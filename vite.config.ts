@@ -18,6 +18,8 @@ export default defineConfig({
       'pages': '/src/pages',
       'components': '/src/components',
       'assets': '/src/assets',
+      'routes': '/src/routes',
+      'utils': '/src/utils',
     },
   },
   build: {

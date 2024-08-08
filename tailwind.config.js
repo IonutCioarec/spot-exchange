@@ -5,7 +5,16 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        plain: ['Plain', 'sans-serif'], // Custom font family
+      },
+      fontWeight: {
+        regular: 400,
+        bold: 700,
+        light: 300,
+      },
+    },
   },
   plugins: [],
 }
