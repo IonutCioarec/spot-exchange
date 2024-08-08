@@ -6,7 +6,7 @@ export const PageNotFound = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className='flex flex-col w-full  max-w-prose h-[calc(100vh-200px)] justify-center items-center'>
+    <div className='container mt-5'>
       <div className='flex flex-col p-6 items-center justify-center gap-2 rounded-xl bg-[#f6f8fa] w-full'>
         <FontAwesomeIcon icon={faSearch} className='fa-3x mb-2' />
 

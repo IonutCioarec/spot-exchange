@@ -2273,3 +2273,41 @@ box-shadow: inset 0 0 8px #EEFF41, inset 0 0 8px #EEFF41, inset 0 0 8px #EEFF41,
 body{
   background-color: #313131 !important;
 }
+
+.dark-toast{
+  background-color: #202020 !important;
+  color: lightgray !important;
+  border: 1px solid #303030 !important;
+}
+
+.dapp-core-component__transactionToast-styles__close{
+  color: red !important;
+}
+
+.dapp-core-component__transactionDetails-styles__icon {
+  color: lightgray !important;
+}
+
+.dapp-core-component__copyButton-styles__copy {
+  color: lightgray !important;
+}
+
+.dapp-core-component__explorerLinkStyles__search{
+  color: lightgray !important;
+}
+
+.w-100{
+  min-width: 100px;
+}
+
+.w-150{
+  min-width: 150px;
+}
+
+.w-200{
+  min-width: 200px;
+}
+
+.fullWidth {
+  width: 100%;
+}

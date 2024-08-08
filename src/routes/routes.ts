@@ -10,7 +10,8 @@ export interface RouteType {
 }
 
 export const routeNames = {
-  home: '/'
+  home: '/',
+  unlock: '/unlock'
 };
 
 export const routes: RouteWithTitleType[] = [
@@ -20,3 +21,8 @@ export const routes: RouteWithTitleType[] = [
     component: Home
   }
 ];
+
+export enum RouteNamesEnum {
+  home = '/',
+  swap = '/swap'
+}
