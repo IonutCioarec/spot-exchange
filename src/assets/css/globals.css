@@ -2270,9 +2270,6 @@ box-shadow: inset 0 0 8px #EEFF41, inset 0 0 8px #EEFF41, inset 0 0 8px #EEFF41,
   font-family: 'Plain', sans-serif;
   font-weight: 300;
 }
-body{
-  background-color: #313131 !important;
-}
 
 .dark-toast{
   background-color: #202020 !important;

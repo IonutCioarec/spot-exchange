@@ -37,44 +37,44 @@ export const Unlock = () => {
 
   return (
     <div className="vertical-center-container">
-      <div className='container-bg shadow rounded-lg p-2 mt-2 mb-3 text-center'>
+      <div className='container-bg rounded-lg p-2 mt-2 mb-3 text-center'>
           <h2 className='text-2xl text-white pt-4 mb-0'>MultiversX Login</h2>
           <p className='text-center small text-white'>Choose a login method</p>
 
           <Row className='mt-3 mb-5 p-2'>
-            <Col xs={12} lg={{offset: 3, span: 6}}>
+            <Col xs={12} lg={{offset: 4, span: 4}}>
               <WalletConnectLoginButton
                 loginButtonText='xPortal App'
                 {...commonProps}
-                buttonClassName='font-bold fullWidth mx-0 btn-dark'
+                buttonClassName='font-bold fullWidth mx-0 custom-btn'
               />
             </Col>
-            <Col xs={12} lg={{offset: 3, span: 6}}>
+            <Col xs={12} lg={{offset: 4, span: 4}}>
               <LedgerLoginButton 
                 loginButtonText='Ledger' 
                 {...commonProps}
-                buttonClassName='font-bold fullWidth mx-0 btn-dark'
+                buttonClassName='font-bold fullWidth mx-0 custom-btn'
               />
             </Col>
-            <Col xs={12} lg={{offset: 3, span: 6}}>
+            <Col xs={12} lg={{offset: 4, span: 4}}>
               <ExtensionLoginButton
                 loginButtonText='DeFi Wallet'
                 {...commonProps}
-                buttonClassName='font-bold fullWidth mx-0 btn-dark'
+                buttonClassName='font-bold fullWidth mx-0 custom-btn'
               />
             </Col>
-            <Col xs={12} lg={{offset: 3, span: 6}}>
+            <Col xs={12} lg={{offset: 4, span: 4}}>
               <OperaWalletLoginButton
                 loginButtonText='Opera Crypto Wallet - Beta'
                 {...commonProps}
-                buttonClassName='font-bold fullWidth mx-0 btn-dark'
+                buttonClassName='font-bold fullWidth mx-0 custom-btn'
               />
             </Col>
-            <Col xs={12} lg={{offset: 3, span: 6}}>
+            <Col xs={12} lg={{offset: 4, span: 4}}>
               <WebWalletUrlLoginButton
                 loginButtonText='Web Wallet'
                 {...commonProps}
-                buttonClassName='font-bold fullWidth mx-0 btn-dark'
+                buttonClassName='font-bold fullWidth mx-0 custom-btn'
               />
             </Col>        
           </Row>

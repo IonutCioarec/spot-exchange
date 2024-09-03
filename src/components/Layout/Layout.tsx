@@ -2,6 +2,8 @@
 import React, { ReactNode } from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import 'assets/css/layout.css';
+import 'assets/scss/layout.scss';
 
 interface LayoutProps {
   children: ReactNode;
