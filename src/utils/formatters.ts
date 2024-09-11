@@ -1,5 +1,9 @@
 import BigNumber from 'bignumber.js';
 
-export const denomination = (amount: number, decimals: number) => {
-  return new BigNumber(amount).shiftedBy(-18).toNumber().toFixed(decimals);
+export const DenominatedAmountToAmount = (amount: number, denomination: number, decimals: number) => {
+  return new BigNumber(amount).shiftedBy(-denomination).decimalPlaces(decimals, BigNumber.ROUND_DOWN).toString();
+}
+
+export const AmountToDenominatedAmount = (amount: number, denomination: number, decimals: number) => {
+  return new BigNumber(amount).shiftedBy(denomination).decimalPlaces(decimals, BigNumber.ROUND_DOWN).toString();
 }
