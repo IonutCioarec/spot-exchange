@@ -15,7 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Header />
 
       <main className="flex-1">
-        <div style={{minHeight: '82vh'}}>{children}</div>
+        <div style={{minHeight: '87vh'}}>{children}</div>
         <Footer />
       </main>
 
