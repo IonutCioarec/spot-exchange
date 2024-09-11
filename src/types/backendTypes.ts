@@ -105,3 +105,8 @@ export interface TokenDetails {
   }[];
   canTransfer: boolean;
 }
+
+export interface PoolsState {
+  pairs: Pair[];
+  tokens: Token[];
+}

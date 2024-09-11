@@ -1,16 +1,14 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch } from 'storeManager/store';  // Import AppDispatch
-import { fetchPairsData, fetchTokensData, selectIsLoading, selectPairs, selectTokens } from 'storeManager/slices/poolsSlice';
-import Loader from 'storeManager/components/Loader';
+import { useSelector } from 'react-redux';
+import { selectPairs, selectTokens, selectStatus } from 'storeManager/slices/poolsSlice';
+import Loader from 'components/Loader';
 import { TableContainer, Paper, Table, TableBody, Box, IconButton, TableCell, TableHead, TableRow, Typography, tableCellClasses, Collapse  } from '@mui/material';
 import { Container, Row, Col } from 'react-bootstrap';
 import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
-import { denomination } from 'utils/formatters';
-import { Pair } from 'types/dexTypes';
+import { DenominatedAmountToAmount } from 'utils/formatters';
+import { Pair } from 'types/backendTypes';
 import 'assets/css/pools.css';
 import { styled } from '@mui/material/styles';
-
 
 interface RowProps {
   pair: Pair;
@@ -55,7 +53,7 @@ const CustomTableRow: React.FC<RowProps> = ({ pair, index }) => {
         </TableCell>
         {/* Liquidity */}
         <TableCell>
-          {denomination(parseFloat(pair.liquidity_token1) + parseFloat(pair.liquidity_token2), 4)}
+          {DenominatedAmountToAmount(parseFloat(pair.liquidity_token1) + parseFloat(pair.liquidity_token2), 18, 3)}
         </TableCell>
         {/*Expand/Collapse Arrow */}
         <TableCell>
@@ -112,29 +110,12 @@ const CustomTableRow: React.FC<RowProps> = ({ pair, index }) => {
 };
 
 const Pools = () => {
-  
-  const dispatch: AppDispatch = useDispatch();
-  const [initialLoad, setInitialLoad] = useState(true);
-  const isLoading = useSelector(selectIsLoading);
   const pairs = useSelector(selectPairs);
   const tokens = useSelector(selectTokens);
+  const status = useSelector(selectStatus);
 
-  // Fetch data on first mount
-  useEffect(() => {
-    dispatch(fetchPairsData()).finally(() => setInitialLoad(false));
-    dispatch(fetchTokensData()).finally(() => setInitialLoad(false));
-  }, [dispatch]);
-
-  useEffect(() => {
-		const interval = window.setInterval(() => {
-			dispatch(fetchPairsData());
-      dispatch(fetchTokensData());
-		}, 3000);
-		return () => window.clearInterval(interval);
-	}, [dispatch]);
-
-  if (initialLoad && isLoading) {
-    return (<Loader />);
+  if (status === 'loading') {
+    return <Loader />;
   }
 
   return (

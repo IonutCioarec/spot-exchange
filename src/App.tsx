@@ -7,6 +7,7 @@ import {Unlock} from 'pages/Unlock';
 import 'assets/css/globals.css';
 import { Provider } from 'react-redux';
 import { store } from 'storeManager/store';
+import { MainLoader } from 'storeManager/loaders/MainLoader';
 
 import {
   DappProvider,
@@ -49,6 +50,7 @@ const App: React.FC = () => {
       }}
     >
       <Provider store={store}>
+        <MainLoader />
         <Router >
           <Layout>
             <TransactionsToastList transactionToastClassName='dark-toast'/>
