@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from 'components/Layout/Layout';
 import { routeNames, routes } from 'routes/routes';
 import { PageNotFound } from 'pages/PageNotFound';
-import Home from 'pages/Home';
 import {Unlock} from 'pages/Unlock';
 import 'assets/css/globals.css';
+import { Provider } from 'react-redux';
+import { store } from 'storeManager/store';
 
 import {
   DappProvider,
@@ -21,7 +22,8 @@ import {
 
 const App: React.FC = () => {
   return (
-    <DappProvider
+    <Provider store={store}>
+      <DappProvider
         environment={environment}
         customNetworkConfig={{
           name: 'customConfig',
@@ -54,18 +56,23 @@ const App: React.FC = () => {
             <SignTransactionsModals />
             <Routes>
               <Route path={routeNames.unlock} element={<Unlock />} />
-              {routes.map((route) => (
-                <Route
-                  path={route.path}
-                  key={`route-key-'${route.path}`}
-                  element={<route.component />}
-                />
-              ))}
+              {routes.map((route, index) => {
+                const ComponentToRender = route.component;
+
+                return (
+                  <Route
+                    key={'route-key-' + index}
+                    path={route.path}
+                    element={<ComponentToRender />}
+                  />
+                );
+              })}
               <Route path='*' element={<PageNotFound />} />
             </Routes>      
           </Layout>
         </Router>
       </DappProvider>
+    </Provider>
   );
 };
 

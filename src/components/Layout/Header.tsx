@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 import 'assets/css/header.css';
 import {useGetIsLoggedIn} from 'hooks'
 import { logout } from 'helpers';
-import useMobile from 'utils/Responsive';
+import useMobile from 'utils/responsive';
 
 
 export const Header = () => {
@@ -39,7 +39,7 @@ export const Header = () => {
 
   return (
     <>
-      <Navbar sticky='top' expanded={expanded} collapseOnSelect expand="lg" className="pl-6 pr-6 pt-2 pb-2" style={{marginBottom: '0', backgroundColor: 'rgb(40, 61, 31)', minHeight: '72px', borderBottom: '1px solid rgba(153, 204, 131, 0.7)'}}>
+      <Navbar expanded={expanded} collapseOnSelect expand="lg" className="pl-6 pr-6 pt-2 pb-2" style={{marginBottom: '0', minHeight: '72px', borderBottom: '1px solid #2e7d32'}}>
         <Navbar.Brand as={Link} to={routeNames.home} className='pl-12 pr-4'>
           <p className={`text-brand ml-2 mb-0 mt-0 ${isMobile ? '' : 'ml-8'}`}>DEX</p>
         </Navbar.Brand>
@@ -51,6 +51,9 @@ export const Header = () => {
             </Nav.Link>
             <Nav.Link as={Link} to="/swap" className={`mx-1 ${location.pathname === '/swap' ? 'active' : ''}`}  onClick={handleSelect}>
               <p className='nav-link mb-0 mt-0 link'>Swap</p>
+            </Nav.Link>
+            <Nav.Link as={Link} to="/pools" className={`mx-1 ${location.pathname === '/pools' ? 'active' : ''}`}  onClick={handleSelect}>
+              <p className='nav-link mb-0 mt-0 link'>Pools</p>
             </Nav.Link>
           </Nav>
           <Nav className={`ml-auto ${isMobile ? '' : 'mr-12'}`} onSelect={handleSelect}>

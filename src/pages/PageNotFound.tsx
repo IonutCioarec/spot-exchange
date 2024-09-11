@@ -7,12 +7,12 @@ export const PageNotFound = () => {
 
   return (
     <div className='container mt-5'>
-      <div className='flex flex-col p-6 items-center justify-center gap-2 rounded-xl bg-[#f6f8fa] w-full'>
-        <FontAwesomeIcon icon={faSearch} className='fa-3x mb-2' />
+      <div className='flex flex-col p-6 items-center justify-center gap-2 rounded-xl bg-[#202020] w-full'>
+        <FontAwesomeIcon icon={faSearch} className='fa-3x mb-2 text-white' />
 
         <div className='flex flex-col items-center'>
-          <h4 className='mt-3 text-xl'>Page not found</h4>
-          <span className='text-lg text-gray-400'>{pathname}</span>
+          <h4 className='mt-3 text-xl text-white'>Page not found</h4>
+          <span className='text-lg text-white'>{pathname}</span>
         </div>
       </div>
     </div>

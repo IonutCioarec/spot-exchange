@@ -5,3 +5,4 @@ export const API_URL = 'https://testnet-api.multiversx.com';
 export const sampleAuthenticatedDomains = [API_URL];
 export const environment = EnvironmentsEnum.testnet;
 export const contractAddress = '';
+export const dexAPI = '';

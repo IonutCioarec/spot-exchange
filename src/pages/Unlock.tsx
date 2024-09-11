@@ -31,12 +31,12 @@ export const Unlock = () => {
     callbackRoute: RouteNamesEnum.home,
     nativeAuth,
     onLoginRedirect: () => {
-      navigate(RouteNamesEnum.home);
+      navigate(RouteNamesEnum.pools);
     }
   };
 
   return (
-    <div className="vertical-center-container">
+    <div className="container">
       <div className='container-bg rounded-lg p-2 mt-2 mb-3 text-center'>
           <h2 className='text-2xl text-white pt-4 mb-0'>MultiversX Login</h2>
           <p className='text-center small text-white'>Choose a login method</p>
