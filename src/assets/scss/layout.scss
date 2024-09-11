@@ -12,6 +12,14 @@
   }
 }
 
+.main-container{
+  min-height: 87vh;
+
+  @include maxQuery(700) {
+		min-height: 86vh;
+	}
+}
+
 .custom-btn {
 	position: relative !important;
 	display: inline-block !important;
