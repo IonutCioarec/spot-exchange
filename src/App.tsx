@@ -21,34 +21,34 @@ import {
 } from 'config';
 
 const App: React.FC = () => {
-  return (
-    <Provider store={store}>
-      <DappProvider
-        environment={environment}
-        customNetworkConfig={{
-          name: 'customConfig',
-          apiTimeout: apiTimeout,
-          walletConnectV2ProjectId: walletConnectV2ProjectId
-        }}
-        dappConfig={{
-          shouldUseWebViewProvider: true,
-          logoutRoute: '/home'
-        }}
-        customComponents={{
-          transactionTracker: {
-            props: {
-              onSuccess: (sessionId: string) => {
-                console.log(`Session ${sessionId} successfully completed`);
-              },
-              onFail: (sessionId: string, errorMessage: string) => {
-                console.log(
-                  `Session ${sessionId} failed. ${errorMessage ?? ''}`
-                );
-              }
+  return (    
+    <DappProvider
+      environment={environment}
+      customNetworkConfig={{
+        name: 'customConfig',
+        apiTimeout: apiTimeout,
+        walletConnectV2ProjectId: walletConnectV2ProjectId
+      }}
+      dappConfig={{
+        shouldUseWebViewProvider: true,
+        logoutRoute: '/home'
+      }}
+      customComponents={{
+        transactionTracker: {
+          props: {
+            onSuccess: (sessionId: string) => {
+              console.log(`Session ${sessionId} successfully completed`);
+            },
+            onFail: (sessionId: string, errorMessage: string) => {
+              console.log(
+                `Session ${sessionId} failed. ${errorMessage ?? ''}`
+              );
             }
           }
-        }}
-      >
+        }
+      }}
+    >
+      <Provider store={store}>
         <Router >
           <Layout>
             <TransactionsToastList transactionToastClassName='dark-toast'/>
@@ -71,8 +71,8 @@ const App: React.FC = () => {
             </Routes>      
           </Layout>
         </Router>
-      </DappProvider>
-    </Provider>
+      </Provider>
+    </DappProvider>
   );
 };
 
