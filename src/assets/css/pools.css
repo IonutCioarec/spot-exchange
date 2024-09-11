@@ -1,0 +1,28 @@
+.MuiTable-root{
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  border: transparent;
+}
+.MuiTableHead-root{
+  background-color: transparent !important;
+  color: white;
+}
+
+.MuiTableRow-root{
+  border: 10px solid transparent;
+}
+
+.MuiTableCell-root{
+  /* background-color: rgba(20,20,20, 0.7) !important; */
+  color: white !important;
+}
+
+.MuiTableContainer-root {
+  box-shadow: none;
+}
+
+.MuiTable-root th, .MuiTable-root td {
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}

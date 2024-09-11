@@ -19,7 +19,8 @@
 .link:focus,
 .link:active,
 .active .link {
-  border-bottom: 1px solid rgb(188, 231, 12);
+  /* border-bottom: 1px solid #2e7d32; */
+  border-bottom: 0px solid transparent;
 }
 
 .custom-toggler .navbar-toggler-icon {

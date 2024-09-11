@@ -2,7 +2,7 @@ import { Transaction } from 'types/sdkCoreTypes';
 import { TransactionsDisplayInfoType } from 'types/sdkDappTypes';
 
 import { refreshAccount, sendTransactions } from './sdkDappHelpers';
-import { isSafari } from 'utils/Responsive';
+import { isSafari } from 'utils/responsive';
 
 type SignAndSendTransactionsProps = {
   transactions: Transaction[];
