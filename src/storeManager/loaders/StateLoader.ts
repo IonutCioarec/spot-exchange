@@ -2,7 +2,7 @@ import { useBackendAPI } from 'hooks/useBackendAPI';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Pair, PoolsState, Token } from 'types/backendTypes';
-import { setPool, setStatus, selectStatus } from 'storeManager/slices/poolsSlice';
+import { setPools } from 'storeManager/slices/poolsSlice';
 import { stateLoaderRefreshTime } from 'config';
 import { useGetPendingTransactions } from 'hooks';
 
@@ -25,11 +25,11 @@ export const StateLoader = () => {
   useEffect(() => {
     loadState()
       .then((state) => {
-        dispatch(setPool(state));
+        dispatch(setPools(state));
       })
       .catch((err) => {
         console.log(
-          'Something went wrong when loading pool: ',
+          'Something went wrong when loading pools: ',
           err
         );
       });
@@ -40,11 +40,11 @@ export const StateLoader = () => {
     const interval = window.setInterval(() => {
       loadState()
         .then((state) => {
-          dispatch(setPool(state));
+          dispatch(setPools(state));
         })
         .catch((err) => {
           console.log(
-            'Something went wrong when loading pool: ',
+            'Something went wrong when loading pools: ',
             err
           );
         });

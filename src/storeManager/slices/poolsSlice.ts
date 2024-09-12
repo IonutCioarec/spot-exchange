@@ -18,7 +18,7 @@ const poolsSlice = createSlice({
   name: 'pools',
   initialState,
   reducers: {
-    setPool: (state, action: PayloadAction<PoolsState>) => {
+    setPools: (state, action: PayloadAction<PoolsState>) => {
       state.pairs = action.payload.pairs;
       state.tokens = action.payload.tokens;
       state.status = 'succeeded';
@@ -29,7 +29,7 @@ const poolsSlice = createSlice({
   },
 });
 
-export const { setPool, setStatus } = poolsSlice.actions;
+export const { setPools, setStatus } = poolsSlice.actions;
 
 // Selectors
 export const selectPairs = (state: any) => state.pools.pairs;
