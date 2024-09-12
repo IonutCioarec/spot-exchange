@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
 import { dexAPI } from 'config';
 import { Pair, SwapPrice, Token } from 'types/backendTypes';
-import BigNumber from 'bignumber.js';
 
 export const useBackendAPI = () => {
 
   // get the list of token pairs (pools)
   const getPairs = async (): Promise<Pair[]> => {
     try {
-      const response = await fetch(`${dexAPI}/pairs`, {
+      const response = await axios.get<Pair[]>(`${dexAPI}/pairs`, {
         headers: { Accept: 'application/json' },
       });
-      const json: Pair[] = await response.json();
-      if (json) {
-        return json;
-      }
+      return response.data;
     } catch (e) {
       console.error(e);
     }
@@ -25,13 +20,10 @@ export const useBackendAPI = () => {
   // get the list of the tokens available to swap
   const getTokens = async (): Promise<Token[]> => {
     try {
-      const response = await fetch(`${dexAPI}/tokens`, {
+      const response = await axios.get<Token[]>(`${dexAPI}/tokens`, {
         headers: { Accept: 'application/json' },
       });
-      const json: Token[] = await response.json();
-      if (json) {
-        return json;
-      }
+      return response.data;
     } catch (e) {
       console.error(e);
     }
@@ -41,15 +33,15 @@ export const useBackendAPI = () => {
   // get the price of swaping token1 -> token2
   const getSwapPrice = async (token1: string, token2: string, amount: string): Promise<SwapPrice | null> => {
     try {
-      const response = await fetch(`${dexAPI}/swap?token_in=${token1}&token_out=${token2}&amount=${amount}`, {
-        headers: {
-          Accept: 'application/json',
+      const response = await axios.get<SwapPrice[]>(`${dexAPI}/swap`, {
+        params: {
+          token_in: token1,
+          token_out: token2,
+          amount,
         },
+        headers: { Accept: 'application/json' },
       });
-      const json: SwapPrice[] = await response.json();
-      if (json) {
-        return json[0];
-      }
+      return response.data[0];
     } catch (e) {
       console.error(e);
     }
