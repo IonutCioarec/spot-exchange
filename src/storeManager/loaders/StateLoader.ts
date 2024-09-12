@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Pair, PoolsState, Token } from 'types/backendTypes';
 import { setPool, setStatus, selectStatus } from 'storeManager/slices/poolsSlice';
 import { stateLoaderRefreshTime } from 'config';
+import { useGetPendingTransactions } from 'hooks';
 
 export const StateLoader = () => {
   const { getTokens, getPairs } = useBackendAPI();
+  const { hasPendingTransactions } = useGetPendingTransactions();
   const dispatch = useDispatch();
   const status = useSelector(selectStatus);
 
@@ -34,7 +36,7 @@ export const StateLoader = () => {
         );
         dispatch(setStatus('failed'));
       });
-  }, [status, dispatch]);
+  }, [status, dispatch, hasPendingTransactions]);
 
   // check for changes every 3 seconds
   useEffect(() => {
@@ -53,7 +55,7 @@ export const StateLoader = () => {
       });
 		}, stateLoaderRefreshTime);
 		return () => window.clearInterval(interval);
-	}, [status, dispatch]);
+	}, [status, dispatch, hasPendingTransactions]);
 
   return null;
 }
