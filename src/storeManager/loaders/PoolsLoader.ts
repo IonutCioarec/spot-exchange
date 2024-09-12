@@ -35,5 +35,24 @@ export const PoolsLoader = () => {
       });
   }, [status, dispatch]);
 
+  // check for changes every 3 seconds
+  useEffect(() => {
+		const interval = window.setInterval(() => {
+			loadPool()
+      .then((state) => {
+        dispatch(setPool(state));
+        dispatch(setStatus('succeeded'));
+      })
+      .catch((err) => {
+        console.log(
+          'Something went wrong when loading pool: ',
+          err
+        );
+        dispatch(setStatus('failed'));
+      });
+		}, 3000);
+		return () => window.clearInterval(interval);
+	}, [status, dispatch]);
+
   return null;
 }
