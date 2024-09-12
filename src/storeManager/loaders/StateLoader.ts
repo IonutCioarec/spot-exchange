@@ -1,8 +1,8 @@
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Pair, PoolsState, Token } from 'types/backendTypes';
-import { setPools } from 'storeManager/slices/poolsSlice';
+import { useDispatch } from 'react-redux';
+import { setPairs } from 'storeManager/slices/pairsSlice';
+import { setTokens } from 'storeManager/slices/tokensSlice';
 import { stateLoaderRefreshTime } from 'config';
 import { useGetPendingTransactions } from 'hooks';
 
@@ -11,46 +11,31 @@ export const StateLoader = () => {
   const { hasPendingTransactions } = useGetPendingTransactions();
   const dispatch = useDispatch();
 
-  const loadState = async (): Promise<PoolsState> => {
-    const tokens: Token[] = await getTokens();
-    const pairs: Pair[] = await getPairs();
+  const loadState = async () => {
+    const tokens = await getTokens();
+    const pairs = await getPairs();
 
-    return {
-      tokens,
-      pairs
-    };
+    dispatch(setTokens(tokens));
+    dispatch(setPairs(pairs));
   };
 
-  // load pool
+  // Load initial state
   useEffect(() => {
-    loadState()
-      .then((state) => {
-        dispatch(setPools(state));
-      })
-      .catch((err) => {
-        console.log(
-          'Something went wrong when loading pools: ',
-          err
-        );
-      });
+    loadState().catch((err) => {
+      console.error('Error loading state:', err);
+    });
   }, [dispatch, hasPendingTransactions]);
 
-  // check for changes every 3 seconds
+  // Refresh data at interval
   useEffect(() => {
     const interval = window.setInterval(() => {
-      loadState()
-        .then((state) => {
-          dispatch(setPools(state));
-        })
-        .catch((err) => {
-          console.log(
-            'Something went wrong when loading pools: ',
-            err
-          );
-        });
+      loadState().catch((err) => {
+        console.error('Error refreshing state:', err);
+      });
     }, stateLoaderRefreshTime);
+
     return () => window.clearInterval(interval);
   }, [dispatch, hasPendingTransactions]);
 
   return null;
-}
+};

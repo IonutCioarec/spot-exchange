@@ -40,73 +40,12 @@ export interface SwapPrice {
   steps: SwapStep[];
 }
 
-export interface TokenDetails {
-  type: string;
-  identifier: string;
-  collection: string;
-  nonce: number;
-  name: string;
-  ticker: string;
-  owner: string;
-  minted: string;
-  burnt: string;
-  initialMinted: string;
-  decimals: number;
-  isPaused: boolean;
-  assets: {
-    website: string;
-    description: string;
-    status: string;
-    pngUrl: string;
-    name: string;
-    svgUrl: string;
-    ledgerSignature: string;
-    lockedAccounts: string;
-    extraTokens: string[];
-    preferredRankAlgorithm: string;
-  };
-  transactions: number;
-  transactionsLastUpdatedAt: number;
-  transfers: number;
-  transfersLastUpdatedAt: number;
-  accounts: number;
-  accountsLastUpdatedAt: number;
-  canUpgrade: boolean;
-  canMint: boolean;
-  canBurn: boolean;
-  canChangeOwner: boolean;
-  canAddSpecialRoles: boolean;
-  canPause: boolean;
-  canFreeze: boolean;
-  canWipe: boolean;
-  canTransferNftCreateRole: boolean;
-  price: number;
-  marketCap: number;
-  supply: string;
-  circulatingSupply: string;
-  timestamp: number;
-  mexPairType: string;
-  totalLiquidity: number;
-  totalVolume24h: number;
-  isLowLiquidity: boolean;
-  lowLiquidityThresholdPercent: number;
-  tradesCount: number;
-  roles: {
-    address: string;
-    canLocalMint: boolean;
-    canLocalBurn: boolean;
-    canCreate: boolean;
-    canBurn: boolean;
-    canAddQuantity: boolean;
-    canUpdateAttributes: boolean;
-    canAddUri: boolean;
-    canTransfer: boolean;
-    roles: string[];
-  }[];
-  canTransfer: boolean;
+export interface PairsState {
+  pairs: Pair[];
+  status: 'loading' | 'succeeded' | 'failed';
 }
 
-export interface PoolsState {
-  pairs: Pair[];
+export interface TokensState {
   tokens: Token[];
+  status: 'loading' | 'succeeded' | 'failed';
 }

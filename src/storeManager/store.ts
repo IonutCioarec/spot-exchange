@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import poolsReducer from './slices/poolsSlice';
+import pairsReducer from './slices/pairsSlice';
+import tokensReducer from './slices/tokensSlice';
 
 // Create the Redux store
 const store = configureStore({
   reducer: {
-    pools: poolsReducer,
+    pairs: pairsReducer,
+    tokens: tokensReducer,
   },
 });
 
