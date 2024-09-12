@@ -39,10 +39,9 @@ export const useBackendAPI = () => {
   };
 
   // get the price of swaping token1 -> token2
-  const getSwapPrice = async (token1: string, token2: string, amount: number, tokenDecimals: number): Promise<SwapPrice | null> => {
+  const getSwapPrice = async (token1: string, token2: string, amount: string): Promise<SwapPrice | null> => {
     try {
-      const totalAmount = new BigNumber(amount).shiftedBy(tokenDecimals);
-      const response = await fetch(`${dexAPI}/swap?token_in=${token1}&token_out=${token2}&amount=${totalAmount}`, {
+      const response = await fetch(`${dexAPI}/swap?token_in=${token1}&token_out=${token2}&amount=${amount}`, {
         headers: {
           Accept: 'application/json',
         },
