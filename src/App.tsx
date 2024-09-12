@@ -32,7 +32,7 @@ const App: React.FC = () => {
       }}
       dappConfig={{
         shouldUseWebViewProvider: true,
-        logoutRoute: '/home'
+        logoutRoute: routeNames.home
       }}
       customComponents={{
         transactionTracker: {
