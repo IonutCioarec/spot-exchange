@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from 'components/Layout/Layout';
 import { routeNames, routes } from 'routes/routes';
 import { PageNotFound } from 'pages/PageNotFound';
-import {Unlock} from 'pages/Unlock';
+import { Unlock } from 'pages/Unlock';
 import 'assets/css/globals.css';
 import { Provider } from 'react-redux';
 import { store } from 'storeManager/store';
@@ -22,7 +22,7 @@ import {
 } from 'config';
 
 const App: React.FC = () => {
-  return (    
+  return (
     <DappProvider
       environment={environment}
       customNetworkConfig={{
@@ -53,7 +53,7 @@ const App: React.FC = () => {
         <MainLoader />
         <Router >
           <Layout>
-            <TransactionsToastList transactionToastClassName='dark-toast'/>
+            <TransactionsToastList transactionToastClassName='dark-toast' />
             <NotificationModal />
             <SignTransactionsModals />
             <Routes>
@@ -70,7 +70,7 @@ const App: React.FC = () => {
                 );
               })}
               <Route path='*' element={<PageNotFound />} />
-            </Routes>      
+            </Routes>
           </Layout>
         </Router>
       </Provider>

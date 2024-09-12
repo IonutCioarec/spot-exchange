@@ -19,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Footer />
       </main>
 
-      
+
     </div>
   );
 };

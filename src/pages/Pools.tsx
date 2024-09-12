@@ -21,7 +21,7 @@ const Pools = () => {
         <Col xs={12} lg={12}>
           <div className='mt-5 mb-5'>
             {pairs.map((pair: Pair, index: number) => (
-              <Pool pair={pair} key={`pairs-${index}`}/>
+              <Pool pair={pair} key={`pairs-${index}`} />
             ))}
           </div>
         </Col>

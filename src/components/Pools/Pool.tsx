@@ -7,7 +7,7 @@ import { denominatedAmountToAmount } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 import { Button } from "@mui/material";
 
-export const Pool = (pair : any) => {
+export const Pool = (pair: any) => {
   const isMobile = useMobile();
   const [open, setOpen] = useState(false);
   const token1_img = 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png';
@@ -37,7 +37,7 @@ export const Pool = (pair : any) => {
           </div>
         </div>
         {open && (
-          <div className="mt-4" style={{borderTop: '1px solid grey'}}>
+          <div className="mt-4" style={{ borderTop: '1px solid grey' }}>
             <p className="mt-1">Extra detalii... urmeaza</p>
           </div>
         )}

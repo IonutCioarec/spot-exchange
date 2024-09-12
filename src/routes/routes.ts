@@ -32,5 +32,5 @@ export const routes: RouteWithTitleType[] = [
 export enum RouteNamesEnum {
   home = '/',
   swap = '/swap',
-  pools ='/pools'
+  pools = '/pools'
 }

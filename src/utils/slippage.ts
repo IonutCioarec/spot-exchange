@@ -51,7 +51,7 @@ export function calculateSlippage(
 
   // Return the slippage and new price as a result
   return {
-    slippage: slippage.toNumber(), 
+    slippage: slippage.toNumber(),
     newPriceToken1InToken2: parseFloat(newPriceToken1InToken2.toFixed(18))
   };
 }
