@@ -10,7 +10,6 @@ export const StateLoader = () => {
   const { getTokens, getPairs } = useBackendAPI();
   const { hasPendingTransactions } = useGetPendingTransactions();
   const dispatch = useDispatch();
-  const status = useSelector(selectStatus);
 
   const loadState = async (): Promise<PoolsState> => {
     const tokens: Token[] = await getTokens();
@@ -27,16 +26,14 @@ export const StateLoader = () => {
     loadState()
       .then((state) => {
         dispatch(setPool(state));
-        dispatch(setStatus('succeeded'));
       })
       .catch((err) => {
         console.log(
           'Something went wrong when loading pool: ',
           err
         );
-        dispatch(setStatus('failed'));
       });
-  }, [status, dispatch, hasPendingTransactions]);
+  }, [dispatch, hasPendingTransactions]);
 
   // check for changes every 3 seconds
   useEffect(() => {
@@ -44,18 +41,16 @@ export const StateLoader = () => {
       loadState()
         .then((state) => {
           dispatch(setPool(state));
-          dispatch(setStatus('succeeded'));
         })
         .catch((err) => {
           console.log(
             'Something went wrong when loading pool: ',
             err
           );
-          dispatch(setStatus('failed'));
         });
     }, stateLoaderRefreshTime);
     return () => window.clearInterval(interval);
-  }, [status, dispatch, hasPendingTransactions]);
+  }, [dispatch, hasPendingTransactions]);
 
   return null;
 }
