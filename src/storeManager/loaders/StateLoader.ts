@@ -40,22 +40,22 @@ export const StateLoader = () => {
 
   // check for changes every 3 seconds
   useEffect(() => {
-		const interval = window.setInterval(() => {
-			loadState()
-      .then((state) => {
-        dispatch(setPool(state));
-        dispatch(setStatus('succeeded'));
-      })
-      .catch((err) => {
-        console.log(
-          'Something went wrong when loading pool: ',
-          err
-        );
-        dispatch(setStatus('failed'));
-      });
-		}, stateLoaderRefreshTime);
-		return () => window.clearInterval(interval);
-	}, [status, dispatch, hasPendingTransactions]);
+    const interval = window.setInterval(() => {
+      loadState()
+        .then((state) => {
+          dispatch(setPool(state));
+          dispatch(setStatus('succeeded'));
+        })
+        .catch((err) => {
+          console.log(
+            'Something went wrong when loading pool: ',
+            err
+          );
+          dispatch(setStatus('failed'));
+        });
+    }, stateLoaderRefreshTime);
+    return () => window.clearInterval(interval);
+  }, [status, dispatch, hasPendingTransactions]);
 
   return null;
 }
