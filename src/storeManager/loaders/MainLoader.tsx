@@ -1,10 +1,10 @@
 import { Fragment } from "react/jsx-runtime";
-import { PoolsLoader } from "./PoolsLoader";
+import { StateLoader } from "./StateLoader";
 
 export const MainLoader = () => {
   return (
     <Fragment>
-      <PoolsLoader />
+      <StateLoader />
     </Fragment>
   );
 }

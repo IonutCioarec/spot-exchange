@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Pair, PoolsState, Token } from 'types/backendTypes';
 import { setPool, setStatus, selectStatus } from 'storeManager/slices/poolsSlice';
 
-export const PoolsLoader = () => {
+export const StateLoader = () => {
   const { getTokens, getPairs } = useBackendAPI();
   const dispatch = useDispatch();
   const status = useSelector(selectStatus);
 
-  const loadPool = async (): Promise<PoolsState> => {
+  const loadState = async (): Promise<PoolsState> => {
     const tokens: Token[] = await getTokens();
     const pairs: Pair[] = await getPairs();
 
@@ -21,7 +21,7 @@ export const PoolsLoader = () => {
 
   // load pool
   useEffect(() => {
-    loadPool()
+    loadState()
       .then((state) => {
         dispatch(setPool(state));
         dispatch(setStatus('succeeded'));
@@ -38,7 +38,7 @@ export const PoolsLoader = () => {
   // check for changes every 3 seconds
   useEffect(() => {
 		const interval = window.setInterval(() => {
-			loadPool()
+			loadState()
       .then((state) => {
         dispatch(setPool(state));
         dispatch(setStatus('succeeded'));
