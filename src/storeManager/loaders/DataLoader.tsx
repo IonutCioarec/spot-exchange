@@ -1,7 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 import { StateLoader } from "./StateLoader";
 
-export const MainLoader = () => {
+export const DataLoader = () => {
   return (
     <Fragment>
       <StateLoader />
