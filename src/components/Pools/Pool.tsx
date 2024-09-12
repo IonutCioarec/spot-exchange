@@ -3,7 +3,7 @@ import 'assets/scss/pools.scss';
 import useMobile from 'utils/responsive';
 import { Pair } from "types/backendTypes";
 import { useState } from "react";
-import { DenominatedAmountToAmount } from 'utils/formatters';
+import { denominatedAmountToAmount } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 import { Button } from "@mui/material";
 
@@ -23,7 +23,7 @@ export const Pool = (pair : any) => {
             <span> WEGLD / MEX</span>
           </div>
           <div>
-            {DenominatedAmountToAmount(parseFloat(pair.pair.liquidity_token1) + parseFloat(pair.pair.liquidity_token2), 18, 3)}
+            {denominatedAmountToAmount(parseFloat(pair.pair.liquidity_token1) + parseFloat(pair.pair.liquidity_token2), 18, 3)}
           </div>
           <div>
             <Button
