@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Pair, PoolsState, Token } from 'types/backendTypes';
 import { setPool, setStatus, selectStatus } from 'storeManager/slices/poolsSlice';
+import { stateLoaderRefreshTime } from 'config';
 
 export const StateLoader = () => {
   const { getTokens, getPairs } = useBackendAPI();
@@ -50,7 +51,7 @@ export const StateLoader = () => {
         );
         dispatch(setStatus('failed'));
       });
-		}, 3000);
+		}, stateLoaderRefreshTime);
 		return () => window.clearInterval(interval);
 	}, [status, dispatch]);
 
