@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { denominatedAmountToAmount } from './formatters';
 
 interface SlippageResult {
   slippage: number;
@@ -17,9 +18,8 @@ export function calculateSlippage(
   const decimalsToken1 = token1_decimals !== null ? token1_decimals : 18;
   const decimalsToken2 = token2_decimals !== null ? token2_decimals : 18;
 
-  // Normalize the liquidity values using BigNumber and shiftedBy
-  const liquidityToken1 = new BigNumber(liquidity_token1).shiftedBy(-decimalsToken1);
-  const liquidityToken2 = new BigNumber(liquidity_token2).shiftedBy(-decimalsToken2);
+  const liquidityToken1 = new BigNumber(denominatedAmountToAmount(liquidity_token1, decimalsToken1, 4));
+  const liquidityToken2 = new BigNumber(denominatedAmountToAmount(liquidity_token2, decimalsToken2, 4));
 
   // Calculate the current price of Token1 in terms of Token2
   const priceToken1InToken2 = liquidityToken2.dividedBy(liquidityToken1);
@@ -51,7 +51,7 @@ export function calculateSlippage(
 
   // Return the slippage and new price as a result
   return {
-    slippage: slippage.toNumber(), 
+    slippage: slippage.toNumber(),
     newPriceToken1InToken2: parseFloat(newPriceToken1InToken2.toFixed(18))
   };
 }

@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from 'components/Layout/Layout';
 import { routeNames, routes } from 'routes/routes';
 import { PageNotFound } from 'pages/PageNotFound';
-import {Unlock} from 'pages/Unlock';
+import { Unlock } from 'pages/Unlock';
 import 'assets/css/globals.css';
 import { Provider } from 'react-redux';
 import { store } from 'storeManager/store';
+import { DataLoader } from 'storeManager/loaders/DataLoader';
 
 import {
   DappProvider,
@@ -22,36 +23,37 @@ import {
 
 const App: React.FC = () => {
   return (
-    <Provider store={store}>
-      <DappProvider
-        environment={environment}
-        customNetworkConfig={{
-          name: 'customConfig',
-          apiTimeout: apiTimeout,
-          walletConnectV2ProjectId: walletConnectV2ProjectId
-        }}
-        dappConfig={{
-          shouldUseWebViewProvider: true,
-          logoutRoute: '/home'
-        }}
-        customComponents={{
-          transactionTracker: {
-            props: {
-              onSuccess: (sessionId: string) => {
-                console.log(`Session ${sessionId} successfully completed`);
-              },
-              onFail: (sessionId: string, errorMessage: string) => {
-                console.log(
-                  `Session ${sessionId} failed. ${errorMessage ?? ''}`
-                );
-              }
+    <DappProvider
+      environment={environment}
+      customNetworkConfig={{
+        name: 'customConfig',
+        apiTimeout: apiTimeout,
+        walletConnectV2ProjectId: walletConnectV2ProjectId
+      }}
+      dappConfig={{
+        shouldUseWebViewProvider: true,
+        logoutRoute: routeNames.home
+      }}
+      customComponents={{
+        transactionTracker: {
+          props: {
+            onSuccess: (sessionId: string) => {
+              console.log(`Session ${sessionId} successfully completed`);
+            },
+            onFail: (sessionId: string, errorMessage: string) => {
+              console.log(
+                `Session ${sessionId} failed. ${errorMessage ?? ''}`
+              );
             }
           }
-        }}
-      >
+        }
+      }}
+    >
+      <Provider store={store}>
+        <DataLoader />
         <Router >
           <Layout>
-            <TransactionsToastList transactionToastClassName='dark-toast'/>
+            <TransactionsToastList transactionToastClassName='dark-toast' />
             <NotificationModal />
             <SignTransactionsModals />
             <Routes>
@@ -68,11 +70,11 @@ const App: React.FC = () => {
                 );
               })}
               <Route path='*' element={<PageNotFound />} />
-            </Routes>      
+            </Routes>
           </Layout>
         </Router>
-      </DappProvider>
-    </Provider>
+      </Provider>
+    </DappProvider>
   );
 };
 

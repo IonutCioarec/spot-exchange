@@ -1,19 +1,20 @@
-.MuiTable-root{
+.MuiTable-root {
   border-radius: 10px;
   border-collapse: separate;
   border-spacing: 0 10px;
   border: transparent;
 }
-.MuiTableHead-root{
+
+.MuiTableHead-root {
   background-color: transparent !important;
   color: white;
 }
 
-.MuiTableRow-root{
+.MuiTableRow-root {
   border: 10px solid transparent;
 }
 
-.MuiTableCell-root{
+.MuiTableCell-root {
   /* background-color: rgba(20,20,20, 0.7) !important; */
   color: white !important;
 }
@@ -22,7 +23,8 @@
   box-shadow: none;
 }
 
-.MuiTable-root th, .MuiTable-root td {
+.MuiTable-root th,
+.MuiTable-root td {
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
 }

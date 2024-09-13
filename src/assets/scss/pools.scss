@@ -1,0 +1,25 @@
+// Define the minQuery mixin
+@mixin minQuery($min-width) {
+  @media (min-width: #{$min-width}px) {
+    @content;
+  }
+}
+
+// Define the maxQuery mixin
+@mixin maxQuery($max-width) {
+  @media (max-width: #{$max-width}px) {
+    @content;
+  }
+}
+
+.pool {
+  padding: 15px;
+  background-color: rgba(10, 50, 50, 1);
+  border-radius: 10px;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: rgba(153, 204, 131, 0.2);
+    cursor: pointer;
+  }
+}
