@@ -14,12 +14,12 @@
 
 .pool {
   padding: 15px;
-  background-color: rgba(10, 50, 50, 1);
+  background-color: #17181d;
   border-radius: 10px;
-  margin-top: 20px;
+  margin-top: 3px;
 
   &:hover {
-    background-color: rgba(153, 204, 131, 0.2);
+    background-color: #1f2027;
     cursor: pointer;
   }
 }
