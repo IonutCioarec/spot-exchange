@@ -22,7 +22,8 @@ export interface TokenValue {
   has_branding: boolean,
   decimals: number,
   is_lp_token: boolean,
-  supply: number
+  price: number | null,
+  supply: string
 }
 
 export interface Token {
