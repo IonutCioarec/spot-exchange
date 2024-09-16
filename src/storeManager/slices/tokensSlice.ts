@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Token, TokensState, TokenValue } from 'types/backendTypes';
+import { createSelector } from 'reselect';
 
 const initialState: TokensState = {
   tokens: {
@@ -31,20 +32,26 @@ export const selectLpTokens = (state: any) => state.tokens.tokens.lp_tokens;
 export const selectPairTokens = (state: any) => state.tokens.tokens.pair_tokens;
 export const selectTokensStatus = (state: any) => state.tokens.status;
 
-// Transform lpTokens into an object keyed by token_id
-export const selectLpTokensById = (state: any) => {
-  return state.tokens.tokens.lp_tokens.reduce((acc: Record<string, TokenValue>, token: TokenValue) => {
-    acc[token.token_id] = token;
-    return acc;
-  }, {});
-};
+// Memoized selector to transform lpTokens into an object keyed by token_id
+export const selectLpTokensById = createSelector(
+  [selectLpTokens],
+  (lpTokens: TokenValue[]) => {
+    return lpTokens.reduce((acc: Record<string, TokenValue>, token: TokenValue) => {
+      acc[token.token_id] = token;
+      return acc;
+    }, {});
+  }
+);
 
-// Transform pairTokens into an object keyed by token_id
-export const selectPairTokensById = (state: any) => {
-  return state.tokens.tokens.pair_tokens.reduce((acc: Record<string, TokenValue>, token: TokenValue) => {
-    acc[token.token_id] = token;
-    return acc;
-  }, {});
-};
+// Memoized selector to transform pairTokens into an object keyed by token_id
+export const selectPairTokensById = createSelector(
+  [selectPairTokens],
+  (pairTokens: TokenValue[]) => {
+    return pairTokens.reduce((acc: Record<string, TokenValue>, token: TokenValue) => {
+      acc[token.token_id] = token;
+      return acc;
+    }, {});
+  }
+);
 
 export default tokensSlice.reducer;
