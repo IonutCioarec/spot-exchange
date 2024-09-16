@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Token, TokensState } from 'types/backendTypes';
+import { Token, TokensState, TokenValue } from 'types/backendTypes';
 
 const initialState: TokensState = {
   tokens: {
@@ -30,5 +30,21 @@ export const { setTokens, setStatus } = tokensSlice.actions;
 export const selectLpTokens = (state: any) => state.tokens.tokens.lp_tokens;
 export const selectPairTokens = (state: any) => state.tokens.tokens.pair_tokens;
 export const selectTokensStatus = (state: any) => state.tokens.status;
+
+// Transform lpTokens into an object keyed by token_id
+export const selectLpTokensById = (state: any) => {
+  return state.tokens.tokens.lp_tokens.reduce((acc: Record<string, TokenValue>, token: TokenValue) => {
+    acc[token.token_id] = token;
+    return acc;
+  }, {});
+};
+
+// Transform pairTokens into an object keyed by token_id
+export const selectPairTokensById = (state: any) => {
+  return state.tokens.tokens.pair_tokens.reduce((acc: Record<string, TokenValue>, token: TokenValue) => {
+    acc[token.token_id] = token;
+    return acc;
+  }, {});
+};
 
 export default tokensSlice.reducer;
