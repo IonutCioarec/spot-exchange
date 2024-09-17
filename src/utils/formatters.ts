@@ -23,3 +23,26 @@ export const formatSignificantDecimals = (input: number, decimals: number = 2): 
     return '0';
   }
 };
+
+export function intlNumberFormat(
+  number: number,
+  minDigits: number = 2,
+  maxDigits: number = 2,
+  locales?: string | string[]
+): string {
+  const options: Intl.NumberFormatOptions = {
+    minimumFractionDigits: minDigits,
+    maximumFractionDigits: maxDigits,
+  };
+
+  return new Intl.NumberFormat(locales || 'en-GB', options).format(number);
+}
+
+export const denominatedAmountToIntlFormattedAmount = (
+  amount: number | string,
+  denomination: number,
+  decimals: number,
+): string => {
+  const auxAmount = denominatedAmountToAmount(amount, denomination, decimals);
+  return intlNumberFormat(parseFloat(auxAmount), decimals, decimals);
+}
