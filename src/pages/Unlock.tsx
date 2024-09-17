@@ -46,35 +46,35 @@ export const Unlock = () => {
             <WalletConnectLoginButton
               loginButtonText='xPortal App'
               {...commonProps}
-              buttonClassName='font-bold fullWidth mx-0 custom-btn'
+              buttonClassName='font-bold fullWidth mx-0 custom-effect btn-success'
             />
           </Col>
           <Col xs={12} lg={{ offset: 4, span: 4 }}>
             <LedgerLoginButton
               loginButtonText='Ledger'
               {...commonProps}
-              buttonClassName='font-bold fullWidth mx-0 custom-btn'
+              buttonClassName='font-bold fullWidth mx-0 custom-effect btn-success'
             />
           </Col>
           <Col xs={12} lg={{ offset: 4, span: 4 }}>
             <ExtensionLoginButton
               loginButtonText='DeFi Wallet'
               {...commonProps}
-              buttonClassName='font-bold fullWidth mx-0 custom-btn'
+              buttonClassName='font-bold fullWidth mx-0 custom-effect btn-success'
             />
           </Col>
           <Col xs={12} lg={{ offset: 4, span: 4 }}>
             <OperaWalletLoginButton
               loginButtonText='Opera Crypto Wallet - Beta'
               {...commonProps}
-              buttonClassName='font-bold fullWidth mx-0 custom-btn'
+              buttonClassName='font-bold fullWidth mx-0 custom-effect btn-success'
             />
           </Col>
           <Col xs={12} lg={{ offset: 4, span: 4 }}>
             <WebWalletUrlLoginButton
               loginButtonText='Web Wallet'
               {...commonProps}
-              buttonClassName='font-bold fullWidth mx-0 custom-btn'
+              buttonClassName='font-bold fullWidth mx-0 custom-effect btn-success'
             />
           </Col>
         </Row>
