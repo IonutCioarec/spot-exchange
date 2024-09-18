@@ -17,21 +17,16 @@ interface PoolProps {
   token2Details: TokenValue;
 }
 
+const defaultTokenValues = {
+  image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
+  name: 'TOKEN',
+  price: 0,
+  decimals: 18
+}
+
 export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) => {
   const isMobile = useMobile();
   const [open, setOpen] = useState(false);
-  const token1DummyImg = 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png';
-  const token2DummyImg = 'https://tools.multiversx.com/assets-cdn/devnet/tokens/MEX-a659d0/icon.png';
-
-  const token1LiqPrice = token1Details?.price ? parseFloat(pair.liquidity_token1) * token1Details?.price : 0;
-  const token2LiqPrice = token2Details?.price ? parseFloat(pair.liquidity_token2) * token2Details?.price : 0;
-  const tokensLiquidityPrice = token1LiqPrice && token2LiqPrice ? token1LiqPrice + token2LiqPrice : 0;
-
-  const token1Img = (token1Details?.logo_url && token1Details?.logo_url !== 'N/A') ? token1Details?.logo_url : token1DummyImg;
-  const token2Img = (token2Details?.logo_url && token2Details?.logo_url !== 'N/A') ? token2Details?.logo_url : token2DummyImg;
-
-  const token1Decimals = token1Details?.decimals ? token1Details?.decimals : 18;
-  const token2Decimals = token2Details?.decimals ? token2Details?.decimals : 18;
 
   return (
     <Fragment>
@@ -41,25 +36,37 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
             {index + 1}
           </Col>
           <Col lg={1}>
-            <img src={token1Img} alt={pair.token1} className='d-inline' style={{ width: 30, height: 30 }} />
-            <img src={token2Img} alt={pair.token2} className='d-inline' style={{ width: 30, height: 30 }} />
+            <img
+              src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+              alt={pair.token1}
+              className='d-inline'
+              style={{ width: 30, height: 30 }}
+            />
+            <img
+              src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+              alt={pair.token2}
+              className='d-inline'
+              style={{ width: 30, height: 30 }}
+            />
           </Col>
           <Col lg={3}>
             <div className="d-inline-grid mb-0">
-              <p className="mb-0">{token1Details?.ticker ? token1Details?.ticker : 'TOKEN1'}</p>
-              <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${token1Details?.price ? formatSignificantDecimals(token1Details?.price) : '0'}</p>
+              <p className="mb-0">{token1Details?.ticker ?? defaultTokenValues.name}</p>
+              <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(token1Details?.price ?? defaultTokenValues.price)}
+              </p>
             </div>
             <div className="d-inline-grid mx-2 mb-0">
               <span>/</span>
             </div>
             <div className="d-inline-grid">
-              <p className="mb-0">{token2Details?.ticker ? token2Details?.ticker : 'TOKEN2'}</p>
-              <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${token2Details?.price ? formatSignificantDecimals(token2Details?.price) : '0'}</p>
+              <p className="mb-0">{token2Details?.ticker ?? defaultTokenValues.name}</p>
+              <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(token2Details?.price ?? defaultTokenValues.price)}
+              </p>
             </div>
           </Col>
           <Col lg={2}>
             <p className="mb-0 font-size-xxs text-silver">Liquidity</p>
-            ${denominatedAmountToIntlFormattedAmount(tokensLiquidityPrice, 18, 3)}
+            ${denominatedAmountToIntlFormattedAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}
           </Col>
           <Col lg={2} className="text-right">
             <p className="mb-0 font-size-xxs text-silver">Volume (24h)</p>
@@ -102,27 +109,37 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
 
                   <div className="d-flex justify-content-between mt-3">
                     <div>
-                      <p className="font-size-xs text-silver mb-1">{token1Details?.token_id ? token1Details?.token_id : 'Token1'}</p>
+                      <p className="font-size-xs text-silver mb-1">{token1Details?.token_id ?? defaultTokenValues.name}</p>
                       <div className="d-flex justfy-content-start">
-                        <p className="h5">{denominatedAmountToIntlFormattedAmount(pair.liquidity_token1, token1Decimals, 3)}</p>
-                        <img src={token1Img} alt={pair?.token1} className='ms-2' style={{ width: 25, height: 25 }} />
+                        <p className="h5">{denominatedAmountToIntlFormattedAmount(pair.liquidity_token1, token1Details?.decimals ?? defaultTokenValues.decimals, 3)}</p>
+                        <img
+                          src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                          alt={pair.token1}
+                          className='ms-2'
+                          style={{ width: 25, height: 25 }}
+                        />
                         <p className="h5 ms-1 mb-0">{token1Details?.ticker}</p>
                       </div>
-                      <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount(token1LiqPrice, 18, 3)}</p>
+                      <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1), 18, 3)}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-size-xs text-silver mb-1">{token2Details?.token_id ? token2Details?.token_id : 'Token2'}</p>
+                      <p className="font-size-xs text-silver mb-1">{token2Details?.token_id ?? defaultTokenValues.name}</p>
                       <div className="d-flex justfy-content-end">
-                        <p className="h5">{denominatedAmountToIntlFormattedAmount(pair.liquidity_token2, token2Decimals, 3)}</p>
-                        <img src={token2Img} alt={pair?.token2} className='ms-2' style={{ width: 25, height: 25 }} />
+                        <p className="h5">{denominatedAmountToIntlFormattedAmount(pair.liquidity_token2, token2Details?.decimals ?? defaultTokenValues.decimals, 3)}</p>
+                        <img
+                          src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                          alt={pair.token2}
+                          className='ms-2'
+                          style={{ width: 25, height: 25 }}
+                        />
                         <p className="h5 ms-1 mb-0">{token2Details?.ticker}</p>
                       </div>
-                      <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount(token2LiqPrice, 18, 3)}</p>
+                      <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount((token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}</p>
                     </div>
                   </div>
                   <PoolLiquidityBar
-                    token1Amount={Number(denominatedAmountToAmount(pair.liquidity_token1, token1Decimals, 3))}
-                    token2Amount={Number(denominatedAmountToAmount(pair.liquidity_token2, token2Decimals, 3))}
+                    token1Amount={Number(denominatedAmountToAmount(pair.liquidity_token1, token1Details?.decimals ?? defaultTokenValues.decimals, 3))}
+                    token2Amount={Number(denominatedAmountToAmount(pair.liquidity_token2, token2Details?.decimals ?? defaultTokenValues.decimals, 3))}
                   />
                 </div>
                 <Row className="g-2">
@@ -165,7 +182,7 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                     <p className="text-[#01b574] font-size-xxl font-bold mb-0">$67,66.456</p>
                   </div>
                 </div>
-                <div className="poolSubContainer px-4 py-3 mt-2">
+                <div className="pool-sub-container px-4 py-3 mt-2">
                   <p className="text-white font-size-lg font-bold mb-0">Actions</p>
                   <div className="d-flex justify-content-between align-items-center gap-3 mt-3">
                     <Button
