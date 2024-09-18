@@ -4,17 +4,14 @@ export default function PoolLiquidityBar({
   token1Amount,
   token2Amount,
 }: {
-  token1Amount: string;
-  token2Amount: string;
+  token1Amount: number;
+  token2Amount: number;
 }) {
-  // Convert the string amounts to numbers
-  const token1 = parseFloat(token1Amount);
-  const token2 = parseFloat(token2Amount);
 
   // Calculate percentages for both tokens
-  const total = token1 + token2;
-  let token1Percentage = total > 0 ? (token1 / total) * 100 : 0;
-  let token2Percentage = total > 0 ? (token2 / total) * 100 : 0;
+  const total = token1Amount + token2Amount;
+  let token1Percentage = total > 0 ? (token1Amount / total) * 100 : 0;
+  let token2Percentage = total > 0 ? (token2Amount / total) * 100 : 0;
 
   // Cap the token1, token2 min and max value for better bars display
   if (token1Percentage < 5) token1Percentage = 5;

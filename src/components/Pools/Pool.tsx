@@ -121,8 +121,8 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                     </div>
                   </div>
                   <PoolLiquidityBar
-                    token1Amount={denominatedAmountToAmount(pair?.liquidity_token1, token1Decimals, 3)}
-                    token2Amount={denominatedAmountToAmount(pair?.liquidity_token2, token2Decimals, 3)}
+                    token1Amount={Number(denominatedAmountToAmount(pair.liquidity_token1, token1Decimals, 3))}
+                    token2Amount={Number(denominatedAmountToAmount(pair.liquidity_token2, token2Decimals, 3))}
                   />
                 </div>
                 <Row className="g-2">
@@ -165,7 +165,7 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                     <p className="text-[#01b574] font-size-xxl font-bold mb-0">$67,66.456</p>
                   </div>
                 </div>
-                <div className="pool-sub-container px-4 py-3 mt-2">
+                <div className="poolSubContainer px-4 py-3 mt-2">
                   <p className="text-white font-size-lg font-bold mb-0">Actions</p>
                   <div className="d-flex justify-content-between align-items-center gap-3 mt-3">
                     <Button
