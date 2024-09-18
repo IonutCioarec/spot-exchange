@@ -28,8 +28,8 @@ const Pools = () => {
                 key={`pairs-${index}`}
                 pair={pair}
                 index={index}
-                token1Details={pairtokens[pair?.token1]}
-                token2Details={pairtokens[pair?.token2]}
+                token1Details={pairtokens[pair.token1]}
+                token2Details={pairtokens[pair.token2]}
               />
             ))}
           </div>
