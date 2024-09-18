@@ -97,7 +97,7 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
           <div className="mt-4" style={{ borderTop: '1px solid grey' }}>
             <Row className="mt-3 g-2">
               <Col lg={8}>
-                <div className="poolSubContainer px-4 py-3 ">
+                <div className="pool-sub-container px-4 py-3 ">
                   <p className="text-center text-silver">Pool Assets</p>
 
                   <div className="d-flex justify-content-between mt-3">
@@ -127,19 +127,19 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                 </div>
                 <Row className="g-2">
                   <Col lg={3} className="mt-3">
-                    <div className="poolSubContainer px-4 py-3 text-center">
+                    <div className="pool-sub-container px-4 py-3 text-center">
                       <p className="text-silver">Fees (24h)</p>
                       <p className="h3 mt-3 mb-0">$1234.8</p>
                     </div>
                   </Col>
                   <Col lg={3} className="mt-3">
-                    <div className="poolSubContainer px-4 py-3 text-center">
+                    <div className="pool-sub-container px-4 py-3 text-center">
                       <p className="text-silver">Holders</p>
                       <p className="h3 mt-3 mb-0">21</p>
                     </div>
                   </Col>
                   <Col lg={6} className="mt-3">
-                    <div className="poolSubContainer px-4 py-3 text-center">
+                    <div className="pool-sub-container px-4 py-3 text-center">
                       <p className="text-silver">LP Token</p>
                       <p className="h3 mt-3 mb-0">{pair.lp_token_id}</p>
                     </div>
@@ -147,7 +147,7 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                 </Row>
               </Col>
               <Col lg={4}>
-                <div className="poolSubContainer px-4 py-3">
+                <div className="pool-sub-container px-4 py-3">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <p className="text-white font-size-lg font-bold mb-0">Incoming Fee</p>
@@ -156,7 +156,7 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                     <p className="text-[#01b574] font-size-xxl font-bold mb-0">0.04%</p>
                   </div>
                 </div>
-                <div className="poolSubContainer px-4 py-3 mt-2">
+                <div className="pool-sub-container px-4 py-3 mt-2">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <p className="text-white font-size-lg font-bold mb-0">Your Liquidity</p>
@@ -165,7 +165,7 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                     <p className="text-[#01b574] font-size-xxl font-bold mb-0">$67,66.456</p>
                   </div>
                 </div>
-                <div className="poolSubContainer px-4 py-3 mt-2">
+                <div className="pool-sub-container px-4 py-3 mt-2">
                   <p className="text-white font-size-lg font-bold mb-0">Actions</p>
                   <div className="d-flex justify-content-between align-items-center gap-3 mt-3">
                     <Button
