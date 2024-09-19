@@ -3,18 +3,23 @@ import 'assets/scss/pools.scss';
 import useMobile from 'utils/responsive';
 import { Pair, TokenValue } from "types/backendTypes";
 import { useState } from "react";
-import { denominatedAmountToIntlFormattedAmount, denominatedAmountToAmount } from 'utils/formatters';
+import { denominatedAmountToIntlFormattedAmount, denominatedAmountToAmount, formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
 import { Button } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
-import { formatSignificantDecimals } from "utils/formatters";
 import PoolLiquidityBar from "./PoolLiquidityBar";
+import { getPercentageBigNumber, getAmountFromPercentageBigNumber } from "utils/calculs";
+import { useGetAccountInfo } from 'hooks';
 
 interface PoolProps {
   pair: Pair;
   index: number,
   token1Details: TokenValue;
   token2Details: TokenValue;
+  userToken1Balance: number;
+  userToken2Balance: number;
+  userLpTokenBalance: number;
+  lpTokenSupply: number;
 }
 
 const defaultTokenValues = {
@@ -24,9 +29,10 @@ const defaultTokenValues = {
   decimals: 18
 }
 
-export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) => {
+export const Pool = ({ pair, index, token1Details, token2Details, userToken1Balance, userToken2Balance, userLpTokenBalance, lpTokenSupply }: PoolProps) => {
   const isMobile = useMobile();
   const [open, setOpen] = useState(false);
+  const { address } = useGetAccountInfo();
 
   return (
     <Fragment>
@@ -105,7 +111,7 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
             <Row className="mt-3 g-2">
               <Col lg={8}>
                 <div className="pool-sub-container px-4 py-3 ">
-                  <p className="text-center text-silver">Pool Assets</p>
+                  <p className="text-center text-silver mt-2">Pool Assets</p>
 
                   <div className="d-flex justify-content-between mt-3">
                     <div>
@@ -137,40 +143,83 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                       <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount((token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}</p>
                     </div>
                   </div>
-                  <PoolLiquidityBar
-                    token1Amount={Number(denominatedAmountToAmount(pair.liquidity_token1, token1Details?.decimals ?? defaultTokenValues.decimals, 3))}
-                    token2Amount={Number(denominatedAmountToAmount(pair.liquidity_token2, token2Details?.decimals ?? defaultTokenValues.decimals, 3))}
-                  />
+                  <div className="mb-2">
+                    <PoolLiquidityBar
+                      token1Amount={Number(denominatedAmountToAmount(pair.liquidity_token1, token1Details?.decimals ?? defaultTokenValues.decimals, 3))}
+                      token2Amount={Number(denominatedAmountToAmount(pair.liquidity_token2, token2Details?.decimals ?? defaultTokenValues.decimals, 3))}
+                    />
+                  </div>
                 </div>
                 <Row className="g-2">
                   <Col lg={3} className="mt-3">
                     <div className="pool-sub-container px-4 py-3 text-center">
-                      <p className="text-silver">Fees (24h)</p>
-                      <p className="h3 mt-3 mb-0">$1234.8</p>
+                      <p className="text-silver">Fees (Total)</p>
+                      <p className="h3 mt-3 mb-0">$12.8M</p>
                     </div>
                   </Col>
                   <Col lg={3} className="mt-3">
                     <div className="pool-sub-container px-4 py-3 text-center">
-                      <p className="text-silver">Pool Fee</p>
-                      <p className="h3 mt-3 mb-0">0.4%</p>
+                      <p className="text-silver">Fees (24h)</p>
+                      <p className="h3 mt-3 mb-0">$123.8k</p>
                     </div>
                   </Col>
-                  <Col lg={6} className="mt-3">
+                  <Col lg={3} className="mt-3">
                     <div className="pool-sub-container px-4 py-3 text-center">
-                      <p className="text-silver">LP Token</p>
-                      <p className="h3 mt-3 mb-0">{pair.lp_token_id}</p>
+                      <p className="text-silver">Your Fee (Total)</p>
+                      <p className="h3 mt-3 mb-0">${address ? '4M' : '0'}</p>
+                    </div>
+                  </Col>
+                  <Col lg={3} className="mt-3">
+                    <div className="pool-sub-container px-4 py-3 text-center">
+                      <p className="text-silver">Your Fee (24h)</p>
+                      <p className="h3 mt-3 mb-0">${address ? '48k' : '0'}</p>
                     </div>
                   </Col>
                 </Row>
               </Col>
               <Col lg={4}>
                 <div className="pool-sub-container px-4 py-3">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <p className="text-white font-size-lg font-bold mb-0">Pool Share</p>
-                      <p className="small text-silver mb-0 mt-1">Trading fee percentage</p>
+                  <div className="d-flex justify-content-between align-items-baseline">
+                    <p className="text-white font-size-lg font-bold mb-0">Pool Share</p>
+                    <p className="text-[#01b574] font-size-xxl font-bold mb-0 text-right">{intlNumberFormat(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3, 3)}%</p>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-baseline">
+                    <p className="small text-silver mb-0 mt-1">{token1Details?.token_id ?? defaultTokenValues.name}</p>
+                    <div className="d-flex justfy-content-end">
+                      <p className="font-size-xs mb-0">
+                        {intlNumberFormat(
+                          getAmountFromPercentageBigNumber(
+                            getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
+                            Number(denominatedAmountToAmount((pair.liquidity_token1), (token1Details?.decimals ?? 18), 3))
+                          ), 3, 3)
+                        }
+                      </p>
+                      <img
+                        src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                        alt={pair.token1}
+                        className='ms-2'
+                        style={{ width: 20, height: 20 }}
+                      />
                     </div>
-                    <p className="text-[#01b574] font-size-xxl font-bold mb-0">7.28%</p>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-baseline">
+                    <p className="small text-silver mb-0">{token2Details?.token_id ?? defaultTokenValues.name}</p>
+                    <div className="d-flex justify-content-end">
+                      <p className="font-size-xs mb-0">
+                        {intlNumberFormat(
+                          getAmountFromPercentageBigNumber(
+                            getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
+                            Number(denominatedAmountToAmount((pair.liquidity_token2), (token2Details?.decimals ?? 18), 3))
+                          ), 3, 3)
+                        }
+                      </p>
+                      <img
+                        src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                        alt={pair.token2}
+                        className='ms-2'
+                        style={{ width: 20, height: 20 }}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="pool-sub-container px-4 py-3 mt-2">
@@ -179,12 +228,19 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                       <p className="text-white font-size-lg font-bold mb-0">Your Liquidity</p>
                       <p className="small text-silver mb-0 mt-1">Total value</p>
                     </div>
-                    <p className="text-[#01b574] font-size-xxl font-bold mb-0">$67,66.456</p>
+                    <p className="text-[#01b574] font-size-xxl font-bold mb-0">
+                      ${intlNumberFormat(
+                        getAmountFromPercentageBigNumber(
+                          getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
+                          Number(denominatedAmountToAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3))
+                        ), 3, 3)
+                      }
+                    </p>
                   </div>
                 </div>
-                <div className="pool-sub-container px-4 py-3 mt-2">
+                <div className="pool-sub-container px-4 pt-3 pb-2 mt-2">
                   <p className="text-white font-size-lg font-bold mb-0">Actions</p>
-                  <div className="d-flex justify-content-between align-items-center gap-3 mt-3">
+                  <div className="d-flex justify-content-between align-items-center gap-3 mt-1 mb-1">
                     <Button
                       className="custom-effect btn-outline-warning text-uppercase font-bold"
                       variant="outlined"
@@ -208,6 +264,6 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
           </div>
         )}
       </div>
-    </Fragment>
+    </Fragment >
   );
 }

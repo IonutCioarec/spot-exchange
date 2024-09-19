@@ -26,7 +26,7 @@ export const UserStateLoader = () => {
     loadState().catch((err) => {
       console.error('Error loading user state:', err);
     });
-  }, [dispatch, tokenIds, hasPendingTransactions]);
+  }, [dispatch, tokenIds, hasPendingTransactions, address]);
 
   // Refresh data at interval
   useEffect(() => {
