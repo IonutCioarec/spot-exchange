@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import pairsReducer from './slices/pairsSlice';
 import tokensReducer from './slices/tokensSlice';
+import userTokensReducer from './slices/userTokensSlice';
 
 // Create the Redux store
 const store = configureStore({
   reducer: {
     pairs: pairsReducer,
     tokens: tokensReducer,
+    userTokens: userTokensReducer
   },
 });
 
