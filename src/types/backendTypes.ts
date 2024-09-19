@@ -15,8 +15,21 @@ export interface Pair {
   updated_at: string;
   fee: number;
 }
+export interface TokenValue {
+  token_id: string,
+  ticker: string,
+  logo_url: string,
+  has_branding: boolean,
+  decimals: number,
+  is_lp_token: boolean,
+  price: number | null,
+  supply: string
+}
 
-export type Token = string;
+export interface Token {
+  lp_tokens: TokenValue[],
+  pair_tokens: TokenValue[]
+}
 
 export interface FormattedRawValue {
   formatted: string;
@@ -46,6 +59,6 @@ export interface PairsState {
 }
 
 export interface TokensState {
-  tokens: Token[];
+  tokens: Token;
   status: 'loading' | 'succeeded' | 'failed';
 }

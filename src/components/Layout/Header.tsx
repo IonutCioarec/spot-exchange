@@ -39,7 +39,7 @@ export const Header = () => {
 
   return (
     <>
-      <Navbar expanded={expanded} collapseOnSelect expand="lg" className="pl-6 pr-6 pt-2 pb-2" style={{ marginBottom: '0', minHeight: '72px', borderBottom: '1px solid #2e7d32' }}>
+      <Navbar expanded={expanded} collapseOnSelect expand="lg" className="pl-6 pr-6 pt-2 pb-2" style={{ marginBottom: '0', minHeight: '72px', borderBottom: '1px solid #01b574' }}>
         <Navbar.Brand as={Link} to={routeNames.home} className='pl-12 pr-4'>
           <p className={`text-brand ml-2 mb-0 mt-0 ${isMobile ? '' : 'ml-8'}`}>DEX</p>
         </Navbar.Brand>
@@ -58,9 +58,9 @@ export const Header = () => {
           </Nav>
           <Nav className={`ml-auto ${isMobile ? '' : 'mr-12'}`} onSelect={handleSelect}>
             {!isLoggedIn ? (
-              <Button component={Link} to="/unlock" variant='contained' size='medium' color='success' className='custom-btn font-size-sm mb-0 mt-0'> Connect Wallet</Button>
+              <Button component={Link} to="/unlock" variant='contained' size='medium' color='success' className='custom-success-btn font-size-sm mb-0 mt-0'> Connect Wallet</Button>
             ) : (
-              <Button onClick={handleLogout} variant='contained' size='medium' color='success' className='custom-btn font-size-xs mb-0 mt-0'> Disconnect</Button>
+              <Button onClick={handleLogout} variant='contained' size='medium' color='success' className='custom-success-btn font-size-xs mb-0 mt-0'> Disconnect</Button>
             )}
           </Nav>
         </Navbar.Collapse>

@@ -43,6 +43,10 @@
   font-size: 1.25rem !important;
 }
 
+.font-size-xxl {
+  font-size: 1.5rem !important;
+}
+
 .line-height-sm {
   line-height: 1.25 !important;
 }
@@ -328,7 +332,7 @@ h6 {
   background-color: transparent !important;
   border: 2px solid #4318ff !important;
   color: #4318ff !important;
-  font-weight: 500 !important;
+  font-weight: 500;
   transition: all 150ms ease-in 0s !important;
 }
 
@@ -336,7 +340,7 @@ h6 {
   background-color: transparent !important;
   border: 2px solid #0f1535 !important;
   color: #0f1535 !important;
-  font-weight: 500 !important;
+  font-weight: 500;
   transition: all 150ms ease-in 0s !important;
 }
 
@@ -344,7 +348,7 @@ h6 {
   background-color: transparent !important;
   border: 2px solid #0075ff !important;
   color: #0075ff !important;
-  font-weight: 500 !important;
+  font-weight: 500;
   transition: all 150ms ease-in 0s !important;
 }
 
@@ -352,7 +356,7 @@ h6 {
   background-color: transparent !important;
   border: 2px solid #01b574 !important;
   color: #01b574 !important;
-  font-weight: 500 !important;
+  font-weight: 500;
   transition: all 150ms ease-in 0s !important;
 }
 
@@ -360,7 +364,7 @@ h6 {
   background-color: transparent !important;
   border: 2px solid #ffb547 !important;
   color: #ffb547 !important;
-  font-weight: 500 !important;
+  font-weight: 500;
   transition: all 150ms ease-in 0s !important;
 }
 
@@ -368,7 +372,7 @@ h6 {
   background-color: transparent !important;
   border: 2px solid #e31a1a !important;
   color: #e31a1a !important;
-  font-weight: 500 !important;
+  font-weight: 500;
   transition: all 150ms ease-in 0s !important;
 }
 
@@ -376,7 +380,7 @@ h6 {
   background-color: transparent !important;
   border: 2px solid #e9ecef !important;
   color: #e9ecef !important;
-  font-weight: 500 !important;
+  font-weight: 500;
   transition: all 150ms ease-in 0s !important;
 }
 
@@ -384,7 +388,7 @@ h6 {
   background-color: transparent !important;
   border: 2px solid #344767 !important;
   color: #344767 !important;
-  font-weight: 500 !important;
+  font-weight: 500;
   transition: all 150ms ease-in 0s !important;
 }
 
@@ -2409,4 +2413,60 @@ h6 {
 
 .fullWidth {
   width: 100%;
+}
+
+.m-l-n-xxs {
+  margin-left: -1px;
+}
+
+.m-l-n-xs {
+  margin-left: -5px;
+}
+
+.m-l-n-sm {
+  margin-left: -10px;
+}
+
+.m-l-n-md {
+  margin-left: -15px;
+}
+
+.m-l-n-lg {
+  margin-left: -20px;
+}
+
+.m-l-n-xl {
+  margin-left: -25px;
+}
+
+.m-l-n-xxl {
+  margin-left: -30px;
+}
+
+.m-r-n-xxs {
+  margin-right: -1px;
+}
+
+.m-r-n-xs {
+  margin-right: -5px;
+}
+
+.m-r-n-sm {
+  margin-right: -10px;
+}
+
+.m-r-n-md {
+  margin-right: -15px;
+}
+
+.m-r-n-lg {
+  margin-right: -20px;
+}
+
+.m-r-n-xl {
+  margin-right: -25px;
+}
+
+.m-r-n-xxl {
+  margin-right: -30px;
 }

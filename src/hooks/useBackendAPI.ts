@@ -18,16 +18,19 @@ export const useBackendAPI = () => {
   };
 
   // get the list of the tokens available to swap
-  const getTokens = async (): Promise<Token[]> => {
+  const getTokens = async (): Promise<Token> => {
     try {
-      const response = await axios.get<Token[]>(`${dexAPI}/tokens`, {
+      const response = await axios.get<Token>(`${dexAPI}/tokens`, {
         headers: { Accept: 'application/json' },
       });
       return response.data;
     } catch (e) {
       console.error(e);
     }
-    return [];
+    return {
+      lp_tokens: [],
+      pair_tokens: []
+    };
   };
 
   // get the price of swaping token1 -> token2

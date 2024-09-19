@@ -28,3 +28,18 @@
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
 }
+.text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ticker-text {
+  min-width: 100px; /* Adjust width as needed to align with the price */
+  text-align: left;
+}
+
+.price-text {
+  min-width: 100px; /* Same width as ticker-text for alignment */
+  text-align: right; /* Align price to the right */
+}
