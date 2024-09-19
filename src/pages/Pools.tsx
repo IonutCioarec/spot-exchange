@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { selectPairs, selectPairsStatus } from 'storeManager/slices/pairsSlice';
 import { selectLpTokens, selectPairTokensById } from 'storeManager/slices/tokensSlice';
+import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import Loader from 'components/Loader';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Pair } from 'types/backendTypes';
@@ -12,7 +13,7 @@ const Pools = () => {
   const pairtokens = useSelector(selectPairTokensById);
   const lptokens = useSelector(selectLpTokens);
   const pairsStatus = useSelector(selectPairsStatus);
-  //console.log(JSON.stringify(pairs, null, 2));
+  const userTokens = useSelector(selectUserTokens);
 
   if (pairsStatus === 'loading') {
     return <Loader />;
