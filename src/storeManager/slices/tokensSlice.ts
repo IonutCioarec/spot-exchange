@@ -54,4 +54,13 @@ export const selectPairTokensById = createSelector(
   }
 );
 
+// Memoized selector combining lp_tokens and pair_tokens
+export const selectTokenIds = createSelector(
+  [selectLpTokens, selectPairTokens],
+  (lp_tokens, pair_tokens) => [
+    ...lp_tokens,
+    ...pair_tokens
+  ].map((token) => token.token_id)
+);
+
 export default tokensSlice.reducer;
