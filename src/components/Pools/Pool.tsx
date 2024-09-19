@@ -151,8 +151,8 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                   </Col>
                   <Col lg={3} className="mt-3">
                     <div className="pool-sub-container px-4 py-3 text-center">
-                      <p className="text-silver">Holders</p>
-                      <p className="h3 mt-3 mb-0">21</p>
+                      <p className="text-silver">Pool Fee</p>
+                      <p className="h3 mt-3 mb-0">0.4%</p>
                     </div>
                   </Col>
                   <Col lg={6} className="mt-3">
@@ -167,10 +167,10 @@ export const Pool = ({ pair, index, token1Details, token2Details }: PoolProps) =
                 <div className="pool-sub-container px-4 py-3">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
-                      <p className="text-white font-size-lg font-bold mb-0">Incoming Fee</p>
+                      <p className="text-white font-size-lg font-bold mb-0">Pool Share</p>
                       <p className="small text-silver mb-0 mt-1">Trading fee percentage</p>
                     </div>
-                    <p className="text-[#01b574] font-size-xxl font-bold mb-0">0.04%</p>
+                    <p className="text-[#01b574] font-size-xxl font-bold mb-0">7.28%</p>
                   </div>
                 </div>
                 <div className="pool-sub-container px-4 py-3 mt-2">
