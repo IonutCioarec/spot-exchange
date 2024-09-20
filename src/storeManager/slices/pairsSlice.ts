@@ -35,23 +35,35 @@ export const selectViewMode = (state: any) => state.pairs.viewMode;
 
 // Filtered pairs based on viewMode
 export const selectFilteredPairs = createSelector(
-  [selectPairs, selectViewMode, selectUserTokens, (state, address) => address],
-  (pairs, viewMode, userTokens, address) => {
+  [selectPairs, selectViewMode, selectUserTokens, (state, address) => address, (state, address, searchInput) => searchInput],
+  (pairs, viewMode, userTokens, address, searchInput) => {
+    let filteredPairs = pairs;
     switch (viewMode) {
       case 'assets':
-        return pairs.filter((pair: Pair) => {
+        filteredPairs = pairs.filter((pair: Pair) => {
           const userBalance = userTokens[pair.lp_token_id]?.balance ?? 0;
           return userBalance > 0;
         });
-
+        break;
       case 'created':
-        return pairs.filter((pair: Pair) => pair.creator_address === address);
-
+        filteredPairs = pairs.filter((pair: Pair) => pair.creator_address === address);
+        break;
       case 'all':
       default:
-        return pairs;
+        break;
     }
+
+    if (searchInput) {
+      const lowerCaseSearchInput = searchInput.toLowerCase();
+      filteredPairs = filteredPairs.filter((pair: Pair) => {
+        const token1Prefix = pair.token1.split('-')[0].toLowerCase();
+        const token2Prefix = pair.token2.split('-')[0].toLowerCase();
+        return token1Prefix.includes(lowerCaseSearchInput) || token2Prefix.includes(lowerCaseSearchInput);
+      });
+    }
+    return filteredPairs;
   }
 );
+
 
 export default pairsSlice.reducer;

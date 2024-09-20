@@ -18,16 +18,17 @@ import { useGetAccountInfo } from 'hooks';
 
 const Pools = () => {
   const { address } = useGetAccountInfo();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [viewMode, setViewModeState] = useState<'all' | 'assets' | 'created'>('all');
+  const [searchInput, setSearchInput] = useState<string>('');
+  const loadingTime = 300;
+
   const dispatch = useDispatch();
-  const pairs = useSelector((state) => selectFilteredPairs(state, address));
+  const pairs = useSelector((state) => selectFilteredPairs(state, address, searchInput));
   const pairtokens = useSelector(selectPairTokensById);
   const lptokens = useSelector(selectLpTokensById);
   const pairsStatus = useSelector(selectPairsStatus);
   const userTokens = useSelector(selectUserTokens);
-
-  const [loading, setLoading] = useState(false);
-  const [viewMode, setViewModeState] = useState('all');
-  console.log(JSON.stringify(pairs, null, 2));
 
   const handleAssetsPairsToggle = async () => {
     setLoading(true);
@@ -35,18 +36,26 @@ const Pools = () => {
     setViewModeState(newViewMode);
     dispatch(setViewMode(newViewMode));
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, loadingTime));
     setLoading(false);
   };
 
-  const handleCreatedPairsToggle = async () => {+
+  const handleCreatedPairsToggle = async () => {
     setLoading(true);
     const newViewMode = viewMode === 'created' ? 'all' : 'created';
     setViewModeState(newViewMode);
     dispatch(setViewMode(newViewMode));
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, loadingTime));
     setLoading(false);
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
+    setSearchInput(event.target.value);
+    setTimeout(() => {
+      setLoading(false);
+    }, loadingTime);
   };
 
 
@@ -81,6 +90,8 @@ const Pools = () => {
                 size="small"
                 variant="outlined"
                 className="ms-2 mb-2"
+                value={searchInput}
+                onChange={handleSearchChange}
                 InputProps={{
                   style: {
                     backgroundColor: '#17181d',
