@@ -56,7 +56,7 @@ export interface SwapPrice {
 export interface PairsState {
   pairs: Pair[];
   status: 'loading' | 'succeeded' | 'failed';
-  viewMode: 'all' | 'my'
+  viewMode: 'all' | 'assets' | 'created'
 }
 
 export interface TokensState {

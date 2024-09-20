@@ -14,10 +14,12 @@ import { Button } from '@mui/material';
 import { isEmpty } from '@multiversx/sdk-core/out';
 import TextField from '@mui/material/TextField';
 import { Search } from '@mui/icons-material';
+import { useGetAccountInfo } from 'hooks';
 
 const Pools = () => {
+  const { address } = useGetAccountInfo();
   const dispatch = useDispatch();
-  const pairs = useSelector(selectFilteredPairs);
+  const pairs = useSelector((state) => selectFilteredPairs(state, address));
   const pairtokens = useSelector(selectPairTokensById);
   const lptokens = useSelector(selectLpTokensById);
   const pairsStatus = useSelector(selectPairsStatus);
@@ -25,11 +27,21 @@ const Pools = () => {
 
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewModeState] = useState('all');
-  //console.log(JSON.stringify(pairs, null, 2));
+  console.log(JSON.stringify(pairs, null, 2));
 
-  const handleAssetsToggle = async () => {
+  const handleAssetsPairsToggle = async () => {
     setLoading(true);
-    const newViewMode = viewMode === 'all' ? 'my' : 'all';
+    const newViewMode = viewMode === 'assets' ? 'all' : 'assets';
+    setViewModeState(newViewMode);
+    dispatch(setViewMode(newViewMode));
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    setLoading(false);
+  };
+
+  const handleCreatedPairsToggle = async () => {+
+    setLoading(true);
+    const newViewMode = viewMode === 'created' ? 'all' : 'created';
     setViewModeState(newViewMode);
     dispatch(setViewMode(newViewMode));
 
@@ -49,17 +61,18 @@ const Pools = () => {
                 variant="outlined"
                 size="small"
                 sx={{ minWidth: '120px' }}
+                onClick={handleCreatedPairsToggle}
               >
-                Your Pools
+                {viewMode === 'created' ? 'All Pools' : 'Your Pools'}
               </Button>
               <Button
                 className="custom-effect btn-dark2 text-uppercase text-capitalize mb-2 ms-2"
                 variant="outlined"
                 size="small"
                 sx={{ minWidth: '120px' }}
-                onClick={handleAssetsToggle}
+                onClick={handleAssetsPairsToggle}
               >
-                {viewMode === 'all' ? 'Your Assets' : 'All Assets'}
+                {viewMode === 'assets' ? 'All Assets' : 'Your Assets'}
               </Button>
               <TextField
                 id="outlined-search"

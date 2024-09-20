@@ -20,7 +20,7 @@ const pairsSlice = createSlice({
     setStatus: (state, action: PayloadAction<'loading' | 'succeeded' | 'failed'>) => {
       state.status = action.payload;
     },
-    setViewMode: (state, action: PayloadAction<'all' | 'my'>) => {
+    setViewMode: (state, action: PayloadAction<'all' | 'assets' | 'created'>) => {
       state.viewMode = action.payload;
     },
   },
@@ -35,17 +35,22 @@ export const selectViewMode = (state: any) => state.pairs.viewMode;
 
 // Filtered pairs based on viewMode
 export const selectFilteredPairs = createSelector(
-  [selectPairs, selectViewMode, selectUserTokens],
-  (pairs, viewMode, userTokens) => {
-    if (viewMode === 'my') {
-      // Filter pairs where user has LP tokens
-      return pairs.filter((pair: Pair) => {
-        const userBalance = userTokens[pair.lp_token_id]?.balance ?? 0;
-        return userBalance > 0;
-      });
+  [selectPairs, selectViewMode, selectUserTokens, (state, address) => address],
+  (pairs, viewMode, userTokens, address) => {
+    switch (viewMode) {
+      case 'assets':
+        return pairs.filter((pair: Pair) => {
+          const userBalance = userTokens[pair.lp_token_id]?.balance ?? 0;
+          return userBalance > 0;
+        });
+
+      case 'created':
+        return pairs.filter((pair: Pair) => pair.creator_address === address);
+
+      case 'all':
+      default:
+        return pairs;
     }
-    // If viewMode is 'all', return all pairs
-    return pairs;
   }
 );
 
