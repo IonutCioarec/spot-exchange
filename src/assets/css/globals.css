@@ -2470,3 +2470,33 @@ h6 {
 .m-r-n-xxl {
   margin-right: -30px;
 }
+
+.btn-dark2 {
+  background-color: #17181d !important;
+  border-color: #17181d !important;
+  color: white !important;
+  transition: all 150ms ease-in 0s !important;
+}
+
+.btn-outline-dark2:hover,
+.btn-dark2:active {
+  background-color: #101116 !important;
+  border-color: #101116 !important;
+  color: white !important;
+  transform: scale(1.03);
+}
+
+.btn-dark3 {
+  background-color: #282933 !important;
+  border-color: #282933 !important;
+  color: white !important;
+  transition: all 150ms ease-in 0s !important;
+}
+
+.btn-outline-dark3:hover,
+.btn-dark3:active {
+  background-color: #202128 !important; /* Darker shade for hover/active state */
+  border-color: #202128 !important;
+  color: white !important;
+  transform: scale(1.03);
+}
