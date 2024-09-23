@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 import 'assets/css/header.css';
 import { useGetIsLoggedIn } from 'hooks'
 import { logout } from 'helpers';
-import useMobile from 'utils/responsive';
+import {useMobile} from 'utils/responsive';
 
 
 export const Header = () => {
