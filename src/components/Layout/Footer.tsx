@@ -2,7 +2,7 @@ import HeartIcon from 'assets/img/heart.svg?react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className=' bottom-0 left-0 w-full text-center small text-white p-1' style={{ borderTop: '1px solid #01b574' }}>
+    <footer className=' bottom-0 left-0 w-full text-center small text-white p-1' style={{ borderTop: '1px solid #01b574', backgroundColor: '#0e140f' }}>
       <div className='d-flex'>
         <div className='mx-auto w-full max-w-prose pb-2 pt-2 pl-6 pr-6'>
           <div className='flex flex-col items-center'>

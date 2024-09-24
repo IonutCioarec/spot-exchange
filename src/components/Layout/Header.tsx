@@ -160,7 +160,7 @@ export const Header = () => {
         )}
       </Navbar>
       {isMobile && (
-        <div className="bottom-nav">
+        <div className="bottom-nav" style={{borderTop: '1px solid #01b574'}}>
           <div className="nav-items">
             <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
               <AnalyticsIcon />
