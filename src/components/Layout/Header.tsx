@@ -15,6 +15,7 @@ import PoolIcon from '@mui/icons-material/Pool'; // Custom pool icon representat
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import LogoutIcon from '@mui/icons-material/Logout';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 
 export const Header = () => {
@@ -45,10 +46,10 @@ export const Header = () => {
         expanded={expanded}
         collapseOnSelect
         expand="lg"
-        className="pl-6 pr-6 pt-2 pb-2"
+        className="pl-6 pr-6 pt-0 pb-0"
         style={{
           marginBottom: '0',
-          minHeight: '72px',
+          minHeight: '52px',
           borderBottom: '1px solid #01b574'
         }}
       >
@@ -75,7 +76,9 @@ export const Header = () => {
                 className={`mx-1 ${location.pathname === '/' ? 'active' : ''}`}
                 onClick={handleSelect}
               >
-                <p className="nav-link mb-0 mt-0 link">Home</p>
+                <p className="nav-link mb-0 mt-0 link font-size-sm">
+                  <AnalyticsIcon className='nav-link-icon' />Dashboard
+                </p>
               </Nav.Link>
               <Nav.Link
                 as={Link}
@@ -83,7 +86,9 @@ export const Header = () => {
                 className={`mx-1 ${location.pathname === '/swap' ? 'active' : ''}`}
                 onClick={handleSelect}
               >
-                <p className="nav-link mb-0 mt-0 link">Swap</p>
+                <p className="nav-link mb-0 mt-0 link font-size-sm">
+                  <SwapHorizIcon className='nav-link-icon' />Swap
+                </p>
               </Nav.Link>
               <Nav.Link
                 as={Link}
@@ -91,7 +96,9 @@ export const Header = () => {
                 className={`mx-1 ${location.pathname === '/pools' ? 'active' : ''}`}
                 onClick={handleSelect}
               >
-                <p className="nav-link mb-0 mt-0 link">Pools</p>
+                <p className="nav-link mb-0 mt-0 link font-size-sm">
+                  <WorkspacesIcon className='nav-link-icon' />Pools
+                </p>
               </Nav.Link>
             </Nav>
             <Nav className={`ml-auto ${isMobile ? '' : 'mr-12'}`} onSelect={handleSelect}>
@@ -102,7 +109,7 @@ export const Header = () => {
                   variant="contained"
                   size="medium"
                   color="success"
-                  className="custom-success-btn font-size-sm mb-0 mt-0"
+                  className="custom-success-btn font-size-xs mb-0 mt-0"
                 >
                   Connect Wallet
                 </Button>
@@ -133,7 +140,7 @@ export const Header = () => {
                   variant="contained"
                   size="medium"
                   color="success"
-                  className="custom-success-btn font-size-sm mb-0 mt-0"
+                  className="custom-success-btn font-size-xs mb-0 mt-0"
                 >
                   Connect Wallet
                 </Button>
@@ -156,8 +163,8 @@ export const Header = () => {
         <div className="bottom-nav">
           <div className="nav-items">
             <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-              <HomeIcon />
-              <p className='mb-0'>Home</p>
+              <AnalyticsIcon />
+              <p className='mb-0'>Dashboard</p>
             </Link>
             <Link
               to="/swap"

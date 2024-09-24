@@ -7,7 +7,7 @@
 .nav-link {
   margin-bottom: 0;
   min-width: 60px;
-  color: white !important;
+  color: rgb(241, 234, 234) !important;
   font-family: 'Plain', sans-serif;
   text-transform: capitalize;
   font-size: 18px;
@@ -15,12 +15,23 @@
   line-height: 130%;
 }
 
+.nav-link.active::before {
+  content: ''; /* Down arrow */
+  color: #01b574; /* Arrow color */
+  position: relative;
+  display: block;
+  top: -9px; /* Adjust the position of the arrow */
+  text-align: center; /* Center the arrow */
+  margin-bottom: -2px;
+  border-bottom: 2px solid
+}
+
+
 .link:hover,
 .link:focus,
 .link:active,
 .active .link {
-  /* border-bottom: 1px solid #2e7d32; */
-  border-bottom: 0px solid transparent;
+  color: #01b574 !important;
 }
 
 .custom-toggler .navbar-toggler-icon {
@@ -29,4 +40,11 @@
 
 .navbar-toggler {
   border: none !important;
+}
+
+.nav-link-icon{
+  margin-right: 5px;
+  margin-left: -5px;
+  margin-top: -5px;
+  font-size: 18px !important;
 }
