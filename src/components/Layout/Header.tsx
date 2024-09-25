@@ -50,7 +50,7 @@ export const Header = () => {
         style={{
           marginBottom: '0',
           minHeight: '52px',
-          borderBottom: '1px solid #01b574'
+          borderBottom: '2px solid #0c462f'
         }}
       >
         <Navbar.Brand as={Link} to={routeNames.home} className="pl-12 pr-4">
@@ -109,7 +109,7 @@ export const Header = () => {
                   variant="contained"
                   size="medium"
                   color="success"
-                  className="custom-success-btn font-size-xs mb-0 mt-0"
+                  className="btn-green3 text-capitalize font-size-sm mb-0 mt-0"
                 >
                   Connect Wallet
                 </Button>
@@ -119,7 +119,7 @@ export const Header = () => {
                   variant="contained"
                   size="medium"
                   color="success"
-                  className="custom-success-btn font-size-xs mb-0 mt-0"
+                  className="btn-green3 text-capitalize font-size-sm mb-0 mt-0"
                 >
                   Disconnect
                 </Button>
@@ -140,7 +140,7 @@ export const Header = () => {
                   variant="contained"
                   size="medium"
                   color="success"
-                  className="custom-success-btn font-size-xs mb-0 mt-0"
+                  className="btn-green3 text-capitalize font-size-sm mb-0 mt-0"
                 >
                   Connect Wallet
                 </Button>
@@ -150,7 +150,7 @@ export const Header = () => {
                   variant="contained"
                   size="medium"
                   color="success"
-                  className="custom-success-btn font-size-xs mb-0 mt-0"
+                  className="btn-green3 text-capitalize font-size-sm mb-0 mt-0"
                 >
                   Disconnect
                 </Button>
@@ -160,7 +160,7 @@ export const Header = () => {
         )}
       </Navbar>
       {isMobile && (
-        <div className="bottom-nav" style={{borderTop: '1px solid #01b574'}}>
+        <div className="bottom-nav" style={{borderTop: '1px solid #1a9765'}}>
           <div className="nav-items">
             <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
               <AnalyticsIcon />

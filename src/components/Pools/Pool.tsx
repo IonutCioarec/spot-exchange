@@ -82,7 +82,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             </Col>
             <Col lg={3} className="text-right">
               <Button
-                className="custom-effect btn-success"
+                className="btn-green3 text-capitalize"
                 variant="outlined"
                 size="small"
                 color="success"
@@ -98,7 +98,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 {open ? <span className="m-l-n-xs">Collapse</span> : <span className="m-l-n-xs">Expand</span>}
               </Button>
               <Button
-                className="ms-2 custom-effect btn-success"
+                className="ms-2 btn-green3 text-capitalize"
                 variant="outlined"
                 size="small"
                 color="success"
@@ -183,7 +183,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   <div className="pool-sub-container px-4 py-3">
                     <div className="d-flex justify-content-between align-items-baseline">
                       <p className="text-white font-size-lg font-bold mb-0">Pool Share</p>
-                      <p className="text-[#01b574] font-size-xxl font-bold mb-0 text-right">{intlNumberFormat(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3, 3)}%</p>
+                      <p className="text-white font-size-xxl font-bold mb-0 text-right">{intlNumberFormat(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3, 3)}%</p>
                     </div>
                     <div className="d-flex justify-content-between align-items-baseline">
                       <p className="small text-silver mb-0 mt-1">{token1Details?.token_id ?? defaultTokenValues.name}</p>
@@ -230,7 +230,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         <p className="text-white font-size-lg font-bold mb-0">Your Liquidity</p>
                         <p className="small text-silver mb-0 mt-1">Total value</p>
                       </div>
-                      <p className="text-[#01b574] font-size-xxl font-bold mb-0">
+                      <p className="text-white font-size-xxl font-bold mb-0">
                         ${intlNumberFormat(
                           getAmountFromPercentageBigNumber(
                             getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
@@ -244,7 +244,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     <p className="text-white font-size-lg font-bold mb-0">Actions</p>
                     <div className="d-flex justify-content-between align-items-center gap-3 mt-1 mb-1">
                       <Button
-                        className="custom-effect btn-outline-warning text-uppercase font-bold"
+                        className="btn-outline-warning text-uppercase font-bold"
                         variant="outlined"
                         size="small"
                         fullWidth
@@ -252,7 +252,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         Withdraw
                       </Button>
                       <Button
-                        className="custom-effect btn-outline-success text-uppercase font-bold"
+                        className="btn-outline-success text-uppercase font-bold"
                         variant="outlined"
                         size="small"
                         fullWidth
@@ -322,7 +322,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           <Row className="mt-2 g-2">
             <Col xs={6}>
               <Button
-                className="custom-effect btn-success"
+                className="btn-green3 text-capitalize"
                 variant="outlined"
                 size="small"
                 color="success"
@@ -341,7 +341,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             </Col>
             <Col xs={6}>
               <Button
-                className="custom-effect btn-success"
+                className="btn-green3 text-capitalize"
                 variant="outlined"
                 size="small"
                 color="success"
@@ -389,7 +389,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             <div className="pool-sub-container p-2 mt-1">
               <div className="d-flex justify-content-between align-items-center">
                 <p className="text-white font-size-sm font-bold mb-0">Pool Share</p>
-                <p className="text-[#01b574] font-size-sm font-bold mb-0 text-right">{intlNumberFormat(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3, 3)}%</p>
+                <p className="text-white font-size-sm font-bold mb-0 text-right">{intlNumberFormat(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3, 3)}%</p>
               </div>
               <div className="d-flex justify-content-between align-items-baseline">
                 <p className="small text-silver font-size-xs mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
@@ -435,7 +435,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 <div>
                   <p className="text-white font-size-sm font-bold mb-0">Your Liquidity</p>
                 </div>
-                <p className="text-[#01b574] font-size-sm font-bold mb-0">
+                <p className="text-white font-size-sm font-bold mb-0">
                   ${intlNumberFormat(
                     getAmountFromPercentageBigNumber(
                       getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
@@ -448,7 +448,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             <div className="pool-sub-container p-2 mt-1">
               <div className="d-flex justify-content-between align-items-center gap-2">
                 <Button
-                  className="custom-effect font-size-xs btn-outline-warning text-uppercase font-bold"
+                  className="font-size-xs btn-outline-warning text-uppercase font-bold"
                   variant="outlined"
                   size="small"
                   fullWidth
@@ -456,7 +456,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   Withdraw
                 </Button>
                 <Button
-                  className="custom-effect font-size-xs btn-outline-success text-uppercase font-bold"
+                  className="font-size-xs btn-outline-success text-uppercase font-bold"
                   variant="outlined"
                   size="small"
                   fullWidth

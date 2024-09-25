@@ -70,9 +70,9 @@ const Pools = () => {
       <Row className='mb-5'>
         <Col xs={12} lg={12}>
           <div className='mt-5 mb-5'>
-            <div className='mb-3 mt-2 d-flex justify-content-end' style={{ borderBottom: '3px solid #01b574' }}>
+            <div className='mb-3 mt-2 d-flex justify-content-end' style={{ borderBottom: '3px solid #0c462f' }}>
               <Button
-                className="custom-effect btn-dark2 text-uppercase font-bold mb-2 text-capitalize"
+                className="custom-effect btn-green3 text-uppercase font-bold mb-2 text-capitalize"
                 variant="outlined"
                 size="small"
                 sx={{ minWidth: '120px' }}
@@ -81,7 +81,7 @@ const Pools = () => {
                 {viewMode === 'created' ? 'All Pools' : 'Your Pools'}
               </Button>
               <Button
-                className="custom-effect btn-dark2 text-uppercase text-capitalize mb-2 ms-2"
+                className="custom-effect btn-green3 text-uppercase text-capitalize mb-2 ms-2"
                 variant="outlined"
                 size="small"
                 sx={{ minWidth: '120px' }}
@@ -100,7 +100,7 @@ const Pools = () => {
                 onChange={handleSearchChange}
                 InputProps={{
                   style: {
-                    backgroundColor: '#17181d',
+                    backgroundColor: '#0c462f',
                     color: 'white',
                   },
                   startAdornment: (
@@ -119,7 +119,7 @@ const Pools = () => {
             {pairsStatus === 'loading' && <FilterLoader />}
             {(isEmpty(pairs) && pairsStatus !== 'loading' && !loading) && (
               <div style={{ minHeight: '30vh' }}>
-                <div className='flex flex-col p-6 items-center justify-center gap-2 rounded-xl bg-[#17181d] w-full'>
+                <div className='flex flex-col p-6 items-center justify-center gap-2 rounded-xl bg-[#083121] w-full'>
                   <div className='flex flex-col items-center'>
                     <p className='text-white mb-0 font-bold'>No Results Found</p>
                   </div>
