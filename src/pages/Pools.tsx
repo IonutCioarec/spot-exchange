@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setViewMode, selectFilteredPairs, selectPairsStatus } from 'storeManager/slices/pairsSlice';
 import { selectPairTokensById, selectLpTokensById } from 'storeManager/slices/tokensSlice';
@@ -29,6 +29,12 @@ const Pools = () => {
   const lptokens = useSelector(selectLpTokensById);
   const pairsStatus = useSelector(selectPairsStatus);
   const userTokens = useSelector(selectUserTokens);
+
+  // Reset the viewMode to 'all' when the component is first mounted
+  useEffect(() => {
+    setViewModeState('all');
+    dispatch(setViewMode('all'));
+  }, [dispatch]);
 
   const handleAssetsPairsToggle = async () => {
     setLoading(true);
