@@ -1,4 +1,4 @@
-import Home from 'pages/Home';
+import Dashboard from 'pages/Dashboard';
 import Pools from 'pages/Pools';
 
 interface RouteWithTitleType extends RouteType {
@@ -19,8 +19,8 @@ export const routeNames = {
 export const routes: RouteWithTitleType[] = [
   {
     path: routeNames.home,
-    title: 'Home',
-    component: Home
+    title: 'Dashboard',
+    component: Dashboard
   },
   {
     path: routeNames.pools,

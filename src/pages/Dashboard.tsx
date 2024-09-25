@@ -3,7 +3,7 @@ import 'assets/css/home.css';
 import 'assets/scss/home.scss';
 import { Row, Col } from 'react-bootstrap';
 
-const Home = () => {
+const Dashboard = () => {
   return (
     <div className="start-box">
       <Container>
@@ -17,4 +17,4 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default Dashboard;
