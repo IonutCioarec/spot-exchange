@@ -8,6 +8,7 @@ import 'assets/css/globals.css';
 import { Provider } from 'react-redux';
 import { store } from 'storeManager/store';
 import { DataLoader } from 'storeManager/loaders/DataLoader';
+import { IntlProvider } from 'react-intl';
 
 import {
   DappProvider,
@@ -49,31 +50,33 @@ const App: React.FC = () => {
         }
       }}
     >
-      <Provider store={store}>
-        <DataLoader />
-        <Router >
-          <Layout>
-            <TransactionsToastList transactionToastClassName='dark-toast' />
-            <NotificationModal />
-            <SignTransactionsModals />
-            <Routes>
-              <Route path={routeNames.unlock} element={<Unlock />} />
-              {routes.map((route, index) => {
-                const ComponentToRender = route.component;
+      <IntlProvider locale='en' >
+        <Provider store={store}>
+          <DataLoader />
+          <Router >
+            <Layout>
+              <TransactionsToastList transactionToastClassName='dark-toast' />
+              <NotificationModal />
+              <SignTransactionsModals />
+              <Routes>
+                <Route path={routeNames.unlock} element={<Unlock />} />
+                {routes.map((route, index) => {
+                  const ComponentToRender = route.component;
 
-                return (
-                  <Route
-                    key={'route-key-' + index}
-                    path={route.path}
-                    element={<ComponentToRender />}
-                  />
-                );
-              })}
-              <Route path='*' element={<PageNotFound />} />
-            </Routes>
-          </Layout>
-        </Router>
-      </Provider>
+                  return (
+                    <Route
+                      key={'route-key-' + index}
+                      path={route.path}
+                      element={<ComponentToRender />}
+                    />
+                  );
+                })}
+                <Route path='*' element={<PageNotFound />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </Provider>
+      </IntlProvider>
     </DappProvider>
   );
 };

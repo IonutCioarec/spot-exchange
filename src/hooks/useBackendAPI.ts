@@ -34,21 +34,26 @@ export const useBackendAPI = () => {
   };
 
   // get the price of swaping token1 -> token2
-  const getSwapPrice = async (token1: string, token2: string, amount: string): Promise<SwapPrice | null> => {
+  const getSwapPrice = async (token1: string, token2: string, amount: string): Promise<SwapPrice> => {
     try {
-      const response = await axios.get<SwapPrice[]>(`${dexAPI}/swap`, {
-        params: {
-          token_in: token1,
-          token_out: token2,
-          amount,
-        },
+      const response = await axios.get<SwapPrice[]>(`${dexAPI}/swap?token_in=${token1}&token_out=${token2}&amount=${amount}`, {
         headers: { Accept: 'application/json' },
       });
       return response.data[0];
     } catch (e) {
       console.error(e);
     }
-    return null;
+    return {
+      cumulative_exchange_rate: {
+        formatted: '',
+        raw: ''
+      },
+      final_output: {
+        formatted: '',
+        raw: ''
+      },
+      steps: []
+    };
   };
 
   return {

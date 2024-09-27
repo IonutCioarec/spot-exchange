@@ -13,10 +13,10 @@
 }
 
 .main-container {
-  min-height: 89.1vh;
+  min-height: 83vh;
 
   @include maxQuery(700) {
-    min-height: 86vh;
+    min-height: 100vh;
   }
 }
 

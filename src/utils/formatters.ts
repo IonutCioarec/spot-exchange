@@ -46,3 +46,13 @@ export const denominatedAmountToIntlFormattedAmount = (
   const auxAmount = denominatedAmountToAmount(amount, denomination, decimals);
   return intlNumberFormat(parseFloat(auxAmount), decimals, decimals);
 }
+
+export const parseFormattedNumber = (formatted: string) => {
+  return parseFloat(formatted.replace(/,/g, ''));
+};
+
+export const formatNumberWithCommas = (value: any) => {
+  const parts = value.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+};
