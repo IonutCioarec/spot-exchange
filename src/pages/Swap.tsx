@@ -81,7 +81,7 @@ const Swap = () => {
     }
 
     const price = await getPrice(token1, token2, parseFormattedNumber(rawValue).toString());
-    setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price),3)), 0, 2));
+    setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price),3)), 0, 20));
   };
 
   const handleToken2AmountChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
