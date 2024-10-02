@@ -51,3 +51,30 @@
   border-radius: 30px;
   border: 3px solid #041810;
 }
+
+.animated-icon {
+  transition: all 500ms ease-in 0s !important;
+  cursor: pointer;
+}
+
+.animated-icon:hover {
+  transform: rotate(180deg);
+}
+
+.full-animated-icon {
+  transition: transform 500ms ease-in-out;
+  cursor: pointer;
+}
+
+.full-animated-icon:hover {
+  animation: rotateInfinite 2s linear infinite;
+}
+
+@keyframes rotateInfinite {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
