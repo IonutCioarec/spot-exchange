@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
-import { formatSignificantDecimals } from 'utils/formatters';
+import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowDown, Search } from '@mui/icons-material';
 import { Token, TokenValue } from 'types/backendTypes';
 
@@ -40,6 +40,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   const handleTokenSelect = (tokenId: string) => {
     setSelectedToken(tokenId);
     resetAmounts();
+    setSearchInput('');
     handleClose();
   };
 
@@ -58,7 +59,9 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         <div className='mx-2'>
           <p className='m-0 font-bold'>{pairTokens[selectedToken]?.ticker || pairTokens[tokenType == 'token1' ? 'WEGLD-a28c59' : 'MEX-a659d0']?.ticker}</p>
           <p className='mt-0 mb-0 font-size-xxs text-silver'>
-            ${formatSignificantDecimals(pairTokens[tokenType == 'token1' ? 'WEGLD-a28c59' : 'MEX-a659d0']?.price || 0, 3)}
+            ${intlNumberFormat(Number(formatSignificantDecimals(pairTokens[selectedToken]?.price ?? 0, 3)), 0, 20) ||
+              intlNumberFormat(Number(formatSignificantDecimals((pairTokens[tokenType == 'token1' ? 'WEGLD-a28c59' : 'MEX-a659d0']?.price || 0, 3))), 0, 20)
+            }
           </p>
         </div>
         <div className='me-5'>
@@ -90,7 +93,11 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
                 </ListItemAvatar>
                 <ListItemText
                   primary={token.ticker}
-                  secondary={`Balance: ${userTokens[token.token_id]?.balance || 0}`}
+                  secondary={`Price: ${pairTokens[token.token_id]?.price || 0}`}
+                />
+                <ListItemText
+                  primary='Balance: '
+                  secondary={`${userTokens[token.token_id]?.balance || 0}`}
                 />
               </ListItem>
             ))}
