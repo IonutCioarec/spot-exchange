@@ -17,6 +17,10 @@ export const formatSignificantDecimals = (input: number, decimals: number = 2): 
   const fixedInput = input.toFixed(20);
   const match = fixedInput.match(regexPattern);
 
+  if (parseFloat(fixedInput) === parseInt(fixedInput, 10)) {
+    return parseFloat(fixedInput).toFixed(decimals);
+  }
+
   if (match) {
     return match[0];
   } else {
