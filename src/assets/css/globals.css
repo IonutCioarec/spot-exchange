@@ -2501,6 +2501,34 @@ h6 {
   margin-left: -30px;
 }
 
+.m-b-n-xxs {
+  margin-left: -1px;
+}
+
+.m-b-n-xs {
+  margin-bottom: -5px;
+}
+
+.m-b-n-sm {
+  margin-bottom: -10px;
+}
+
+.m-b-n-md {
+  margin-bottom: -15px;
+}
+
+.m-b-n-lg {
+  margin-bottom: -20px;
+}
+
+.m-b-n-xl {
+  margin-bottom: -25px;
+}
+
+.m-b-n-xxl {
+  margin-bottom: -30px;
+}
+
 .m-r-n-xxs {
   margin-right: -1px;
 }

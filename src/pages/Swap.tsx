@@ -17,7 +17,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import WalletIcon from '@mui/icons-material/Wallet';
 import SouthIcon from '@mui/icons-material/South';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill, faWallet, faCircleInfo, faGear, faRotate, faArrowRight, faArrowCircleRight, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { faMoneyBill, faWallet, faCircleInfo, faGear, faRotate, faArrowRight, faArrowCircleRight, faCaretRight, faRightLong, faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 import InfoIcon from '@mui/icons-material/Info';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, InputAdornment } from '@mui/material';
@@ -55,8 +55,6 @@ const Swap = () => {
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
     const amountScaled = amountToDenominatedAmount(amount, pairTokens[fromToken]?.decimals ?? 18, 20);
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-
-    console.log(JSON.stringify(priceResponse, null, 2));
 
     const price = priceResponse?.final_output?.formatted || '0';
     return {
@@ -335,27 +333,61 @@ const Swap = () => {
             }
             {steps.some(step => Object.keys(step).length > 0) ? (
               <Fragment>
-                <p className='text-silver font-size-sm mb-0 mt-1'>Price Impact</p>
-                {steps.map((step: any, index: number) => (
-                  <div className='d-flex justify-content-between align-items-center' key={`step-${index}`}>
-                    <p className='text-silver font-size-sm mb-0 ms-2'>
-                      <FontAwesomeIcon icon={faCaretRight} className='me-1' />
-                      <span className='text-[#0b8832] font-bold'>
-                        {pairTokens[step?.token_in]?.ticker ?? 'TOKEN'} {'/'} {pairTokens[step?.token_out]?.ticker ?? 'TOKEN'}
-                      </span>
-                    </p>
-                    <p className='font-size-sm text-white mb-0'>
-                      {formatSignificantDecimals(Number(step?.price_impact?.formatted || 0), 2)}%
-                    </p>
+                <div className='d-flex justify-content-between align-items-center'>
+                  <div className='d-flex justify-content-start'>
+                    <p className='text-silver font-size-sm mb-0 mt-1'>Price Impact</p>
+                    <div>
+                      {steps.map((step: any, index: number) => (
+                        <p className='text-silver font-size-sm m-b-n-xs ms-2 mt-1' key={`step-${index}`}>
+                          <FontAwesomeIcon icon={faCaretRight} className='me-1 text-[#0b8832]' />
+                          <span className='text-[#0b8832] font-bold font-size-xs'>
+                            {pairTokens[step?.token_in]?.ticker ?? 'TOKEN'} {'/'} {pairTokens[step?.token_out]?.ticker ?? 'TOKEN'}
+                          </span>
+                        </p>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                  <div>
+                    {steps.map((step: any, index: number) => (
+                      <div className='d-flex justify-content-between align-items-center' key={`step2-${index}`}>
+
+                        <p className='font-size-sm text-white mb-0'>
+                          {formatSignificantDecimals(Number(step?.price_impact?.formatted || 0), 2)}%
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className='d-flex justify-content-between align-items-center'>
+                  <p className='text-silver font-size-sm mb-0'>Route</p>
+                  <div className='d-flex justify-content-end align-items-center text-white '>
+                    {steps.map((step: any, index: number) => (
+                      <Fragment key={`route-${index}`}>
+                        <img
+                          src={pairTokens[step?.token_in]?.logo_url ?? defaultTokenValues.image_url}
+                          alt={pairTokens[step?.token_in]?.ticker}
+                          style={{ width: 20, height: 20, border: '1px solid #202020' }}
+                          className='b-r-sm'
+                        />
+                        <span className='mx-1'><FontAwesomeIcon icon={faArrowRight} size='xs' /></span>
+                        <img
+                          src={pairTokens[step?.token_out]?.logo_url ?? defaultTokenValues.image_url}
+                          alt={pairTokens[step?.token_out]?.ticker}
+                          style={{ width: 20, height: 20, border: '1px solid #202020' }}
+                          className='b-r-sm'
+                        />
+                        {index < steps.length - 1 && <p className='mx-2 mb-0 font-size-sm' style={{ marginTop: '-3px' }}>|</p>}
+                      </Fragment>
+                    ))}
+                  </div>
+                </div>
               </Fragment>
             ) : (
               ''
             )}
 
             {parseFormattedNumber(token2Amount) > 0 && (
-              <div className='d-flex justify-content-between align-items-center mt-1'>
+              <div className='d-flex justify-content-between align-items-center'>
                 <p className='text-silver font-size-sm mb-0'>Minimum Received</p>
                 <p className='font-size-sm text-white mb-0'>
                   {intlNumberFormat(parseFormattedNumber(token2Amount) - (parseFormattedNumber(token2Amount) * (Number(slippage) / 100)), 0, 3)}
