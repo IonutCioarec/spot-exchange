@@ -18,7 +18,7 @@ import WalletIcon from '@mui/icons-material/Wallet';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill, faWallet, faCircleInfo, faGear, faRotate, faArrowRight, faArrowCircleRight, faCaretRight, faRightLong, faAnglesRight } from '@fortawesome/free-solid-svg-icons';
+import { faMoneyBill, faWallet, faCircleInfo, faGear, faRotate, faArrowRight, faArrowCircleRight, faCaretRight, faRightLong, faAnglesRight, faRetweet, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import InfoIcon from '@mui/icons-material/Info';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, InputAdornment } from '@mui/material';
@@ -54,6 +54,40 @@ const Swap = () => {
   const [showSlippageModal, setShowSlippageModal] = useState<boolean>(false);
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
+
+  const token1AmountChange = async (amount: string) => {
+    const rawValue = amount.replace(/,/g, '');
+
+    if (isNaN(Number(rawValue)) || !rawValue) {
+      setToken1Amount('');
+      setToken2Amount('');
+      setToken1AmountPrice('0.000');
+      setToken2AmountPrice('0.000');
+      setSteps([{}]);
+      return;
+    }
+
+    const formattedValue = formatNumberWithCommas(rawValue);
+    setToken1Amount(formattedValue);
+
+    if (amount === '' || !token1 || !token2) {
+      setToken2Amount('');
+      return;
+    }
+
+    const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
+    setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
+
+    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price ?? 0).multipliedBy(new BigNumber(rawValue));
+    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price ?? 0).multipliedBy(new BigNumber(price.swapPrice));
+    setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
+    setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+
+    if (price?.steps) {
+      setSteps(price.steps);
+    }
+  };
+
 
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
     const amountScaled = amountToDenominatedAmount(amount, pairTokens[fromToken]?.decimals ?? 18, 20);
@@ -176,14 +210,14 @@ const Swap = () => {
   };
 
   const handleSwapTokens = async () => {
-    // Swap token1 and token2
+    // Swap token1 and token2 first
     const tempToken = token1;
-    const tempToken2 = token2;
     setToken1(token2);
     setToken2(tempToken);
-
-    resetAmounts();
+    resetAmounts();  
+    setReversedExchangeRate(false);
   };
+  
 
   const resetAmounts = () => {
     setToken1Amount('');
@@ -255,6 +289,9 @@ const Swap = () => {
           </div>
 
           <div className='swap-container mt-1 text-white'>
+            <p className='font-size-md text-white mb-0 cursor-pointer' onClick={() => token1AmountChange(token1Amount)}>
+              <span className='slippage-info ms-2'><FontAwesomeIcon icon={faRotateRight} className='mt-1 full-animated-icon text-[#0b8832]' /></span>
+            </p>
             <div className='d-flex justify-content-between align-items-center gap-4 swap-token-container mt-2'>
               <div className='input-container b-r-sm'>
                 <TextField
