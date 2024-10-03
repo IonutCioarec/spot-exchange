@@ -78,3 +78,36 @@
     transform: rotate(360deg);
   }
 }
+
+.swap-delimitator-icon {
+  position: relative;
+}
+
+.swap-delimitator-icon .hover-icon {
+  display: none;
+}
+
+.swap-delimitator-icon:hover .default-icon {
+  display: none;
+}
+
+.swap-delimitator-icon:hover .hover-icon {
+  display: inline-block;
+}
+
+.full-blinking-icon {
+  animation: blinkAnimation 1.5s infinite;
+  cursor: pointer;
+}
+
+@keyframes blinkAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

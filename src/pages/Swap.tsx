@@ -15,13 +15,16 @@ import TextField from '@mui/material/TextField';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import WalletIcon from '@mui/icons-material/Wallet';
-import SouthIcon from '@mui/icons-material/South';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faWallet, faCircleInfo, faGear, faRotate, faArrowRight, faArrowCircleRight, faCaretRight, faRightLong, faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 import InfoIcon from '@mui/icons-material/Info';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, InputAdornment } from '@mui/material';
 import TokenSelector from 'components/Swap/TokenSelector';
+import CustomTooltip from 'components/CustomTooltip';
+
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -56,10 +59,16 @@ const Swap = () => {
     const amountScaled = amountToDenominatedAmount(amount, pairTokens[fromToken]?.decimals ?? 18, 20);
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
 
+    if (!priceResponse) {
+      return { swapPrice: '0', steps: [] };
+    }
+
     const price = priceResponse?.final_output?.formatted || '0';
+    const steps = priceResponse?.steps || [];
+
     return {
       swapPrice: price,
-      steps: priceResponse?.steps
+      steps: steps
     };
   };
 
@@ -84,14 +93,18 @@ const Swap = () => {
       return;
     }
 
+    if (!token1 || !token2) return;
     const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
     setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
     const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price ?? 0).multipliedBy(new BigNumber(rawValue));
     const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price ?? 0).multipliedBy(new BigNumber(price.swapPrice));
-    setToken1AmountPrice(intlNumberFormat(Number(totalToken1UsdPrice), 3, 3));
-    setToken2AmountPrice(intlNumberFormat(Number(totalToken2UsdPrice), 3, 3));
-    setSteps(price?.steps);
+    setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
+    setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+
+    if (price?.steps) {
+      setSteps(price.steps);
+    }
   };
 
   const handleToken2AmountChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,6 +127,8 @@ const Swap = () => {
       setToken1Amount('');
       return;
     }
+
+    if (!token1 || !token2) return;
     const price = (await getPrice(token2, token1, parseFormattedNumber(rawValue).toString())).swapPrice;
     setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
 
@@ -123,7 +138,9 @@ const Swap = () => {
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
     const steps = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString())).steps;
-    setSteps(steps);
+    if (steps) {
+      setSteps(steps);
+    }
   };
 
   const handleSlippageAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -156,6 +173,16 @@ const Swap = () => {
       : await getPrice(token2, token1, '1');
 
     setDefaultExchangePrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.swapPrice), 3)), 0, 20));
+  };
+
+  const handleSwapTokens = async () => {
+    // Swap token1 and token2
+    const tempToken = token1;
+    const tempToken2 = token2;
+    setToken1(token2);
+    setToken2(tempToken);
+
+    resetAmounts();
   };
 
   const resetAmounts = () => {
@@ -212,7 +239,8 @@ const Swap = () => {
                 <div className='me-1 text-[#0b8832]'><FontAwesomeIcon icon={faMoneyBill} style={{ marginTop: '5px' }} /></div>
                 <p className='text-silver font-size-sm mb-0'>${token1AmountPrice}</p>
               </div>
-              <div className='d-flex justify-content-end align-items-center mr-5'>
+              <div className='d-flex justify-content-end align-items-baseline mr-5'>
+                <p className='btn-green3 p-1 slippage-info me-2 cursor-pointer mb-0 font-size-xs' onClick={() => setToken1Amount(intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20))}>Max</p>
                 <div className='me-1 text-[#0b8832]'><FontAwesomeIcon icon={faWallet} /></div>
                 <p className='text-silver font-size-sm mb-0'>{intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20)}</p>
               </div>
@@ -220,7 +248,10 @@ const Swap = () => {
           </div>
 
           <div className='swap-delimitator'>
-            <div className='swap-delimitator-icon mt-0'><SouthIcon className='mb-2' style={{ fontSize: '30px' }} /></div>
+            <div className='swap-delimitator-icon mt-0'>
+              <KeyboardDoubleArrowDownIcon className='mb-2 full-blinking-icon default-icon' style={{ fontSize: '30px' }} onClick={handleSwapTokens} />
+              <AutorenewIcon className='mb-2 full-animated-icon hover-icon' style={{ fontSize: '30px' }} onClick={handleSwapTokens} />
+            </div>
           </div>
 
           <div className='swap-container mt-1 text-white'>
@@ -263,7 +294,7 @@ const Swap = () => {
                 <p className='text-silver font-size-sm mb-0'>${token2AmountPrice}</p>
               </div>
               <div className='d-flex justify-content-end align-items-center mr-5'>
-                <div className='me-1 text-[#0b8832]'><FontAwesomeIcon icon={faWallet} /></div>
+                <div className='me-1 text-[#0b8832]'><FontAwesomeIcon className='' icon={faWallet} /></div>
                 <p className='text-silver font-size-sm mb-0'>{intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token2]?.balance ?? 0), 3)), 3, 20)}</p>
               </div>
             </div>
@@ -279,7 +310,11 @@ const Swap = () => {
             </div>
             <div className='d-flex justify-content-between align-items-center mt-1'>
               <p className='text-silver font-size-sm mb-0'>Slippage
-                <span className='slippage-info ms-2'><FontAwesomeIcon icon={faCircleInfo} className='mt-1' /></span>
+                <span className='slippage-info ms-2 text-[#0b8832]'>
+                  <CustomTooltip key="unstake" title={`You agree to receive up to ${slippage}% less than the expected amount.`}>
+                    <FontAwesomeIcon icon={faCircleInfo} className="mt-1" />
+                  </CustomTooltip>
+                </span>
               </p>
               <p className='font-size-sm text-white mb-0 cursor-pointer' onClick={handleShowSlippageModal}>{intlNumberFormat(Number(slippage))}%
                 <span className='slippage-info ms-2'><FontAwesomeIcon icon={faGear} className='mt-1 full-animated-icon text-[#0b8832]' /></span>
