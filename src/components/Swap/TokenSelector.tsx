@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
+import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, Paper } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowDown, Search } from '@mui/icons-material';
 import { Token, TokenValue } from 'types/backendTypes';
@@ -69,7 +69,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         </div>
       </div>
 
-      <Dialog open={isOpen} onClose={handleClose}>
+      <Dialog open={isOpen} onClose={handleClose} style={{ borderRadius: '20px' }}>
         <DialogContent>
           <TextField
             fullWidth
@@ -93,11 +93,12 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
                 </ListItemAvatar>
                 <ListItemText
                   primary={token.ticker}
-                  secondary={`Price: ${pairTokens[token.token_id]?.price || 0}`}
+                  secondary={`${pairTokens[token.token_id]?.price || 0}`}
                 />
                 <ListItemText
-                  primary='Balance: '
-                  secondary={`${userTokens[token.token_id]?.balance || 0}`}
+                  primary={`${userTokens[token.token_id]?.balance || 0}`}
+                  secondary={`${parseFloat(userTokens[token.token_id]?.balance || '0') * parseFloat(pairTokens[token.token_id]?.price) || '0'}`}
+                  className='text-right'
                 />
               </ListItem>
             ))}
