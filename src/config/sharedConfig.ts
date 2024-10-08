@@ -7,3 +7,5 @@ export const adminAddresses = [
 ];
 export const stateLoaderRefreshTime = 15000;
 export const userStateLoaderRefreshTime = 5000;
+export const defaultSwapToken1 = 'WEGLD-a28c59';
+export const defaultSwapToken2 = 'MEX-a659d0';

@@ -24,6 +24,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, InputAdornment } from '@mui/material';
 import TokenSelector from 'components/Swap/TokenSelector';
 import CustomTooltip from 'components/CustomTooltip';
+import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 
 
 const defaultTokenValues = {
@@ -41,8 +42,8 @@ const Swap = () => {
   const { getSwapPrice } = useBackendAPI();
 
   // the modal to select the token to swap (token1)
-  const [token1, setToken1] = useState<string>('WEGLD-a28c59');
-  const [token2, setToken2] = useState<string>('MEX-a659d0');
+  const [token1, setToken1] = useState<string>(defaultSwapToken1);
+  const [token2, setToken2] = useState<string>(defaultSwapToken2);
   const [token1Amount, setToken1Amount] = useState<string>('');
   const [token2Amount, setToken2Amount] = useState<string>('');
   const [token1AmountPrice, setToken1AmountPrice] = useState<string>('0.000');
