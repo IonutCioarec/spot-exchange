@@ -211,7 +211,6 @@ const Swap = () => {
   };
 
   const handleSwapTokens = async () => {
-    // Swap token1 and token2 first
     const tempToken = token1;
     setToken1(token2);
     setToken2(tempToken);
@@ -219,6 +218,10 @@ const Swap = () => {
     setReversedExchangeRate(false);
   };
   
+  const handleMaxAmount = async () => {
+    const newAmount = intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20);
+    token1AmountChange(newAmount)
+  };
 
   const resetAmounts = () => {
     setToken1Amount('');
@@ -275,7 +278,7 @@ const Swap = () => {
                 <p className='text-silver font-size-sm mb-0'>${token1AmountPrice}</p>
               </div>
               <div className='d-flex justify-content-end align-items-baseline mr-5'>
-                <p className='btn-green3 p-1 slippage-info me-2 cursor-pointer mb-0 font-size-xs' onClick={() => setToken1Amount(intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20))}>Max</p>
+                <p className='btn-green3 p-1 slippage-info me-2 cursor-pointer mb-0 font-size-xs' onClick={handleMaxAmount}>Max</p>
                 <div className='me-1 text-[#0b8832]'><FontAwesomeIcon icon={faWallet} /></div>
                 <p className='text-silver font-size-sm mb-0'>{intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20)}</p>
               </div>
