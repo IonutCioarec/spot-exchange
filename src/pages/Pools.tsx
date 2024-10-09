@@ -22,6 +22,16 @@ import { useTablet } from 'utils/responsive';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
+  '& .MuiSwitch-switchBase': {
+    transitionDuration: '300ms',
+    '&.Mui-checked': {
+      color: '#0c462f',
+      '& + .MuiSwitch-track': {
+        backgroundColor: '#0c462f',
+        border: '1px solid green'
+      },
+    },
+  },
   '& .MuiSwitch-track': {
     borderRadius: 22 / 2,
     backgroundColor: '#bdbdbd',
@@ -38,7 +48,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
     boxShadow: 'none',
     width: 16,
     height: 16,
-    margin: 2,
+    margin: 2
   },
 }));
 
@@ -96,7 +106,6 @@ const Pools = () => {
                     <CustomSwitch
                       checked={viewMode === 'assets'}
                       onChange={handleAssetsPairsToggle}
-                      color='success'
                     />
                   }
                   label="My Deposits"
