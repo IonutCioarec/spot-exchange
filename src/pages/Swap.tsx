@@ -342,7 +342,7 @@ const Swap = () => {
           </div>
           <div className='p-3 mt-1 b-r-sm' style={{ border: '1px solid #0b4932' }}>
             <div className='d-flex justify-content-between align-items-center'>
-              <p className='text-silver font-size-sm mb-0'>Swap rate</p>
+              <p className='text-silver font-size-sm mb-0'>{!isMobile ? 'Swap ' : ''}Rate</p>
               <p className='font-size-sm text-white mb-0'>
                 <span className='me-1'>1</span>
                 {pairTokens[reversedExchangeRate ? token2 : token1]?.ticker ?? ''} ≃ {defaultExchangePrice} {pairTokens[reversedExchangeRate ? token1 : token2]?.ticker ?? ''}
