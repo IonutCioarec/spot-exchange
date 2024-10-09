@@ -15,6 +15,30 @@ import { isEmpty } from '@multiversx/sdk-core/out';
 import TextField from '@mui/material/TextField';
 import { Search } from '@mui/icons-material';
 import { useGetAccountInfo } from 'hooks';
+import { Switch, FormControlLabel } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+const CustomSwitch = styled(Switch)(({ theme }) => ({
+  padding: 8,
+  '& .MuiSwitch-track': {
+    borderRadius: 22 / 2,
+    backgroundColor: '#bdbdbd',
+    '&::before, &::after': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: 16,
+      height: 16,
+    }
+  },
+  '& .MuiSwitch-thumb': {
+    boxShadow: 'none',
+    width: 16,
+    height: 16,
+    margin: 2,
+  },
+}));
 
 const Pools = () => {
   const { address } = useGetAccountInfo();
@@ -36,19 +60,10 @@ const Pools = () => {
     dispatch(setViewMode('all'));
   }, [dispatch]);
 
-  const handleAssetsPairsToggle = async () => {
+  const handleAssetsPairsToggle = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
-    const newViewMode = viewMode === 'assets' ? 'all' : 'assets';
-    setViewModeState(newViewMode);
-    dispatch(setViewMode(newViewMode));
-
-    await new Promise((resolve) => setTimeout(resolve, loadingTime));
-    setLoading(false);
-  };
-
-  const handleCreatedPairsToggle = async () => {
-    setLoading(true);
-    const newViewMode = viewMode === 'created' ? 'all' : 'created';
+    const isChecked = event.target.checked;
+    const newViewMode = isChecked ? 'assets' : 'all';
     setViewModeState(newViewMode);
     dispatch(setViewMode(newViewMode));
 
@@ -71,23 +86,31 @@ const Pools = () => {
         <Col xs={12} lg={12}>
           <div className='mt-5 mb-5'>
             <div className='mb-3 mt-2 d-flex justify-content-end' style={{ borderBottom: '3px solid #0c462f' }}>
+              <FormControlLabel
+                control={
+                  <CustomSwitch
+                    checked={viewMode === 'assets'}
+                    onChange={handleAssetsPairsToggle}
+                    color='success'
+                  />
+                }
+                label="My Deposits"
+                labelPlacement="end"
+                sx={{
+                  color: 'white',
+                  fontSize: '14px',
+                  '& .MuiTypography-root': {
+                    fontSize: '14px',
+                  },
+                }}
+              />
               <Button
-                className="custom-effect btn-green3 text-uppercase font-bold mb-2 text-capitalize"
+                className="custom-effect btn-green3 text-uppercase mb-2 text-capitalize"
                 variant="outlined"
                 size="small"
                 sx={{ minWidth: '120px' }}
-                onClick={handleCreatedPairsToggle}
               >
-                {viewMode === 'created' ? 'All Pools' : 'Your Pools'}
-              </Button>
-              <Button
-                className="custom-effect btn-green3 text-uppercase text-capitalize mb-2 ms-2"
-                variant="outlined"
-                size="small"
-                sx={{ minWidth: '120px' }}
-                onClick={handleAssetsPairsToggle}
-              >
-                {viewMode === 'assets' ? 'All Assets' : 'Your Assets'}
+                New Pool
               </Button>
               <TextField
                 id="outlined-search"
