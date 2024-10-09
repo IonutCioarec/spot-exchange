@@ -32,11 +32,11 @@
 
 .nav-item p {
   margin: 5px 0 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .nav-item svg {
-  font-size: 28px;
+  font-size: 20px;
 }
 
 .nav-item.active {
