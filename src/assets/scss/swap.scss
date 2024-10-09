@@ -121,7 +121,11 @@
 }
 
 .token-list-item:hover,
-token-list-item:active {
+.token-list-item:active {
   background-color: #0a3b28 !important;
   border: 1px solid silver !important;
+}
+
+.close-button:hover{
+  background-color: #041810 !important;
 }

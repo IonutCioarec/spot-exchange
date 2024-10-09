@@ -1,11 +1,14 @@
 import { forwardRef, Fragment, useEffect, useState } from 'react';
-import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider } from '@mui/material';
+import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowDown, Search } from '@mui/icons-material';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import SimpleLoader from 'components/SimpleLoader';
 import { defaultSwapToken1, defaultSwapToken2 } from 'config';
+import { useMobile } from 'utils/responsive';
+import { useTablet } from 'utils/responsive';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -38,6 +41,8 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const isMobile = useMobile();
+  const isTablet = useTablet();
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => {
@@ -75,7 +80,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
     <>
       <div
         className='input-container p-1 b-r-sm d-flex justify-content-between align-items-center'
-        style={{ minWidth: '150px' }}
+        style={{ minWidth: (isMobile || isTablet) ? '120px' : '150px' }}
         onClick={handleOpen}
       >
         <img
@@ -91,7 +96,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             }
           </p>
         </div>
-        <div className='me-5'>
+        <div className={`me-5 ${isMobile ? 'm-l-n-sm' : ''}`}>
           <KeyboardArrowDown sx={{ marginTop: '-2px' }} />
         </div>
       </div>
@@ -103,11 +108,22 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         TransitionComponent={Transition}
         maxWidth='xs'
         fullWidth
+        fullScreen={isMobile ? true : false}
         PaperProps={{
           style: { backgroundColor: '#062418', borderRadius: '10px', minHeight: '100px' },
         }}
       >
         <DialogTitle id="scroll-dialog-title">
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleClose}
+            aria-label="close"
+            className='float-right mb-3 text-white close-button'
+            sx={{borderRadius: '20px !important'}}
+          >
+            <CloseIcon />
+          </IconButton>
           <TextField
             fullWidth
             label='Search tokens by name or ticker'
@@ -115,7 +131,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className='input-container'
-            autoFocus
+            autoFocus            
             InputProps={{
               startAdornment: <Search sx={{ color: 'silver', marginRight: '8px' }} />,
               style: { color: 'silver' },

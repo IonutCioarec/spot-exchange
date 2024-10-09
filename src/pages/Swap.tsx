@@ -25,7 +25,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, InputAdornme
 import TokenSelector from 'components/Swap/TokenSelector';
 import CustomTooltip from 'components/CustomTooltip';
 import { defaultSwapToken1, defaultSwapToken2 } from 'config';
-
+import { useMobile } from 'utils/responsive';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -39,6 +39,7 @@ const Swap = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const pairTokens = useSelector(selectPairTokensById);
   const userTokens = useSelector(selectUserTokens);
+  const isMobile = useMobile();
   const { getSwapPrice } = useBackendAPI();
 
   // the modal to select the token to swap (token1)
@@ -214,10 +215,10 @@ const Swap = () => {
     const tempToken = token1;
     setToken1(token2);
     setToken2(tempToken);
-    resetAmounts();  
+    resetAmounts();
     setReversedExchangeRate(false);
   };
-  
+
   const handleMaxAmount = async () => {
     const newAmount = intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20);
     token1AmountChange(newAmount)
@@ -235,9 +236,8 @@ const Swap = () => {
 
   return (
     <Container>
-      <Row className='mt-5'>
+      <Row className={`${isMobile ? 'mt-4' : 'mt-5'}`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
-          <p className='h4 mt-5 text-white'>Swap Details</p>
           <div className='swap-container text-white' style={{ maxWidth: '100%' }}>
             <div className='d-flex justify-content-between align-items-center gap-4 swap-token-container'>
               <div className='input-container b-r-sm'>
@@ -254,7 +254,7 @@ const Swap = () => {
                     style: {
                       color: 'white',
                       border: 'none',
-                      fontSize: '25px',
+                      fontSize: isMobile ? '20px' : '25px',
                       caretColor: 'white',
                       paddingLeft: '10px',
                     },
@@ -272,7 +272,7 @@ const Swap = () => {
                 resetAmounts={resetAmounts}
               />
             </div>
-            <div className='d-flex justify-content-between align-items-center px-1 mt-1'>
+            <div className={`d-flex justify-content-between align-items-center px-1 mt-1 ${isMobile ? 'mb-4' : 'mb-2'}`}>
               <div className='d-flex justify-content-start align-items-center ms-2'>
                 <div className='me-1 text-[#0b8832]'><FontAwesomeIcon icon={faMoneyBill} style={{ marginTop: '5px' }} /></div>
                 <p className='text-silver font-size-sm mb-0'>${token1AmountPrice}</p>
@@ -311,7 +311,7 @@ const Swap = () => {
                     style: {
                       color: 'white',
                       border: 'none',
-                      fontSize: '25px',
+                      fontSize: isMobile ? '20px' : '25px',
                       caretColor: 'white',
                       paddingLeft: '10px',
                     },
@@ -362,11 +362,13 @@ const Swap = () => {
               </p>
             </div>
             {showSlippageModal &&
-              <div className='d-flex justify-content-between align-items-center mt-1 swap-token-container b-r-xs py-2 px-3'>
-                <div className='text-white text-center input-container  bg-[#041810] p-2 b-r-sm' style={{ minWidth: '20%' }} onClick={() => { setSlippage('1'); setShowSlippageModal(false) }}>1.00%</div>
-                <div className='text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ minWidth: '20%' }} onClick={() => { setSlippage('5'); setShowSlippageModal(false) }}>5.00%</div>
-                <div className='text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ minWidth: '20%' }} onClick={() => { setSlippage('10'); setShowSlippageModal(false) }}>10.00%</div>
-                <div className='d-flex align-items-center text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ maxWidth: '30%' }}>
+              <div className={`d-flex justify-content-between align-items-center mt-1 swap-token-container b-r-xs py-2 px-3 ${isMobile ? 'font-size-xs' : ''}`}>
+                <div className='text-white text-center input-container  bg-[#041810] p-2 b-r-sm' style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('1'); setShowSlippageModal(false) }}>1.00%</div>
+                <div className='text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('5'); setShowSlippageModal(false) }}>5.00%</div>
+                {!isMobile &&
+                  <div className='text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ minWidth: '20%' }} onClick={() => { setSlippage('10'); setShowSlippageModal(false) }}>10.00%</div>
+                }
+                <div className='d-flex align-items-center text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ maxWidth: isMobile ? '45%' : '30%' }}>
                   <span className='text-silver'>Custom:</span>
                   <TextField
                     id="custom-slippage"
@@ -385,12 +387,12 @@ const Swap = () => {
                         fontSize: '14px',
                         caretColor: 'white',
                         paddingLeft: '10px',
-                        marginTop: '3px',
-                        marginBottom: '-3px'
+                        marginTop: isMobile ? '-5px' : '3px',
+                        marginBottom: isMobile ? '-11px' : '-3px'
                       },
                       endAdornment: (
                         <InputAdornment position="end" sx={{ marginTop: '-5px' }}>
-                          <span className='text-white'>%</span>
+                          <span className={`text-white ${isMobile ? 'font-size-xs' : ''}`}>%</span>
                         </InputAdornment>
                       ),
                     }}
