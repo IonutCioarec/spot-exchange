@@ -1,6 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
 import 'assets/scss/pools.scss';
-import {useMobile, useTablet} from 'utils/responsive';
+import { useMobile, useTablet } from 'utils/responsive';
 import { Pair, TokenValue } from "types/backendTypes";
 import { useState } from "react";
 import { denominatedAmountToIntlFormattedAmount, denominatedAmountToAmount, formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
@@ -10,6 +10,7 @@ import { Row, Col } from "react-bootstrap";
 import PoolLiquidityBar from "./PoolLiquidityBar";
 import { getPercentageBigNumber, getAmountFromPercentageBigNumber } from "utils/calculs";
 import { useGetAccountInfo } from 'hooks';
+import { Link } from 'react-router-dom';
 
 interface PoolProps {
   pair: Pair;
@@ -252,6 +253,8 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         Withdraw
                       </Button>
                       <Button
+                        component={Link}
+                        to={`/swap?token1=${token1Details.token_id}&token2=${token2Details.token_id}`}
                         className="btn-outline-success text-uppercase font-bold"
                         variant="outlined"
                         size="small"
@@ -353,119 +356,121 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             </Col>
           </Row>
           {open && (
-          <div className="mt-3" style={{ borderTop: '1px solid grey' }}>
-            <div className="pool-sub-container p-2 mt-3">
-              <div className="d-flex justify-content-between">
-                <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
-                <p className="mb-0 font-size-sm text-silver">
-                  $127,546,675.23
-                </p>
-              </div>
-            </div>
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between">
-                <p className="mb-0 font-size-sm text-silver">Fees (Total)</p>
-                <p className="mb-0 font-size-sm text-silver">
-                  $12,234,432.1
-                </p>
-              </div>
-            </div>
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <p className="mb-0 font-size-sm text-silver">Your Fee (Total)</p>
-                  <p className="mb-0 mt-1 font-size-xs text-white font-bold">$4,052,123.1</p>
-                </div>
-                <div style={{ borderRight: '1px dashed silver' }}></div>
-                <div className="text-right">
-                  <p className="mb-0 font-size-sm text-silver">Your Fee (24h)</p>
-                  <p className="mb-0 mt-1 font-size-xs text-white font-bold">
-                    $152,123.1
+            <div className="mt-3" style={{ borderTop: '1px solid grey' }}>
+              <div className="pool-sub-container p-2 mt-3">
+                <div className="d-flex justify-content-between">
+                  <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
+                  <p className="mb-0 font-size-sm text-silver">
+                    $127,546,675.23
                   </p>
                 </div>
               </div>
-            </div>
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between">
+                  <p className="mb-0 font-size-sm text-silver">Fees (Total)</p>
+                  <p className="mb-0 font-size-sm text-silver">
+                    $12,234,432.1
+                  </p>
+                </div>
+              </div>
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <p className="mb-0 font-size-sm text-silver">Your Fee (Total)</p>
+                    <p className="mb-0 mt-1 font-size-xs text-white font-bold">$4,052,123.1</p>
+                  </div>
+                  <div style={{ borderRight: '1px dashed silver' }}></div>
+                  <div className="text-right">
+                    <p className="mb-0 font-size-sm text-silver">Your Fee (24h)</p>
+                    <p className="mb-0 mt-1 font-size-xs text-white font-bold">
+                      $152,123.1
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="text-white font-size-sm font-bold mb-0">Pool Share</p>
-                <p className="text-white font-size-sm font-bold mb-0 text-right">{intlNumberFormat(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3, 3)}%</p>
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="text-white font-size-sm font-bold mb-0">Pool Share</p>
+                  <p className="text-white font-size-sm font-bold mb-0 text-right">{intlNumberFormat(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3, 3)}%</p>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
+                  <div className="d-flex justfy-content-end">
+                    <p className="font-size-xs mb-0">
+                      {intlNumberFormat(
+                        getAmountFromPercentageBigNumber(
+                          getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
+                          Number(denominatedAmountToAmount((pair.liquidity_token1), (token1Details?.decimals ?? 18), 3))
+                        ), 3, 3)
+                      }
+                    </p>
+                    <img
+                      src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                      alt={pair.token1}
+                      className='ms-2'
+                      style={{ width: 20, height: 20 }}
+                    />
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">{token2Details?.token_id ?? defaultTokenValues.name}</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">
+                      {intlNumberFormat(
+                        getAmountFromPercentageBigNumber(
+                          getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
+                          Number(denominatedAmountToAmount((pair.liquidity_token2), (token2Details?.decimals ?? 18), 3))
+                        ), 3, 3)
+                      }
+                    </p>
+                    <img
+                      src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                      alt={pair.token2}
+                      className='ms-2'
+                      style={{ width: 20, height: 20 }}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="d-flex justify-content-between align-items-baseline">
-                <p className="small text-silver font-size-xs mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
-                <div className="d-flex justfy-content-end">
-                  <p className="font-size-xs mb-0">
-                    {intlNumberFormat(
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p className="text-white font-size-sm font-bold mb-0">Your Liquidity</p>
+                  </div>
+                  <p className="text-white font-size-sm font-bold mb-0">
+                    ${intlNumberFormat(
                       getAmountFromPercentageBigNumber(
                         getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
-                        Number(denominatedAmountToAmount((pair.liquidity_token1), (token1Details?.decimals ?? 18), 3))
+                        Number(denominatedAmountToAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3))
                       ), 3, 3)
                     }
                   </p>
-                  <img
-                    src={token1Details?.logo_url ?? defaultTokenValues.image_url}
-                    alt={pair.token1}
-                    className='ms-2'
-                    style={{ width: 20, height: 20 }}
-                  />
                 </div>
               </div>
-              <div className="d-flex justify-content-between align-items-baseline">
-                <p className="small text-silver font-size-xs mb-0">{token2Details?.token_id ?? defaultTokenValues.name}</p>
-                <div className="d-flex justify-content-end">
-                  <p className="font-size-xs mb-0">
-                    {intlNumberFormat(
-                      getAmountFromPercentageBigNumber(
-                        getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
-                        Number(denominatedAmountToAmount((pair.liquidity_token2), (token2Details?.decimals ?? 18), 3))
-                      ), 3, 3)
-                    }
-                  </p>
-                  <img
-                    src={token2Details?.logo_url ?? defaultTokenValues.image_url}
-                    alt={pair.token2}
-                    className='ms-2'
-                    style={{ width: 20, height: 20 }}
-                  />
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between align-items-center gap-2">
+                  <Button
+                    className="font-size-xs btn-outline-warning text-uppercase font-bold"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  >
+                    Withdraw
+                  </Button>
+                  <Button
+                    component={Link}
+                    to={`/swap?token1=${token1Details.token_id}&token2=${token2Details.token_id}`}
+                    className="font-size-xs btn-outline-success text-uppercase font-bold"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  >
+                    SWAP
+                  </Button>
                 </div>
               </div>
             </div>
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <p className="text-white font-size-sm font-bold mb-0">Your Liquidity</p>
-                </div>
-                <p className="text-white font-size-sm font-bold mb-0">
-                  ${intlNumberFormat(
-                    getAmountFromPercentageBigNumber(
-                      getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
-                      Number(denominatedAmountToAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3))
-                    ), 3, 3)
-                  }
-                </p>
-              </div>
-            </div>
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between align-items-center gap-2">
-                <Button
-                  className="font-size-xs btn-outline-warning text-uppercase font-bold"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                >
-                  Withdraw
-                </Button>
-                <Button
-                  className="font-size-xs btn-outline-success text-uppercase font-bold"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                >
-                  SWAP
-                </Button>
-              </div>
-            </div>
-          </div>
           )}
         </div>
       </Fragment >
