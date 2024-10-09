@@ -27,6 +27,7 @@ import CustomTooltip from 'components/CustomTooltip';
 import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useLocation } from 'react-router-dom';
+import SimpleLoader from 'components/SimpleLoader';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -168,7 +169,7 @@ const Swap = () => {
       return;
     }
     if (Number(value) > 50) {
-      setSlippage('50')
+      setSlippage('50');
       return;
     }
     setSlippage(value);
@@ -244,12 +245,23 @@ const Swap = () => {
     const calculateMinReceived = () => {
       if (token2Amount && slippage) {
         const minValue = parseFormattedNumber(token2Amount) - (parseFormattedNumber(token2Amount) * (Number(slippage) / 100));
-        setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(minValue, 3)), 0, 20));        
+        setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(minValue, 3)), 0, 20));
       }
     };
 
     calculateMinReceived();
   }, [token2Amount, token1Amount, slippage]);
+
+  // refresh button
+  const [refreshingAmount, setRefreshingAmount] = useState<boolean>(false);
+  const handleRefreshingAmount = async () => {
+    setRefreshingAmount(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    token1AmountChange(token1Amount);
+
+    setRefreshingAmount(false);
+  };
 
   const resetAmounts = () => {
     setToken1Amount('');
@@ -329,9 +341,14 @@ const Swap = () => {
           </div>
 
           <div className='swap-container mt-1 text-white'>
-            <p className='font-size-md text-white mb-0 cursor-pointer' onClick={() => token1AmountChange(token1Amount)}>
-              <span className='slippage-info ms-2'><FontAwesomeIcon icon={faRotateRight} className='mt-1 full-animated-icon text-[#0b8832]' /></span>
-            </p>
+            {!refreshingAmount &&
+              <p className='font-size-md text-white mb-0 cursor-pointer' onClick={handleRefreshingAmount}>
+                <span className='slippage-info ms-2'><FontAwesomeIcon icon={faRotateRight} className='mt-1 full-animated-icon text-[#0b8832]' /></span>
+              </p>
+            }
+            {refreshingAmount &&
+              <SimpleLoader />
+            }
             <div className='d-flex justify-content-between align-items-center gap-4 swap-token-container mt-2'>
               <div className='input-container b-r-sm'>
                 <TextField
