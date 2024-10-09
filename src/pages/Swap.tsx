@@ -26,6 +26,7 @@ import TokenSelector from 'components/Swap/TokenSelector';
 import CustomTooltip from 'components/CustomTooltip';
 import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
+import { useLocation } from 'react-router-dom';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -42,9 +43,23 @@ const Swap = () => {
   const isMobile = useMobile();
   const { getSwapPrice } = useBackendAPI();
 
-  // the modal to select the token to swap (token1)
-  const [token1, setToken1] = useState<string>(defaultSwapToken1);
-  const [token2, setToken2] = useState<string>(defaultSwapToken2);
+  // parse query parameters if they exist
+  const location = useLocation();  
+  const getQueryParam = (param: string) => {
+    const params = new URLSearchParams(location.search);
+    const value = params.get(param);
+    
+    if (value) {
+      const [firstPart, secondPart] = value.split('-');
+      return firstPart.toUpperCase() + '-' + secondPart;
+    }
+    
+    return null;
+  };
+
+  // Set token1 and token2 from query parameters or use defaults
+  const [token1, setToken1] = useState<string>(getQueryParam('token1') || defaultSwapToken1);
+  const [token2, setToken2] = useState<string>(getQueryParam('token2') || defaultSwapToken2);
   const [token1Amount, setToken1Amount] = useState<string>('');
   const [token2Amount, setToken2Amount] = useState<string>('');
   const [token1AmountPrice, setToken1AmountPrice] = useState<string>('0.000');
@@ -233,6 +248,15 @@ const Swap = () => {
     setSteps([{}]);
     handleReversedExchangeRate();
   };
+
+  // Update token1 and token2 if query params change
+  useEffect(() => {    
+    const token1FromQuery = getQueryParam('token1');
+    const token2FromQuery = getQueryParam('token2');
+
+    setToken1(token1FromQuery || defaultSwapToken1);
+    setToken2(token2FromQuery || defaultSwapToken2);
+  }, [location.search]);
 
   return (
     <Container>
