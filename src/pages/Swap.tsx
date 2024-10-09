@@ -44,16 +44,16 @@ const Swap = () => {
   const { getSwapPrice } = useBackendAPI();
 
   // parse query parameters if they exist
-  const location = useLocation();  
+  const location = useLocation();
   const getQueryParam = (param: string) => {
     const params = new URLSearchParams(location.search);
     const value = params.get(param);
-    
+
     if (value) {
       const [firstPart, secondPart] = value.split('-');
       return firstPart.toUpperCase() + '-' + secondPart;
     }
-    
+
     return null;
   };
 
@@ -72,40 +72,6 @@ const Swap = () => {
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
-  const token1AmountChange = async (amount: string) => {
-    const rawValue = amount.replace(/,/g, '');
-
-    if (isNaN(Number(rawValue)) || !rawValue) {
-      setToken1Amount('');
-      setToken2Amount('');
-      setToken1AmountPrice('0.000');
-      setToken2AmountPrice('0.000');
-      setSteps([{}]);
-      return;
-    }
-
-    const formattedValue = formatNumberWithCommas(rawValue);
-    setToken1Amount(formattedValue);
-
-    if (amount === '' || !token1 || !token2) {
-      setToken2Amount('');
-      return;
-    }
-
-    const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
-    setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
-
-    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price ?? 0).multipliedBy(new BigNumber(price.swapPrice));
-    setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
-    setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
-
-    if (price?.steps) {
-      setSteps(price.steps);
-    }
-  };
-
-
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
     const amountScaled = amountToDenominatedAmount(amount, pairTokens[fromToken]?.decimals ?? 18, 20);
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
@@ -114,7 +80,7 @@ const Swap = () => {
       return { swapPrice: '0', steps: [] };
     }
 
-    const price = priceResponse?.final_output?.formatted || '0';
+    const price = priceResponse?.final_output?.raw || '0';
     const steps = priceResponse?.steps || [];
 
     return {
@@ -208,6 +174,39 @@ const Swap = () => {
     setSlippage(value);
   };
 
+  const token1AmountChange = async (amount: string) => {
+    const rawValue = amount.replace(/,/g, '');
+
+    if (isNaN(Number(rawValue)) || !rawValue) {
+      setToken1Amount('');
+      setToken2Amount('');
+      setToken1AmountPrice('0.000');
+      setToken2AmountPrice('0.000');
+      setSteps([{}]);
+      return;
+    }
+
+    const formattedValue = formatNumberWithCommas(rawValue);
+    setToken1Amount(formattedValue);
+
+    if (amount === '' || !token1 || !token2) {
+      setToken2Amount('');
+      return;
+    }
+
+    const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
+    setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
+
+    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price ?? 0).multipliedBy(new BigNumber(rawValue));
+    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price ?? 0).multipliedBy(new BigNumber(price.swapPrice));
+    setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
+    setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+
+    if (price?.steps) {
+      setSteps(price.steps);
+    }
+  };
+
   // Add the default swap rate: 1 token -> x token2
   const [defaultExchangePrice, setDefaultExchangePrice] = useState<string>('');
   useEffect(() => {
@@ -216,7 +215,7 @@ const Swap = () => {
       setDefaultExchangePrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.swapPrice), 3)), 0, 20));
     };
     fetchDefaultPrice();
-  }, [token1, token2]);
+  }, [token1, token2, token1Amount, token2Amount, pairTokens]);
 
   const handleReversedExchangeRate = async () => {
     const price = reversedExchangeRate
@@ -239,6 +238,19 @@ const Swap = () => {
     token1AmountChange(newAmount)
   };
 
+  // update minReceived when token2Amount, token1Amount, or slippage change
+  const [minReceived, setMinReceived] = useState<string>('0.000');
+  useEffect(() => {
+    const calculateMinReceived = () => {
+      if (token2Amount && slippage) {
+        const minValue = parseFormattedNumber(token2Amount) - (parseFormattedNumber(token2Amount) * (Number(slippage) / 100));
+        setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(minValue, 3)), 0, 20));        
+      }
+    };
+
+    calculateMinReceived();
+  }, [token2Amount, token1Amount, slippage]);
+
   const resetAmounts = () => {
     setToken1Amount('');
     setToken2Amount('');
@@ -250,7 +262,7 @@ const Swap = () => {
   };
 
   // Update token1 and token2 if query params change
-  useEffect(() => {    
+  useEffect(() => {
     const token1FromQuery = getQueryParam('token1');
     const token2FromQuery = getQueryParam('token2');
 
@@ -492,7 +504,7 @@ const Swap = () => {
               <div className='d-flex justify-content-between align-items-center'>
                 <p className='text-silver font-size-sm mb-0'>Minimum Received</p>
                 <p className='font-size-sm text-white mb-0'>
-                  {intlNumberFormat(parseFormattedNumber(token2Amount) - (parseFormattedNumber(token2Amount) * (Number(slippage) / 100)), 0, 3)}
+                  {minReceived}
                 </p>
               </div>
             )}

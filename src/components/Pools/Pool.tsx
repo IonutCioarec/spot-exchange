@@ -11,6 +11,7 @@ import PoolLiquidityBar from "./PoolLiquidityBar";
 import { getPercentageBigNumber, getAmountFromPercentageBigNumber } from "utils/calculs";
 import { useGetAccountInfo } from 'hooks';
 import { Link } from 'react-router-dom';
+import { defaultSwapToken1, defaultSwapToken2 } from "config";
 
 interface PoolProps {
   pair: Pair;
@@ -254,7 +255,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                       </Button>
                       <Button
                         component={Link}
-                        to={`/swap?token1=${token1Details.token_id}&token2=${token2Details.token_id}`}
+                        to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}
                         className="btn-outline-success text-uppercase font-bold"
                         variant="outlined"
                         size="small"
