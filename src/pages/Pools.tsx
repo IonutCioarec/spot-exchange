@@ -17,6 +17,8 @@ import { Search } from '@mui/icons-material';
 import { useGetAccountInfo } from 'hooks';
 import { Switch, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useMobile } from 'utils/responsive';
+import { useTablet } from 'utils/responsive';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -46,6 +48,8 @@ const Pools = () => {
   const [viewMode, setViewModeState] = useState<'all' | 'assets' | 'created'>('all');
   const [searchInput, setSearchInput] = useState<string>('');
   const loadingTime = 300;
+  const isMobile = useMobile();
+  const isTablet = useTablet();
 
   const dispatch = useDispatch();
   const pairs = useSelector((state) => selectFilteredPairs(state, address, searchInput));
@@ -86,24 +90,26 @@ const Pools = () => {
         <Col xs={12} lg={12}>
           <div className='mt-5 mb-5'>
             <div className='mb-3 mt-2 d-flex justify-content-end' style={{ borderBottom: '3px solid #0c462f' }}>
-              <FormControlLabel
-                control={
-                  <CustomSwitch
-                    checked={viewMode === 'assets'}
-                    onChange={handleAssetsPairsToggle}
-                    color='success'
-                  />
-                }
-                label="My Deposits"
-                labelPlacement="end"
-                sx={{
-                  color: 'white',
-                  fontSize: '14px',
-                  '& .MuiTypography-root': {
+              {!isMobile &&
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      checked={viewMode === 'assets'}
+                      onChange={handleAssetsPairsToggle}
+                      color='success'
+                    />
+                  }
+                  label="My Deposits"
+                  labelPlacement="end"
+                  sx={{
+                    color: 'white',
                     fontSize: '14px',
-                  },
-                }}
-              />
+                    '& .MuiTypography-root': {
+                      fontSize: '14px',
+                    },
+                  }}
+                />
+              }
               <Button
                 className="custom-effect btn-green3 text-uppercase mb-2 text-capitalize"
                 variant="outlined"
@@ -139,6 +145,28 @@ const Pools = () => {
                 }}
               />
             </div>
+            {isMobile &&
+              <div className='text-right m-t-n-sm'>
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      checked={viewMode === 'assets'}
+                      onChange={handleAssetsPairsToggle}
+                      color='success'
+                    />
+                  }
+                  label="My Deposits"
+                  labelPlacement="end"
+                  sx={{
+                    color: 'white',
+                    fontSize: '14px',
+                    '& .MuiTypography-root': {
+                      fontSize: '14px',
+                    },
+                  }}
+                />
+              </div>
+            }
             {pairsStatus === 'loading' && <FilterLoader />}
             {(isEmpty(pairs) && pairsStatus !== 'loading' && !loading) && (
               <div style={{ minHeight: '30vh' }}>

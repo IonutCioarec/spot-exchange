@@ -48,13 +48,13 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 src={token1Details?.logo_url ?? defaultTokenValues.image_url}
                 alt={pair.token1}
                 className='d-inline'
-                style={{ width: 30, height: 30 }}
+                style={{ width: 30, height: 30, border: '1px solid #303030', borderRadius: '20px' }}
               />
               <img
                 src={token2Details?.logo_url ?? defaultTokenValues.image_url}
                 alt={pair.token2}
                 className='d-inline'
-                style={{ width: 30, height: 30 }}
+                style={{ width: 30, height: 30, border: '1px solid #303030', borderRadius: '20px' }}
               />
             </Col>
             <Col lg={3}>
