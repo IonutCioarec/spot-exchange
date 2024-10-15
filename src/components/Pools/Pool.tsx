@@ -1,7 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 import 'assets/scss/pools.scss';
 import { useMobile, useTablet } from 'utils/responsive';
-import { Pair, TokenValue } from "types/backendTypes";
+import { Pair, Token } from "types/backendTypes";
 import { useState } from "react";
 import { denominatedAmountToIntlFormattedAmount, denominatedAmountToAmount, formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
@@ -16,8 +16,8 @@ import { defaultSwapToken1, defaultSwapToken2 } from "config";
 interface PoolProps {
   pair: Pair;
   index: number,
-  token1Details: TokenValue;
-  token2Details: TokenValue;
+  token1Details: Token;
+  token2Details: Token;
   userToken1Balance: number;
   userToken2Balance: number;
   userLpTokenBalance: number;
@@ -62,7 +62,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             <Col lg={3}>
               <div className="d-inline-grid mb-0">
                 <p className="mb-0">{token1Details?.ticker ?? defaultTokenValues.name}</p>
-                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(token1Details?.price ?? defaultTokenValues.price)}
+                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price)}
                 </p>
               </div>
               <div className="d-inline-grid mx-2 mb-0">
@@ -70,13 +70,13 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               </div>
               <div className="d-inline-grid">
                 <p className="mb-0">{token2Details?.ticker ?? defaultTokenValues.name}</p>
-                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(token2Details?.price ?? defaultTokenValues.price)}
+                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price)}
                 </p>
               </div>
             </Col>
             <Col lg={2}>
               <p className="mb-0 font-size-xxs text-silver">Liquidity</p>
-              ${denominatedAmountToIntlFormattedAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}
+              ${denominatedAmountToIntlFormattedAmount((Number(token1Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (Number(token2Details?.price) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}
             </Col>
             <Col lg={2} className="text-right">
               <p className="mb-0 font-size-xxs text-silver">Volume (24h)</p>
@@ -130,7 +130,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                           />
                           <p className="h5 ms-1 mb-0">{token1Details?.ticker}</p>
                         </div>
-                        <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1), 18, 3)}</p>
+                        <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount((Number(token1Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1), 18, 3)}</p>
                       </div>
                       <div className="text-right">
                         <p className="font-size-xs text-silver mb-1">{token2Details?.token_id ?? defaultTokenValues.name}</p>
@@ -144,7 +144,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                           />
                           <p className="h5 ms-1 mb-0">{token2Details?.ticker}</p>
                         </div>
-                        <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount((token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}</p>
+                        <p className="mt-0 font-size-xs text-silver">${denominatedAmountToIntlFormattedAmount((Number(token2Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}</p>
                       </div>
                     </div>
                     <div className="mb-2">
@@ -236,7 +236,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         ${intlNumberFormat(
                           getAmountFromPercentageBigNumber(
                             getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
-                            Number(denominatedAmountToAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3))
+                            Number(denominatedAmountToAmount((Number(token1Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (Number(token2Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3))
                           ), 3, 3)
                         }
                       </p>
@@ -285,7 +285,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               />
               <div className="mb-0 ms-3">
                 <p className="mb-0">{token1Details?.ticker ?? defaultTokenValues.name}</p>
-                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(token1Details?.price ?? defaultTokenValues.price)}
+                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price)}
                 </p>
               </div>
             </div>
@@ -293,7 +293,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             <div className="d-flex justify-content-end">
               <div className="text-right me-3">
                 <p className="mb-0">{token2Details?.ticker ?? defaultTokenValues.name}</p>
-                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(token2Details?.price ?? defaultTokenValues.price)}
+                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${formatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price)}
                 </p>
               </div>
               <img
@@ -307,7 +307,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             <div className="d-flex justify-content-between">
               <p className="mb-0 font-size-sm text-silver">Liquidity</p>
               <p className="mb-0 font-size-sm text-silver">
-                ${denominatedAmountToIntlFormattedAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}
+                ${denominatedAmountToIntlFormattedAmount((Number(token1Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (Number(token2Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3)}
               </p>
             </div>
           </div>
@@ -443,7 +443,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     ${intlNumberFormat(
                       getAmountFromPercentageBigNumber(
                         getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
-                        Number(denominatedAmountToAmount((token1Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (token2Details?.price ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3))
+                        Number(denominatedAmountToAmount((Number(token1Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token1) + (Number(token2Details?.price_usd) ?? defaultTokenValues.price) * parseFloat(pair.liquidity_token2), 18, 3))
                       ), 3, 3)
                     }
                   </p>
