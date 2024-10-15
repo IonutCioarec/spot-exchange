@@ -1,34 +1,40 @@
 export interface Pair {
-  id: string;
-  token1: string;
-  token2: string;
-  source: number;
-  sc_address: string;
-  state: string;
-  created_at: string;
-  creator_address: string;
-  token1_decimals: number | null;
-  token2_decimals: number | null;
-  liquidity_token1: string;
-  liquidity_token2: string;
-  lp_token_id: string;
-  updated_at: string;
-  fee: number;
+  creator_address: string,
+  fee: number,
+  fees_1h: string,
+  fees_24h: string,
+  fees_30d: string,
+  fees_7d: string,
+  lp_token_id: string,
+  pair_id: string,
+  state: string,
+  token1: string,
+  token1_reserve: string,
+  token1_reserve_denominated: string,
+  token2: string,
+  token2_reserve: string,
+  token2_reserve_denominated: string,
+  tvl: string,
+  volume_1h: string,
+  volume_24h: string,
+  volume_30d: string,
+  volume_7d: string
 }
-export interface TokenValue {
+export interface Token {
   token_id: string,
   ticker: string,
   logo_url: string,
   has_branding: boolean,
   decimals: number,
   is_lp_token: boolean,
-  price: number | null,
+  price_usd: string,
+  price_change_24h: string,
+  price_change_7d: string,
+  price_change_30d: string,
+  volume_24h: string,
+  volume_7d: string,
+  volume_30d: string,
   supply: string
-}
-
-export interface Token {
-  lp_tokens: TokenValue[],
-  pair_tokens: TokenValue[]
 }
 
 export interface FormattedRawValue {
@@ -60,6 +66,6 @@ export interface PairsState {
 }
 
 export interface TokensState {
-  tokens: Token;
+  tokens: Token[];
   status: 'loading' | 'succeeded' | 'failed';
 }

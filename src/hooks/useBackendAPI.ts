@@ -2,13 +2,16 @@ import axios from 'axios';
 import { dexAPI } from 'config';
 import { Pair, SwapPrice, Token } from 'types/backendTypes';
 
+
 export const useBackendAPI = () => {
 
   // get the list of token pairs (pools)
   const getPairs = async (): Promise<Pair[]> => {
     try {
       const response = await axios.get<Pair[]>(`${dexAPI}/pairs`, {
-        headers: { Accept: 'application/json' },
+        headers: {
+          Accept: 'application/json',
+        },
       });
       return response.data;
     } catch (e) {
@@ -17,20 +20,18 @@ export const useBackendAPI = () => {
     return [];
   };
 
-  // get the list of the tokens available to swap
-  const getTokens = async (): Promise<Token> => {
+  // get the list of the tokens available to swap + lp_tokens
+  const getTokens = async (): Promise<Token[]> => {
     try {
-      const response = await axios.get<Token>(`${dexAPI}/tokens`, {
+      const response = await axios.get<Token[]>(`${dexAPI}/tokens/v2`, {
         headers: { Accept: 'application/json' },
       });
+      //console.log(JSON.stringify(response.data, null, 2));
       return response.data;
     } catch (e) {
       console.error(e);
     }
-    return {
-      lp_tokens: [],
-      pair_tokens: []
-    };
+    return [];
   };
 
   // get the price of swaping token1 -> token2
