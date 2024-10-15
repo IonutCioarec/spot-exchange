@@ -40,6 +40,8 @@ const Swap = () => {
   const { address } = useGetAccountInfo();
   const [loading, setLoading] = useState<boolean>(false);
   const pairTokens = useSelector(selectPairTokensById);
+
+  console.log(JSON.stringify(pairTokens, null, 2));
   const userTokens = useSelector(selectUserTokens);
   const isMobile = useMobile();
   const { getSwapPrice } = useBackendAPI();
@@ -115,8 +117,8 @@ const Swap = () => {
     const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
     setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
-    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price ?? 0).multipliedBy(new BigNumber(price.swapPrice));
+    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
+    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
@@ -150,8 +152,8 @@ const Swap = () => {
     const price = (await getPrice(token2, token1, parseFormattedNumber(rawValue).toString())).swapPrice;
     setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
 
-    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price ?? 0).multipliedBy(new BigNumber(price));
+    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
+    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
@@ -198,8 +200,8 @@ const Swap = () => {
     const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
     setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
-    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price ?? 0).multipliedBy(new BigNumber(price.swapPrice));
+    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
+    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
