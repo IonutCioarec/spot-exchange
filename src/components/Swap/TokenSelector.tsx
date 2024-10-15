@@ -91,8 +91,8 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         <div className='mx-2'>
           <p className='m-0 font-bold'>{pairTokens[selectedToken]?.ticker || pairTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
           <p className='mt-0 mb-0 font-size-xxs text-silver'>
-            ${intlNumberFormat(Number(formatSignificantDecimals(pairTokens[selectedToken]?.price ?? 0, 3)), 0, 20) ||
-              intlNumberFormat(Number(formatSignificantDecimals((pairTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.price || 0, 3))), 0, 20)
+            ${intlNumberFormat(Number(formatSignificantDecimals(Number(pairTokens[selectedToken]?.price_usd) ?? 0, 3)), 0, 20) ||
+              intlNumberFormat(Number(formatSignificantDecimals(Number(pairTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.price_usd) || 0, 3)), 0, 20)
             }
           </p>
         </div>
@@ -166,13 +166,13 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
                       </ListItemAvatar>
                       <ListItemText
                         primary={token.token_id}
-                        secondary={`$${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price || '0'), 3)), 0, 20)}`}
+                        secondary={`$${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}`}
                         primaryTypographyProps={{ style: { color: 'white' } }}
                         secondaryTypographyProps={{ style: { color: 'silver' } }}
                       />
                       <ListItemText
                         primary={`${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0'), 3)), 0, 20)}`}
-                        secondary={`$${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0') * parseFloat(pairTokens[token.token_id]?.price || '0'), 3)), 0, 20)}`}
+                        secondary={`$${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0') * parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}`}
                         className="text-right"
                         primaryTypographyProps={{ style: { color: 'white' } }}
                         secondaryTypographyProps={{ style: { color: 'silver' } }}
