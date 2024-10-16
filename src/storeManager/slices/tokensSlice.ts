@@ -29,39 +29,42 @@ export const { setTokens, setStatus } = tokensSlice.actions;
 
 // Selectors
 // Select LP tokens (where is_lp_token is true)
-export const selectLpTokens = (state: any) => state.tokens.tokens.filter((token: Token) => token.is_lp_token);
-export const selectPairTokens = (state: any) => state.tokens.tokens.filter((token: Token) => !token.is_lp_token);
+export const selectLpTokens = createSelector(
+  [(state: any) => state.tokens.tokens],
+  (tokens: Token[]) => tokens.filter((token) => token.is_lp_token)
+);
+
+// Select pair tokens (where is_lp_token is false)
+export const selectPairTokens = createSelector(
+  [(state: any) => state.tokens.tokens],
+  (tokens: Token[]) => tokens.filter((token) => !token.is_lp_token)
+);
+
+// Select tokens status
 export const selectTokensStatus = (state: any) => state.tokens.status;
 
 // Memoized selector to transform lpTokens into an object keyed by token_id
 export const selectLpTokensById = createSelector(
   [selectLpTokens],
-  (lpTokens: Token[]) => {
-    return lpTokens.reduce((acc: Record<string, Token>, token: Token) => {
-      acc[token.token_id] = token;
-      return acc;
-    }, {});
-  }
+  (lpTokens: Token[]) => lpTokens.reduce((acc: Record<string, Token>, token: Token) => {
+    acc[token.token_id] = token;
+    return acc;
+  }, {})
 );
 
 // Memoized selector to transform pairTokens into an object keyed by token_id
 export const selectPairTokensById = createSelector(
   [selectPairTokens],
-  (pairTokens: Token[]) => {
-    return pairTokens.reduce((acc: Record<string, Token>, token: Token) => {
-      acc[token.token_id] = token;
-      return acc;
-    }, {});
-  }
+  (pairTokens: Token[]) => pairTokens.reduce((acc: Record<string, Token>, token: Token) => {
+    acc[token.token_id] = token;
+    return acc;
+  }, {})
 );
 
 // Memoized selector combining lp_tokens and pair_tokens
 export const selectTokenIds = createSelector(
   [selectLpTokens, selectPairTokens],
-  (lp_tokens, pair_tokens) => [
-    ...lp_tokens,
-    ...pair_tokens
-  ].map((token) => token.token_id)
+  (lp_tokens, pair_tokens) => [...lp_tokens, ...pair_tokens].map((token) => token.token_id)
 );
 
 export default tokensSlice.reducer;
