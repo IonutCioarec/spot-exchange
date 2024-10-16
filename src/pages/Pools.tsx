@@ -201,7 +201,7 @@ const Pools = () => {
                     userToken2Balance={Number(userTokens[pair.token2]?.balance ?? 0)}
                     // userLpTokenBalance={Number(denominatedAmountToAmount(userTokens[pair.lp_token_id]?.balance, lptokens[pair.lp_token_id].decimals, 20) || 0)}
                     userLpTokenBalance={Number(0.6)}
-                    lpTokenSupply={(Number(denominatedAmountToAmount(lptokens[pair.lp_token_id].supply, lptokens[pair.lp_token_id].decimals, 20)) ?? 0)}
+                    lpTokenSupply={(Number(denominatedAmountToAmount(lptokens[pair.lp_token_id]?.supply || 0, lptokens[pair.lp_token_id]?.decimals || 18, 20)) ?? 0)}
                   />
                 ))}
               </Fragment>
