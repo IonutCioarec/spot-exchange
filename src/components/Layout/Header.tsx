@@ -1,8 +1,8 @@
-import { routeNames } from 'routes/routes';
+import { routeNames, routes } from 'routes/routes';
 import { Link, useLocation } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import 'assets/css/header.css';
 import { useGetIsLoggedIn } from 'hooks';
@@ -38,6 +38,16 @@ export const Header = () => {
   const location = useLocation();
   const handleToggle = () => setExpanded(!expanded);
   const handleSelect = () => setExpanded(false);
+  
+  // Set the document title based on the current route
+  useEffect(() => {
+    const currentRoute = routes.find(route => route.path === location.pathname);
+    if (currentRoute) {
+      document.title = `Smart Exchange - ${currentRoute.title}`;
+    } else {
+      document.title = 'Smart Exchange';
+    }
+  }, [location]);
 
   return (
     <>
