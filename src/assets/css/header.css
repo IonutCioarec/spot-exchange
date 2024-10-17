@@ -5,6 +5,21 @@
   border-bottom: 1px solid #2F2F2F;
 }
 
+.header-area2 {
+  background-color: #141414;
+  border-bottom: 1px solid #2F2F2F;
+}
+
+.nav-social-media-icon {
+  color: white !important;
+}
+
+.nav-social-media-icon:hover,
+.nav-social-media-icon:focus,
+.nav-social-media-icon:active {
+  color: #78EB54 !important;
+}
+
 .text-brand {
   font-weight: bold;
   font-size: 20px;
@@ -17,27 +32,16 @@
   color: rgb(241, 234, 234) !important;
   text-transform: uppercase;
   font-size: 18px;
-  font-weight: 400 !important;
-  line-height: 130%;
+  font-weight: 700 !important;
+  line-height: 0;
+  padding: 7px 10px;
 }
-
-.nav-link.active::before {
-  content: '';
-  color: #1a9765;
-  position: relative;
-  display: block;
-  top: -9px;
-  text-align: center;
-  margin-bottom: -2px;
-  border-bottom: 2px solid
-}
-
 
 .link:hover,
 .link:focus,
 .link:active,
 .active .link {
-  color: #1a9765 !important;
+  color: #78EB54 !important;
 }
 
 .custom-toggler .navbar-toggler-icon {

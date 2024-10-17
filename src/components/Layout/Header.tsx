@@ -18,7 +18,9 @@ import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import { Container } from 'react-bootstrap';
 import logo from 'assets/img/logo_transparent_bg.png';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { Telegram, Facebook, X, MenuBook } from '@mui/icons-material';
 
 export const Header = () => {
   const [expanded, setExpanded] = useState(false);
@@ -67,7 +69,7 @@ export const Header = () => {
             onClick={() => handleClick('')}
           />
           {!isMobile && (
-          <p className='header-area1-text font-size-xxl mt-2 mb-0' onClick={() => handleClick('')}>SmartExchange</p>
+            <p className='header-area1-text font-size-xxl mt-2 mb-0' onClick={() => handleClick('')}>Smart<span className='text-white'>Exchange</span></p>
           )}
           {!isLoggedIn ? (
             <Button
@@ -87,42 +89,18 @@ export const Header = () => {
           )}
         </div>
       </div>
-      <Navbar
-        expanded={expanded}
-        collapseOnSelect
-        expand="lg"
-        className="pl-6 pr-6 pt-0 pb-0"
-        style={{
-          marginBottom: '0',
-          minHeight: '52px',
-          borderBottom: '2px solid #0c462f'
-        }}
-      >
-        <Navbar.Brand as={Link} to={routeNames.home} className="pl-12 pr-4">
-          <p className={`text-brand ml-2 mb-0 mt-0 ${isMobile ? '' : 'ml-8'}`}>DEX</p>
-        </Navbar.Brand>
-        {!isMobile && (
-          <Navbar.Toggle
-            aria-controls="responsive-navbar-nav"
-            id="responsive-navbar-toggle"
-            className="custom-toggler"
-            onClick={handleToggle}
-          />
-        )}
-        {!isMobile && (
-          <Navbar.Collapse
-            id="responsive-navbar-nav"
-            className="text-up2 pr-5 pl-5 text-center"
-          >
-            <Nav className="text-center ml-auto" onSelect={handleSelect}>
+      {!isMobile && (
+        <div className='header-area2'>
+          <Navbar className='container'>
+            <Nav>
               <Nav.Link
                 as={Link}
                 to="/"
                 className={`mx-1 ${location.pathname === '/' ? 'active' : ''}`}
                 onClick={handleSelect}
               >
-                <p className="nav-link mb-0 mt-0 link font-size-sm">
-                  <AnalyticsIcon className='nav-link-icon' />Dashboard
+                <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
+                  Dashboard
                 </p>
               </Nav.Link>
               <Nav.Link
@@ -132,7 +110,7 @@ export const Header = () => {
                 onClick={handleSelect}
               >
                 <p className="nav-link mb-0 mt-0 link font-size-sm">
-                  <SwapHorizIcon className='nav-link-icon' />Swap
+                  Swap
                 </p>
               </Nav.Link>
               <Nav.Link
@@ -142,68 +120,43 @@ export const Header = () => {
                 onClick={handleSelect}
               >
                 <p className="nav-link mb-0 mt-0 link font-size-sm">
-                  <WorkspacesIcon className='nav-link-icon' />Pools
+                  Pools
                 </p>
               </Nav.Link>
             </Nav>
-            <Nav className={`ml-auto ${isMobile ? '' : 'mr-12'}`} onSelect={handleSelect}>
-              {!isLoggedIn ? (
-                <Button
-                  component={Link}
-                  to="/unlock"
-                  variant="contained"
-                  size="medium"
-                  color="success"
-                  className="btn-green3 text-capitalize font-size-sm mb-0 mt-0"
-                >
-                  Connect Wallet
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleLogout}
-                  variant="contained"
-                  size="medium"
-                  color="success"
-                  className="btn-green3 text-capitalize font-size-sm mb-0 mt-0"
-                >
-                  Disconnect
-                </Button>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        )}
-        {isMobile && (
-          <Navbar
-            id="responsive-navbar-nav2"
-            className="text-up2 pr-5 pl-5 text-center mr-5"
-          >
-            <Nav className={`ml-auto ${isMobile ? '' : 'mr-12'}`} onSelect={handleSelect}>
-              {!isLoggedIn ? (
-                <Button
-                  component={Link}
-                  to="/unlock"
-                  variant="contained"
-                  size="medium"
-                  color="success"
-                  className="btn-green3 text-capitalize font-size-sm mb-0 mt-0"
-                >
-                  Connect Wallet
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleLogout}
-                  variant="contained"
-                  size="medium"
-                  color="success"
-                  className="btn-green3 text-capitalize font-size-sm mb-0 mt-0"
-                >
-                  Disconnect
-                </Button>
-              )}
+            <Nav className='ml-auto'>
+              <Nav.Link
+                href='https://www.facebook.com'
+                target='_blank'
+                className='m-r-n-lg'
+              >
+                <Facebook className='nav-social-media-icon m-0' sx={{fontSize: '20px'}}/>
+              </Nav.Link>
+              <Nav.Link
+                href='https://www.x.com'
+                target='_blank'
+                className='m-r-n-xl'
+              >
+                <X className='nav-social-media-icon' sx={{fontSize: '16px', marginTop: '2px'}}/>
+              </Nav.Link>
+              <Nav.Link
+                href='https://www.telegram.com'
+                target='_blank'
+                className='m-r-n-lg'
+              >
+                <Telegram className='nav-social-media-icon m-0' sx={{fontSize: '20px'}}/>
+              </Nav.Link>
+              <Nav.Link
+                href='https://www.telegram.com'
+                target='_blank'
+                className='m-r-n-lg'
+              >
+                <MenuBook className='nav-social-media-icon m-0' sx={{fontSize: '20px'}}/>
+              </Nav.Link>
             </Nav>
           </Navbar>
-        )}
-      </Navbar>
+        </div>
+      )}
       {isMobile && (
         <div className="bottom-nav" style={{ borderTop: '1px solid #1a9765' }}>
           <div className="nav-items">

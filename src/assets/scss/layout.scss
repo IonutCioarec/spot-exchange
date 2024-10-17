@@ -13,7 +13,7 @@
 }
 
 .main-container {
-  min-height: 83vh;
+  min-height: 80vh;
 
   @include maxQuery(700) {
     min-height: 100vh;
@@ -275,7 +275,7 @@
 
 .header-area1-text{
   text-transform: uppercase;
-  color: white;
+  color: #78EB54;
   font-weight: bold;
   cursor: pointer;
 
