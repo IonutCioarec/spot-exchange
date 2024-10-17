@@ -1,5 +1,5 @@
 import { routeNames, routes } from 'routes/routes';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useEffect, useState } from 'react';
@@ -16,6 +16,8 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import LogoutIcon from '@mui/icons-material/Logout';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import { Container } from 'react-bootstrap';
+import logo from 'assets/img/logo_transparent_bg.png';
 
 
 export const Header = () => {
@@ -36,9 +38,13 @@ export const Header = () => {
 
   const isMobile = useMobile();
   const location = useLocation();
+  const navigate = useNavigate();
+  const handleClick = (route: string) => {
+    navigate(`/${route}`);
+  };
   const handleToggle = () => setExpanded(!expanded);
   const handleSelect = () => setExpanded(false);
-  
+
   // Set the document title based on the current route
   useEffect(() => {
     const currentRoute = routes.find(route => route.path === location.pathname);
@@ -51,7 +57,36 @@ export const Header = () => {
 
   return (
     <>
-
+      <div className='header-area1'>
+        <div className={`container d-flex justify-content-between align-items-center`}>
+          <img
+            src={logo}
+            alt='logo'
+            className='cursor-pointer'
+            style={{ width: 50, height: 50 }}
+            onClick={() => handleClick('')}
+          />
+          {!isMobile && (
+          <p className='header-area1-text font-size-xxl mt-2 mb-0' onClick={() => handleClick('')}>SmartExchange</p>
+          )}
+          {!isLoggedIn ? (
+            <Button
+              component={Link}
+              to="/unlock"
+              className="btn-intense-green hover-btn"
+            >
+              Connect Wallet
+            </Button>
+          ) : (
+            <Button
+              onClick={handleLogout}
+              className="btn-intense-green hover-btn"
+            >
+              Disconnect
+            </Button>
+          )}
+        </div>
+      </div>
       <Navbar
         expanded={expanded}
         collapseOnSelect
@@ -170,7 +205,7 @@ export const Header = () => {
         )}
       </Navbar>
       {isMobile && (
-        <div className="bottom-nav" style={{borderTop: '1px solid #1a9765'}}>
+        <div className="bottom-nav" style={{ borderTop: '1px solid #1a9765' }}>
           <div className="nav-items">
             <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
               <AnalyticsIcon />

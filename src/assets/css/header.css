@@ -1,3 +1,10 @@
+.header-area1 {
+  background-color: #141414;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #2F2F2F;
+}
+
 .text-brand {
   font-weight: bold;
   font-size: 20px;
@@ -41,7 +48,7 @@
   border: none !important;
 }
 
-.nav-link-icon{
+.nav-link-icon {
   margin-right: 5px;
   margin-left: -5px;
   margin-top: -5px;

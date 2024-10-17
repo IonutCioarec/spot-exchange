@@ -2665,3 +2665,30 @@ h6 {
   transition: all 250ms ease-in 0s !important;
   cursor: pointer;
 }
+
+/* Intense colors */
+.text-intense-green {
+  color: #78EB54;
+}
+.text-intense-orange {
+  color: #EC6219;
+}
+.text-intense-blue{ 
+  color: #2E4BD4;
+}
+.text-intense-yellow {
+  color: #ffff00;
+}
+
+.bg-intense-green {
+  background-color: #78EB54;
+}
+.bg-intense-orange {
+  background-color: #EC6219;
+}
+.bg-intense-blue{ 
+  background-color: #2E4BD4;
+}
+.bg-intense-yellow {
+  background-color: #ffff00;
+}
