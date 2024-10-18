@@ -17,7 +17,14 @@
 .nav-social-media-icon:hover,
 .nav-social-media-icon:focus,
 .nav-social-media-icon:active {
-  color: #78EB54 !important;
+  color: #3FAC5A !important;
+}
+
+.half-colored-d {
+  background: linear-gradient(to right, #3FAC5A 55%, #ffffff 45%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .text-brand {
@@ -41,7 +48,7 @@
 .link:focus,
 .link:active,
 .active .link {
-  color: #78EB54 !important;
+  color: #3FAC5A !important;
 }
 
 .custom-toggler .navbar-toggler-icon {

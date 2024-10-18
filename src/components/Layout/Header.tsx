@@ -17,7 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import { Container } from 'react-bootstrap';
-import logo from 'assets/img/logo_transparent_bg.png';
+import logo from 'assets/img/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { Telegram, Facebook, X, MenuBook } from '@mui/icons-material';
@@ -51,9 +51,9 @@ export const Header = () => {
   useEffect(() => {
     const currentRoute = routes.find(route => route.path === location.pathname);
     if (currentRoute) {
-      document.title = `Smart Exchange - ${currentRoute.title}`;
+      document.title = `EmeralDex - ${currentRoute.title}`;
     } else {
-      document.title = 'Smart Exchange';
+      document.title = 'EmeralDEX';
     }
   }, [location]);
 
@@ -69,7 +69,11 @@ export const Header = () => {
             onClick={() => handleClick('')}
           />
           {!isMobile && (
-            <p className='header-area1-text font-size-xxl mt-2 mb-0' onClick={() => handleClick('')}>Smart<span className='text-white'>Exchange</span></p>
+            <p className='header-area1-text font-size-xxl mt-2 mb-0' onClick={() => handleClick('')}>
+              Emeral
+              <span className='half-colored-d'>D</span>
+              <span className='text-white'>EX</span>
+            </p>
           )}
           {!isLoggedIn ? (
             <Button
@@ -130,28 +134,28 @@ export const Header = () => {
                 target='_blank'
                 className='m-r-n-lg'
               >
-                <Facebook className='nav-social-media-icon m-0' sx={{fontSize: '20px'}}/>
+                <Facebook className='nav-social-media-icon m-0' sx={{ fontSize: '20px' }} />
               </Nav.Link>
               <Nav.Link
                 href='https://www.x.com'
                 target='_blank'
                 className='m-r-n-xl'
               >
-                <X className='nav-social-media-icon' sx={{fontSize: '16px', marginTop: '2px'}}/>
+                <X className='nav-social-media-icon' sx={{ fontSize: '16px', marginTop: '2px' }} />
               </Nav.Link>
               <Nav.Link
                 href='https://www.telegram.com'
                 target='_blank'
                 className='m-r-n-lg'
               >
-                <Telegram className='nav-social-media-icon m-0' sx={{fontSize: '20px'}}/>
+                <Telegram className='nav-social-media-icon m-0' sx={{ fontSize: '20px' }} />
               </Nav.Link>
               <Nav.Link
                 href='https://www.telegram.com'
                 target='_blank'
                 className='m-r-n-lg'
               >
-                <MenuBook className='nav-social-media-icon m-0' sx={{fontSize: '20px'}}/>
+                <MenuBook className='nav-social-media-icon m-0' sx={{ fontSize: '20px' }} />
               </Nav.Link>
             </Nav>
           </Navbar>
