@@ -1,42 +1,48 @@
 @font-face {
   font-family: 'Red Rose';
   src: url('../fonts/RedRose-Regular.ttf') format('truetype');
-  font-weight: 400; /* Normal weight */
+  font-weight: 400;
+  /* Normal weight */
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Red Rose';
   src: url('../fonts/RedRose-Bold.ttf') format('truetype');
-  font-weight: 700; /* Bold weight */
+  font-weight: 700;
+  /* Bold weight */
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Red Rose';
   src: url('../fonts/RedRose-Light.ttf') format('truetype');
-  font-weight: 300; /* Light weight */
+  font-weight: 300;
+  /* Light weight */
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Red Rose';
   src: url('../fonts/RedRose-Medium.ttf') format('truetype');
-  font-weight: 500; /* Medium weight */
+  font-weight: 500;
+  /* Medium weight */
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Red Rose';
   src: url('../fonts/RedRose-SemiBold.ttf') format('truetype');
-  font-weight: 600; /* Semi-Bold weight */
+  font-weight: 600;
+  /* Semi-Bold weight */
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Red Rose';
   src: url('../fonts/RedRose-VariableFont_wght.ttf') format('truetype');
-  font-weight: 100 900; /* Variable font with weight range */
+  font-weight: 100 900;
+  /* Variable font with weight range */
   font-style: normal;
 }
 
@@ -91,7 +97,7 @@ main {
   scrollbar-color: #083121 #062418;
 }
 
-.footer-area{
+.footer-area {
   background-color: #141414;
   border-top: 1px solid #2F2F2F;
   padding-top: 12px;
