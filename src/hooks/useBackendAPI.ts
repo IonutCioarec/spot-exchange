@@ -8,7 +8,7 @@ export const useBackendAPI = () => {
   // get the list of token pairs (pools)
   const getPairs = async (): Promise<Pair[]> => {
     try {
-      const response = await axios.get<Pair[]>(`${dexAPI}/pairs`, {
+      const response = await axios.get<Pair[]>(`${dexAPI}/pairs/v2`, {
         headers: {
           Accept: 'application/json',
         },
@@ -26,7 +26,6 @@ export const useBackendAPI = () => {
       const response = await axios.get<Token[]>(`${dexAPI}/tokens/v2`, {
         headers: { Accept: 'application/json' },
       });
-      //console.log(JSON.stringify(response.data, null, 2));
       return response.data;
     } catch (e) {
       console.error(e);

@@ -41,7 +41,6 @@ const Swap = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const pairTokens = useSelector(selectPairTokensById);
 
-  console.log(JSON.stringify(pairTokens, null, 2));
   const userTokens = useSelector(selectUserTokens);
   const isMobile = useMobile();
   const { getSwapPrice } = useBackendAPI();
