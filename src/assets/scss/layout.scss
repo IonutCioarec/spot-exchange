@@ -228,12 +228,12 @@
 
 .btn-intense-green {
   font-family: "Red Rose", serif !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
   line-height: 17px !important;
   letter-spacing: 0em !important;
-  padding: 13px 25px !important;
+  padding: 10px 20px !important;
   border-radius: 35px !important;
   background: #3FAC5A !important;
   color: #161616 !important;
@@ -244,10 +244,11 @@
   white-space: nowrap;
 }
 
-.hover-btn {  
+.hover-btn {
   &:hover {
     color: #161616 !important;
   }
+
   &::before {
     content: "";
     position: absolute;
@@ -273,7 +274,7 @@
   }
 }
 
-.header-area1-text{
+.header-area1-text {
   text-transform: uppercase;
   color: #3FAC5A;
   font-weight: bold;
@@ -282,4 +283,55 @@
   @include maxQuery(575) {
     visibility: hidden;
   }
+}
+
+.aws-btn {
+  --button-default-height: 39px;
+  --button-default-font-size: 12px;
+  --button-default-border-radius: 10px;
+  --button-horizontal-padding: 25px;
+  --button-raise-level: 6px;
+  --button-hover-pressure: 2;
+  --transform-speed: .185s;
+  font-weight: bold;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.aws-btn.aws-btn-primary {
+  --button-primary-color: #3fac5a;
+  --button-primary-color-dark: #245c3c;
+  --button-primary-color-light: black;
+  --button-primary-color-hover: #3c965a;
+  --button-primary-color-active: #3c965a;
+  --button-primary-border: 0px solid #FFFFFF;
+}
+
+.aws-btn.aws-btn-secondary {
+  --button-secondary-color: #323232;
+  --button-secondary-color-dark: #282828;
+  --button-secondary-color-light: #e9e9e2;
+  --button-secondary-color-hover: #464646;
+  --button-secondary-color-active: #464646;
+  --button-secondary-border: none;
+}
+
+.aws-btn.aws-btn-danger {
+  --button-primary-color: #f47272;
+  --button-primary-color-dark: #8e2b2b;
+  --button-primary-color-light: white;
+  --button-primary-color-hover: #f05c5c;
+  --button-primary-color-active: #f05c5c;
+  --button-primary-border: 0px solid #752121;
+}
+
+.aws-btn.aws-btn-warning {
+  --button-primary-color: #f8b26a;
+  --button-primary-color-dark: #a65f1b;
+  --button-primary-color-light: black;
+  --button-primary-color-hover: #f5a64f;
+  --button-primary-color-active: #f5a64f;
+  --button-primary-border: 0px solid #8a4a12;
 }

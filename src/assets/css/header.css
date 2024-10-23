@@ -1,13 +1,12 @@
 .header-area1 {
-  background-color: #141414;
+  background-color: rgba(20, 20, 20, 1);
   padding-top: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #2F2F2F;
 }
 
 .header-area2 {
-  background-color: #141414;
-  border-bottom: 1px solid #2F2F2F;
+  background-color: rgba(20, 20, 20, 1);
+  box-shadow: 0 7px 7px rgba(63, 142, 90, 0.1);
 }
 
 .nav-social-media-icon {

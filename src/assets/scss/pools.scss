@@ -13,19 +13,19 @@
 }
 
 .pool {
-  padding: 15px;
-  background-color: #083121;
+  padding: 5px;
+  background-color: rgba(34, 34, 34, 0.6);
   border-radius: 10px;
   margin-top: 3px;
 
   &:hover {
-    background-color: #0a3b28;
+    background-color: rgba(63, 63, 63, 0.4);
     cursor: pointer;
   }
 }
 
 .pool-sub-container {
-  background-color: #062418;
+  background-color: rgba(18, 18, 18, 0.3);
   border-radius: 5px;
 }
 

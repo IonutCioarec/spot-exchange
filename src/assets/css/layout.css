@@ -55,7 +55,7 @@ body {
   font-family: 'Red Rose', serif !important;
 }
 
-body::before {
+.bg-image::before {
   content: "";
   position: fixed;
   top: 0;
@@ -88,13 +88,13 @@ main {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #083121;
+  background-color: #3FAC5A;
   border-radius: 10px;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #083121 #062418;
+  scrollbar-color: #3FAC5A #202020;
 }
 
 .footer-area {
