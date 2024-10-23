@@ -19,6 +19,9 @@ import { Switch, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
+import LightSpot from 'components/LightSpot';
+import StaticLightSpot from 'components/StaticLightSpot';
+import LightTrapezoid from 'components/LightTrapezoid';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -93,13 +96,22 @@ const Pools = () => {
     }, loadingTime);
   };
 
-
   return (
-    <Container>
-      <Row className='mb-5'>
+    <Fragment>
+      <Row>
+        <Col xs={12}>
+          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.3)', minHeight: '100px' }}>
+            <div className='p-5'>
+              <h2 className='text-white text-center'>Pools</h2>
+              <p className='text-white mb-0'>It is a long established fact that a reader will be distracted by the readable content of a page</p>
+            </div>
+          </div>
+        </Col>
+      </Row>
+      <Row className='mb-1'>
         <Col xs={12} lg={12}>
           <div className='mt-5 mb-5'>
-            <div className='mb-3 mt-2 d-flex justify-content-end' style={{ borderBottom: '3px solid #0c462f' }}>
+            {/* <div className='mb-3 mt-2 d-flex justify-content-end' style={{ borderBottom: '3px solid #0c462f' }}>
               {!isMobile &&
                 <FormControlLabel
                   control={
@@ -175,7 +187,7 @@ const Pools = () => {
                   }}
                 />
               </div>
-            }
+            } */}
             {pairsStatus === 'loading' && <FilterLoader />}
             {(isEmpty(pairs) && pairsStatus !== 'loading' && !loading) && (
               <div style={{ minHeight: '30vh' }}>
@@ -207,10 +219,14 @@ const Pools = () => {
               </Fragment>
             )}
 
+            {/* Add light spots */}
+            <LightSpot size={350} x="40%" y="40%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
+            {/* <LightSpot size={300} x="10%" y="70%" color="rgba(63, 172, 90, 0.6)" /> */}
+            {/* <LightSpot size={250} x="85%" y="30%" color="rgba(63, 172, 90, 0.3)" /> */}
           </div>
         </Col>
       </Row>
-    </Container>
+    </Fragment>
   );
 };
 

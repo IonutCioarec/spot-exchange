@@ -25,7 +25,6 @@ export default function PoolLiquidityBar({
     width: '100%',
     backgroundColor: 'transparent',
     borderRadius: '7px',
-    marginTop: '5px'
   });
 
   const Token1Bar = styled('div')({

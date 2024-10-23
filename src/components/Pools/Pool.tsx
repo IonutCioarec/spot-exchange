@@ -5,13 +5,18 @@ import { Pair, Token } from "types/backendTypes";
 import { useState } from "react";
 import { denominatedAmountToIntlFormattedAmount, denominatedAmountToAmount, formatSignificantDecimals, intlNumberFormat, intlFormatSignificantDecimals } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
 import PoolLiquidityBar from "./PoolLiquidityBar";
 import { getPercentageBigNumber, getAmountFromPercentageBigNumber } from "utils/calculs";
 import { useGetAccountInfo } from 'hooks';
 import { Link } from 'react-router-dom';
 import { defaultSwapToken1, defaultSwapToken2 } from "config";
+import {
+  AwesomeButton,
+  AwesomeButtonProgress,
+  AwesomeButtonSocial,
+} from 'react-awesome-button';
 
 interface PoolProps {
   pair: Pair;
@@ -85,31 +90,30 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             <Col lg={2} className="text-right">
               <p className="mb-0 font-size-xxs text-silver">Volume (24h)</p>
               ${intlFormatSignificantDecimals(Number(pair?.volume_24h), 3)}
-            </Col>            
+            </Col>
             <Col lg={1} className="text-center">
-              <Button
-                className="btn-green3 text-capitalize"
-                variant="outlined"
+              <IconButton
+                className="m-0"
                 size="small"
                 color="success"
-                onClick={() => setOpen(!open)}                
+                onClick={() => setOpen(!open)}
               >
-                {open ? (<KeyboardArrowUp sx={{ marginTop: '-2px' }} />) : (<KeyboardArrowDown sx={{ marginTop: '-2px' }} />)}
-              </Button>
+                {open ? (<KeyboardArrowUp sx={{ marginTop: '-2px', fontSize: '30px' }} />) : (<KeyboardArrowDown sx={{ marginTop: '-2px', fontSize: '30px' }} />)}
+              </IconButton>
             </Col>
           </Row>
           {open && (
-            <div className="mt-4" style={{ borderTop: '1px solid grey' }}>
-              <Row className="mt-3 g-2">
+            <div className="mt-2" style={{ borderTop: '3px solid rgba(10, 10, 10, 0.3)' }}>
+              <Row className="g-1" style={{ marginTop: '0' }}>
                 <Col lg={8}>
-                  <div className="pool-sub-container px-4 py-3 ">
-                    <p className="text-center text-silver mt-2">Pool Assets</p>
+                  <div className="pool-sub-container px-4 py-2 ">
+                    <p className="text-center text-silver mt-1">Pool Assets</p>
 
-                    <div className="d-flex justify-content-between mt-3">
+                    <div className="d-flex justify-content-between mt-1">
                       <div>
-                        <p className="font-size-xs text-silver mb-1">{token1Details?.token_id ?? defaultTokenValues.name}</p>
+                        <p className="font-size-xs text-silver mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
                         <div className="d-flex justfy-content-start">
-                          <p className="h5">{intlNumberFormat(Number(pair.token1_reserve), 3, 3)}</p>
+                          <p className="h5 mb-0">{intlNumberFormat(Number(pair.token1_reserve), 3, 3)}</p>
                           <img
                             src={token1Details?.logo_url ?? defaultTokenValues.image_url}
                             alt={pair.token1}
@@ -118,12 +122,12 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                           />
                           <p className="h5 ms-1 mb-0">{token1Details?.ticker}</p>
                         </div>
-                        <p className="mt-0 font-size-xs text-silver">${intlFormatSignificantDecimals((Number(token1Details?.price_usd) ?? defaultTokenValues.price) * Number(pair.token1_reserve), 3)}</p>
+                        <p className="mt-0 font-size-xs text-silver mb-1">${intlFormatSignificantDecimals((Number(token1Details?.price_usd) ?? defaultTokenValues.price) * Number(pair.token1_reserve), 3)}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-size-xs text-silver mb-1">{token2Details?.token_id ?? defaultTokenValues.name}</p>
+                        <p className="font-size-xs text-silver mb-0">{token2Details?.token_id ?? defaultTokenValues.name}</p>
                         <div className="d-flex justfy-content-end">
-                          <p className="h5">{intlNumberFormat(Number(pair.token2_reserve), 3, 3)}</p>
+                          <p className="h5 mb-0">{intlNumberFormat(Number(pair.token2_reserve), 3, 3)}</p>
                           <img
                             src={token2Details?.logo_url ?? defaultTokenValues.image_url}
                             alt={pair.token2}
@@ -132,53 +136,53 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                           />
                           <p className="h5 ms-1 mb-0">{token2Details?.ticker}</p>
                         </div>
-                        <p className="mt-0 font-size-xs text-silver">${intlFormatSignificantDecimals((Number(token2Details?.price_usd) ?? defaultTokenValues.price) * Number(pair.token2_reserve), 3)}</p>
+                        <p className="mt-0 font-size-xs text-silver mb-0">${intlFormatSignificantDecimals((Number(token2Details?.price_usd) ?? defaultTokenValues.price) * Number(pair.token2_reserve), 3)}</p>
                       </div>
                     </div>
-                    <div className="mb-2">
+                    <div className="mb-1">
                       <PoolLiquidityBar
                         token1Amount={Number(pair.token1_reserve)}
                         token2Amount={Number(pair.token2_reserve)}
                       />
                     </div>
                   </div>
-                  <Row className="g-2">
-                    <Col lg={3} className="mt-3">
-                      <div className="pool-sub-container px-4 py-3 text-center">
-                        <p className="text-silver font-size-sm">Fees (Total)</p>
-                        <p className="h3 mt-3 mb-0">$12.8M</p>
+                  <Row className="g-1">
+                    <Col lg={3} className="mt-2">
+                      <div className="pool-sub-container p-2 text-center">
+                        <p className="text-silver font-size-xs mb-0">Fees (Total)</p>
+                        <p className="h5 mb-0">$12.8M</p>
                       </div>
                     </Col>
-                    <Col lg={3} className="mt-3">
-                      <div className="pool-sub-container px-4 py-3 text-center">
-                        <p className="text-silver font-size-sm">Fees (24h)</p>
-                        <p className="h3 mt-3 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}</p>
+                    <Col lg={3} className="mt-2">
+                      <div className="pool-sub-container p-2 text-center">
+                        <p className="text-silver font-size-xs mb-0">Fees (24h)</p>
+                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}</p>
                       </div>
                     </Col>
-                    <Col lg={3} className="mt-3">
-                      <div className="pool-sub-container px-4 py-3 text-center">
-                        <p className="text-silver font-size-sm">Your Fees (Total)</p>
-                        <p className="h3 mt-3 mb-0">${address ? '4M' : '0'}</p>
+                    <Col lg={3} className="mt-2">
+                      <div className="pool-sub-container p-2 text-center">
+                        <p className="text-silver font-size-xs mb-0">Your Fees (Total)</p>
+                        <p className="h5 mb-0">${address ? '4M' : '0'}</p>
                       </div>
                     </Col>
-                    <Col lg={3} className="mt-3">
-                      <div className="pool-sub-container px-4 py-3 text-center">
-                        <p className="text-silver font-size-sm">Your Fees (24h)</p>
-                        <p className="h3 mt-3 mb-0">${address ? '48k' : '0'}</p>
+                    <Col lg={3} className="mt-2">
+                      <div className="pool-sub-container p-2 text-center">
+                        <p className="text-silver font-size-xs mb-0">Your Fees (24h)</p>
+                        <p className="h5 mb-0">${address ? '48k' : '0'}</p>
                       </div>
                     </Col>
                   </Row>
                 </Col>
                 <Col lg={4}>
-                  <div className="pool-sub-container px-4 py-3">
+                  <div className="pool-sub-container px-3 py-2">
                     <div className="d-flex justify-content-between align-items-baseline">
-                      <p className="text-white font-size-lg font-bold mb-0">Pool Share</p>
-                      <p className="text-white font-size-xxl font-bold mb-0 text-right">{intlFormatSignificantDecimals(getPercentageBigNumber(userLpTokenBalance ?? 0, lpTokenSupply), 3)}%</p>
+                      <p className="text-white font-size-md font-bold mb-0">Pool Share</p>
+                      <p className="text-white font-size-xl font-bold mb-0 text-right">{intlFormatSignificantDecimals(getPercentageBigNumber(userLpTokenBalance ?? 0, lpTokenSupply), 3)}%</p>
                     </div>
                     <div className="d-flex justify-content-between align-items-baseline">
-                      <p className="small text-silver mb-0 mt-1">{token1Details?.token_id ?? defaultTokenValues.name}</p>
+                      <p className="small text-silver mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
                       <div className="d-flex justfy-content-end">
-                        <p className="font-size-xs mb-0">
+                        <p className="font-size-sm mb-0">
                           {intlFormatSignificantDecimals(
                             getAmountFromPercentageBigNumber(
                               getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
@@ -186,18 +190,12 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                             ), 3, 3)
                           }
                         </p>
-                        <img
-                          src={token1Details?.logo_url ?? defaultTokenValues.image_url}
-                          alt={pair.token1}
-                          className='ms-2'
-                          style={{ width: 20, height: 20 }}
-                        />
                       </div>
                     </div>
                     <div className="d-flex justify-content-between align-items-baseline">
                       <p className="small text-silver mb-0">{token2Details?.token_id ?? defaultTokenValues.name}</p>
                       <div className="d-flex justify-content-end">
-                        <p className="font-size-xs mb-0">
+                        <p className="font-size-sm mb-0">
                           {intlFormatSignificantDecimals(
                             getAmountFromPercentageBigNumber(
                               getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
@@ -205,22 +203,16 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                             ), 3, 3)
                           }
                         </p>
-                        <img
-                          src={token2Details?.logo_url ?? defaultTokenValues.image_url}
-                          alt={pair.token2}
-                          className='ms-2'
-                          style={{ width: 20, height: 20 }}
-                        />
                       </div>
                     </div>
                   </div>
-                  <div className="pool-sub-container px-4 py-3 mt-2">
+                  <div className="pool-sub-container px-3 py-2 mt-1">
                     <div className="d-flex justify-content-between align-items-center">
                       <div>
-                        <p className="text-white font-size-lg font-bold mb-0">Your Liquidity</p>
-                        <p className="small text-silver mb-0 mt-1">Total value</p>
+                        <p className="text-white font-size-md font-bold mb-0">Your Liquidity</p>
+                        <p className="small text-silver mb-0">Total value</p>
                       </div>
-                      <p className="text-white font-size-xxl font-bold mb-0">
+                      <p className="text-white font-size-xl font-bold mb-0">
                         ${intlFormatSignificantDecimals(
                           getAmountFromPercentageBigNumber(
                             getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
@@ -230,26 +222,12 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                       </p>
                     </div>
                   </div>
-                  <div className="pool-sub-container px-4 pt-3 pb-2 mt-2">
-                    <div className="d-flex justify-content-between align-items-center gap-3 mt-1 mb-1">
-                      <Button
-                        className="btn-outline-warning text-uppercase font-bold"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                      >
-                        Withdraw
-                      </Button>
-                      <Button
-                        component={Link}
-                        to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}
-                        className="btn-outline-success text-uppercase font-bold"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                      >
-                        SWAP
-                      </Button>
+
+                  <div className="mt-2">
+                    <div className="d-flex justify-content-between align-items-center gap-3 mt-1 mb-1 mx-1">
+                      <AwesomeButton className="aws-btn-primary full-width">ADD</AwesomeButton>
+                      <AwesomeButton className="aws-btn-danger full-width">WITHDRAW</AwesomeButton>
+                      <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
                     </div>
                   </div>
                 </Col>
