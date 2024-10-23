@@ -55,7 +55,7 @@ body {
   font-family: 'Red Rose', serif !important;
 }
 
-.bg-image::before {
+body::before {
   content: "";
   position: fixed;
   top: 0;
