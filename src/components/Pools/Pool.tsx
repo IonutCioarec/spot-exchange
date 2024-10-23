@@ -12,6 +12,7 @@ import { getPercentageBigNumber, getAmountFromPercentageBigNumber } from "utils/
 import { useGetAccountInfo } from 'hooks';
 import { Link } from 'react-router-dom';
 import { defaultSwapToken1, defaultSwapToken2 } from "config";
+import CountUp from 'react-countup';
 import {
   AwesomeButton,
   AwesomeButtonProgress,
@@ -85,11 +86,31 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             </Col>
             <Col lg={2} className="text-right">
               <p className="mb-0 font-size-xxs text-silver">Fees (24h)</p>
-              ${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}
+              $
+              <CountUp
+                start={0}
+                // end={Number(pair?.fees_24h)}
+                end={423.245}
+                duration={1.5}
+                separator=","
+                decimals={3}
+                decimal="."
+                delay={0.1}
+              />
             </Col>
             <Col lg={2} className="text-right">
               <p className="mb-0 font-size-xxs text-silver">Volume (24h)</p>
-              ${intlFormatSignificantDecimals(Number(pair?.volume_24h), 3)}
+              $
+              <CountUp
+                start={0}
+                // end={Number(pair?.volume_24h)}
+                end={4563.764}
+                duration={1.5}
+                separator=","
+                decimals={3}
+                decimal="."
+                delay={0.1}
+              />
             </Col>
             <Col lg={1} className="text-center">
               <IconButton
@@ -139,12 +160,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         <p className="mt-0 font-size-xs text-silver mb-0">${intlFormatSignificantDecimals((Number(token2Details?.price_usd) ?? defaultTokenValues.price) * Number(pair.token2_reserve), 3)}</p>
                       </div>
                     </div>
-                    <div className="mb-1">
-                      <PoolLiquidityBar
-                        token1Amount={Number(pair.token1_reserve)}
-                        token2Amount={Number(pair.token2_reserve)}
-                      />
-                    </div>
                   </div>
                   <Row className="g-1">
                     <Col lg={3} className="mt-2">
@@ -155,8 +170,8 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     </Col>
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
-                        <p className="text-silver font-size-xs mb-0">Fees (24h)</p>
-                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}</p>
+                        <p className="text-silver font-size-xs mb-0">Fees (30D)</p>
+                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_30d), 3)}</p>
                       </div>
                     </Col>
                     <Col lg={3} className="mt-2">
@@ -210,7 +225,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     <div className="d-flex justify-content-between align-items-center">
                       <div>
                         <p className="text-white font-size-md font-bold mb-0">Your Liquidity</p>
-                        <p className="small text-silver mb-0">Total value</p>
                       </div>
                       <p className="text-white font-size-xl font-bold mb-0">
                         ${intlFormatSignificantDecimals(
