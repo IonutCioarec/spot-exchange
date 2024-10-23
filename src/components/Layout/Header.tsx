@@ -21,6 +21,7 @@ import logo from 'assets/img/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { Telegram, Facebook, X, MenuBook } from '@mui/icons-material';
+import LightLine from 'components/LightLine';
 
 export const Header = () => {
   const [expanded, setExpanded] = useState(false);
@@ -59,108 +60,80 @@ export const Header = () => {
 
   return (
     <>
-      <div className='header-area1'>
-        <div className={`container d-flex justify-content-between align-items-center`}>
+      <div className='header-area2'>
+        <div className='d-flex px-3 py-2 justify-content-between align-items-center'>
           <img
             src={logo}
             alt='logo'
-            className='cursor-pointer'
-            style={{ width: 50, height: 50 }}
+            className='cursor-pointer ms-1'
+            style={{ width: 25, height: 25 }}
             onClick={() => handleClick('')}
           />
-          {!isMobile && (
-            <p className='header-area1-text font-size-xxl mt-2 mb-0' onClick={() => handleClick('')}>
-              Emeral
-              <span className='half-colored-d'>D</span>
-              <span className='text-white'>EX</span>
-            </p>
-          )}
-          {!isLoggedIn ? (
-            <Button
-              component={Link}
-              to="/unlock"
-              className="btn-intense-green hover-btn"
-            >
-              Connect Wallet
-            </Button>
-          ) : (
-            <Button
-              onClick={handleLogout}
-              className="btn-intense-green hover-btn"
-            >
-              Disconnect
-            </Button>
-          )}
+          <p className='header-area1-text font-size-xxl mb-0 ms-2' onClick={() => handleClick('')}>
+            Emeral
+            <span className='half-colored-d'>D</span>
+            <span className='text-white'>EX</span>
+          </p>
+          <div className='ml-auto'>
+            {!isMobile && (
+              <Navbar>
+                <Nav>
+                  <Nav.Link
+                    as={Link}
+                    to="/"
+                    className={`mx-1 ${location.pathname === '/' ? 'active' : ''}`}
+                    onClick={handleSelect}
+                  >
+                    <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
+                      Dashboard
+                    </p>
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/swap"
+                    className={`mx-1 ${location.pathname === '/swap' ? 'active' : ''}`}
+                    onClick={handleSelect}
+                  >
+                    <p className="nav-link mb-0 mt-0 link font-size-sm">
+                      Swap
+                    </p>
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/pools"
+                    className={`mx-1 ${location.pathname === '/pools' ? 'active' : ''}`}
+                    onClick={handleSelect}
+                  >
+                    <p className="nav-link mb-0 mt-0 link font-size-sm">
+                      Pools
+                    </p>
+                  </Nav.Link>
+                </Nav>
+                
+              </Navbar>
+            )}
+          </div>
+          <div className='ml-auto'>
+            {!isLoggedIn ? (
+              <Button
+                component={Link}
+                to="/unlock"
+                className="btn-intense-green hover-btn"
+              >
+                Connect Wallet
+              </Button>
+            ) : (
+              <Button
+                onClick={handleLogout}
+                className="btn-intense-green hover-btn"
+              >
+                Disconnect
+              </Button>
+            )}
+          </div>
         </div>
       </div>
-      {!isMobile && (
-        <div className='header-area2'>
-          <Navbar className='container'>
-            <Nav>
-              <Nav.Link
-                as={Link}
-                to="/"
-                className={`mx-1 ${location.pathname === '/' ? 'active' : ''}`}
-                onClick={handleSelect}
-              >
-                <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
-                  Dashboard
-                </p>
-              </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/swap"
-                className={`mx-1 ${location.pathname === '/swap' ? 'active' : ''}`}
-                onClick={handleSelect}
-              >
-                <p className="nav-link mb-0 mt-0 link font-size-sm">
-                  Swap
-                </p>
-              </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/pools"
-                className={`mx-1 ${location.pathname === '/pools' ? 'active' : ''}`}
-                onClick={handleSelect}
-              >
-                <p className="nav-link mb-0 mt-0 link font-size-sm">
-                  Pools
-                </p>
-              </Nav.Link>
-            </Nav>
-            <Nav className='ml-auto'>
-              <Nav.Link
-                href='https://www.facebook.com'
-                target='_blank'
-                className='m-r-n-lg'
-              >
-                <Facebook className='nav-social-media-icon m-0' sx={{ fontSize: '20px' }} />
-              </Nav.Link>
-              <Nav.Link
-                href='https://www.x.com'
-                target='_blank'
-                className='m-r-n-xl'
-              >
-                <X className='nav-social-media-icon' sx={{ fontSize: '16px', marginTop: '2px' }} />
-              </Nav.Link>
-              <Nav.Link
-                href='https://www.telegram.com'
-                target='_blank'
-                className='m-r-n-lg'
-              >
-                <Telegram className='nav-social-media-icon m-0' sx={{ fontSize: '20px' }} />
-              </Nav.Link>
-              <Nav.Link
-                href='https://www.telegram.com'
-                target='_blank'
-                className='m-r-n-lg'
-              >
-                <MenuBook className='nav-social-media-icon m-0' sx={{ fontSize: '20px' }} />
-              </Nav.Link>
-            </Nav>
-          </Navbar>
-        </div>
-      )}
+      
       {isMobile && (
         <div className="bottom-nav">
           <div className="nav-items">
