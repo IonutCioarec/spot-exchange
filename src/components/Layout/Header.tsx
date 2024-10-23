@@ -61,20 +61,22 @@ export const Header = () => {
   return (
     <>
       <div className='header-area2'>
-        <div className='d-flex px-3 py-2 justify-content-between align-items-center'>
-          <img
-            src={logo}
-            alt='logo'
-            className='cursor-pointer ms-1'
-            style={{ width: 25, height: 25 }}
-            onClick={() => handleClick('')}
-          />
-          <p className='header-area1-text font-size-xxl mb-0 ms-2' onClick={() => handleClick('')}>
-            Emeral
-            <span className='half-colored-d'>D</span>
-            <span className='text-white'>EX</span>
-          </p>
-          <div className='ml-auto'>
+        <div className='d-flex py-2 justify-content-between align-items-center'>
+          <div className='d-flex align-items-center ml-3'>
+            <img
+              src={logo}
+              alt='logo'
+              className='cursor-pointer ms-1'
+              style={{ width: 25, height: 25 }}
+              onClick={() => handleClick('')}
+            />
+            <p className='header-area1-text font-size-xxl mb-0 ms-2' onClick={() => handleClick('')}>
+              Emeral
+              <span className='half-colored-d'>D</span>
+              <span className='text-white'>EX</span>
+            </p>
+          </div>
+          <div>
             {!isMobile && (
               <Navbar>
                 <Nav>
@@ -109,11 +111,11 @@ export const Header = () => {
                     </p>
                   </Nav.Link>
                 </Nav>
-                
+
               </Navbar>
             )}
           </div>
-          <div className='ml-auto'>
+          <div className='mr-3'>
             {!isLoggedIn ? (
               <Button
                 component={Link}
@@ -133,7 +135,7 @@ export const Header = () => {
           </div>
         </div>
       </div>
-      
+
       {isMobile && (
         <div className="bottom-nav">
           <div className="nav-items">

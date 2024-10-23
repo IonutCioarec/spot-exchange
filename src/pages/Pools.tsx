@@ -220,7 +220,7 @@ const Pools = () => {
             )}
 
             {/* Add light spots */}
-            <LightSpot size={350} x="40%" y="40%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
+            <LightSpot size={isMobile ? 220 : 350} x="25%" y="40%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
             {/* <LightSpot size={300} x="10%" y="70%" color="rgba(63, 172, 90, 0.6)" /> */}
             {/* <LightSpot size={250} x="85%" y="30%" color="rgba(63, 172, 90, 0.3)" /> */}
           </div>

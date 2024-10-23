@@ -41,7 +41,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         }}
       />
 
-      <main className="flex-1">
+      <main>
         <div className='main-container container'>
           {children}
         </div>
