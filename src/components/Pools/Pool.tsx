@@ -66,7 +66,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 initial={{ x: 0 }}
                 animate={{ x: 20 }}
                 transition={{
-                  duration: 1.5,
+                  duration: 2.5,
                   ease: 'easeInOut',
                   delay: 0.3,
                 }}
