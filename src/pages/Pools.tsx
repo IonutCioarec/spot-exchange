@@ -22,38 +22,43 @@ import { useTablet } from 'utils/responsive';
 import LightSpot from 'components/LightSpot';
 import StaticLightSpot from 'components/StaticLightSpot';
 import LightTrapezoid from 'components/LightTrapezoid';
+import { color } from 'framer-motion';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
   '& .MuiSwitch-switchBase': {
     transitionDuration: '300ms',
     '&.Mui-checked': {
-      color: '#0c462f',
+      color: '#3FAC5A',
       '& + .MuiSwitch-track': {
-        backgroundColor: '#0c462f',
-        border: '1px solid green'
+        backgroundColor: 'transparent',
+        border: '1px solid #3FAC5A',
       },
     },
   },
   '& .MuiSwitch-track': {
-    borderRadius: 22 / 2,
-    backgroundColor: '#bdbdbd',
+    borderRadius: 10,
+    backgroundColor: 'transparent',
+    border: '1px solid #3FAC5A',
+    height: 16,
+    width: 34,
+    margin: 'auto',
     '&::before, &::after': {
       content: '""',
       position: 'absolute',
       top: '50%',
-      transform: 'translateY(-50%)',
-      width: 16,
-      height: 16,
-    }
+    },
   },
   '& .MuiSwitch-thumb': {
     boxShadow: 'none',
-    width: 16,
-    height: 16,
-    margin: 2
+    color: 'lightgray',
+    width: 10,
+    height: 10,
+    margin: 5,
   },
 }));
+
+
 
 const Pools = () => {
   const { address } = useGetAccountInfo();
@@ -111,7 +116,7 @@ const Pools = () => {
       <Row className='mb-1'>
         <Col xs={12} lg={12}>
           <div className='mt-5 mb-5'>
-            {/* <div className='mb-3 mt-2 d-flex justify-content-end' style={{ borderBottom: '3px solid #0c462f' }}>
+            <div className='mb-3 mt-2 d-flex justify-content-end'>
               {!isMobile &&
                 <FormControlLabel
                   control={
@@ -127,6 +132,7 @@ const Pools = () => {
                     fontSize: '14px',
                     '& .MuiTypography-root': {
                       fontSize: '14px',
+                      fontFamily: 'Red Rose'
                     },
                   }}
                 />
@@ -187,7 +193,7 @@ const Pools = () => {
                   }}
                 />
               </div>
-            } */}
+            }
             {pairsStatus === 'loading' && <FilterLoader />}
             {(isEmpty(pairs) && pairsStatus !== 'loading' && !loading) && (
               <div style={{ minHeight: '30vh' }}>
