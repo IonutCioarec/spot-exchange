@@ -61,10 +61,6 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-
-
-
-
 const Pools = () => {
   const { address } = useGetAccountInfo();
   const [loading, setLoading] = useState<boolean>(false);
@@ -143,45 +139,57 @@ const Pools = () => {
                 />
               }
               <div className='d-flex justify-content-end'>
-              <Button
-                className="btn-intense-green hover-btn"
-                sx={{ minWidth: isMobile ? '170px' : '120px', height: '30px' }}
-              >
-                New Pool
-              </Button>
-              <TextField
-                id="outlined-search"
-                type="search"
-                size="small"
-                className="ms-2 mb-2"
-                value={searchInput}
-                onChange={handleSearchChange}
-                InputProps={{
-                  style: {
-                    backgroundColor: 'rgba(63, 63, 63, 0.4)',
-                    color: 'white',
-                    borderRadius: '20px'
-                  },
-                  startAdornment: (
-                    <Search style={{ color: 'white', marginRight: '8px', fontSize: '16px' }} />
-                  ),
-                }}
-                InputLabelProps={{
-                  style: {
-                    color: 'white',
-                    marginTop: '3px'
-                  },
-                }}
-                sx={{
-                  '& .MuiInputBase-input': {
-                    height: '0.95em',
-                    fontSize: '0.95em',
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    height: 'auto',
-                  },
-                }}
-              />
+                <Button
+                  className="btn-intense-green hover-btn"
+                  sx={{ minWidth: isMobile ? '170px' : '120px', height: '30px' }}
+                >
+                  New Pool
+                </Button>
+                <TextField
+                  id="outlined-search"
+                  type="search"
+                  size="small"
+                  className="ms-2 mb-2"
+                  value={searchInput}
+                  onChange={handleSearchChange}
+                  InputProps={{
+                    style: {
+                      backgroundColor: 'rgba(63, 63, 63, 0.4)',
+                      color: 'white',
+                      borderRadius: '20px'
+                    },
+                    startAdornment: (
+                      <Search style={{ color: 'white', marginRight: '8px', fontSize: '16px' }} />
+                    ),
+                  }}
+                  InputLabelProps={{
+                    style: {
+                      color: 'white',
+                      marginTop: '3px'
+                    },
+                  }}
+                  sx={{
+                    '& .MuiInputBase-input': {
+                      height: '0.95em',
+                      fontSize: '0.95em',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      height: 'auto',
+                      '& fieldset': {
+                        borderColor: 'transparent',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#3FAC5A',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: '#3FAC5A',
+                      },
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'transparent',
+                    }
+                  }}
+                />
               </div>
             </div>
             {isMobile &&
