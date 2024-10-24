@@ -34,6 +34,15 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
         backgroundColor: 'transparent',
         border: '1px solid #3FAC5A',
       },
+      '& + .MuiSwitch-thumb': {
+        backgroundColor: '#3FAC5A',
+      },
+    },
+    '&.Mui-disabled': {
+      color: theme.palette.action.disabled,
+      '& + .MuiSwitch-track': {
+        backgroundColor: theme.palette.action.disabledBackground,
+      },
     },
   },
   '& .MuiSwitch-track': {
@@ -43,20 +52,16 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
     height: 16,
     width: 34,
     margin: 'auto',
-    '&::before, &::after': {
-      content: '""',
-      position: 'absolute',
-      top: '50%',
-    },
   },
   '& .MuiSwitch-thumb': {
     boxShadow: 'none',
-    color: 'lightgray',
     width: 10,
     height: 10,
     margin: 5,
   },
 }));
+
+
 
 
 
@@ -113,10 +118,10 @@ const Pools = () => {
           </div>
         </Col>
       </Row>
-      <Row className='mb-1'>
+      <Row className='mb-1 mt-2'>
         <Col xs={12} lg={12}>
-          <div className='mt-5 mb-5'>
-            <div className='mb-3 mt-2 d-flex justify-content-end'>
+          <div className=''>
+            <div className='mt-2 d-flex justify-content-between align-items-center'>
               {!isMobile &&
                 <FormControlLabel
                   control={
@@ -137,40 +142,47 @@ const Pools = () => {
                   }}
                 />
               }
+              <div className='d-flex justify-content-end'>
               <Button
-                className="custom-effect btn-green3 text-uppercase mb-2 text-capitalize"
-                variant="outlined"
-                size="small"
-                sx={{ minWidth: '120px' }}
+                className="btn-intense-green hover-btn"
+                sx={{ minWidth: isMobile ? '170px' : '120px', height: '30px' }}
               >
                 New Pool
               </Button>
               <TextField
                 id="outlined-search"
-                label="Quick Search"
                 type="search"
                 size="small"
-                variant="outlined"
                 className="ms-2 mb-2"
                 value={searchInput}
                 onChange={handleSearchChange}
                 InputProps={{
                   style: {
-                    backgroundColor: '#0c462f',
+                    backgroundColor: 'rgba(63, 63, 63, 0.4)',
                     color: 'white',
+                    borderRadius: '20px'
                   },
                   startAdornment: (
-                    <Search style={{ color: 'white', marginRight: '8px' }} />
+                    <Search style={{ color: 'white', marginRight: '8px', fontSize: '16px' }} />
                   ),
                 }}
                 InputLabelProps={{
                   style: {
                     color: 'white',
-                    fontSize: '13px',
                     marginTop: '3px'
                   },
                 }}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    height: '0.95em',
+                    fontSize: '0.95em',
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    height: 'auto',
+                  },
+                }}
               />
+              </div>
             </div>
             {isMobile &&
               <div className='text-right m-t-n-sm'>
@@ -197,7 +209,7 @@ const Pools = () => {
             {pairsStatus === 'loading' && <FilterLoader />}
             {(isEmpty(pairs) && pairsStatus !== 'loading' && !loading) && (
               <div style={{ minHeight: '30vh' }}>
-                <div className='flex flex-col p-6 items-center justify-center gap-2 rounded-xl bg-[#083121] w-full'>
+                <div className='flex flex-col p-3 items-center justify-center gap-2 rounded-lg pool'>
                   <div className='flex flex-col items-center'>
                     <p className='text-white mb-0 font-bold'>No Results Found</p>
                   </div>

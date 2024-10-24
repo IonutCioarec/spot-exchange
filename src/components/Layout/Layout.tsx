@@ -37,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           width: '7vw',
           height: '7vw',
           top: '25%',
-          left: '5%'
+          left: '3%'
         }}
       />
 
