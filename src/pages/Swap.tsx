@@ -284,7 +284,7 @@ const Swap = () => {
   }, [location.search]);
 
   return (
-    <Container>
+    <Container className='swap-page-height'>
       <Row className={`${isMobile ? 'mt-4' : 'mt-5'}`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className='swap-container text-white' style={{ maxWidth: '100%' }}>

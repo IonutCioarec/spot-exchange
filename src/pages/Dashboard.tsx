@@ -5,7 +5,7 @@ import { Row, Col } from 'react-bootstrap';
 
 const Dashboard = () => {
   return (
-    <div className="start-box">
+    <div className="dashboard-page-height">
       <Container>
         <Row className='d-flex text-white container align-items-center'>
           <Col xs={12} lg={12}>

@@ -1,0 +1,21 @@
+// Define the minQuery mixin
+@mixin minQuery($min-width) {
+  @media (min-width: #{$min-width}px) {
+    @content;
+  }
+}
+
+// Define the maxQuery mixin
+@mixin maxQuery($max-width) {
+  @media (max-width: #{$max-width}px) {
+    @content;
+  }
+}
+
+.dashboard-page-height {
+  min-height: 88vh;
+
+  @include maxQuery(700) {
+    min-height: 86.1vh;
+  }
+}

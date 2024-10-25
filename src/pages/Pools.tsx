@@ -120,7 +120,7 @@ const Pools = () => {
   );
 
   return (
-    <Fragment>
+    <div className='pools-page-height'>
       <Row>
         <Col xs={12}>
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.3)', minHeight: '100px' }}>
@@ -307,7 +307,7 @@ const Pools = () => {
           </div>
         </Col>
       </Row>
-    </Fragment>
+    </div>
   );
 };
 

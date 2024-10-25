@@ -102,3 +102,11 @@
     border: 1px solid #00774c !important;
   }
 }
+
+.pools-page-height {
+  min-height: 88vh;
+
+  @include maxQuery(700) {
+    min-height: 86.1vh;
+  }
+}

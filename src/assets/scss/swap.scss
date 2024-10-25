@@ -129,3 +129,11 @@
 .close-button:hover{
   background-color: #041810 !important;
 }
+
+.swap-page-height {
+  min-height: 82.8vh;
+
+  @include maxQuery(700) {
+    min-height: 83.1vh;
+  }
+}
