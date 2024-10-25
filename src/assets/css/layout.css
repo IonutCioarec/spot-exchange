@@ -99,7 +99,7 @@ main {
 
 .footer-area {
   background-color: #141414;
-  border-top: 1px solid #2F2F2F;
+  box-shadow: 0 -12px 7px rgba(63, 142, 90, 0.1);
   padding-top: 12px;
   padding-bottom: 10px;
   bottom: 0;
