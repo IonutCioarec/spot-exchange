@@ -8,7 +8,7 @@ import CircularProgress, {
 
 const FilterLoader = () => {
   return (
-    <div className='mt-2' style={{ minHeight: '20vh' }}>
+    <div className='' style={{ minHeight: '20vh' }}>
       <div className='flex flex-col p-3 items-center justify-center gap-2 rounded-lg pool w-full'>
         <div className='flex flex-col items-center mt-1'>
           <CircularProgress

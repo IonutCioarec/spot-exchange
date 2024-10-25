@@ -114,7 +114,7 @@ const Pools = () => {
           </div>
         </Col>
       </Row>
-      <Row className='mb-1 mt-2'>
+      <Row className='mb-5 mt-2'>
         <Col xs={12} lg={12}>
           <div className=''>
             <div className='mt-2 d-flex justify-content-between align-items-center'>
@@ -209,6 +209,7 @@ const Pools = () => {
                     fontSize: '14px',
                     '& .MuiTypography-root': {
                       fontSize: '14px',
+                      fontFamily: 'Red Rose'
                     },
                   }}
                 />
@@ -228,7 +229,7 @@ const Pools = () => {
               <FilterLoader />
             ) : (
               <Fragment>
-                {pairs.map((pair: Pair, index: number) => (
+                {pairs.slice(0, 15).map((pair: Pair, index: number) => (
                   <Pool
                     key={`pairs-${index}`}
                     pair={pair}
