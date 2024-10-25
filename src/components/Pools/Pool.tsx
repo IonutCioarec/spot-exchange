@@ -261,219 +261,221 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     <div className="d-flex justify-content-between align-items-center gap-3 mt-1 mb-1 mx-1">
                       <AwesomeButton className="aws-btn-primary full-width">ADD</AwesomeButton>
                       <AwesomeButton className="aws-btn-danger full-width">WITHDRAW</AwesomeButton>
-                      <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
+                      <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
+                        <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
+                      </Link>
                     </div>
                   </div>
                 </Col>
               </Row>
             </div>
-        </motion.div>
-      </div>
+          </motion.div>
+        </div>
       </Fragment >
     );
   } else {
-  return (
-    <Fragment>
-      <div className={`pool text-white ${open ? 'mb-5' : 'mb-3'}`}>
-        <div className="d-flex justify-content-between">
-          <div className="d-flex justify-content-start">
-            <img
-              src={token1Details?.logo_url ?? defaultTokenValues.image_url}
-              alt={pair.token1}
-              style={{ width: 40, height: 40 }}
-            />
-            <div className="mb-0 ms-3">
-              <p className="mb-0">{token1Details?.ticker ?? defaultTokenValues.name}</p>
-              <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
-              </p>
-            </div>
-          </div>
-          <span>/</span>
-          <div className="d-flex justify-content-end">
-            <div className="text-right me-3">
-              <p className="mb-0">{token2Details?.ticker ?? defaultTokenValues.name}</p>
-              <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
-              </p>
-            </div>
-            <img
-              src={token2Details?.logo_url ?? defaultTokenValues.image_url}
-              alt={pair.token2}
-              style={{ width: 40, height: 40 }}
-            />
-          </div>
-        </div>
-        <div className="pool-sub-container p-2 mt-3">
+    return (
+      <Fragment>
+        <div className={`pool text-white ${open ? 'mb-5' : 'mb-3'}`}>
           <div className="d-flex justify-content-between">
-            <p className="mb-0 font-size-sm text-silver">Liquidity</p>
-            <p className="mb-0 font-size-sm text-silver">
-              ${intlFormatSignificantDecimals(Number(pair?.tvl), 3)}
-            </p>
-          </div>
-        </div>
-        <div className="pool-sub-container p-2 mt-1">
-          <div className="d-flex justify-content-between">
-            <p className="mb-0 font-size-sm text-silver">Volume (24h)</p>
-            <p className="mb-0 font-size-sm text-silver">${intlFormatSignificantDecimals(Number(pair?.volume_24h), 3)}</p>
-          </div>
-        </div>
-        <div className="pool-sub-container p-2 mt-1">
-          <div className="d-flex justify-content-between">
-            <p className="mb-0 font-size-sm text-silver">Fees (24h)</p>
-            <p className="mb-0 font-size-sm text-silver">${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}</p>
-          </div>
-        </div>
-        <Row className="mt-2 g-2">
-          <Col xs={6}>
-            <Button
-              className="btn-green3 text-capitalize"
-              variant="outlined"
-              size="small"
-              color="success"
-              fullWidth
-              onClick={() => setOpen(!open)}
-              startIcon={
-                open ? (
-                  <KeyboardArrowUp sx={{ marginTop: '-2px' }} />
-                ) : (
-                  <KeyboardArrowDown sx={{ marginTop: '-2px' }} />
-                )
-              }
-            >
-              {open ? <span className="m-l-n-xs">Collapse</span> : <span className="m-l-n-xs">Expand</span>}
-            </Button>
-          </Col>
-          <Col xs={6}>
-            <Button
-              className="btn-green3 text-capitalize"
-              variant="outlined"
-              size="small"
-              color="success"
-              fullWidth
-              startIcon={<Add sx={{ marginTop: '-3px' }} />}
-            >
-              <span className="m-l-n-xs">Add</span>
-            </Button>
-          </Col>
-        </Row>
-        {open && (
-          <div className="mt-3" style={{ borderTop: '1px solid grey' }}>
-            <div className="pool-sub-container p-2 mt-3">
-              <div className="d-flex justify-content-between">
-                <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
-                <p className="mb-0 font-size-sm text-silver">
-                  $127,546,675.23
+            <div className="d-flex justify-content-start">
+              <img
+                src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                alt={pair.token1}
+                style={{ width: 40, height: 40 }}
+              />
+              <div className="mb-0 ms-3">
+                <p className="mb-0">{token1Details?.ticker ?? defaultTokenValues.name}</p>
+                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
                 </p>
               </div>
             </div>
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between">
-                <p className="mb-0 font-size-sm text-silver">Fees (Total)</p>
-                <p className="mb-0 font-size-sm text-silver">
-                  $12,234,432.1
+            <span>/</span>
+            <div className="d-flex justify-content-end">
+              <div className="text-right me-3">
+                <p className="mb-0">{token2Details?.ticker ?? defaultTokenValues.name}</p>
+                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
                 </p>
               </div>
+              <img
+                src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                alt={pair.token2}
+                style={{ width: 40, height: 40 }}
+              />
             </div>
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <p className="mb-0 font-size-sm text-silver">Your Fee (Total)</p>
-                  <p className="mb-0 mt-1 font-size-xs text-white font-bold">$4,052,123.1</p>
-                </div>
-                <div style={{ borderRight: '1px dashed silver' }}></div>
-                <div className="text-right">
-                  <p className="mb-0 font-size-sm text-silver">Your Fee (24h)</p>
-                  <p className="mb-0 mt-1 font-size-xs text-white font-bold">
-                    $152,123.1
+          </div>
+          <div className="pool-sub-container p-2 mt-3">
+            <div className="d-flex justify-content-between">
+              <p className="mb-0 font-size-sm text-silver">Liquidity</p>
+              <p className="mb-0 font-size-sm text-silver">
+                ${intlFormatSignificantDecimals(Number(pair?.tvl), 3)}
+              </p>
+            </div>
+          </div>
+          <div className="pool-sub-container p-2 mt-1">
+            <div className="d-flex justify-content-between">
+              <p className="mb-0 font-size-sm text-silver">Volume (24h)</p>
+              <p className="mb-0 font-size-sm text-silver">${intlFormatSignificantDecimals(Number(pair?.volume_24h), 3)}</p>
+            </div>
+          </div>
+          <div className="pool-sub-container p-2 mt-1">
+            <div className="d-flex justify-content-between">
+              <p className="mb-0 font-size-sm text-silver">Fees (24h)</p>
+              <p className="mb-0 font-size-sm text-silver">${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}</p>
+            </div>
+          </div>
+          <Row className="mt-2 g-2">
+            <Col xs={6}>
+              <Button
+                className="btn-green3 text-capitalize"
+                variant="outlined"
+                size="small"
+                color="success"
+                fullWidth
+                onClick={() => setOpen(!open)}
+                startIcon={
+                  open ? (
+                    <KeyboardArrowUp sx={{ marginTop: '-2px' }} />
+                  ) : (
+                    <KeyboardArrowDown sx={{ marginTop: '-2px' }} />
+                  )
+                }
+              >
+                {open ? <span className="m-l-n-xs">Collapse</span> : <span className="m-l-n-xs">Expand</span>}
+              </Button>
+            </Col>
+            <Col xs={6}>
+              <Button
+                className="btn-green3 text-capitalize"
+                variant="outlined"
+                size="small"
+                color="success"
+                fullWidth
+                startIcon={<Add sx={{ marginTop: '-3px' }} />}
+              >
+                <span className="m-l-n-xs">Add</span>
+              </Button>
+            </Col>
+          </Row>
+          {open && (
+            <div className="mt-3" style={{ borderTop: '1px solid grey' }}>
+              <div className="pool-sub-container p-2 mt-3">
+                <div className="d-flex justify-content-between">
+                  <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
+                  <p className="mb-0 font-size-sm text-silver">
+                    $127,546,675.23
                   </p>
                 </div>
               </div>
-            </div>
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between">
+                  <p className="mb-0 font-size-sm text-silver">Fees (Total)</p>
+                  <p className="mb-0 font-size-sm text-silver">
+                    $12,234,432.1
+                  </p>
+                </div>
+              </div>
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <p className="mb-0 font-size-sm text-silver">Your Fee (Total)</p>
+                    <p className="mb-0 mt-1 font-size-xs text-white font-bold">$4,052,123.1</p>
+                  </div>
+                  <div style={{ borderRight: '1px dashed silver' }}></div>
+                  <div className="text-right">
+                    <p className="mb-0 font-size-sm text-silver">Your Fee (24h)</p>
+                    <p className="mb-0 mt-1 font-size-xs text-white font-bold">
+                      $152,123.1
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="text-white font-size-sm font-bold mb-0">Pool Share</p>
-                <p className="text-white font-size-sm font-bold mb-0 text-right">{intlFormatSignificantDecimals(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3)}%</p>
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="text-white font-size-sm font-bold mb-0">Pool Share</p>
+                  <p className="text-white font-size-sm font-bold mb-0 text-right">{intlFormatSignificantDecimals(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3)}%</p>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
+                  <div className="d-flex justfy-content-end">
+                    <p className="font-size-xs mb-0">
+                      {intlNumberFormat(
+                        getAmountFromPercentageBigNumber(
+                          getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
+                          Number(pair?.token1_reserve)
+                        ), 3, 3)
+                      }
+                    </p>
+                    <img
+                      src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                      alt={pair.token1}
+                      className='ms-2'
+                      style={{ width: 20, height: 20 }}
+                    />
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">{token2Details?.token_id ?? defaultTokenValues.name}</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">
+                      {intlNumberFormat(
+                        getAmountFromPercentageBigNumber(
+                          getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
+                          Number(pair?.token2_reserve)
+                        ), 3, 3)
+                      }
+                    </p>
+                    <img
+                      src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                      alt={pair.token2}
+                      className='ms-2'
+                      style={{ width: 20, height: 20 }}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="d-flex justify-content-between align-items-baseline">
-                <p className="small text-silver font-size-xs mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
-                <div className="d-flex justfy-content-end">
-                  <p className="font-size-xs mb-0">
-                    {intlNumberFormat(
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p className="text-white font-size-sm font-bold mb-0">Your Liquidity</p>
+                  </div>
+                  <p className="text-white font-size-sm font-bold mb-0">
+                    ${intlFormatSignificantDecimals(
                       getAmountFromPercentageBigNumber(
                         getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
-                        Number(pair?.token1_reserve)
+                        Number(pair?.tvl)
                       ), 3, 3)
                     }
                   </p>
-                  <img
-                    src={token1Details?.logo_url ?? defaultTokenValues.image_url}
-                    alt={pair.token1}
-                    className='ms-2'
-                    style={{ width: 20, height: 20 }}
-                  />
                 </div>
               </div>
-              <div className="d-flex justify-content-between align-items-baseline">
-                <p className="small text-silver font-size-xs mb-0">{token2Details?.token_id ?? defaultTokenValues.name}</p>
-                <div className="d-flex justify-content-end">
-                  <p className="font-size-xs mb-0">
-                    {intlNumberFormat(
-                      getAmountFromPercentageBigNumber(
-                        getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
-                        Number(pair?.token2_reserve)
-                      ), 3, 3)
-                    }
-                  </p>
-                  <img
-                    src={token2Details?.logo_url ?? defaultTokenValues.image_url}
-                    alt={pair.token2}
-                    className='ms-2'
-                    style={{ width: 20, height: 20 }}
-                  />
+              <div className="pool-sub-container p-2 mt-1">
+                <div className="d-flex justify-content-between align-items-center gap-2">
+                  <Button
+                    className="font-size-xs btn-outline-warning text-uppercase font-bold"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  >
+                    Withdraw
+                  </Button>
+                  <Button
+                    component={Link}
+                    to={`/swap?token1=${token1Details.token_id}&token2=${token2Details.token_id}`}
+                    className="font-size-xs btn-outline-success text-uppercase font-bold"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  >
+                    SWAP
+                  </Button>
                 </div>
               </div>
             </div>
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <p className="text-white font-size-sm font-bold mb-0">Your Liquidity</p>
-                </div>
-                <p className="text-white font-size-sm font-bold mb-0">
-                  ${intlFormatSignificantDecimals(
-                    getAmountFromPercentageBigNumber(
-                      getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply),
-                      Number(pair?.tvl)
-                    ), 3, 3)
-                  }
-                </p>
-              </div>
-            </div>
-            <div className="pool-sub-container p-2 mt-1">
-              <div className="d-flex justify-content-between align-items-center gap-2">
-                <Button
-                  className="font-size-xs btn-outline-warning text-uppercase font-bold"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                >
-                  Withdraw
-                </Button>
-                <Button
-                  component={Link}
-                  to={`/swap?token1=${token1Details.token_id}&token2=${token2Details.token_id}`}
-                  className="font-size-xs btn-outline-success text-uppercase font-bold"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                >
-                  SWAP
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </Fragment >
-  );
-}
+          )}
+        </div>
+      </Fragment >
+    );
+  }
 }
