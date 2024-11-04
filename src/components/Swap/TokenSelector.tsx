@@ -1,5 +1,5 @@
 import { forwardRef, Fragment, useEffect, useState } from 'react';
-import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton } from '@mui/material';
+import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton, Button } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowDown, Search } from '@mui/icons-material';
 import Slide from '@mui/material/Slide';
@@ -9,6 +9,10 @@ import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectPage, selectPairTokens, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput } from 'storeManager/slices/tokensSlice';
+import { Token } from 'types/backendTypes';
+import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -24,7 +28,6 @@ interface TokenSelectorProps {
   selectedToken: string | '';
   setSelectedToken: (tokenId: string) => void;
   excludedToken: string | null;
-  pairTokens: { [key: string]: any };
   userTokens: Record<string, { balance: string }>;
   resetAmounts: () => void;
 }
@@ -34,12 +37,17 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   selectedToken,
   setSelectedToken,
   excludedToken,
-  pairTokens,
   userTokens,
   resetAmounts
 }) => {
+  const dispatch = useDispatch();
+  const pairTokens = useSelector(selectPairTokensById);
+  const currentPage = useSelector(selectPage);
+  const totalPages = useSelector(selectTotalPages);
+  const apiSearchInput = useSelector(selectSearchInput);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
+  const [localSearchInput, setLocalSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const isMobile = useMobile();
   const isTablet = useTablet();
@@ -47,21 +55,25 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => {
     setIsOpen(false);
-    setSearchInput('');
+    setLocalSearchInput('');
+    dispatch(setSearchInput(''));
+    dispatch(setPage(1));
   };
 
-  const filteredTokens = Object.values(pairTokens).filter((token) => {
-    const matchesSearch =
-      token.token_id.toLowerCase().includes(searchInput.toLowerCase()) ||
-      token.ticker.toLowerCase().includes(searchInput.toLowerCase());
-    const isNotExcluded = token.token_id !== excludedToken;
-    return matchesSearch && isNotExcluded;
-  });
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalSearchInput(value);
+    dispatch(setSearchInput(value));
+    dispatch(setPage(1));
+  };
+
+  const handlePageChange = (newPage: number) => {
+    dispatch(setPage(newPage));
+  };
 
   const handleTokenSelect = (tokenId: string) => {
     setSelectedToken(tokenId);
     resetAmounts();
-    setSearchInput('');
     handleClose();
   };
 
@@ -74,7 +86,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
       setLoading(true);
       clearTimeout(delayDebounceFn);
     };
-  }, [searchInput])
+  }, [localSearchInput])
 
   return (
     <>
@@ -120,7 +132,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             onClick={handleClose}
             aria-label="close"
             className='float-right mb-3 text-white close-button'
-            sx={{borderRadius: '20px !important'}}
+            sx={{ borderRadius: '20px !important' }}
           >
             <CloseIcon />
           </IconButton>
@@ -128,10 +140,10 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             fullWidth
             label='Search tokens by name or ticker'
             variant='outlined'
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            value={apiSearchInput}
+            onChange={handleSearchChange}
             className='input-container'
-            autoFocus            
+            autoFocus
             InputProps={{
               startAdornment: <Search sx={{ color: 'silver', marginRight: '8px' }} />,
               style: { color: 'silver' },
@@ -157,8 +169,8 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         <DialogContent>
           <List>
             {!loading ? (
-              filteredTokens.length > 0 ? (
-                filteredTokens.map((token) => (
+              Object.values(pairTokens).length > 0 ? (
+                Object.values(pairTokens).map((token: any) => (
                   <Fragment key={`list-item-${token.token_id}`}>
                     <ListItem button onClick={() => handleTokenSelect(token.token_id)} className='token-list-item'>
                       <ListItemAvatar>
@@ -188,6 +200,46 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
               <SimpleLoader />
             )}
           </List>
+          {/* Pagination controls */}
+          {Object.values(pairTokens).length > 0 && (
+            <div className="pagination-controls">
+              <Button
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+                className='pagination-button'
+              >
+                <KeyboardDoubleArrowLeft className={`${currentPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
+              </Button>
+
+              <Button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className='pagination-button'
+              >
+                <ChevronLeft className={`${currentPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
+              </Button>
+
+              <span>
+                Page {currentPage} {totalPages > 0 ? `of ${totalPages}` : 'of 1'}
+              </span>
+
+              <Button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className='pagination-button'
+              >
+                <ChevronRight className={`${currentPage === totalPages ? 'disabled-arrow' : 'active-arrow'}`} />
+              </Button>
+
+              <Button
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+                className='pagination-button'
+              >
+                <KeyboardDoubleArrowRight className={`${currentPage === totalPages ? 'disabled-arrow' : 'active-arrow'}`} />
+              </Button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </>

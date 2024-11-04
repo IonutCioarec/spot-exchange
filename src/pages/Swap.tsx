@@ -316,7 +316,6 @@ const Swap = () => {
                 selectedToken={token1}
                 setSelectedToken={setToken1}
                 excludedToken={token2}
-                pairTokens={pairTokens}
                 userTokens={userTokens}
                 resetAmounts={resetAmounts}
               />
@@ -378,7 +377,6 @@ const Swap = () => {
                 selectedToken={token2}
                 setSelectedToken={setToken2}
                 excludedToken={token1}
-                pairTokens={pairTokens}
                 userTokens={userTokens}
                 resetAmounts={resetAmounts}
               />

@@ -62,10 +62,19 @@ export interface SwapPrice {
 export interface PairsState {
   pairs: Pair[];
   status: 'loading' | 'succeeded' | 'failed';
-  viewMode: 'all' | 'assets' | 'created'
+  viewMode: 'all' | 'assets' | 'created',
 }
 
 export interface TokensState {
-  tokens: Token[];
+  allTokens: Token[];
+  pairTokens: {
+    tokens: Token[];
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+  };
+  lpTokens: Token[];
+  searchInput: string;
   status: 'loading' | 'succeeded' | 'failed';
 }
