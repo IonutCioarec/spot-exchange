@@ -90,7 +90,18 @@ export const selectPairTokensById = createSelector(
 // Memoized selector combining lp_tokens and pair_tokens
 export const selectTokenIds = createSelector(
   selectAllTokens,
-  (allTokens) => allTokens.map((token:Token) => token.token_id)
+  (allTokens) => allTokens.map((token: Token) => ({
+    token_id: token.token_id,
+    is_lp_token: token.is_lp_token,
+  }))
+);
+
+export const selectAllTokensById = createSelector(
+  [selectAllTokens],
+  (pairTokens: Token[]) => pairTokens.reduce((acc: Record<string, Token>, token: Token) => {
+    acc[token.token_id] = token;
+    return acc;
+  }, {})
 );
 
 export default tokensSlice.reducer;
