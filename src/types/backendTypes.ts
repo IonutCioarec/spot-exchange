@@ -61,8 +61,14 @@ export interface SwapPrice {
 
 export interface PairsState {
   pairs: Pair[];
-  status: 'loading' | 'succeeded' | 'failed';
-  viewMode: 'all' | 'assets' | 'created',
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+  token_search: string;
+  my_deposits: boolean;
+  lp_token_search: string[];
+  status: 'loading' | 'succeeded' | 'failed';  
 }
 
 export interface TokensState {

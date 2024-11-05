@@ -1,7 +1,7 @@
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPairs } from 'storeManager/slices/pairsSlice';
+import { setPairs, selectPairsSearchInput, selectPairsLpSearchInput, selectPairsMyDeposits } from 'storeManager/slices/pairsSlice';
 import { selectSearchInput, setAllTokens, setPairTokens, setLpTokens } from 'storeManager/slices/tokensSlice';
 import { stateLoaderRefreshTime } from 'config';
 import { useGetPendingTransactions } from 'hooks';
@@ -10,8 +10,13 @@ export const StateLoader = () => {
   const { getTokens, getPairs } = useBackendAPI();
   const { hasPendingTransactions } = useGetPendingTransactions();
   const dispatch = useDispatch();
-  const searchInput = useSelector(selectSearchInput);
-  const page = useSelector((state: any) => state.tokens.pairTokens.page);
+  const tokensSearchInput = useSelector(selectSearchInput);
+  const tokensPage = useSelector((state: any) => state.tokens.pairTokens.page);
+
+  const pairsTokenSearch = useSelector(selectPairsSearchInput);
+  const pairsLPTokenSearch = useSelector(selectPairsLpSearchInput);
+  const pairsPage = useSelector((state: any) => state.pairs.page);
+  const pairsMyDeposits = useSelector(selectPairsMyDeposits);
 
   const loadAllTokens = async () => {
     const { allTokens } = await getTokens(1, 500);
@@ -33,20 +38,31 @@ export const StateLoader = () => {
     dispatch(setLpTokens(lpTokens));
   };
 
-  useEffect(() => {
-    loadPairTokens(page, 10, searchInput);
-  }, [dispatch, page, searchInput]);
-
-  const loadPairs = async () => {
-    const pairs = await getPairs();
+  const loadPairs = async (currentPage: number, currentLimit: number, sortBy: 'liquidity' | 'volume24h' | 'fees_24h', sortDirection: 'asc' | 'desc', tokenSearch: string, my_deposits: boolean, lp_token_search?: string[]) => {
+    const pairs = await getPairs(
+      currentPage,
+      currentLimit,
+      sortBy,
+      sortDirection,
+      tokenSearch,
+      my_deposits,
+      lp_token_search
+    );
     dispatch(setPairs(pairs));
   };
 
   // Load initial state
   useEffect(() => {
+     loadPairTokens(tokensPage, 10, tokensSearchInput);
+  }, [dispatch, tokensPage, tokensSearchInput]);
+
+  useEffect(() => {
+    loadPairs(pairsPage, 10, 'liquidity', 'desc', pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch);
+  }, [dispatch, pairsPage, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch]);
+
+  useEffect(() => {
     loadAllTokens();
     loadLpTokens();
-    loadPairs();
   }, [dispatch, hasPendingTransactions]);
 
   // Refresh data at interval

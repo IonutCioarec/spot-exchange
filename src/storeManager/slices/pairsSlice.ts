@@ -5,65 +5,56 @@ import { selectUserTokens } from './userTokensSlice';
 
 const initialState: PairsState = {
   pairs: [],
-  status: 'loading',
-  viewMode: 'all',
+  page: 1,
+  limit: 10,
+  total: 10,
+  total_pages: 1,
+  token_search: '',
+  lp_token_search: [],
+  my_deposits: false,
+  status: 'loading'
 };
 
 const pairsSlice = createSlice({
   name: 'pairs',
   initialState,
   reducers: {
-    setPairs: (state, action: PayloadAction<Pair[]>) => {
-      state.pairs = action.payload.data;
+    setPairs: (state, action: PayloadAction<PairsState>) => {
+      const { pairs, page, limit, total, total_pages } = action.payload;
+      state.pairs = pairs;
+      state.page = page;
+      state.limit = limit;
+      state.total = total;
+      state.total_pages = total_pages;
       state.status = 'succeeded';
     },
     setStatus: (state, action: PayloadAction<'loading' | 'succeeded' | 'failed'>) => {
       state.status = action.payload;
     },
-    setViewMode: (state, action: PayloadAction<'all' | 'assets' | 'created'>) => {
-      state.viewMode = action.payload;
+    setTokenSearch: (state, action: PayloadAction<string>) => {
+      state.token_search = action.payload;
+    },
+    setLPTokenSearch: (state, action: PayloadAction<string[]>) => {
+      state.lp_token_search = action.payload;
+    },
+    setPage: (state, action: PayloadAction<number>) => {
+      state.page = action.payload;
+    },
+    setMyDeposits: (state, action: PayloadAction<boolean>) => {
+      state.my_deposits = action.payload;
     },
   },
 });
 
-export const { setPairs, setStatus, setViewMode } = pairsSlice.actions;
+export const { setPairs, setStatus, setTokenSearch, setPage, setMyDeposits, setLPTokenSearch } = pairsSlice.actions;
 
 // Selectors
 export const selectPairs = (state: any) => state.pairs.pairs;
 export const selectPairsStatus = (state: any) => state.pairs.status;
-export const selectViewMode = (state: any) => state.pairs.viewMode;
-
-// Filtered pairs based on viewMode
-export const selectFilteredPairs = createSelector(
-  [selectPairs, selectViewMode, selectUserTokens, (state, address) => address, (state, address, searchInput) => searchInput],
-  (pairs, viewMode, userTokens, address, searchInput) => {
-    let filteredPairs = pairs;
-    switch (viewMode) {
-      case 'assets':
-        filteredPairs = pairs.filter((pair: Pair) => {
-          const userBalance = userTokens[pair.lp_token_id]?.balance ?? 0;
-          return userBalance > 0;
-        });
-        break;
-      case 'created':
-        filteredPairs = pairs.filter((pair: Pair) => pair.creator_address === address);
-        break;
-      case 'all':
-      default:
-        break;
-    }
-
-    if (searchInput) {
-      const lowerCaseSearchInput = searchInput.toLowerCase();
-      filteredPairs = filteredPairs.filter((pair: Pair) => {
-        const token1Prefix = pair.token1.split('-')[0].toLowerCase();
-        const token2Prefix = pair.token2.split('-')[0].toLowerCase();
-        return token1Prefix.includes(lowerCaseSearchInput) || token2Prefix.includes(lowerCaseSearchInput);
-      });
-    }
-    return filteredPairs;
-  }
-);
-
+export const selectPairsPage = (state: any) => state.pairs.page;
+export const selectPairsTotalPages = (state: any) => state.pairs.total_pages;
+export const selectPairsSearchInput = (state: any) => state.pairs.token_search;
+export const selectPairsLpSearchInput = (state: any) => state.pairs.lp_token_search;
+export const selectPairsMyDeposits = (state: any) => state.pairs.my_deposits;
 
 export default pairsSlice.reducer;
