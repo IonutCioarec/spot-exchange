@@ -68,6 +68,8 @@ export interface PairsState {
   token_search: string;
   my_deposits: boolean;
   lp_token_search: string[];
+  sort_by: 'liquidity' | 'volume24h' | 'fees_24h',
+  sort_direction: 'asc' | 'desc',
   status: 'loading' | 'succeeded' | 'failed';  
 }
 

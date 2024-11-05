@@ -1,9 +1,9 @@
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPairs, selectPairsSearchInput, selectPairsLpSearchInput, selectPairsMyDeposits } from 'storeManager/slices/pairsSlice';
+import { setPairs, selectPairsSearchInput, selectPairsLpSearchInput, selectPairsMyDeposits, selectPairsSortBy, selectPairsSortDirection } from 'storeManager/slices/pairsSlice';
 import { selectSearchInput, setAllTokens, setPairTokens, setLpTokens } from 'storeManager/slices/tokensSlice';
-import { stateLoaderRefreshTime } from 'config';
+import { stateLoaderRefreshTime, tokensItemsPerPage, poolsItemsPerPage } from 'config';
 import { useGetPendingTransactions } from 'hooks';
 
 export const StateLoader = () => {
@@ -17,6 +17,8 @@ export const StateLoader = () => {
   const pairsLPTokenSearch = useSelector(selectPairsLpSearchInput);
   const pairsPage = useSelector((state: any) => state.pairs.page);
   const pairsMyDeposits = useSelector(selectPairsMyDeposits);
+  const pairsSortBy = useSelector(selectPairsSortBy);
+  const pairsSortDirection = useSelector(selectPairsSortDirection);
 
   const loadAllTokens = async () => {
     const { allTokens } = await getTokens(1, 500);
@@ -53,23 +55,23 @@ export const StateLoader = () => {
 
   // Load initial state
   useEffect(() => {
-     loadPairTokens(tokensPage, 10, tokensSearchInput);
+    //loadPairTokens(tokensPage, tokensItemsPerPage, tokensSearchInput);
   }, [dispatch, tokensPage, tokensSearchInput]);
 
   useEffect(() => {
-    loadPairs(pairsPage, 10, 'liquidity', 'desc', pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch);
-  }, [dispatch, pairsPage, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch]);
+    loadPairs(pairsPage, poolsItemsPerPage, pairsSortBy, pairsSortDirection, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch);
+  }, [dispatch, pairsPage, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch, pairsSortBy, pairsSortDirection]);
 
   useEffect(() => {
-    loadAllTokens();
-    loadLpTokens();
+    //loadAllTokens();
+    //loadLpTokens();
   }, [dispatch, hasPendingTransactions]);
 
   // Refresh data at interval
   useEffect(() => {
     const interval = window.setInterval(() => {
-      loadAllTokens();
-      loadLpTokens();
+      //loadAllTokens();
+      //loadLpTokens();
     }, stateLoaderRefreshTime);
 
     return () => window.clearInterval(interval);

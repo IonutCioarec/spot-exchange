@@ -38,6 +38,8 @@ export const useBackendAPI = () => {
         total_pages,
         token_search: token_search ? token_search : '',
         my_deposits: my_deposits,
+        sort_by: sort_by,
+        sort_direction: sort_direction,
         lp_token_search: lp_token_search?.length ? lp_tokens : [],
         status: 'succeeded',
       };
@@ -52,6 +54,8 @@ export const useBackendAPI = () => {
       total: 0,
       total_pages: 0,
       token_search: '',
+      sort_by: 'liquidity',
+      sort_direction: 'desc',
       lp_token_search: [],
       my_deposits: false,
       status: 'failed',

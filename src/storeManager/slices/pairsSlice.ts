@@ -12,6 +12,8 @@ const initialState: PairsState = {
   token_search: '',
   lp_token_search: [],
   my_deposits: false,
+  sort_by: 'liquidity',
+  sort_direction: 'desc',
   status: 'loading'
 };
 
@@ -43,10 +45,16 @@ const pairsSlice = createSlice({
     setMyDeposits: (state, action: PayloadAction<boolean>) => {
       state.my_deposits = action.payload;
     },
+    setSortBy: (state, action: PayloadAction<'liquidity' | 'volume24h' | 'fees_24h'>) => {
+      state.sort_by = action.payload;
+    },
+    setSortDirection: (state, action: PayloadAction<'asc' | 'desc'>) => {
+      state.sort_direction = action.payload;
+    },
   },
 });
 
-export const { setPairs, setStatus, setTokenSearch, setPage, setMyDeposits, setLPTokenSearch } = pairsSlice.actions;
+export const { setPairs, setStatus, setTokenSearch, setPage, setMyDeposits, setLPTokenSearch, setSortBy, setSortDirection } = pairsSlice.actions;
 
 // Selectors
 export const selectPairs = (state: any) => state.pairs.pairs;
@@ -56,5 +64,7 @@ export const selectPairsTotalPages = (state: any) => state.pairs.total_pages;
 export const selectPairsSearchInput = (state: any) => state.pairs.token_search;
 export const selectPairsLpSearchInput = (state: any) => state.pairs.lp_token_search;
 export const selectPairsMyDeposits = (state: any) => state.pairs.my_deposits;
+export const selectPairsSortBy = (state: any) => state.pairs.sort_by;
+export const selectPairsSortDirection = (state: any) => state.pairs.sort_direction;
 
 export default pairsSlice.reducer;
