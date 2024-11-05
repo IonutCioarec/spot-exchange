@@ -1,8 +1,20 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setViewMode, selectFilteredPairs, selectPairsStatus } from 'storeManager/slices/pairsSlice';
-import { selectPairTokensById, selectLpTokensById } from 'storeManager/slices/tokensSlice';
-import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
+import {
+  selectPairs,
+  selectPairsStatus,
+  selectPairsSearchInput,
+  selectPairsLpSearchInput,
+  selectPairsPage,
+  selectPairsTotalPages,
+  setPage,
+  setTokenSearch,
+  setLPTokenSearch,
+  setMyDeposits,
+  selectPairsMyDeposits
+} from 'storeManager/slices/pairsSlice';
+import { selectPairTokensById, selectLpTokensById, selectAllTokensById } from 'storeManager/slices/tokensSlice';
+import { selectUserTokens, selectNonZeroBalanceLpTokenIds } from 'storeManager/slices/userTokensSlice';
 import Loader from 'components/Loader';
 import FilterLoader from 'components/Pools/FilterLoader';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -23,7 +35,7 @@ import LightSpot from 'components/LightSpot';
 import StaticLightSpot from 'components/StaticLightSpot';
 import LightTrapezoid from 'components/LightTrapezoid';
 import { color } from 'framer-motion';
-import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight,  KeyboardDoubleArrowLeft} from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { poolsItemsPerPage } from 'config';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
@@ -66,58 +78,62 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 const Pools = () => {
   const { address } = useGetAccountInfo();
   const [loading, setLoading] = useState<boolean>(false);
-  const [viewMode, setViewModeState] = useState<'all' | 'assets' | 'created'>('all');
-  const [searchInput, setSearchInput] = useState<string>('');
+  // const [viewMode, setViewModeState] = useState<'all' | 'assets' | 'created'>('all');
+  const [localSearchInput, setLocalSearchInput] = useState<string>('');
   const loadingTime = 300;
   const isMobile = useMobile();
   const isTablet = useTablet();
-  const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
-  const pairs = useSelector((state) => selectFilteredPairs(state, address, searchInput));
-  const pairtokens = useSelector(selectPairTokensById);
+  const pairs = useSelector(selectPairs);
+  const allTokens = useSelector(selectAllTokensById);
   const lptokens = useSelector(selectLpTokensById);
   const pairsStatus = useSelector(selectPairsStatus);
   const userTokens = useSelector(selectUserTokens);
 
+  const currentPage = useSelector(selectPairsPage);
+  const totalPages = useSelector(selectPairsTotalPages);
+  const apiSearchInput = useSelector(selectPairsSearchInput);
+  const lpSearchInput = useSelector(selectNonZeroBalanceLpTokenIds);
+  const myDeposits = useSelector(selectPairsMyDeposits);
+
   // Reset the viewMode to 'all' when the component is first mounted
   useEffect(() => {
-    setViewModeState('all');
-    dispatch(setViewMode('all'));
+    setLPTokenSearch(['']);
+    setMyDeposits(false);
   }, [dispatch]);
 
   const handleAssetsPairsToggle = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
-    setCurrentPage(1);
+    dispatch(setPage(1));
     const isChecked = event.target.checked;
-    const newViewMode = isChecked ? 'assets' : 'all';
-    setViewModeState(newViewMode);
-    dispatch(setViewMode(newViewMode));
+
+    if (isChecked) {
+      dispatch(setLPTokenSearch(lpSearchInput));
+      dispatch(setMyDeposits(true));
+    } else {
+      dispatch(setLPTokenSearch(['']));
+      dispatch(setMyDeposits(false));
+    }
 
     await new Promise((resolve) => setTimeout(resolve, loadingTime));
     setLoading(false);
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     setLoading(true);
-    setCurrentPage(1);
-    setSearchInput(event.target.value);
+    setLocalSearchInput(value);
+    dispatch(setTokenSearch(value));
+    dispatch(setPage(1));
     setTimeout(() => {
       setLoading(false);
     }, loadingTime);
   };
 
-  //Frontend pagination  
-  const totalPages = Math.ceil(pairs.length / poolsItemsPerPage);
-  const handleFirstPage = () => setCurrentPage(1);
-  const handlePreviousPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
-  const handleNextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
-  const handleLastPage = () => setCurrentPage(totalPages);
-
-  const paginatedPairs = pairs.slice(
-    (currentPage - 1) * poolsItemsPerPage,
-    currentPage * poolsItemsPerPage
-  );
+  const handlePageChange = (newPage: number) => {
+    dispatch(setPage(newPage));
+  };
 
   return (
     <div className='pools-page-height'>
@@ -139,7 +155,7 @@ const Pools = () => {
                 <FormControlLabel
                   control={
                     <CustomSwitch
-                      checked={viewMode === 'assets'}
+                      checked={myDeposits}
                       onChange={handleAssetsPairsToggle}
                     />
                   }
@@ -167,7 +183,7 @@ const Pools = () => {
                   type="search"
                   size="small"
                   className="ms-2 mb-2"
-                  value={searchInput}
+                  value={apiSearchInput}
                   onChange={handleSearchChange}
                   InputProps={{
                     style: {
@@ -214,7 +230,7 @@ const Pools = () => {
                 <FormControlLabel
                   control={
                     <CustomSwitch
-                      checked={viewMode === 'assets'}
+                      checked={myDeposits === true}
                       onChange={handleAssetsPairsToggle}
                       color='success'
                     />
@@ -234,7 +250,7 @@ const Pools = () => {
             }
             {pairsStatus === 'loading' && <FilterLoader />}
             {(isEmpty(pairs) && pairsStatus !== 'loading' && !loading) && (
-              <div style={{ minHeight: '30vh' }}>
+              <div>
                 <div className='flex flex-col p-3 items-center justify-center gap-2 rounded-lg pool'>
                   <div className='flex flex-col items-center'>
                     <p className='text-white mb-0 font-bold'>No Results Found</p>
@@ -246,13 +262,13 @@ const Pools = () => {
               <FilterLoader />
             ) : (
               <Fragment>
-                {paginatedPairs.map((pair: Pair, index: number) => (
+                {pairs.map((pair: Pair, index: number) => (
                   <Pool
                     key={`pairs-${index}`}
                     pair={pair}
                     index={index + (currentPage - 1) * 15}
-                    token1Details={pairtokens[pair.token1]}
-                    token2Details={pairtokens[pair.token2]}
+                    token1Details={allTokens[pair.token1]}
+                    token2Details={allTokens[pair.token2]}
                     userToken1Balance={Number(userTokens[pair.token1]?.balance ?? 0)}
                     userToken2Balance={Number(userTokens[pair.token2]?.balance ?? 0)}
                     // userLpTokenBalance={Number(denominatedAmountToAmount(userTokens[pair.lp_token_id]?.balance, lptokens[pair.lp_token_id].decimals, 20) || 0)}
@@ -262,19 +278,19 @@ const Pools = () => {
                 ))}
                 <div className="pagination-controls">
                   <Button
-                    onClick={handleFirstPage}
+                    onClick={() => handlePageChange(1)}
                     disabled={currentPage === 1}
                     className='pagination-button'
                   >
-                    <KeyboardDoubleArrowLeft className={`${currentPage === 1 ? 'disabled-arrow' : 'active-arrow'}`}/>
+                    <KeyboardDoubleArrowLeft className={`${currentPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
                   </Button>
 
                   <Button
-                    onClick={handlePreviousPage}
+                    onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                     className='pagination-button'
                   >
-                    <ChevronLeft className={`${currentPage === 1 ? 'disabled-arrow' : 'active-arrow'}`}/>
+                    <ChevronLeft className={`${currentPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
                   </Button>
 
                   <span>
@@ -282,19 +298,19 @@ const Pools = () => {
                   </span>
 
                   <Button
-                    onClick={handleNextPage}
+                    onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     className='pagination-button'
                   >
-                    <ChevronRight className={`${currentPage === totalPages ? 'disabled-arrow' : 'active-arrow'}`}/>
+                    <ChevronRight className={`${currentPage === totalPages ? 'disabled-arrow' : 'active-arrow'}`} />
                   </Button>
 
                   <Button
-                    onClick={handleLastPage}
+                    onClick={() => handlePageChange(totalPages)}
                     disabled={currentPage === totalPages}
                     className='pagination-button'
                   >
-                    <KeyboardDoubleArrowRight className={`${currentPage === totalPages ? 'disabled-arrow' : 'active-arrow'}`}/>
+                    <KeyboardDoubleArrowRight className={`${currentPage === totalPages ? 'disabled-arrow' : 'active-arrow'}`} />
                   </Button>
                 </div>
               </Fragment>
