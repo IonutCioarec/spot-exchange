@@ -23,6 +23,11 @@
     background-color: rgba(63, 63, 63, 0.4);
     cursor: pointer;
   }
+
+  @include maxQuery(675) {
+    padding: 15px;
+    box-shadow: 0 0 50px rgba(71, 160, 102, 0.1);
+  }
 }
 
 .pool-sub-container {

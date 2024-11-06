@@ -16,6 +16,8 @@ import { AwesomeButton } from 'react-awesome-button';
 import { motion } from "framer-motion";
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 interface PoolProps {
   pair: Pair;
@@ -100,7 +102,16 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 {sortBy === 'liquidity' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
                 {sortBy === 'liquidity' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
               </p>
-              ${intlFormatSignificantDecimals(Number(pair?.tvl), 3)}
+              $
+              <CountUp
+                  start={0}
+                  end={Number(pair?.tvl)}
+                  duration={1.5}
+                  separator=","
+                  decimals={3}
+                  decimal="."
+                  delay={0.1}
+                />
             </Col>
             <Col lg={2} className="text-right">
               <p className={`mb-0 font-size-xxs ${sortBy === 'fees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
@@ -293,88 +304,122 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               <img
                 src={token1Details?.logo_url ?? defaultTokenValues.image_url}
                 alt={pair.token1}
-                style={{ width: 40, height: 40 }}
+                style={{
+                  width: 35,
+                  height: 35,
+                  border: '1px solid rgba(63, 172, 90, 0.3)',
+                  borderRadius: '20px',
+                }}
               />
-              <div className="mb-0 ms-3">
-                <p className="mb-0">{token1Details?.ticker ?? defaultTokenValues.name}</p>
+              <div className="mb-0 ms-2">
+                <p className="mb-0 font-size-sm">{token1Details?.ticker ?? defaultTokenValues.name}</p>
                 <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
                 </p>
               </div>
             </div>
             <span>/</span>
             <div className="d-flex justify-content-end">
-              <div className="text-right me-3">
-                <p className="mb-0">{token2Details?.ticker ?? defaultTokenValues.name}</p>
+              <div className="text-right me-2">
+                <p className="mb-0 font-size-sm">{token2Details?.ticker ?? defaultTokenValues.name}</p>
                 <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
                 </p>
               </div>
               <img
                 src={token2Details?.logo_url ?? defaultTokenValues.image_url}
                 alt={pair.token2}
-                style={{ width: 40, height: 40 }}
+                style={{
+                  width: 35,
+                  height: 35,
+                  border: '1px solid rgba(63, 172, 90, 0.3)',
+                  borderRadius: '20px',
+                }}
               />
             </div>
           </div>
           <div className="pool-sub-container p-2 mt-3">
             <div className="d-flex justify-content-between">
-              <p className="mb-0 font-size-sm text-silver">Liquidity</p>
+              <p className={`mb-0 font-size-sm ${sortBy === 'liquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                Liquidity
+                {sortBy === 'liquidity' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'liquidity' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+              </p>
               <p className="mb-0 font-size-sm text-silver">
-                ${intlFormatSignificantDecimals(Number(pair?.tvl), 3)}
+                $
+                <CountUp
+                  start={0}
+                  end={Number(pair?.tvl)}
+                  duration={1.5}
+                  separator=","
+                  decimals={3}
+                  decimal="."
+                  delay={0.1}
+                />
               </p>
             </div>
           </div>
           <div className="pool-sub-container p-2 mt-1">
             <div className="d-flex justify-content-between">
-              <p className="mb-0 font-size-sm text-silver">Volume (24h)</p>
-              <p className="mb-0 font-size-sm text-silver">${intlFormatSignificantDecimals(Number(pair?.volume_24h), 3)}</p>
+              <p className={`mb-0 font-size-sm ${sortBy === 'volume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                Volume (24h)
+                {sortBy === 'volume24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'volume24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+              </p>
+              <p className="mb-0 font-size-sm text-silver">
+                $
+                <CountUp
+                  start={0}
+                  // end={Number(pair?.volume_24h)}
+                  end={4563.764}
+                  duration={1.5}
+                  separator=","
+                  decimals={3}
+                  decimal="."
+                  delay={0.1}
+                />
+              </p>
             </div>
           </div>
           <div className="pool-sub-container p-2 mt-1">
             <div className="d-flex justify-content-between">
-              <p className="mb-0 font-size-sm text-silver">Fees (24h)</p>
-              <p className="mb-0 font-size-sm text-silver">${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}</p>
+              <p className={`mb-0 font-size-sm ${sortBy === 'fees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                Fees (24h)
+                {sortBy === 'fees24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'fees24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+              </p>
+              <p className="mb-0 font-size-sm text-silver">
+                $
+                <CountUp
+                  start={0}
+                  // end={Number(pair?.fees_24h)}
+                  end={423.245}
+                  duration={1.5}
+                  separator=","
+                  decimals={3}
+                  decimal="."
+                  delay={0.1}
+                />
+              </p>
             </div>
           </div>
-          <Row className="mt-2 g-2">
-            <Col xs={6}>
-              <Button
-                className="btn-green3 text-capitalize"
-                variant="outlined"
+          <Row className="mt-1 text-right">
+            <Col xs={12}>
+              <IconButton
+                className="m-0"
                 size="small"
                 color="success"
-                fullWidth
                 onClick={() => setOpen(!open)}
-                startIcon={
-                  open ? (
-                    <KeyboardArrowUp sx={{ marginTop: '-2px' }} />
-                  ) : (
-                    <KeyboardArrowDown sx={{ marginTop: '-2px' }} />
-                  )
-                }
               >
-                {open ? <span className="m-l-n-xs">Collapse</span> : <span className="m-l-n-xs">Expand</span>}
-              </Button>
-            </Col>
-            <Col xs={6}>
-              <Button
-                className="btn-green3 text-capitalize"
-                variant="outlined"
-                size="small"
-                color="success"
-                fullWidth
-                startIcon={<Add sx={{ marginTop: '-3px' }} />}
-              >
-                <span className="m-l-n-xs">Add</span>
-              </Button>
+                {open ? (<KeyboardDoubleArrowUpIcon sx={{ marginTop: '-2px', fontSize: '30px', marginBottom: '-10px' }} />) : (<KeyboardDoubleArrowDownIcon sx={{ marginTop: '-2px', fontSize: '30px', marginBottom: '-10px' }} />)}
+              </IconButton>
             </Col>
           </Row>
           {open && (
-            <div className="mt-3" style={{ borderTop: '1px solid grey' }}>
+            <div>
               <div className="pool-sub-container p-2 mt-3">
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
                   <p className="mb-0 font-size-sm text-silver">
-                    $127,546,675.23
+                    ${intlFormatSignificantDecimals(Number(pair?.volume_30d), 3)}
                   </p>
                 </div>
               </div>
@@ -382,7 +427,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Fees (Total)</p>
                   <p className="mb-0 font-size-sm text-silver">
-                    $12,234,432.1
+                    ${intlFormatSignificantDecimals(Number(pair?.fees_30d), 3)}
                   </p>
                 </div>
               </div>
@@ -392,7 +437,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     <p className="mb-0 font-size-sm text-silver">Your Fee (Total)</p>
                     <p className="mb-0 mt-1 font-size-xs text-white font-bold">$4,052,123.1</p>
                   </div>
-                  <div style={{ borderRight: '1px dashed silver' }}></div>
                   <div className="text-right">
                     <p className="mb-0 font-size-sm text-silver">Your Fee (24h)</p>
                     <p className="mb-0 mt-1 font-size-xs text-white font-bold">
@@ -418,12 +462,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         ), 3, 3)
                       }
                     </p>
-                    <img
-                      src={token1Details?.logo_url ?? defaultTokenValues.image_url}
-                      alt={pair.token1}
-                      className='ms-2'
-                      style={{ width: 20, height: 20 }}
-                    />
                   </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-baseline">
@@ -437,12 +475,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         ), 3, 3)
                       }
                     </p>
-                    <img
-                      src={token2Details?.logo_url ?? defaultTokenValues.image_url}
-                      alt={pair.token2}
-                      className='ms-2'
-                      style={{ width: 20, height: 20 }}
-                    />
                   </div>
                 </div>
               </div>
@@ -461,26 +493,13 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   </p>
                 </div>
               </div>
-              <div className="pool-sub-container p-2 mt-1">
-                <div className="d-flex justify-content-between align-items-center gap-2">
-                  <Button
-                    className="font-size-xs btn-outline-warning text-uppercase font-bold"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                  >
-                    Withdraw
-                  </Button>
-                  <Button
-                    component={Link}
-                    to={`/swap?token1=${token1Details.token_id}&token2=${token2Details.token_id}`}
-                    className="font-size-xs btn-outline-success text-uppercase font-bold"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                  >
-                    SWAP
-                  </Button>
+              <div className="mt-2">
+                <div className="d-flex justify-content-between align-items-center gap-2 mt-1 mx-1">
+                  <AwesomeButton className="aws-btn-primary full-width">ADD</AwesomeButton>
+                  <AwesomeButton className="aws-btn-danger full-width">WITHDRAW</AwesomeButton>
+                  <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
+                    <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
+                  </Link>
                 </div>
               </div>
             </div>

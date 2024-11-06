@@ -294,6 +294,13 @@
   --button-hover-pressure: 2;
   --transform-speed: .185s;
   font-weight: bold;
+
+  @include maxQuery(675) {
+    --button-default-height: 35px;
+    --button-default-font-size: 11px;
+    --button-raise-level: 4px;
+    min-width: 100px;
+  }
 }
 
 .full-width {
