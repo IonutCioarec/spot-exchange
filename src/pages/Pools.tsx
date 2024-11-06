@@ -253,12 +253,12 @@ const Pools = () => {
                       },
                     }}
                   >
-                    <MenuItem value="liquidity_desc" className='font-rose select-menu-item'>Highest Liquidity</MenuItem>
-                    <MenuItem value="liquidity_asc" className='font-rose select-menu-item'>Lowest Liquidity</MenuItem>
-                    <MenuItem value="volume24h_desc" className='font-rose select-menu-item'>Highest Volume 24h</MenuItem>
-                    <MenuItem value="volume24h_asc" className='font-rose select-menu-item'>Lowest Volume 24h</MenuItem>
-                    <MenuItem value="fees24h_desc" className='font-rose select-menu-item'>Highest Fees 24h</MenuItem>
-                    <MenuItem value="fees24h_asc" className='font-rose select-menu-item'>Lowest Fees 24h</MenuItem>
+                    <MenuItem value="liquidity_desc" className='font-rose select-menu-item font-size-sm'>Highest Liquidity</MenuItem>
+                    <MenuItem value="liquidity_asc" className='font-rose select-menu-item font-size-sm'>Lowest Liquidity</MenuItem>
+                    <MenuItem value="volume24h_desc" className='font-rose select-menu-item font-size-sm'>Highest Volume 24h</MenuItem>
+                    <MenuItem value="volume24h_asc" className='font-rose select-menu-item font-size-sm'>Lowest Volume 24h</MenuItem>
+                    <MenuItem value="fees24h_desc" className='font-rose select-menu-item font-size-sm'>Highest Fees 24h</MenuItem>
+                    <MenuItem value="fees24h_asc" className='font-rose select-menu-item font-size-sm'>Lowest Fees 24h</MenuItem>
                   </Select>
                 </div>
               }
