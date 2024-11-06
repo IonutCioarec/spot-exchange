@@ -7,11 +7,15 @@ import {
   selectPairsLpSearchInput,
   selectPairsPage,
   selectPairsTotalPages,
+  selectPairsMyDeposits,
+  selectPairsSortBy,
+  selectPairsSortDirection,
   setPage,
   setTokenSearch,
   setLPTokenSearch,
   setMyDeposits,
-  selectPairsMyDeposits
+  setSortBy,
+  setSortDirection
 } from 'storeManager/slices/pairsSlice';
 import { selectPairTokensById, selectLpTokensById, selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import { selectUserTokens, selectNonZeroBalanceLpTokenIds } from 'storeManager/slices/userTokensSlice';
@@ -22,7 +26,8 @@ import { Pair } from 'types/backendTypes';
 import 'assets/css/pools.css';
 import { Pool } from 'components/Pools/Pool';
 import { denominatedAmountToAmount } from 'utils/formatters';
-import { Button } from '@mui/material';
+import { Button, OutlinedInput, SelectChangeEvent } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { isEmpty } from '@multiversx/sdk-core/out';
 import TextField from '@mui/material/TextField';
 import { Search } from '@mui/icons-material';
@@ -96,6 +101,8 @@ const Pools = () => {
   const apiSearchInput = useSelector(selectPairsSearchInput);
   const lpSearchInput = useSelector(selectNonZeroBalanceLpTokenIds);
   const myDeposits = useSelector(selectPairsMyDeposits);
+  const sortBy = useSelector(selectPairsSortBy);
+  const sortDirection = useSelector(selectPairsSortDirection);
 
   // Reset the viewMode to 'all' when the component is first mounted
   useEffect(() => {
@@ -135,6 +142,48 @@ const Pools = () => {
     dispatch(setPage(newPage));
   };
 
+  const handleSortByChange = (event: SelectChangeEvent) => {
+    const selectedValue = event.target.value;
+
+    switch (selectedValue) {
+      case 'liquidity_desc':
+        dispatch(setSortBy('liquidity'));
+        dispatch(setSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+      case 'liquidity_asc':
+        dispatch(setSortBy('liquidity'));
+        dispatch(setSortDirection('asc'));
+        dispatch(setPage(1));
+        break;
+      case 'volume24h_desc':
+        dispatch(setSortBy('volume24h'));
+        dispatch(setSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+      case 'volume24h_asc':
+        dispatch(setSortBy('volume24h'));
+        dispatch(setSortDirection('asc'));
+        dispatch(setPage(1));
+        break;
+      case 'fees24h_desc':
+        dispatch(setSortBy('fees24h'));
+        dispatch(setSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+      case 'fees24h_asc':
+        dispatch(setSortBy('fees24h'));
+        dispatch(setSortDirection('asc'));
+        dispatch(setPage(1));
+        break;
+      default:
+        dispatch(setSortBy('liquidity'));
+        dispatch(setSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+    }
+  };
+
   return (
     <div className='pools-page-height'>
       <Row>
@@ -152,24 +201,66 @@ const Pools = () => {
           <div className=''>
             <div className='mt-2 d-flex justify-content-between align-items-center'>
               {!isMobile &&
-                <FormControlLabel
-                  control={
-                    <CustomSwitch
-                      checked={myDeposits}
-                      onChange={handleAssetsPairsToggle}
-                    />
-                  }
-                  label="My Deposits"
-                  labelPlacement="end"
-                  sx={{
-                    color: 'white',
-                    fontSize: '14px',
-                    '& .MuiTypography-root': {
+                <div className='d-flex justify-content-between align-items-center'>
+                  <FormControlLabel
+                    control={
+                      <CustomSwitch
+                        checked={myDeposits}
+                        onChange={handleAssetsPairsToggle}
+                      />
+                    }
+                    label="My Deposits"
+                    labelPlacement="end"
+                    sx={{
+                      color: 'white',
                       fontSize: '14px',
-                      fontFamily: 'Red Rose'
-                    },
-                  }}
-                />
+                      '& .MuiTypography-root': {
+                        fontSize: '14px',
+                        fontFamily: 'Red Rose'
+                      },
+                    }}
+                  />
+                  <span className='font-size-sm font-regular text-white m-r-n-sm'>Sort-by: </span>
+                  <Select
+                    id="sort-by"
+                    value={""}
+                    onChange={handleSortByChange}
+                    input={<OutlinedInput />}
+                    size='small'
+                    sx={{
+                      color: 'white',
+                      fontSize: '12px',
+                      fontFamily: 'Red Rose',
+                      padding: 0,
+                      '.MuiOutlinedInput-notchedOutline': {
+                        border: 'none',
+                      },
+                      '& .MuiSvgIcon-root': {
+                        color: 'white',
+                        marginLeft: '-50px !important'
+                      },
+                      backgroundColor: 'transparent',
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        sx: {
+                          backgroundColor: 'rgba(32, 32, 32, 1)',
+                          color: 'white',
+                          fontFamily: 'Red Rose',
+                          borderRadius: '15px',
+                          // boxShadow: '10px 0 7px rgba(63, 142, 90, 0.1), -10px 0 7px rgba(63, 142, 90, 0.1) !important'
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="liquidity_desc" className='font-rose select-menu-item'>Highest Liquidity</MenuItem>
+                    <MenuItem value="liquidity_asc" className='font-rose select-menu-item'>Lowest Liquidity</MenuItem>
+                    <MenuItem value="volume24h_desc" className='font-rose select-menu-item'>Highest Volume 24h</MenuItem>
+                    <MenuItem value="volume24h_asc" className='font-rose select-menu-item'>Lowest Volume 24h</MenuItem>
+                    <MenuItem value="fees24h_desc" className='font-rose select-menu-item'>Highest Fees 24h</MenuItem>
+                    <MenuItem value="fees24h_asc" className='font-rose select-menu-item'>Lowest Fees 24h</MenuItem>
+                  </Select>
+                </div>
               }
               <div className='d-flex justify-content-end'>
                 <Button
@@ -274,6 +365,8 @@ const Pools = () => {
                     // userLpTokenBalance={Number(denominatedAmountToAmount(userTokens[pair.lp_token_id]?.balance, lptokens[pair.lp_token_id].decimals, 20) || 0)}
                     userLpTokenBalance={Number(0.6)}
                     lpTokenSupply={(Number(denominatedAmountToAmount(lptokens[pair.lp_token_id]?.supply || 0, lptokens[pair.lp_token_id]?.decimals || 18, 20)) ?? 0)}
+                    sortBy={sortBy}
+                    sortDirection={sortDirection}
                   />
                 ))}
                 <div className="pagination-controls">

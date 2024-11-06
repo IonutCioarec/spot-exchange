@@ -3,22 +3,19 @@ import 'assets/scss/pools.scss';
 import { useMobile, useTablet } from 'utils/responsive';
 import { Pair, Token } from "types/backendTypes";
 import { useState } from "react";
-import { denominatedAmountToIntlFormattedAmount, denominatedAmountToAmount, formatSignificantDecimals, intlNumberFormat, intlFormatSignificantDecimals } from 'utils/formatters';
+import { intlNumberFormat, intlFormatSignificantDecimals } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
 import { Button, IconButton } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
-import PoolLiquidityBar from "./PoolLiquidityBar";
 import { getPercentageBigNumber, getAmountFromPercentageBigNumber } from "utils/calculs";
 import { useGetAccountInfo } from 'hooks';
 import { Link } from 'react-router-dom';
 import { defaultSwapToken1, defaultSwapToken2 } from "config";
 import CountUp from 'react-countup';
-import {
-  AwesomeButton,
-  AwesomeButtonProgress,
-  AwesomeButtonSocial,
-} from 'react-awesome-button';
+import { AwesomeButton } from 'react-awesome-button';
 import { motion } from "framer-motion";
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 interface PoolProps {
   pair: Pair;
@@ -29,6 +26,8 @@ interface PoolProps {
   userToken2Balance: number;
   userLpTokenBalance: number;
   lpTokenSupply: number;
+  sortBy: 'liquidity' | 'volume24h' | 'fees24h';
+  sortDirection: 'asc' | 'desc';
 }
 
 const defaultTokenValues = {
@@ -38,7 +37,7 @@ const defaultTokenValues = {
   decimals: 18
 }
 
-export const Pool = ({ pair, index, token1Details, token2Details, userToken1Balance, userToken2Balance, userLpTokenBalance, lpTokenSupply }: PoolProps) => {
+export const Pool = ({ pair, index, token1Details, token2Details, userToken1Balance, userToken2Balance, userLpTokenBalance, lpTokenSupply, sortBy, sortDirection }: PoolProps) => {
   const isMobile = useMobile();
   const isTablet = useTablet();
   const [open, setOpen] = useState(false);
@@ -96,11 +95,19 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               </div>
             </Col>
             <Col lg={2}>
-              <p className="mb-0 font-size-xxs text-silver">Liquidity</p>
+              <p className={`mb-0 font-size-xxs ${sortBy === 'liquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                Liquidity
+                {sortBy === 'liquidity' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'liquidity' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+              </p>
               ${intlFormatSignificantDecimals(Number(pair?.tvl), 3)}
             </Col>
             <Col lg={2} className="text-right">
-              <p className="mb-0 font-size-xxs text-silver">Fees (24h)</p>
+              <p className={`mb-0 font-size-xxs ${sortBy === 'fees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                Fees (24h)
+                {sortBy === 'fees24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'fees24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+              </p>
               $
               <CountUp
                 start={0}
@@ -114,7 +121,11 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               />
             </Col>
             <Col lg={2} className="text-right">
-              <p className="mb-0 font-size-xxs text-silver">Volume (24h)</p>
+              <p className={`mb-0 font-size-xxs ${sortBy === 'volume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                Volume (24h)
+                {sortBy === 'volume24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'volume24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+              </p>
               $
               <CountUp
                 start={0}

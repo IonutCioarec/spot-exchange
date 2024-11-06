@@ -45,7 +45,7 @@ const pairsSlice = createSlice({
     setMyDeposits: (state, action: PayloadAction<boolean>) => {
       state.my_deposits = action.payload;
     },
-    setSortBy: (state, action: PayloadAction<'liquidity' | 'volume24h' | 'fees_24h'>) => {
+    setSortBy: (state, action: PayloadAction<'liquidity' | 'volume24h' | 'fees24h'>) => {
       state.sort_by = action.payload;
     },
     setSortDirection: (state, action: PayloadAction<'asc' | 'desc'>) => {

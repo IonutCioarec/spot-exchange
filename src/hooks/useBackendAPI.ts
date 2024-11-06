@@ -8,7 +8,7 @@ export const useBackendAPI = () => {
   const getPairs = async (
     currentPage: number = 1,
     currentLimit: number = 10,
-    sort_by: 'liquidity' | 'volume24h' | 'fees_24h' = 'liquidity',
+    sort_by: 'liquidity' | 'volume24h' | 'fees24h' = 'liquidity',
     sort_direction: 'asc' | 'desc' = 'desc',
     token_search: string = '',
     my_deposits: boolean = false,

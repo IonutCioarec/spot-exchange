@@ -340,3 +340,12 @@
   box-shadow: 10px 0 7px rgba(63, 142, 90, 0.1),
     -10px 0 7px rgba(63, 142, 90, 0.1) !important;
 }
+
+.select-menu-item {
+  box-shadow: 5px 0 5px rgba(63, 142, 90, 0.1) !important;
+  border-radius: 10px;
+}
+
+.select-menu-item:hover {
+  background-color: #161616 !important;
+}

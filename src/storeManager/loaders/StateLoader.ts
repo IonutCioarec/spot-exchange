@@ -40,7 +40,7 @@ export const StateLoader = () => {
     dispatch(setLpTokens(lpTokens));
   };
 
-  const loadPairs = async (currentPage: number, currentLimit: number, sortBy: 'liquidity' | 'volume24h' | 'fees_24h', sortDirection: 'asc' | 'desc', tokenSearch: string, my_deposits: boolean, lp_token_search?: string[]) => {
+  const loadPairs = async (currentPage: number, currentLimit: number, sortBy: 'liquidity' | 'volume24h' | 'fees24h', sortDirection: 'asc' | 'desc', tokenSearch: string, my_deposits: boolean, lp_token_search?: string[]) => {
     const pairs = await getPairs(
       currentPage,
       currentLimit,
