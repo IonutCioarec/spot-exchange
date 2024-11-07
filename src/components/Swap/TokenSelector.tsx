@@ -29,6 +29,7 @@ interface TokenSelectorProps {
   setSelectedToken: (tokenId: string) => void;
   excludedToken: string | null;
   userTokens: Record<string, { balance: string }>;
+  allTokens: Record<string, Token>;
   resetAmounts: () => void;
 }
 
@@ -38,6 +39,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   setSelectedToken,
   excludedToken,
   userTokens,
+  allTokens,
   resetAmounts
 }) => {
   const dispatch = useDispatch();
@@ -91,20 +93,20 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   return (
     <>
       <div
-        className='input-container p-1 b-r-sm d-flex justify-content-between align-items-center'
+        className='input-container font-rose p-1 b-r-sm d-flex justify-content-between align-items-center'
         style={{ minWidth: (isMobile || isTablet) ? '120px' : '150px' }}
         onClick={handleOpen}
       >
         <img
-          src={pairTokens[selectedToken]?.logo_url || pairTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.logo_url}
+          src={allTokens[selectedToken]?.logo_url || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.logo_url}
           alt={tokenType}
           style={{ width: 35, height: 35 }}
         />
         <div className='mx-2'>
-          <p className='m-0 font-bold'>{pairTokens[selectedToken]?.ticker || pairTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
+          <p className='m-0 font-bold'>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
           <p className='mt-0 mb-0 font-size-xxs text-silver'>
-            ${intlNumberFormat(Number(formatSignificantDecimals(Number(pairTokens[selectedToken]?.price_usd) ?? 0, 3)), 0, 20) ||
-              intlNumberFormat(Number(formatSignificantDecimals(Number(pairTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.price_usd) || 0, 3)), 0, 20)
+            ${intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[selectedToken]?.price_usd) ?? 0, 3)), 0, 20) ||
+              intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.price_usd) || 0, 3)), 0, 20)
             }
           </p>
         </div>
@@ -122,46 +124,54 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         fullWidth
         fullScreen={isMobile ? true : false}
         PaperProps={{
-          style: { backgroundColor: '#062418', borderRadius: '10px', minHeight: '100px' },
+          style: { backgroundColor: 'rgba(20, 20, 20, 0.9)', borderRadius: '10px', minHeight: '100px' },
         }}
       >
         <DialogTitle id="scroll-dialog-title">
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleClose}
-            aria-label="close"
-            className='float-right mb-3 text-white close-button'
-            sx={{ borderRadius: '20px !important' }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <div className='d-flex justify-content-end'>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+              className='text-right mb-3 text-white close-button'
+              sx={{ borderRadius: '20px !important' }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+          <p className='mb-0 text-silver mx-3 font-rose font-size-sm'>Search tokens by name or ticker</p>
           <TextField
             fullWidth
-            label='Search tokens by name or ticker'
+            size='small'
             variant='outlined'
             value={apiSearchInput}
             onChange={handleSearchChange}
-            className='input-container'
+            className='token-search-container'
             autoFocus
             InputProps={{
-              startAdornment: <Search sx={{ color: 'silver', marginRight: '8px' }} />,
-              style: { color: 'silver' },
+              startAdornment: <Search sx={{ color: 'silver', marginRight: '8px', fontSize: '18px' }} />,
+              style: { color: 'silver', fontFamily: 'Red Rose' },
             }}
             InputLabelProps={{
-              style: { color: 'silver' },
+              style: { color: 'silver', fontFamily: 'Red Rose' },
             }}
             sx={{
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
-                  borderColor: 'silver',
+                  borderColor: '#303030',
+                  borderRadius: '20px',
+                  color: 'silver',
+                  fontSize: '12px'
                 },
                 '&:hover fieldset': {
-                  borderColor: 'silver',
+                  borderColor: '#505050',
                 },
                 '&.Mui-focused fieldset': {
                   borderColor: 'silver',
                 },
+                fontFamily: 'Red Rose',
+                fontSize: '12px'
               },
             }}
           />

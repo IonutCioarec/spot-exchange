@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectPairTokensById, selectLpTokensById } from 'storeManager/slices/tokensSlice';
+import { selectPairTokensById, selectLpTokensById, selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import FilterLoader from 'components/Pools/FilterLoader';
 import { denominatedAmountToIntlFormattedAmount, denominatedAmountToAmount, amountToDenominatedAmount, formatSignificantDecimals, intlNumberFormat, formatNumberWithCommas, parseFormattedNumber } from 'utils/formatters';
@@ -39,9 +39,10 @@ const defaultTokenValues = {
 const Swap = () => {
   const { address } = useGetAccountInfo();
   const [loading, setLoading] = useState<boolean>(false);
-  const pairTokens = useSelector(selectPairTokensById);
+  const allTokens = useSelector(selectAllTokensById);
 
   const userTokens = useSelector(selectUserTokens);
+  console.log(JSON.stringify(userTokens, null, 2));
   const isMobile = useMobile();
   const { getSwapPrice } = useBackendAPI();
 
@@ -75,7 +76,7 @@ const Swap = () => {
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
-    const amountScaled = amountToDenominatedAmount(amount, pairTokens[fromToken]?.decimals ?? 18, 20);
+    const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
 
     if (!priceResponse) {
@@ -116,8 +117,8 @@ const Swap = () => {
     const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
     setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
-    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
+    const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
+    const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
@@ -151,8 +152,8 @@ const Swap = () => {
     const price = (await getPrice(token2, token1, parseFormattedNumber(rawValue).toString())).swapPrice;
     setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
 
-    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price));
+    const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
+    const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
@@ -199,8 +200,8 @@ const Swap = () => {
     const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
     setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
-    const totalToken1UsdPrice = new BigNumber(pairTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken2UsdPrice = new BigNumber(pairTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
+    const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
+    const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
@@ -217,7 +218,7 @@ const Swap = () => {
       setDefaultExchangePrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.swapPrice), 3)), 0, 20));
     };
     fetchDefaultPrice();
-  }, [token1, token2, token1Amount, token2Amount, pairTokens]);
+  }, [token1, token2, token1Amount, token2Amount, allTokens]);
 
   const handleReversedExchangeRate = async () => {
     const price = reversedExchangeRate
@@ -317,6 +318,7 @@ const Swap = () => {
                 setSelectedToken={setToken1}
                 excludedToken={token2}
                 userTokens={userTokens}
+                allTokens={allTokens}
                 resetAmounts={resetAmounts}
               />
             </div>
@@ -378,6 +380,7 @@ const Swap = () => {
                 setSelectedToken={setToken2}
                 excludedToken={token1}
                 userTokens={userTokens}
+                allTokens={allTokens}
                 resetAmounts={resetAmounts}
               />
             </div>
@@ -397,7 +400,7 @@ const Swap = () => {
               <p className='text-silver font-size-sm mb-0'>{!isMobile ? 'Swap ' : ''}Rate</p>
               <p className='font-size-sm text-white mb-0'>
                 <span className='me-1'>1</span>
-                {pairTokens[reversedExchangeRate ? token2 : token1]?.ticker ?? ''} ≃ {defaultExchangePrice} {pairTokens[reversedExchangeRate ? token1 : token2]?.ticker ?? ''}
+                {allTokens[reversedExchangeRate ? token2 : token1]?.ticker ?? ''} ≃ {defaultExchangePrice} {allTokens[reversedExchangeRate ? token1 : token2]?.ticker ?? ''}
                 <span className='slippage-info ms-2' onClick={() => { setReversedExchangeRate(!reversedExchangeRate); handleReversedExchangeRate(); }}><FontAwesomeIcon icon={faRotate} className='mt-1 full-animated-icon text-[#0b8832]' /></span>
               </p>
             </div>
@@ -471,7 +474,7 @@ const Swap = () => {
                         <p className='text-silver font-size-sm m-b-n-xs ms-2 mt-1' key={`step-${index}`}>
                           <FontAwesomeIcon icon={faCaretRight} className='me-1 text-[#0b8832]' />
                           <span className='text-[#0b8832] font-bold font-size-xs'>
-                            {pairTokens[step?.token_in]?.ticker ?? 'TOKEN'} {'/'} {pairTokens[step?.token_out]?.ticker ?? 'TOKEN'}
+                            {allTokens[step?.token_in]?.ticker ?? 'TOKEN'} {'/'} {allTokens[step?.token_out]?.ticker ?? 'TOKEN'}
                           </span>
                         </p>
                       ))}
@@ -494,15 +497,15 @@ const Swap = () => {
                     {steps.map((step: any, index: number) => (
                       <Fragment key={`route-${index}`}>
                         <img
-                          src={pairTokens[step?.token_in]?.logo_url ?? defaultTokenValues.image_url}
-                          alt={pairTokens[step?.token_in]?.ticker}
+                          src={allTokens[step?.token_in]?.logo_url ?? defaultTokenValues.image_url}
+                          alt={allTokens[step?.token_in]?.ticker}
                           style={{ width: 20, height: 20, border: '1px solid #202020' }}
                           className='b-r-sm'
                         />
                         <span className='mx-1'><FontAwesomeIcon icon={faArrowRight} size='xs' /></span>
                         <img
-                          src={pairTokens[step?.token_out]?.logo_url ?? defaultTokenValues.image_url}
-                          alt={pairTokens[step?.token_out]?.ticker}
+                          src={allTokens[step?.token_out]?.logo_url ?? defaultTokenValues.image_url}
+                          alt={allTokens[step?.token_out]?.ticker}
                           style={{ width: 20, height: 20, border: '1px solid #202020' }}
                           className='b-r-sm'
                         />

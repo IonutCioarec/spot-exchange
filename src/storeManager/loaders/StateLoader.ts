@@ -55,15 +55,15 @@ export const StateLoader = () => {
 
   // Load initial state
   useEffect(() => {
-    //loadPairTokens(tokensPage, tokensItemsPerPage, tokensSearchInput);
+    loadPairTokens(tokensPage, tokensItemsPerPage, tokensSearchInput);
   }, [dispatch, tokensPage, tokensSearchInput]);
 
   useEffect(() => {
-    loadPairs(pairsPage, poolsItemsPerPage, pairsSortBy, pairsSortDirection, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch);
+    // loadPairs(pairsPage, poolsItemsPerPage, pairsSortBy, pairsSortDirection, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch);
   }, [dispatch, pairsPage, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch, pairsSortBy, pairsSortDirection]);
 
   useEffect(() => {
-    //loadAllTokens();
+    loadAllTokens();
     //loadLpTokens();
   }, [dispatch, hasPendingTransactions]);
 
