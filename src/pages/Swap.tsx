@@ -42,7 +42,6 @@ const Swap = () => {
   const allTokens = useSelector(selectAllTokensById);
 
   const userTokens = useSelector(selectUserTokens);
-  console.log(JSON.stringify(userTokens, null, 2));
   const isMobile = useMobile();
   const { getSwapPrice } = useBackendAPI();
 
@@ -286,6 +285,16 @@ const Swap = () => {
 
   return (
     <Container className='swap-page-height'>
+      <Row>
+        <Col xs={12}>
+          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
+            <div className='p-5'>
+              <h2 className='text-white text-center'>Swap</h2>
+              <p className='text-white mb-0'>Multiversx's fastest exchange with a huge catalog of tokens</p>
+            </div>
+          </div>
+        </Col>
+      </Row>
       <Row className={`${isMobile ? 'mt-4' : 'mt-5'}`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className='swap-container text-white' style={{ maxWidth: '100%' }}>
