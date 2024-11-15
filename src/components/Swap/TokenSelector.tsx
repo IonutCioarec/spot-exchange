@@ -1,7 +1,7 @@
 import { forwardRef, Fragment, useEffect, useState } from 'react';
 import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton, Button } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
-import { KeyboardArrowDown, Search } from '@mui/icons-material';
+import { KeyboardArrowDown, Search, ArrowDropDown } from '@mui/icons-material';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import SimpleLoader from 'components/SimpleLoader';
@@ -10,7 +10,7 @@ import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPage, selectPairTokens, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput } from 'storeManager/slices/tokensSlice';
+import { selectPage, selectPairTokens, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput, selectPairTokensNumber } from 'storeManager/slices/tokensSlice';
 import { Token } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 
@@ -46,6 +46,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   const pairTokens = useSelector(selectPairTokensById);
   const currentPage = useSelector(selectPage);
   const totalPages = useSelector(selectTotalPages);
+  const pairTokensNumber = useSelector(selectPairTokensNumber);
   const apiSearchInput = useSelector(selectSearchInput);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -93,11 +94,11 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   return (
     <>
       <div
-        className='input-container font-rose p-1 b-r-sm d-flex justify-content-end align-items-center'
+        className='input-container font-rose p-1 b-r-sm d-flex justify-content-center align-items-center'
         style={{
-          minWidth: isMobile || isTablet ? '120px' : '',
+          minWidth: isMobile || isTablet ? '120px' : '11vw',
           boxSizing: 'border-box',
-          overflow: 'hidden',
+          overflow: 'hidden'
         }}
         onClick={handleOpen}
       >
@@ -111,7 +112,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
           className='mx-2'
           style={{
             maxWidth: 'calc(100% - 70px)',
-            
+
             textOverflow: 'ellipsis',
           }}>
           <p className='m-0 font-bold'>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
@@ -121,7 +122,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             }
           </p>
         </div>
-        <div className={` ${isMobile ? 'm-l-n-sm' : ''}`}>
+        <div className={` ${isMobile ? 'm-l-sm' : ''}`}>
           <KeyboardArrowDown sx={{ marginTop: '-2px' }} />
         </div>
       </div>
@@ -138,7 +139,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
           style: { backgroundColor: 'rgba(20, 20, 20, 0.9)', borderRadius: '10px', minHeight: '100px' },
         }}
       >
-        <DialogTitle id="scroll-dialog-title">
+        <DialogTitle id="scroll-dialog-title" style={{ borderBottom: '1px solid #303030' }}>
           <div className='d-flex justify-content-end'>
             <IconButton
               edge="end"
@@ -158,10 +159,10 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             variant='outlined'
             value={apiSearchInput}
             onChange={handleSearchChange}
-            className='token-search-container'
+            className='token-search-container mb-2'
             autoFocus
             InputProps={{
-              startAdornment: <Search sx={{ color: 'silver', marginRight: '8px', fontSize: '18px' }} />,
+              startAdornment: <Search sx={{ color: 'rgba(63, 172, 90, 0.7)', marginRight: '8px', fontSize: '18px' }} />,
               style: { color: 'silver', fontFamily: 'Red Rose' },
             }}
             InputLabelProps={{
@@ -170,13 +171,13 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             sx={{
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
-                  borderColor: '#303030',
+                  borderColor: 'rgba(63, 172, 90, 0.4)',
                   borderRadius: '20px',
                   color: 'silver',
-                  fontSize: '12px'
+                  fontSize: '10px'
                 },
                 '&:hover fieldset': {
-                  borderColor: '#505050',
+                  borderColor: 'rgba(63, 172, 90, 0.6)',
                 },
                 '&.Mui-focused fieldset': {
                   borderColor: 'silver',
@@ -188,31 +189,27 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
           />
         </DialogTitle>
         <DialogContent>
+          <p className='small mt-1 ms-2 mb-0 text-white'>Tokens({pairTokensNumber})</p>
           <List>
             {!loading ? (
               Object.values(pairTokens).length > 0 ? (
-                Object.values(pairTokens).map((token: any) => (
-                  <Fragment key={`list-item-${token.token_id}`}>
-                    <ListItem button onClick={() => handleTokenSelect(token.token_id)} className='token-list-item'>
-                      <ListItemAvatar>
-                        <Avatar src={token.logo_url} sx={{ border: '1px solid #303030' }} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={token.token_id}
-                        secondary={`$${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}`}
-                        primaryTypographyProps={{ style: { color: 'white' } }}
-                        secondaryTypographyProps={{ style: { color: 'silver' } }}
-                      />
-                      <ListItemText
-                        primary={`${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0'), 3)), 0, 20)}`}
-                        secondary={`$${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0') * parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}`}
-                        className="text-right"
-                        primaryTypographyProps={{ style: { color: 'white' } }}
-                        secondaryTypographyProps={{ style: { color: 'silver' } }}
-                      />
-                    </ListItem>
-                    <Divider variant="middle" sx={{ backgroundColor: 'silver' }} />
-                  </Fragment>
+                Object.values(pairTokens).map((token: Token) => (
+                  <div key={`list-item-${token.token_id}`} className='py-1 px-2 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item' onClick={() => handleTokenSelect(token.token_id)}>
+                    <Avatar src={token.logo_url} sx={{ height: '30px', width: '30px', marginTop: '-2px' }} />
+                    <div className='' style={{width: '30%'}}>
+                      <p className='font-size-xxs mb-0 text-silver'>Token</p>
+                      <p className='font-size-xs mb-0'>{token.token_id}</p>
+                    </div>
+                    <div className='text-right' style={{width: '35%'}}>
+                      <p className='font-size-xxs mb-0 text-silver'>Price</p>
+                      <p className='font-size-xs mb-0'>${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}</p>
+                    </div>
+                    <div className='text-right' style={{width: '20%'}}>
+                      <p className='font-size-xxs mb-0 text-silver'>Balance</p>
+                      <p className='font-size-xs mb-0'>{intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0'), 3)), 0, 20)}</p>
+                    </div>
+
+                  </div>
                 ))
               ) : (
                 <p className='text-silver text-center h6'>No token found</p>
