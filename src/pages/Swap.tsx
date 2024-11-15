@@ -16,6 +16,7 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import WalletIcon from '@mui/icons-material/Wallet';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill, faWallet, faCircleInfo, faGear, faRotate, faArrowRight, faArrowCircleRight, faCaretRight, faRightLong, faAnglesRight, faRetweet, faRotateRight } from '@fortawesome/free-solid-svg-icons';
@@ -28,6 +29,8 @@ import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useLocation } from 'react-router-dom';
 import SimpleLoader from 'components/SimpleLoader';
+import { AwesomeButton } from 'react-awesome-button';
+import WifiProtectedSetupIcon from '@mui/icons-material/WifiProtectedSetup';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -77,7 +80,7 @@ const Swap = () => {
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-
+    console.log(JSON.stringify(priceResponse));
     if (!priceResponse) {
       return { swapPrice: '0', steps: [] };
     }
@@ -257,7 +260,6 @@ const Swap = () => {
   const [refreshingAmount, setRefreshingAmount] = useState<boolean>(false);
   const handleRefreshingAmount = async () => {
     setRefreshingAmount(true);
-
     await new Promise((resolve) => setTimeout(resolve, 700));
     token1AmountChange(token1Amount);
 
@@ -286,7 +288,7 @@ const Swap = () => {
   return (
     <Container className='swap-page-height'>
       <Row>
-        <Col xs={12}>
+        <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
             <div className='p-5'>
               <h2 className='text-white text-center'>Swap</h2>
@@ -297,8 +299,9 @@ const Swap = () => {
       </Row>
       <Row className={`${isMobile ? 'mt-4' : 'mt-5'}`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
-          <div className='swap-container text-white' style={{ maxWidth: '100%' }}>
-            <div className='d-flex justify-content-between align-items-center gap-4 swap-token-container'>
+          <div className='swap-container text-white mt-1'>
+            <p className='mb-0 ml-1 small'>From</p>
+            <div className='d-flex justify-content-between mt-2 align-items-center gap-2 swap-token-container'>
               <div className='input-container b-r-sm'>
                 <TextField
                   id="first-token"
@@ -331,35 +334,37 @@ const Swap = () => {
                 resetAmounts={resetAmounts}
               />
             </div>
-            <div className={`d-flex justify-content-between align-items-center px-1 mt-1 ${isMobile ? 'mb-4' : 'mb-2'}`}>
-              <div className='d-flex justify-content-start align-items-center ms-2'>
-                <div className='me-1 text-[#0b8832]'><FontAwesomeIcon icon={faMoneyBill} style={{ marginTop: '5px' }} /></div>
+            <div className={`d-flex justify-content-between align-items-center mt-2 ${isMobile ? 'mb-4' : ''}`} style={{ minHeight: '26px' }}>
+              <div className='d-flex justify-content-start align-items-center ms-1'>
                 <p className='text-silver font-size-sm mb-0'>${token1AmountPrice}</p>
               </div>
-              <div className='d-flex justify-content-end align-items-baseline mr-5'>
-                <p className='btn-green3 p-1 slippage-info me-2 cursor-pointer mb-0 font-size-xs' onClick={handleMaxAmount}>Max</p>
-                <div className='me-1 text-[#0b8832]'><FontAwesomeIcon icon={faWallet} /></div>
+              <div className='d-flex justify-content-end align-items-center mr-2'>
+                <p className='p-1 slippage-info me-2 cursor-pointer font-size-sm hover:text-[#3FAC5A]' onClick={handleMaxAmount} style={{ marginBottom: '-5px', marginTop: '-5px' }}>Max</p>
+                <div className='me-1 text-[#3FAC5A]'><FontAwesomeIcon icon={faWallet} /></div>
                 <p className='text-silver font-size-sm mb-0'>{intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20)}</p>
               </div>
             </div>
           </div>
 
-          <div className='swap-delimitator'>
-            <div className='swap-delimitator-icon mt-0'>
-              <KeyboardDoubleArrowDownIcon className='mb-2 full-blinking-icon default-icon' style={{ fontSize: '30px' }} onClick={handleSwapTokens} />
-              <AutorenewIcon className='mb-2 full-animated-icon hover-icon' style={{ fontSize: '30px' }} onClick={handleSwapTokens} />
+          <div className='swap-delimitator d-flex align-items-center justify-content-center'>
+            <div className='swap-delimitator-icon mt-0 d-flex align-items-center justify-content-center' style={{ width: '50px', height: '50px' }}>
+              <AutorenewIcon className='full-blinking-icon default-icon' style={{ fontSize: '30px' }} onClick={handleSwapTokens} />
+              <AutorenewIcon className='full-animated-icon hover-icon' style={{ fontSize: '30px' }} onClick={handleSwapTokens} />
             </div>
           </div>
 
-          <div className='swap-container mt-1 text-white'>
-            {!refreshingAmount &&
-              <p className='font-size-md text-white mb-0 cursor-pointer' onClick={handleRefreshingAmount}>
-                <span className='slippage-info ms-2'><FontAwesomeIcon icon={faRotateRight} className='mt-1 full-animated-icon text-[#0b8832]' /></span>
-              </p>
-            }
+          <div className={`swap-container ${isMobile ? '' : 'mt-1'} text-white`}>
             {refreshingAmount &&
               <SimpleLoader />
             }
+            <div className='d-flex justify-content-between align-items-center'>
+            <p className='mb-0 ml-1 small'>To</p>
+            {!refreshingAmount &&
+              <p className='font-size-md text-white mb-0 cursor-pointer' onClick={handleRefreshingAmount}>
+                <span className='slippage-info me-1'><WifiProtectedSetupIcon fontSize='small' className='full-animated-icon me-1 hover:text-[#3FAC5A]' /></span>
+              </p>
+            }
+            </div>
             <div className='d-flex justify-content-between align-items-center gap-4 swap-token-container mt-2'>
               <div className='input-container b-r-sm'>
                 <TextField
@@ -393,36 +398,40 @@ const Swap = () => {
                 resetAmounts={resetAmounts}
               />
             </div>
-            <div className='d-flex justify-content-between align-items-center px-1 mt-1'>
-              <div className='d-flex justify-content-start align-items-center ms-2'>
-                <div className='me-1 text-[#0b8832]'><FontAwesomeIcon icon={faMoneyBill} style={{ marginTop: '5px' }} /></div>
+            <div className='d-flex justify-content-between align-items-center mt-2' style={{ minHeight: '26px' }}>
+              <div className='d-flex justify-content-start align-items-center ms-1'>
                 <p className='text-silver font-size-sm mb-0'>${token2AmountPrice}</p>
               </div>
-              <div className='d-flex justify-content-end align-items-center mr-5'>
-                <div className='me-1 text-[#0b8832]'><FontAwesomeIcon className='' icon={faWallet} /></div>
+              <div className='d-flex justify-content-end align-items-center mr-2'>
+                <div className='me-1 text-[#3FAC5A]'><FontAwesomeIcon className='' icon={faWallet} /></div>
                 <p className='text-silver font-size-sm mb-0'>{intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token2]?.balance ?? 0), 3)), 3, 20)}</p>
               </div>
             </div>
           </div>
-          <div className='p-3 mt-1 b-r-sm' style={{ border: '1px solid #0b4932' }}>
+        </Col>
+      </Row>
+
+      <Row className='d-flex align-items-start mt-2'>
+        <Col xs={12} lg={{ span: 6, offset: 3 }}>
+          <div className='p-3 mt-1 b-r-sm' style={{ border: '1px solid #3FAC5A' }}>
             <div className='d-flex justify-content-between align-items-center'>
               <p className='text-silver font-size-sm mb-0'>{!isMobile ? 'Swap ' : ''}Rate</p>
               <p className='font-size-sm text-white mb-0'>
                 <span className='me-1'>1</span>
                 {allTokens[reversedExchangeRate ? token2 : token1]?.ticker ?? ''} ≃ {defaultExchangePrice} {allTokens[reversedExchangeRate ? token1 : token2]?.ticker ?? ''}
-                <span className='slippage-info ms-2' onClick={() => { setReversedExchangeRate(!reversedExchangeRate); handleReversedExchangeRate(); }}><FontAwesomeIcon icon={faRotate} className='mt-1 full-animated-icon text-[#0b8832]' /></span>
+                <span className='slippage-info ms-2' onClick={() => { setReversedExchangeRate(!reversedExchangeRate); handleReversedExchangeRate(); }}><FontAwesomeIcon icon={faRotate} className='mt-1 full-animated-icon text-[#3FAC5A]' /></span>
               </p>
             </div>
             <div className='d-flex justify-content-between align-items-center mt-1'>
               <p className='text-silver font-size-sm mb-0'>Slippage
-                <span className='slippage-info ms-2 text-[#0b8832]'>
+                <span className='slippage-info ms-2 text-[#3FAC5A]'>
                   <CustomTooltip key="unstake" title={`You agree to receive up to ${slippage}% less than the expected amount.`}>
                     <FontAwesomeIcon icon={faCircleInfo} className="mt-1" />
                   </CustomTooltip>
                 </span>
               </p>
               <p className='font-size-sm text-white mb-0 cursor-pointer' onClick={handleShowSlippageModal}>{intlNumberFormat(Number(slippage))}%
-                <span className='slippage-info ms-2'><FontAwesomeIcon icon={faGear} className='mt-1 full-animated-icon text-[#0b8832]' /></span>
+                <span className='slippage-info ms-2'><FontAwesomeIcon icon={faGear} className='mt-1 full-animated-icon text-[#3FAC5A]' /></span>
               </p>
             </div>
             {showSlippageModal &&
@@ -481,8 +490,8 @@ const Swap = () => {
                     <div>
                       {steps.map((step: any, index: number) => (
                         <p className='text-silver font-size-sm m-b-n-xs ms-2 mt-1' key={`step-${index}`}>
-                          <FontAwesomeIcon icon={faCaretRight} className='me-1 text-[#0b8832]' />
-                          <span className='text-[#0b8832] font-bold font-size-xs'>
+                          <FontAwesomeIcon icon={faCaretRight} className='me-1 text-[#3FAC5A]' />
+                          <span className='text-[#3FAC5A] font-bold font-size-xs'>
                             {allTokens[step?.token_in]?.ticker ?? 'TOKEN'} {'/'} {allTokens[step?.token_out]?.ticker ?? 'TOKEN'}
                           </span>
                         </p>
@@ -537,12 +546,13 @@ const Swap = () => {
               </div>
             )}
           </div>
-          <div className='mt-1 mb-5'>
-            <Button className='btn-green3' fullWidth>
-              Swap Tokens
-            </Button>
-          </div>
+          <Button
+            className="btn-intense-green hover-btn fullWidth mt-3 font-size-sm mb-5"
+          >
+            SWAP
+          </Button>
         </Col>
+
       </Row>
     </Container>
   );

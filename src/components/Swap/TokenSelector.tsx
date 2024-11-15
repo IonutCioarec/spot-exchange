@@ -93,16 +93,27 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   return (
     <>
       <div
-        className='input-container font-rose p-1 b-r-sm d-flex justify-content-between align-items-center'
-        style={{ minWidth: (isMobile || isTablet) ? '120px' : '150px' }}
+        className='input-container font-rose p-1 b-r-sm d-flex justify-content-end align-items-center'
+        style={{
+          minWidth: isMobile || isTablet ? '120px' : '',
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+        }}
         onClick={handleOpen}
       >
         <img
           src={allTokens[selectedToken]?.logo_url || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.logo_url}
           alt={tokenType}
-          style={{ width: 35, height: 35 }}
+          style={{ width: 35, height: 35, flexShrink: 0, left: '2%', position: 'relative' }}
+          className='ms-2'
         />
-        <div className='mx-2'>
+        <div
+          className='mx-2'
+          style={{
+            maxWidth: 'calc(100% - 70px)',
+            
+            textOverflow: 'ellipsis',
+          }}>
           <p className='m-0 font-bold'>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
           <p className='mt-0 mb-0 font-size-xxs text-silver'>
             ${intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[selectedToken]?.price_usd) ?? 0, 3)), 0, 20) ||
@@ -110,7 +121,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             }
           </p>
         </div>
-        <div className={`me-5 ${isMobile ? 'm-l-n-sm' : ''}`}>
+        <div className={` ${isMobile ? 'm-l-n-sm' : ''}`}>
           <KeyboardArrowDown sx={{ marginTop: '-2px' }} />
         </div>
       </div>
