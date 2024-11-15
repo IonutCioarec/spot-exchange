@@ -59,19 +59,19 @@ export const StateLoader = () => {
   }, [dispatch, tokensPage, tokensSearchInput]);
 
   useEffect(() => {
-    // loadPairs(pairsPage, poolsItemsPerPage, pairsSortBy, pairsSortDirection, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch);
+    loadPairs(pairsPage, poolsItemsPerPage, pairsSortBy, pairsSortDirection, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch);
   }, [dispatch, pairsPage, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch, pairsSortBy, pairsSortDirection]);
 
   useEffect(() => {
     loadAllTokens();
-    //loadLpTokens();
+    loadLpTokens();
   }, [dispatch, hasPendingTransactions]);
 
   // Refresh data at interval
   useEffect(() => {
     const interval = window.setInterval(() => {
-      //loadAllTokens();
-      //loadLpTokens();
+      loadAllTokens();
+      loadLpTokens();
     }, stateLoaderRefreshTime);
 
     return () => window.clearInterval(interval);
