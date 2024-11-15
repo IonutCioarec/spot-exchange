@@ -68,7 +68,7 @@ export const useBackendAPI = () => {
     currentLimit: number = 10,
     search_by_name: string = '',
     only_lp_tokens?: boolean,
-    sort_by: string = 'volume24h',
+    sort_by: 'volume24h' | 'volume7d'| 'volume30d'| 'price_usd'| 'price_change24h' = 'price_usd',
     sort_direction: 'asc' | 'desc' = 'desc'
   ): Promise<TokensState> => {
     try {
