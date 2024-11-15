@@ -69,7 +69,6 @@ const Swap = () => {
   const [token2Amount, setToken2Amount] = useState<string>('');
   const [token1AmountPrice, setToken1AmountPrice] = useState<string>('0.000');
   const [token2AmountPrice, setToken2AmountPrice] = useState<string>('0.000');
-  const [reversedExchangeRate, setReversedExchangeRate] = useState<boolean>(false);
   const [steps, setSteps] = useState([{}]);
   const [slippage, setSlippage] = useState('1.00');
   const [swapPrice, setSwapPrice] = useState<number | 0>(0);
@@ -158,19 +157,17 @@ const Swap = () => {
 
     if (!token1 || !token2) return;
     const price = (await getPrice(token2, token1, parseFormattedNumber(rawValue).toString()));
-    const price2 = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
     setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
-
     const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
     const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
-    setExchangeRate(price2.exchangeRate);
 
-    const steps = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString())).steps;
-    if (steps) {
-      setSteps(steps);
+    const price2 = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
+    if (price2.steps) {
+      setSteps(price2.steps);
     }
+    setExchangeRate(price2.exchangeRate);
   };
 
   const handleSlippageAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -226,7 +223,6 @@ const Swap = () => {
     setToken1(token2);
     setToken2(tempToken);
     resetAmounts();
-    setReversedExchangeRate(false);
   };
 
   const handleMaxAmount = async () => {
@@ -506,19 +502,23 @@ const Swap = () => {
                   <div className='d-flex justify-content-end align-items-center text-white '>
                     {steps.map((step: any, index: number) => (
                       <Fragment key={`route-${index}`}>
-                        <img
-                          src={allTokens[step?.token_in]?.logo_url ?? defaultTokenValues.image_url}
-                          alt={allTokens[step?.token_in]?.ticker}
-                          style={{ width: 20, height: 20, border: '1px solid #202020' }}
-                          className='b-r-sm'
-                        />
-                        <span className='mx-1'><FontAwesomeIcon icon={faArrowRight} size='xs' /></span>
-                        <img
-                          src={allTokens[step?.token_out]?.logo_url ?? defaultTokenValues.image_url}
-                          alt={allTokens[step?.token_out]?.ticker}
-                          style={{ width: 20, height: 20, border: '1px solid #202020' }}
-                          className='b-r-sm'
-                        />
+                        <CustomTooltip key={`t-route-${index}`} title={`${allTokens[step?.token_in]?.ticker} > ${allTokens[step?.token_out]?.ticker}`}>
+                          <div className='bg-[#32323299] d-flex justify-content-end align-items-center text-white p-1 b-r-sm'>
+                            <img
+                              src={allTokens[step?.token_in]?.logo_url ?? defaultTokenValues.image_url}
+                              alt={allTokens[step?.token_in]?.ticker}
+                              style={{ width: 20, height: 20, border: '1px solid #202020' }}
+                              className='b-r-sm'
+                            />
+                            <span className='mx-1'><FontAwesomeIcon icon={faCaretRight} size='xs' /></span>
+                            <img
+                              src={allTokens[step?.token_out]?.logo_url ?? defaultTokenValues.image_url}
+                              alt={allTokens[step?.token_out]?.ticker}
+                              style={{ width: 20, height: 20, border: '1px solid #202020' }}
+                              className='b-r-sm'
+                            />
+                          </div>
+                        </CustomTooltip>
                         {index < steps.length - 1 && <p className='mx-2 mb-0 font-size-sm' style={{ marginTop: '-3px' }}>|</p>}
                       </Fragment>
                     ))}
