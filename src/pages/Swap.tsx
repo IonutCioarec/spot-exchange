@@ -74,23 +74,26 @@ const Swap = () => {
   const [slippage, setSlippage] = useState('1.00');
   const [swapPrice, setSwapPrice] = useState<number | 0>(0);
   const [showSlippageModal, setShowSlippageModal] = useState<boolean>(false);
+  const [exchangeRate, setExchangeRate] = useState('0');
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-    console.log(JSON.stringify(priceResponse));
+    console.log(JSON.stringify(priceResponse, null, 2));
     if (!priceResponse) {
-      return { swapPrice: '0', steps: [] };
+      return { swapPrice: '0', steps: [], exchangeRate: '0' };
     }
 
     const price = priceResponse?.final_output?.raw || '0';
     const steps = priceResponse?.steps || [];
+    const rate = priceResponse ? priceResponse?.cumulative_exchange_rate?.formatted : '0';
 
     return {
       swapPrice: price,
-      steps: steps
+      steps: steps,
+      exchangeRate: rate
     };
   };
 
@@ -104,6 +107,7 @@ const Swap = () => {
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
       setSteps([{}]);
+      setExchangeRate('0');
       return;
     }
 
@@ -123,6 +127,7 @@ const Swap = () => {
     const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+    setExchangeRate(price.exchangeRate);
 
     if (price?.steps) {
       setSteps(price.steps);
@@ -139,6 +144,7 @@ const Swap = () => {
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
       setSteps([{}]);
+      setExchangeRate('0');
       return;
     }
 
@@ -151,13 +157,15 @@ const Swap = () => {
     }
 
     if (!token1 || !token2) return;
-    const price = (await getPrice(token2, token1, parseFormattedNumber(rawValue).toString())).swapPrice;
-    setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
+    const price = (await getPrice(token2, token1, parseFormattedNumber(rawValue).toString()));
+    const price2 = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
+    setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
     const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price));
+    const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
     setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
     setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+    setExchangeRate(price2.exchangeRate);
 
     const steps = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString())).steps;
     if (steps) {
@@ -187,6 +195,7 @@ const Swap = () => {
       setToken2Amount('');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
+      setExchangeRate('0');
       setSteps([{}]);
       return;
     }
@@ -210,24 +219,6 @@ const Swap = () => {
     if (price?.steps) {
       setSteps(price.steps);
     }
-  };
-
-  // Add the default swap rate: 1 token -> x token2
-  const [defaultExchangePrice, setDefaultExchangePrice] = useState<string>('');
-  useEffect(() => {
-    const fetchDefaultPrice = async () => {
-      const price = await getPrice(token1, token2, '1');
-      setDefaultExchangePrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.swapPrice), 3)), 0, 20));
-    };
-    fetchDefaultPrice();
-  }, [token1, token2, token1Amount, token2Amount, allTokens]);
-
-  const handleReversedExchangeRate = async () => {
-    const price = reversedExchangeRate
-      ? await getPrice(token1, token2, '1')
-      : await getPrice(token2, token1, '1');
-
-    setDefaultExchangePrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.swapPrice), 3)), 0, 20));
   };
 
   const handleSwapTokens = async () => {
@@ -271,9 +262,8 @@ const Swap = () => {
     setToken2Amount('');
     setToken1AmountPrice('0.000');
     setToken2AmountPrice('0.000');
-    setDefaultExchangePrice('0.000');
     setSteps([{}]);
-    handleReversedExchangeRate();
+    setExchangeRate('0');
   };
 
   // Update token1 and token2 if query params change
@@ -358,12 +348,12 @@ const Swap = () => {
               <SimpleLoader />
             }
             <div className='d-flex justify-content-between align-items-center'>
-            <p className='mb-0 ml-1 small'>To</p>
-            {!refreshingAmount &&
-              <p className='font-size-md text-white mb-0 cursor-pointer' onClick={handleRefreshingAmount}>
-                <span className='slippage-info me-1'><WifiProtectedSetupIcon fontSize='small' className='full-animated-icon me-1 hover:text-[#3FAC5A]' /></span>
-              </p>
-            }
+              <p className='mb-0 ml-1 small'>To</p>
+              {!refreshingAmount &&
+                <p className='font-size-md text-white mb-0 cursor-pointer' onClick={handleRefreshingAmount}>
+                  <span className='slippage-info me-1'><WifiProtectedSetupIcon fontSize='small' className='full-animated-icon me-1 hover:text-[#3FAC5A]' /></span>
+                </p>
+              }
             </div>
             <div className='d-flex justify-content-between align-items-center gap-4 swap-token-container mt-2'>
               <div className='input-container b-r-sm'>
@@ -414,14 +404,15 @@ const Swap = () => {
       <Row className='d-flex align-items-start mt-2'>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className='p-3 mt-1 b-r-sm' style={{ border: '1px solid #3FAC5A' }}>
-            <div className='d-flex justify-content-between align-items-center'>
-              <p className='text-silver font-size-sm mb-0'>{!isMobile ? 'Swap ' : ''}Rate</p>
-              <p className='font-size-sm text-white mb-0'>
-                <span className='me-1'>1</span>
-                {allTokens[reversedExchangeRate ? token2 : token1]?.ticker ?? ''} ≃ {defaultExchangePrice} {allTokens[reversedExchangeRate ? token1 : token2]?.ticker ?? ''}
-                <span className='slippage-info ms-2' onClick={() => { setReversedExchangeRate(!reversedExchangeRate); handleReversedExchangeRate(); }}><FontAwesomeIcon icon={faRotate} className='mt-1 full-animated-icon text-[#3FAC5A]' /></span>
-              </p>
-            </div>
+            {Number(exchangeRate) > 0 &&
+              <div className='d-flex justify-content-between align-items-center'>
+                <p className='text-silver font-size-sm mb-0'>{!isMobile ? 'Swap ' : ''}Rate</p>
+                <p className='font-size-sm text-white mb-0'>
+                  <span className='me-1'>1</span>
+                  {allTokens[token1]?.ticker ?? ''} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(exchangeRate), 3)), 3, 20)} {allTokens[token2]?.ticker ?? ''}
+                </p>
+              </div>
+            }
             <div className='d-flex justify-content-between align-items-center mt-1'>
               <p className='text-silver font-size-sm mb-0'>Slippage
                 <span className='slippage-info ms-2 text-[#3FAC5A]'>
@@ -436,13 +427,13 @@ const Swap = () => {
             </div>
             {showSlippageModal &&
               <div className={`d-flex justify-content-between align-items-center mt-1 swap-token-container b-r-xs py-2 px-3 ${isMobile ? 'font-size-xs' : ''}`}>
-                <div className='text-white text-center input-container  bg-[#041810] p-2 b-r-sm' style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('1'); setShowSlippageModal(false) }}>1.00%</div>
-                <div className='text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('5'); setShowSlippageModal(false) }}>5.00%</div>
+                <div className='font-size-sm text-white text-center input-container  bg-[#3FAC5A] p-1 b-r-sm' style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('1'); setShowSlippageModal(false) }}>1.00%</div>
+                <div className='font-size-sm text-white text-center input-container bg-[#3FAC5A] p-1 b-r-sm' style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('5'); setShowSlippageModal(false) }}>5.00%</div>
                 {!isMobile &&
-                  <div className='text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ minWidth: '20%' }} onClick={() => { setSlippage('10'); setShowSlippageModal(false) }}>10.00%</div>
+                  <div className='font-size-sm text-white text-center input-container bg-[#3FAC5A] p-1 b-r-sm' style={{ minWidth: '20%' }} onClick={() => { setSlippage('10'); setShowSlippageModal(false) }}>10.00%</div>
                 }
-                <div className='d-flex align-items-center text-white text-center input-container bg-[#041810] p-2 b-r-sm' style={{ maxWidth: isMobile ? '45%' : '30%' }}>
-                  <span className='text-silver'>Custom:</span>
+                <div className='d-flex align-items-center text-white text-center input-container bg-[#3FAC5A] p-1 b-r-sm' style={{ maxWidth: isMobile ? '45%' : '30%' }}>
+                  <span className='font-size-sm text-white'>Custom:</span>
                   <TextField
                     id="custom-slippage"
                     placeholder='Custom'
@@ -460,8 +451,9 @@ const Swap = () => {
                         fontSize: '14px',
                         caretColor: 'white',
                         paddingLeft: '10px',
-                        marginTop: isMobile ? '-5px' : '3px',
-                        marginBottom: isMobile ? '-11px' : '-3px'
+                        marginTop: isMobile ? '-5px' : '1px',
+                        marginBottom: isMobile ? '-11px' : '-5px',
+                        fontFamily: 'Red Rose'
                       },
                       endAdornment: (
                         <InputAdornment position="end" sx={{ marginTop: '-5px' }}>
@@ -469,7 +461,7 @@ const Swap = () => {
                         </InputAdornment>
                       ),
                     }}
-                    className='mb-0'
+                    className='mb-0 font-size-sm'
                     sx={{
                       "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
                         display: "none",
