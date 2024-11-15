@@ -66,6 +66,7 @@ export const selectPairTokens = (state: any) => state.tokens.pairTokens.tokens;
 export const selectLpTokens = (state: any) => state.tokens.lpTokens;
 export const selectPage = (state: any) => state.tokens.pairTokens.page;
 export const selectTotalPages = (state: any) => state.tokens.pairTokens.total_pages;
+export const selectPairTokensNumber = (state: any) => state.tokens.pairTokens.total;
 export const selectTokensStatus = (state: any) => state.tokens.status;
 export const selectSearchInput = (state: any) => state.tokens.searchInput;
 
