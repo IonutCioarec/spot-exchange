@@ -16,6 +16,7 @@
   padding: 25px;
   background-color: rgba(34, 34, 34, 0.6);
   border-radius: 10px;
+  box-shadow: 10px 0 40px rgba(63, 142, 90, 0.1), -10px 0 40px rgba(63, 142, 90, 0.1);
 }
 
 .swap-token-container {
@@ -23,10 +24,10 @@
   border-radius: 15px;
   padding: 5px;
   border: 1px solid rgba(18, 18, 18, 0.7);
+  box-shadow: 10px 0 40px rgba(63, 142, 90, 0.1), -10px 0 40px rgba(63, 142, 90, 0.1);
 }
 
 .input-container {
-  background-color: rgba(18, 18, 18, 0.3);
   &:hover {
     background-color: rgba(56, 56, 56, 0.3);
     cursor: pointer;
@@ -130,7 +131,7 @@
 }
 
 .swap-page-height {
-  min-height: 87.8vh;
+  min-height: 88.4vh;
 
   @include maxQuery(700) {
     min-height: 87.1vh;

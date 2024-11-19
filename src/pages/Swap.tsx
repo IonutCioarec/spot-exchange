@@ -31,6 +31,7 @@ import { useLocation } from 'react-router-dom';
 import SimpleLoader from 'components/SimpleLoader';
 import { AwesomeButton } from 'react-awesome-button';
 import WifiProtectedSetupIcon from '@mui/icons-material/WifiProtectedSetup';
+import LightSpot from 'components/LightSpot';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -546,6 +547,8 @@ const Swap = () => {
         </Col>
 
       </Row>
+
+      <LightSpot size={isMobile ? 220 : 360} x={isMobile ? '25%' : '40%'} y="36%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
     </Container>
   );
 }
