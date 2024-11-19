@@ -252,12 +252,12 @@ const Pools = () => {
                       },
                     }}
                   >
-                    <MenuItem value="liquidity_desc" className='font-rose select-menu-item font-size-sm'>Highest Liquidity</MenuItem>
-                    <MenuItem value="liquidity_asc" className='font-rose select-menu-item font-size-sm'>Lowest Liquidity</MenuItem>
-                    <MenuItem value="volume24h_desc" className='font-rose select-menu-item font-size-sm'>Highest Volume 24h</MenuItem>
-                    <MenuItem value="volume24h_asc" className='font-rose select-menu-item font-size-sm'>Lowest Volume 24h</MenuItem>
-                    <MenuItem value="fees24h_desc" className='font-rose select-menu-item font-size-sm'>Highest Fees 24h</MenuItem>
-                    <MenuItem value="fees24h_asc" className='font-rose select-menu-item font-size-sm'>Lowest Fees 24h</MenuItem>
+                    <MenuItem value="liquidity_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'liquidity' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Liquidity</MenuItem>
+                    <MenuItem value="liquidity_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'liquidity' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Liquidity</MenuItem>
+                    <MenuItem value="volume24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Volume 24h</MenuItem>
+                    <MenuItem value="volume24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Volume 24h</MenuItem>
+                    <MenuItem value="fees24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'fees24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Fees 24h</MenuItem>
+                    <MenuItem value="fees24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'fees24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Fees 24h</MenuItem>
                   </Select>
                 </div>
               }
@@ -334,48 +334,48 @@ const Pools = () => {
                       fontSize: '14px',
                       fontFamily: 'Red Rose'
                     },
-                  }}                  
+                  }}
                 />
                 <span className='font-size-sm font-regular text-white m-r-n-sm'>Sort-by: </span>
-                  <Select
-                    id="sort-by"
-                    value={""}
-                    onChange={handleSortByChange}
-                    input={<OutlinedInput />}
-                    size='small'
-                    sx={{
+                <Select
+                  id="sort-by"
+                  value={""}
+                  onChange={handleSortByChange}
+                  input={<OutlinedInput />}
+                  size='small'
+                  sx={{
+                    color: 'white',
+                    fontSize: '12px',
+                    fontFamily: 'Red Rose',
+                    padding: 0,
+                    '.MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                    '& .MuiSvgIcon-root': {
                       color: 'white',
-                      fontSize: '12px',
-                      fontFamily: 'Red Rose',
-                      padding: 0,
-                      '.MuiOutlinedInput-notchedOutline': {
-                        border: 'none',
-                      },
-                      '& .MuiSvgIcon-root': {
+                      marginLeft: '-50px !important'
+                    },
+                    backgroundColor: 'transparent',
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        backgroundColor: 'rgba(32, 32, 32, 1)',
                         color: 'white',
-                        marginLeft: '-50px !important'
+                        fontFamily: 'Red Rose',
+                        borderRadius: '15px',
+                        // boxShadow: '10px 0 7px rgba(63, 142, 90, 0.1), -10px 0 7px rgba(63, 142, 90, 0.1) !important'
                       },
-                      backgroundColor: 'transparent',
-                    }}
-                    MenuProps={{
-                      PaperProps: {
-                        sx: {
-                          backgroundColor: 'rgba(32, 32, 32, 1)',
-                          color: 'white',
-                          fontFamily: 'Red Rose',
-                          borderRadius: '15px',
-                          // boxShadow: '10px 0 7px rgba(63, 142, 90, 0.1), -10px 0 7px rgba(63, 142, 90, 0.1) !important'
-                        },
-                      },
-                    }}
-                  >
-                    <MenuItem value="liquidity_desc" className='font-rose select-menu-item font-size-sm'>Highest Liquidity</MenuItem>
-                    <MenuItem value="liquidity_asc" className='font-rose select-menu-item font-size-sm'>Lowest Liquidity</MenuItem>
-                    <MenuItem value="volume24h_desc" className='font-rose select-menu-item font-size-sm'>Highest Volume 24h</MenuItem>
-                    <MenuItem value="volume24h_asc" className='font-rose select-menu-item font-size-sm'>Lowest Volume 24h</MenuItem>
-                    <MenuItem value="fees24h_desc" className='font-rose select-menu-item font-size-sm'>Highest Fees 24h</MenuItem>
-                    <MenuItem value="fees24h_asc" className='font-rose select-menu-item font-size-sm'>Lowest Fees 24h</MenuItem>
-                  </Select>
+                    },
+                  }}
+                >
+                  <MenuItem value="liquidity_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'liquidity' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Liquidity</MenuItem>
+                  <MenuItem value="liquidity_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'liquidity' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Liquidity</MenuItem>
+                  <MenuItem value="volume24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Volume 24h</MenuItem>
+                  <MenuItem value="volume24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Volume 24h</MenuItem>
+                  <MenuItem value="fees24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'fees24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Fees 24h</MenuItem>
+                  <MenuItem value="fees24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'fees24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Fees 24h</MenuItem>
+                </Select>
               </div>
             }
             {pairsStatus === 'loading' && <FilterLoader />}

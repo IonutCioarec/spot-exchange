@@ -356,3 +356,7 @@
 .select-menu-item:hover {
   background-color: #161616 !important;
 }
+
+.select-menu-item.active {
+  color: #3fac5a;
+}
