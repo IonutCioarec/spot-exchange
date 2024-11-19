@@ -81,7 +81,7 @@ const Swap = () => {
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-    console.log(JSON.stringify(priceResponse, null, 2));
+
     if (!priceResponse) {
       return { swapPrice: '0', steps: [], exchangeRate: '0' };
     }
@@ -273,7 +273,7 @@ const Swap = () => {
   }, [location.search]);
 
   return (
-    <Container className='swap-page-height'>
+    <Container className='swap-page-height font-rose'>
       <Row>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
@@ -306,6 +306,7 @@ const Swap = () => {
                       fontSize: isMobile ? '20px' : '25px',
                       caretColor: 'white',
                       paddingLeft: '10px',
+                      fontFamily: 'Red Rose'
                     },
                   }}
                   className='mb-0'
@@ -370,6 +371,7 @@ const Swap = () => {
                       fontSize: isMobile ? '20px' : '25px',
                       caretColor: 'white',
                       paddingLeft: '10px',
+                      fontFamily: 'Red Rose'
                     },
                   }}
                   className='mb-0'
