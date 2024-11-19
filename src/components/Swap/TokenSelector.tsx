@@ -140,7 +140,8 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         }}
       >
         <DialogTitle id="scroll-dialog-title" style={{ borderBottom: '1px solid #303030' }}>
-          <div className='d-flex justify-content-end'>
+          <div className='d-flex justify-content-between font-rose align-items-center'>
+            <p className='mx-auto text-white'>Select a token</p>
             <IconButton
               edge="end"
               color="inherit"
