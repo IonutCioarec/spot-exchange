@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useCallback } from 'react';
+import { debounce } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   selectPairs,
@@ -85,7 +86,7 @@ const Pools = () => {
   const [loading, setLoading] = useState<boolean>(false);
   // const [viewMode, setViewModeState] = useState<'all' | 'assets' | 'created'>('all');
   const [localSearchInput, setLocalSearchInput] = useState<string>('');
-  const loadingTime = 300;
+  const loadingTime = 700;
   const isMobile = useMobile();
   const isTablet = useTablet();
 
@@ -127,16 +128,28 @@ const Pools = () => {
     setLoading(false);
   };
 
+  // Debounced function for search input
+  const debouncedDispatch = useCallback(
+    debounce((value: string) => {
+      setLoading(true);
+      dispatch(setTokenSearch(value));
+      dispatch(setPage(1));
+      setTimeout(() => setLoading(false), loadingTime);
+    }, 500),
+    [dispatch]
+  );
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setLoading(true);
     setLocalSearchInput(value);
-    dispatch(setTokenSearch(value));
-    dispatch(setPage(1));
-    setTimeout(() => {
-      setLoading(false);
-    }, loadingTime);
+    debouncedDispatch(value);
   };
+
+  useEffect(() => {
+    return () => {
+      debouncedDispatch.cancel();
+    };
+  }, [debouncedDispatch]);
 
   const handlePageChange = (newPage: number) => {
     dispatch(setPage(newPage));
@@ -273,7 +286,7 @@ const Pools = () => {
                   type="search"
                   size="small"
                   className="ms-2 mb-2"
-                  value={apiSearchInput}
+                  value={localSearchInput}
                   onChange={handleSearchChange}
                   InputProps={{
                     style: {
