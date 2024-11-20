@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectPairTokensById, selectLpTokensById, selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
@@ -32,6 +32,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import { AwesomeButton } from 'react-awesome-button';
 import WifiProtectedSetupIcon from '@mui/icons-material/WifiProtectedSetup';
 import LightSpot from 'components/LightSpot';
+import { debounce } from 'lodash';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -97,11 +98,12 @@ const Swap = () => {
     };
   };
 
-  const handleToken1AmountChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleToken1AmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const rawValue = value.replace(/,/g, '');
 
-    if (isNaN(Number(rawValue)) || !rawValue) {
+    if (value === '' || isNaN(Number(rawValue)) || !rawValue) {
+      debouncedToken1Calculation.cancel();
       setToken1Amount('');
       setToken2Amount('');
       setToken1AmountPrice('0.000');
@@ -114,31 +116,17 @@ const Swap = () => {
     const formattedValue = formatNumberWithCommas(rawValue);
     setToken1Amount(formattedValue);
 
-    if (value === '' || !token1 || !token2) {
-      setToken2Amount('');
-      return;
-    }
-
     if (!token1 || !token2) return;
-    const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
-    setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
-    const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
-    setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
-    setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
-    setExchangeRate(price.exchangeRate);
-
-    if (price?.steps) {
-      setSteps(price.steps);
-    }
+    debouncedToken1Calculation(rawValue);
   };
 
-  const handleToken2AmountChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleToken2AmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const rawValue = value.replace(/,/g, '');
 
-    if (isNaN(Number(rawValue)) || !rawValue) {
+    if (value === '' || isNaN(Number(rawValue)) || !rawValue) {
+      debouncedToken2Calculation.cancel();
       setToken1Amount('');
       setToken2Amount('');
       setToken1AmountPrice('0.000');
@@ -151,25 +139,52 @@ const Swap = () => {
     const formattedValue = formatNumberWithCommas(rawValue);
     setToken2Amount(formattedValue);
 
-    if (value === '' || !token1 || !token2) {
-      setToken1Amount('');
-      return;
-    }
-
     if (!token1 || !token2) return;
-    const price = (await getPrice(token2, token1, parseFormattedNumber(rawValue).toString()));
-    setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
-    const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
-    setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
-    setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
-    const price2 = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
-    if (price2.steps) {
-      setSteps(price2.steps);
-    }
-    setExchangeRate(price2.exchangeRate);
+    debouncedToken2Calculation(rawValue);
   };
+
+  // Define the debounced functions
+  const debouncedToken1Calculation = useCallback(
+    debounce(async (rawValue: string) => {
+      if (!token1 || !token2) return;
+
+      const price = await getPrice(token1, token2, parseFormattedNumber(rawValue).toString());
+      setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
+
+      const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
+      const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
+      setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
+      setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+      setExchangeRate(price.exchangeRate);
+
+      if (price?.steps) {
+        setSteps(price.steps);
+      }
+    }, 800),
+    [token1, token2, allTokens]
+  );
+
+  const debouncedToken2Calculation = useCallback(
+    debounce(async (rawValue: string) => {
+      if (!token1 || !token2) return;
+
+      const price = await getPrice(token2, token1, parseFormattedNumber(rawValue).toString());
+      setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
+
+      const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
+      const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
+      setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
+      setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+
+      const price2 = await getPrice(token1, token2, parseFormattedNumber(rawValue).toString());
+      if (price2.steps) {
+        setSteps(price2.steps);
+      }
+      setExchangeRate(price2.exchangeRate);
+    }, 800),
+    [token1, token2, allTokens]
+  );
 
   const handleSlippageAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;

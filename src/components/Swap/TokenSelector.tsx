@@ -111,7 +111,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         <div
           className='mx-2'
           style={{
-            width: '55vw',            
+            width: isMobile ? '55vw' : 'auto',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
           }}>
