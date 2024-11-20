@@ -303,7 +303,7 @@ const Swap = () => {
                     style: {
                       color: 'white',
                       border: 'none',
-                      fontSize: isMobile ? '20px' : '25px',
+                      fontSize: isMobile ? '17px' : '25px',
                       caretColor: 'white',
                       paddingLeft: '10px',
                       fontFamily: 'Red Rose'
@@ -368,7 +368,7 @@ const Swap = () => {
                     style: {
                       color: 'white',
                       border: 'none',
-                      fontSize: isMobile ? '20px' : '25px',
+                      fontSize: isMobile ? '17px' : '25px',
                       caretColor: 'white',
                       paddingLeft: '10px',
                       fontFamily: 'Red Rose'
@@ -500,7 +500,7 @@ const Swap = () => {
                     ))}
                   </div>
                 </div>
-                <div className='d-flex justify-content-between align-items-center'>
+                <div className='d-flex justify-content-between align-items-center mt-1 mb-1'>
                   <p className='text-silver font-size-sm mb-0'>Route</p>
                   <div className='d-flex justify-content-end align-items-center text-white '>
                     {steps.map((step: any, index: number) => (

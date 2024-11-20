@@ -96,7 +96,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
       <div
         className='input-container font-rose p-1 b-r-sm d-flex justify-content-center align-items-center'
         style={{
-          minWidth: isMobile || isTablet ? '120px' : '11vw',
+          minWidth: isMobile || isTablet ? '35vw' : '11vw',
           boxSizing: 'border-box',
           overflow: 'hidden'
         }}
@@ -105,15 +105,15 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         <img
           src={allTokens[selectedToken]?.logo_url || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.logo_url}
           alt={tokenType}
-          style={{ width: 35, height: 35, flexShrink: 0, left: '2%', position: 'relative' }}
+          style={{ width: isMobile ? 30 : 35, height: isMobile ? 30 : 35, flexShrink: 0, left: '2%', position: 'relative' }}
           className='ms-2'
         />
         <div
           className='mx-2'
           style={{
-            maxWidth: 'calc(100% - 70px)',
-
+            width: '55vw',            
             textOverflow: 'ellipsis',
+            overflow: 'hidden',
           }}>
           <p className='m-0 font-bold'>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
           <p className='mt-0 mb-0 font-size-xxs text-silver'>
