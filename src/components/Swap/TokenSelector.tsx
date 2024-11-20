@@ -14,6 +14,7 @@ import { selectPage, selectPairTokens, selectPairTokensById, selectSearchInput, 
 import { Token } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounce } from 'lodash';
+import { debounceSearchTime } from 'config';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -70,8 +71,8 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
       setLoading(true);
       dispatch(setSearchInput(value));
       dispatch(setPage(1));
-      setTimeout(() => setLoading(false), 700);
-    }, 700),
+      setTimeout(() => setLoading(false), debounceSearchTime);
+    }, debounceSearchTime),
     [dispatch]
   );
 

@@ -42,7 +42,7 @@ import StaticLightSpot from 'components/StaticLightSpot';
 import LightTrapezoid from 'components/LightTrapezoid';
 import { color } from 'framer-motion';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
-import { poolsItemsPerPage } from 'config';
+import { debounceSearchTime } from 'config';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -134,8 +134,8 @@ const Pools = () => {
       setLoading(true);
       dispatch(setTokenSearch(value));
       dispatch(setPage(1));
-      setTimeout(() => setLoading(false), loadingTime);
-    }, 500),
+      setTimeout(() => setLoading(false), debounceSearchTime);
+    }, debounceSearchTime),
     [dispatch]
   );
 

@@ -33,6 +33,7 @@ import { AwesomeButton } from 'react-awesome-button';
 import WifiProtectedSetupIcon from '@mui/icons-material/WifiProtectedSetup';
 import LightSpot from 'components/LightSpot';
 import { debounce } from 'lodash';
+import { debounceSearchTime } from 'config';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -161,7 +162,7 @@ const Swap = () => {
       if (price?.steps) {
         setSteps(price.steps);
       }
-    }, 700),
+    }, debounceSearchTime),
     [token1, token2, allTokens]
   );
 
@@ -182,7 +183,7 @@ const Swap = () => {
         setSteps(price2.steps);
       }
       setExchangeRate(price2.exchangeRate);
-    }, 700),
+    }, debounceSearchTime),
     [token1, token2, allTokens]
   );
 
