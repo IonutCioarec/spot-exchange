@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useEffect, useState } from 'react';
+import { forwardRef, Fragment, useEffect, useState, useCallback } from 'react';
 import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton, Button } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowDown, Search, ArrowDropDown } from '@mui/icons-material';
@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectPage, selectPairTokens, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput, selectPairTokensNumber } from 'storeManager/slices/tokensSlice';
 import { Token } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
+import { debounce } from 'lodash';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -63,12 +64,29 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
     dispatch(setPage(1));
   };
 
+  // Debounced function for updating Redux state
+  const debouncedDispatch = useCallback(
+    debounce((value: string) => {
+      setLoading(true);
+      dispatch(setSearchInput(value));
+      dispatch(setPage(1));
+      setTimeout(() => setLoading(false), 700);
+    }, 700),
+    [dispatch]
+  );
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocalSearchInput(value);
-    dispatch(setSearchInput(value));
-    dispatch(setPage(1));
+    debouncedDispatch(value);
   };
+
+  // Cleanup debounced function on unmount
+  useEffect(() => {
+    return () => {
+      debouncedDispatch.cancel();
+    };
+  }, [debouncedDispatch]);
 
   const handlePageChange = (newPage: number) => {
     dispatch(setPage(newPage));
@@ -79,17 +97,6 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
     resetAmounts();
     handleClose();
   };
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setLoading(false);
-    }, 700);
-
-    return () => {
-      setLoading(true);
-      clearTimeout(delayDebounceFn);
-    };
-  }, [localSearchInput])
 
   return (
     <>
@@ -158,7 +165,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             fullWidth
             size='small'
             variant='outlined'
-            value={apiSearchInput}
+            value={localSearchInput}
             onChange={handleSearchChange}
             className='token-search-container mb-2'
             autoFocus
@@ -197,15 +204,15 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
                 Object.values(pairTokens).map((token: Token) => (
                   <div key={`list-item-${token.token_id}`} className='py-1 px-2 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item' onClick={() => handleTokenSelect(token.token_id)}>
                     <Avatar src={token.logo_url} sx={{ height: '30px', width: '30px', marginTop: '-2px' }} />
-                    <div className='' style={{width: '30%'}}>
+                    <div className='' style={{ width: '30%' }}>
                       <p className='font-size-xxs mb-0 text-silver'>Token</p>
                       <p className='font-size-xs mb-0'>{token.token_id}</p>
                     </div>
-                    <div className='text-right' style={{width: '35%'}}>
+                    <div className='text-right' style={{ width: '35%' }}>
                       <p className='font-size-xxs mb-0 text-silver'>Price</p>
                       <p className='font-size-xs mb-0'>${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}</p>
                     </div>
-                    <div className='text-right' style={{width: '20%'}}>
+                    <div className='text-right' style={{ width: '20%' }}>
                       <p className='font-size-xxs mb-0 text-silver'>Balance</p>
                       <p className='font-size-xs mb-0'>{intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0'), 3)), 0, 20)}</p>
                     </div>

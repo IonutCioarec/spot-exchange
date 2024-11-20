@@ -161,7 +161,7 @@ const Swap = () => {
       if (price?.steps) {
         setSteps(price.steps);
       }
-    }, 800),
+    }, 700),
     [token1, token2, allTokens]
   );
 
@@ -182,7 +182,7 @@ const Swap = () => {
         setSteps(price2.steps);
       }
       setExchangeRate(price2.exchangeRate);
-    }, 800),
+    }, 700),
     [token1, token2, allTokens]
   );
 
