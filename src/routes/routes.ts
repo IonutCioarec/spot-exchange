@@ -1,6 +1,7 @@
 import Dashboard from 'pages/Dashboard';
 import Pools from 'pages/Pools';
 import Swap from 'pages/Swap';
+import Farms from 'pages/Farms';
 
 interface RouteWithTitleType extends RouteType {
   title: string;
@@ -15,7 +16,8 @@ export const routeNames = {
   home: '/',
   unlock: '/unlock',
   pools: '/pools',
-  swap: '/swap'
+  swap: '/swap',
+  farms: '/farms'
 };
 
 export const routes: RouteWithTitleType[] = [
@@ -33,6 +35,11 @@ export const routes: RouteWithTitleType[] = [
     path: routeNames.swap,
     title: 'Swap',
     component: Swap
+  },
+  {
+    path: routeNames.farms,
+    title: 'Farms',
+    component: Farms
   }
 ];
 
@@ -40,4 +47,5 @@ export enum RouteNamesEnum {
   home = '/',
   swap = '/swap',
   pools = '/pools',
+  farms = '/farms'
 }

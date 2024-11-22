@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { Telegram, Facebook, X, MenuBook } from '@mui/icons-material';
 import LightLine from 'components/LightLine';
+import AgricultureIcon from '@mui/icons-material/Agriculture';
 
 export const Header = () => {
   const [expanded, setExpanded] = useState(false);
@@ -110,6 +111,16 @@ export const Header = () => {
                       Pools
                     </p>
                   </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/farms"
+                    className={`mx-1 ${location.pathname === '/farms' ? 'active' : ''}`}
+                    onClick={handleSelect}
+                  >
+                    <p className="nav-link mb-0 mt-0 link font-size-sm">
+                      Farms
+                    </p>
+                  </Nav.Link>
                 </Nav>
 
               </Navbar>
@@ -156,6 +167,13 @@ export const Header = () => {
             >
               <WorkspacesIcon />
               <p className='mb-0'>Pools</p>
+            </Link>
+            <Link
+              to="/farms"
+              className={`nav-item ${location.pathname === '/farms' ? 'active' : ''}`}
+            >
+              <AgricultureIcon />
+              <p className='mb-0'>Farms</p>
             </Link>
           </div>
         </div>
