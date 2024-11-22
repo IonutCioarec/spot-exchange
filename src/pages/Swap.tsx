@@ -104,7 +104,7 @@ const Swap = () => {
     const rawValue = value.replace(/,/g, '');
 
     if (value === '' || isNaN(Number(rawValue)) || !rawValue) {
-      
+      debouncedToken1Calculation.cancel();
       setToken1Amount('');
       setToken2Amount('');
       setToken1AmountPrice('0.000');
@@ -127,7 +127,7 @@ const Swap = () => {
     const rawValue = value.replace(/,/g, '');
 
     if (value === '' || isNaN(Number(rawValue)) || !rawValue) {
-      
+      debouncedToken2Calculation.cancel();
       setToken1Amount('');
       setToken2Amount('');
       setToken1AmountPrice('0.000');
