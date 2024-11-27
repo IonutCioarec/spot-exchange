@@ -360,3 +360,34 @@
 .select-menu-item.active {
   color: #3fac5a;
 }
+
+.btn-intense-default {
+  font-family: "Red Rose", serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  line-height: 17px !important;
+  letter-spacing: 0em !important;
+  padding: 10px 20px !important;
+  border-radius: 35px !important;
+  align-items: center;
+  transition: color 0.5s ease-in-out !important;
+  overflow: hidden;
+  z-index: 1;
+  white-space: nowrap;
+  border: 0px solid transparent !important;
+}
+
+.btn-intense-default.smaller {
+  padding: 1px 1px !important;
+}
+
+.btn-intense-danger{
+  background: #f47272 !important;
+  color: white !important;
+}
+
+.btn-intense-warning{
+  background: #f8b26a !important;
+  color: black !important;
+}
