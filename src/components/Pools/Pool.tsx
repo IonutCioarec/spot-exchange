@@ -18,6 +18,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import WithdrawModal from './WithdrawModal';
 
 interface PoolProps {
   pair: Pair;
@@ -27,6 +28,7 @@ interface PoolProps {
   userToken1Balance: number;
   userToken2Balance: number;
   userLpTokenBalance: number;
+  lpTokenId: string;
   lpTokenSupply: number;
   sortBy: 'liquidity' | 'volume24h' | 'fees24h';
   sortDirection: 'asc' | 'desc';
@@ -39,11 +41,14 @@ const defaultTokenValues = {
   decimals: 18
 }
 
-export const Pool = ({ pair, index, token1Details, token2Details, userToken1Balance, userToken2Balance, userLpTokenBalance, lpTokenSupply, sortBy, sortDirection }: PoolProps) => {
+export const Pool = ({ pair, index, token1Details, token2Details, userToken1Balance, userToken2Balance, userLpTokenBalance, lpTokenId, lpTokenSupply, sortBy, sortDirection }: PoolProps) => {
   const isMobile = useMobile();
   const isTablet = useTablet();
   const [open, setOpen] = useState(false);
   const { address } = useGetAccountInfo();
+
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const handleWithdrawOpen = () => setIsWithdrawOpen(true);
 
   if (!isMobile && !isTablet) {
     return (
@@ -104,14 +109,14 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               </p>
               $
               <CountUp
-                  start={0}
-                  end={Number(pair?.tvl)}
-                  duration={1.5}
-                  separator=","
-                  decimals={3}
-                  decimal="."
-                  delay={0.1}
-                />
+                start={0}
+                end={Number(pair?.tvl)}
+                duration={1.5}
+                separator=","
+                decimals={3}
+                decimal="."
+                delay={0.1}
+              />
             </Col>
             <Col lg={2} className="text-right">
               <p className={`mb-0 font-size-xxs ${sortBy === 'fees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
@@ -282,7 +287,13 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   <div className="mt-2">
                     <div className="d-flex justify-content-between align-items-center gap-3 mt-1 mb-1 mx-1">
                       <AwesomeButton className="aws-btn-primary full-width">ADD</AwesomeButton>
-                      <AwesomeButton className="aws-btn-danger full-width">WITHDRAW</AwesomeButton>
+                      <AwesomeButton className="aws-btn-danger full-width" onPress={handleWithdrawOpen}>WITHDRAW</AwesomeButton>
+                      <WithdrawModal
+                        isOpen={isWithdrawOpen}
+                        setIsOpen={setIsWithdrawOpen}
+                        lpTokenId={lpTokenId}
+                        lpTokenMaxAmount={userLpTokenBalance}
+                      />
                       <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
                         <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
                       </Link>
@@ -496,7 +507,13 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               <div className="mt-2">
                 <div className="d-flex justify-content-between align-items-center gap-2 mt-1 mx-1">
                   <AwesomeButton className="aws-btn-primary full-width">ADD</AwesomeButton>
-                  <AwesomeButton className="aws-btn-danger full-width">WITHDRAW</AwesomeButton>
+                  <AwesomeButton className="aws-btn-danger full-width" onPress={handleWithdrawOpen}>WITHDRAW</AwesomeButton>
+                  <WithdrawModal
+                    isOpen={isWithdrawOpen}
+                    setIsOpen={setIsWithdrawOpen}
+                    lpTokenId={lpTokenId}
+                    lpTokenMaxAmount={userLpTokenBalance}
+                  />
                   <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
                     <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
                   </Link>

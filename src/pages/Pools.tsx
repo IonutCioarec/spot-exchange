@@ -416,6 +416,7 @@ const Pools = () => {
                     userToken2Balance={Number(userTokens[pair.token2]?.balance ?? 0)}
                     // userLpTokenBalance={Number(denominatedAmountToAmount(userTokens[pair.lp_token_id]?.balance, lptokens[pair.lp_token_id].decimals, 20) || 0)}
                     userLpTokenBalance={Number(0.6)}
+                    lpTokenId={pair.lp_token_id}
                     lpTokenSupply={(Number(denominatedAmountToAmount(lptokens[pair.lp_token_id]?.supply || 0, lptokens[pair.lp_token_id]?.decimals || 18, 20)) ?? 0)}
                     sortBy={sortBy}
                     sortDirection={sortDirection}
