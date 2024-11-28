@@ -57,14 +57,15 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
     <>
       <Dialog
         open={isOpen}
-        onClose={handleClose}
+        onClose={(e, reason) => {
+          if (reason !== 'backdropClick') handleClose(); // Prevent accidental close
+        }}
         style={{ borderRadius: '10px' }}
         TransitionComponent={Transition}
         maxWidth='xs'
         fullWidth
-        fullScreen={isMobile ? true : false}
         PaperProps={{
-          style: { backgroundColor: 'rgba(20, 20, 20, 0.9)', borderRadius: '10px', minHeight: '100px' },
+          style: { backgroundColor: 'rgba(20, 20, 20, 0.9)', borderRadius: '10px', minHeight: '100px', zIndex: 1300 },
         }}
       >
         <DialogTitle id="scroll-dialog-title">
@@ -148,7 +149,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
             <Button
               className="btn-intense-default btn-intense-danger hover-btn ms-2"
               onClick={handleWithdraw}
-              sx={{ minWidth: isMobile ? '170px' : '120px', height: '30px' }}
+              sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
             >
               Withdraw
             </Button>

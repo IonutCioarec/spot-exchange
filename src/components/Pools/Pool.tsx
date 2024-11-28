@@ -2,7 +2,7 @@ import { Fragment } from "react/jsx-runtime";
 import 'assets/scss/pools.scss';
 import { useMobile, useTablet } from 'utils/responsive';
 import { Pair, Token } from "types/backendTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { intlNumberFormat, intlFormatSignificantDecimals } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
 import { Button, IconButton } from "@mui/material";
@@ -49,7 +49,13 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
   const { address } = useGetAccountInfo();
 
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
-  const handleWithdrawOpen = () => setIsWithdrawOpen(true);
+  const handleWithdrawOpen = () => {
+    setIsWithdrawOpen(true);
+  }
+
+  useEffect(() => {
+    console.log('isWithdrawOpen:', isWithdrawOpen);
+  }, [isWithdrawOpen]);
 
   if (!isMobile && !isTablet) {
     return (
