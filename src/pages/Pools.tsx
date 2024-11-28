@@ -287,6 +287,7 @@ const Pools = () => {
                   size="small"
                   className="ms-2 mb-2"
                   value={localSearchInput}
+                  autoComplete="off"
                   onChange={handleSearchChange}
                   InputProps={{
                     style: {
