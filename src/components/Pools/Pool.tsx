@@ -311,43 +311,59 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
       <Fragment>
         <div className={`pool text-white ${open ? 'mb-5' : 'mb-3'}`}>
           <div className="d-flex justify-content-between">
-            <div className="d-flex justify-content-start">
+            <div className="d-flex justify-content-start align-items-center">
               <img
                 src={token1Details?.logo_url ?? defaultTokenValues.image_url}
                 alt={pair.token1}
-                style={{
-                  width: 35,
-                  height: 35,
-                  border: '1px solid rgba(63, 172, 90, 0.3)',
-                  borderRadius: '20px',
-                }}
+                className='d-inline'
+                style={{ width: 27, height: 27, border: '1px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
               />
-              <div className="mb-0 ms-2">
-                <p className="mb-0 font-size-sm">{token1Details?.ticker ?? defaultTokenValues.name}</p>
-                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
-                </p>
-              </div>
-            </div>
-            <span>/</span>
-            <div className="d-flex justify-content-end">
-              <div className="text-right me-2">
-                <p className="mb-0 font-size-sm">{token2Details?.ticker ?? defaultTokenValues.name}</p>
-                <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
-                </p>
-              </div>
-              <img
+              <motion.img
                 src={token2Details?.logo_url ?? defaultTokenValues.image_url}
                 alt={pair.token2}
+                className="d-inline m-l-n-xxl"
+                initial={{ x: 0 }}
+                animate={{ x: 20 }}
+                transition={{
+                  duration: 2.5,
+                  ease: 'easeInOut',
+                  delay: 0.3,
+                }}
                 style={{
-                  width: 35,
-                  height: 35,
+                  width: 27,
+                  height: 27,
                   border: '1px solid rgba(63, 172, 90, 0.3)',
                   borderRadius: '20px',
+                  position: 'relative',
+                  left: '0px',
                 }}
               />
+              <div className=" mb-0 ms-4">
+                <p className="mb-0 font-size-sm">{token1Details?.ticker ?? defaultTokenValues.name}</p>
+                <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
+                </p>
+              </div>
+              <div className="mx-2 mb-0">
+                <span>/</span>
+              </div>
+              <div className="">
+                <p className="mb-0 font-size-sm">{token2Details?.ticker ?? defaultTokenValues.name}</p>
+                <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
+                </p>
+              </div>
+            </div>
+            <div>
+              <IconButton
+                className="m-0"
+                size="small"
+                color="success"
+                onClick={() => setOpen(!open)}
+              >
+                {open ? (<KeyboardDoubleArrowUpIcon sx={{ fontSize: '25px' }} />) : (<KeyboardDoubleArrowDownIcon sx={{ fontSize: '25px' }} />)}
+              </IconButton>
             </div>
           </div>
-          <div className="pool-sub-container p-2 mt-3">
+          <div className="pool-sub-container p-2 mt-1">
             <div className="d-flex justify-content-between">
               <p className={`mb-0 font-size-sm ${sortBy === 'liquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                 Liquidity
@@ -412,21 +428,9 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               </p>
             </div>
           </div>
-          <Row className="mt-1 text-right">
-            <Col xs={12}>
-              <IconButton
-                className="m-0"
-                size="small"
-                color="success"
-                onClick={() => setOpen(!open)}
-              >
-                {open ? (<KeyboardDoubleArrowUpIcon sx={{ marginTop: '-2px', fontSize: '30px', marginBottom: '-10px' }} />) : (<KeyboardDoubleArrowDownIcon sx={{ marginTop: '-2px', fontSize: '30px', marginBottom: '-10px' }} />)}
-              </IconButton>
-            </Col>
-          </Row>
           {open && (
-            <div>
-              <div className="pool-sub-container p-2 mt-3">
+            <div className="b-r-sm mt-2 p-2" style={{border: '1px solid rgba(100,100,100, 0.7)'}}>
+              <div className="pool-sub-container p-1 mt-1">
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
                   <p className="mb-0 font-size-sm text-silver">
@@ -434,7 +438,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   </p>
                 </div>
               </div>
-              <div className="pool-sub-container p-2 mt-1">
+              <div className="pool-sub-container p-1 mt-1">
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Fees (Total)</p>
                   <p className="mb-0 font-size-sm text-silver">
@@ -442,7 +446,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   </p>
                 </div>
               </div>
-              <div className="pool-sub-container p-2 mt-1">
+              <div className="pool-sub-container p-1 mt-1">
                 <div className="d-flex justify-content-between">
                   <div>
                     <p className="mb-0 font-size-sm text-silver">Your Fee (Total)</p>
@@ -457,7 +461,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 </div>
               </div>
 
-              <div className="pool-sub-container p-2 mt-1">
+              <div className="pool-sub-container p-1 mt-1">
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="text-white font-size-sm font-bold mb-0">Pool Share</p>
                   <p className="text-white font-size-sm font-bold mb-0 text-right">{intlFormatSignificantDecimals(getPercentageBigNumber(userLpTokenBalance || 0, lpTokenSupply), 3)}%</p>
@@ -489,7 +493,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   </div>
                 </div>
               </div>
-              <div className="pool-sub-container p-2 mt-1">
+              <div className="pool-sub-container p-1 mt-1">
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
                     <p className="text-white font-size-sm font-bold mb-0">Your Liquidity</p>
