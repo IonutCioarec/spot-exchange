@@ -19,6 +19,7 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import WithdrawModal from './WithdrawModal';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 interface PoolProps {
   pair: Pair;
@@ -354,12 +355,21 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             </div>
             <div>
               <IconButton
-                className="m-0"
+                className="m-0 btn-info"
+                size="small"
+                color="success"
+                
+                onClick={() => setOpen(!open)}
+              >
+                <RocketLaunchIcon sx={{ fontSize: '15px' }} />
+              </IconButton>
+              <IconButton
+                className="m-0 btn-success ms-2"
                 size="small"
                 color="success"
                 onClick={() => setOpen(!open)}
               >
-                {open ? (<KeyboardDoubleArrowUpIcon sx={{ fontSize: '25px' }} />) : (<KeyboardDoubleArrowDownIcon sx={{ fontSize: '25px' }} />)}
+                {open ? (<KeyboardDoubleArrowUpIcon sx={{ fontSize: '15px' }} />) : (<KeyboardDoubleArrowDownIcon sx={{ fontSize: '15px' }} />)}
               </IconButton>
             </div>
           </div>
@@ -429,7 +439,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             </div>
           </div>
           {open && (
-            <div className="b-r-sm mt-2 p-2" style={{border: '1px solid rgba(100,100,100, 0.7)'}}>
+            <div className="b-r-sm mt-2 p-2" style={{ border: '1px solid rgba(100,100,100, 0.7)' }}>
               <div className="pool-sub-container p-1 mt-1">
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
