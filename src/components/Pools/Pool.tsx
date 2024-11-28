@@ -436,7 +436,12 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               </p>
             </div>
           </div>
-          {open && (
+          <motion.div
+            style={{ overflow: 'hidden' }}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+            transition={{ duration: 0.5, ease: [0.17, 0.25, 0.3, 0.3], delay: 0.1 }} // Adjust duration and easing as desired
+          >
             <div className="b-r-sm mt-2 p-2" style={{ border: '1px solid rgba(100,100,100, 0.7)' }}>
               <div className="pool-sub-container p-1 mt-1">
                 <div className="d-flex justify-content-between">
@@ -532,7 +537,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 </div>
               </div>
             </div>
-          )}
+          </motion.div>
         </div>
       </Fragment >
     );
