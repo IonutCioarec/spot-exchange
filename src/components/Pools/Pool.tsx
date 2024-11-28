@@ -53,10 +53,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
     setIsWithdrawOpen(true);
   }
 
-  useEffect(() => {
-    console.log('isWithdrawOpen:', isWithdrawOpen);
-  }, [isWithdrawOpen]);
-
   if (!isMobile && !isTablet) {
     return (
       <Fragment>
