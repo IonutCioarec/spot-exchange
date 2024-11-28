@@ -418,7 +418,7 @@ const Swap = () => {
 
       <Row className='d-flex align-items-start mt-2'>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
-          <div className='p-3 mt-1 b-r-sm' style={{ border: '1px solid #3FAC5A' }}>
+          <div className='p-3 mt-1 b-r-sm' style={{ border: '1px solid silver' }}>
             {Number(exchangeRate) > 0 &&
               <div className='d-flex justify-content-between align-items-center'>
                 <p className='text-silver font-size-sm mb-0'>{!isMobile ? 'Swap ' : ''}Rate</p>
