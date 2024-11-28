@@ -167,6 +167,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             size='small'
             variant='outlined'
             value={localSearchInput}
+            autoComplete="off"
             onChange={handleSearchChange}
             className='token-search-container mb-2'
             autoFocus
