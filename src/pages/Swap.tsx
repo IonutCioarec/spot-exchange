@@ -311,6 +311,7 @@ const Swap = () => {
                   placeholder='0.000'
                   type="text"
                   value={token1Amount}
+                  autoComplete="off"
                   onChange={handleToken1AmountChange}
                   size="medium"
                   variant="standard"
@@ -376,6 +377,7 @@ const Swap = () => {
                   placeholder='0.000'
                   type="text"
                   value={token2Amount}
+                  autoComplete="off"
                   onChange={handleToken2AmountChange}
                   size="medium"
                   variant="standard"
@@ -454,6 +456,7 @@ const Swap = () => {
                     placeholder='Custom'
                     type="text"
                     value={slippage}
+                    autoComplete="off"
                     onChange={handleSlippageAmount}
                     onBlur={() => setShowSlippageModal(false)}
                     size="small"
