@@ -358,8 +358,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 className="m-0 btn-info"
                 size="small"
                 color="success"
-                
-                onClick={() => setOpen(!open)}
               >
                 <RocketLaunchIcon sx={{ fontSize: '15px' }} />
               </IconButton>
