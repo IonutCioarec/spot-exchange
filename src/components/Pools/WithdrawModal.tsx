@@ -92,6 +92,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
               size='small'
               variant='outlined'
               value={amount}
+              autoComplete="off"
               onChange={handleAmountChange}
               className='withdraw-input'
               autoFocus
