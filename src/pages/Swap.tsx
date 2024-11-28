@@ -496,9 +496,9 @@ const Swap = () => {
                     <p className='text-silver font-size-sm mb-0 mt-1'>Price Impact</p>
                     <div>
                       {steps.map((step: any, index: number) => (
-                        <p className='text-silver font-size-sm m-b-n-xs ms-2 mt-1' key={`step-${index}`}>
-                          <FontAwesomeIcon icon={faCaretRight} className='me-1 text-[#3FAC5A]' />
-                          <span className='text-[#3FAC5A] font-bold font-size-xs'>
+                        <p className='text-white font-size-sm m-b-n-xs ms-2 mt-1' key={`step-${index}`}>
+                          <FontAwesomeIcon icon={faCaretRight} className='me-1 text-[white]' />
+                          <span className='text-[white] font-bold font-size-xs'>
                             {allTokens[step?.token_in]?.ticker ?? 'TOKEN'} {'/'} {allTokens[step?.token_out]?.ticker ?? 'TOKEN'}
                           </span>
                         </p>
