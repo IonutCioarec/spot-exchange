@@ -295,7 +295,7 @@ const Swap = () => {
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
             <div className='p-5'>
               <h2 className='text-white text-center'>Swap</h2>
-              <p className='text-white mb-0'>Multiversx's fastest exchange with a huge catalog of tokens</p>
+              <p className='text-white mb-0 text-justified'>Multiversx's fastest exchange with a huge catalog of tokens</p>
             </div>
           </div>
         </Col>

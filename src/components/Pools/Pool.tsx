@@ -210,7 +210,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     <div className="d-flex justify-content-between mt-1">
                       <div>
                         <p className="font-size-xs text-silver mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
-                        <div className="d-flex justfy-content-start">
+                        <div className="d-flex justify-content-start">
                           <p className="h5 mb-0">{intlNumberFormat(Number(pair.token1_reserve), 3, 3)}</p>
                           <img
                             src={token1Details?.logo_url ?? defaultTokenValues.image_url}
@@ -224,7 +224,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                       </div>
                       <div className="text-right">
                         <p className="font-size-xs text-silver mb-0">{token2Details?.token_id ?? defaultTokenValues.name}</p>
-                        <div className="d-flex justfy-content-end">
+                        <div className="d-flex justify-content-end">
                           <p className="h5 mb-0">{intlNumberFormat(Number(pair.token2_reserve), 3, 3)}</p>
                           <img
                             src={token2Details?.logo_url ?? defaultTokenValues.image_url}
@@ -273,7 +273,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     </div>
                     <div className="d-flex justify-content-between align-items-baseline">
                       <p className="small text-silver mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
-                      <div className="d-flex justfy-content-end">
+                      <div className="d-flex justify-content-end">
                         <p className="font-size-sm mb-0">
                           {intlFormatSignificantDecimals(
                             getAmountFromPercentageBigNumber(
@@ -522,7 +522,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 </div>
                 <div className="d-flex justify-content-between align-items-baseline">
                   <p className="small text-silver font-size-xs mb-0">{token1Details?.token_id ?? defaultTokenValues.name}</p>
-                  <div className="d-flex justfy-content-end">
+                  <div className="d-flex justify-content-end">
                     <p className="font-size-xs mb-0">
                       {intlNumberFormat(
                         getAmountFromPercentageBigNumber(
