@@ -12,10 +12,18 @@
   }
 }
 
-.dashboard-page-height {
-  min-height: 88vh;
+.unlock-page-height {
+  min-height: 68vh;
 
   @include maxQuery(700) {
-    min-height: 86.1vh;
+    min-height: 66.1vh;
+  }
+}
+
+.container-bg {
+  margin-top: 20vh !important;
+
+  @include maxQuery(700) {
+    margin-top: 20vh !important;
   }
 }

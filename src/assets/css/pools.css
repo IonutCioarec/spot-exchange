@@ -43,3 +43,28 @@
   min-width: 100px; /* Same width as ticker-text for alignment */
   text-align: right; /* Align price to the right */
 }
+
+.pagination-controls {
+  text-align: right;
+  margin-top: 15px;
+  color: rgba(255,255,255, 0.7);
+  font-size: 13px;
+}
+
+.pagination-button {
+  min-width: 1px !important;
+}
+
+.active-arrow {
+  color: white;
+  font-size: 16px !important;
+  font-weight: bolder;
+  margin-top: -2px;
+}
+
+.disabled-arrow {
+  color: rgba(200, 200, 200, 0.6);
+  font-size: 16px !important;
+  font-weight: bolder;
+  margin-top: -2px;
+}

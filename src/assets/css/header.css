@@ -1,3 +1,31 @@
+.header-area1 {
+  background-color: rgba(20, 20, 20, 1);
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.header-area2 {
+  background-color: rgba(20, 20, 20, 1);
+  box-shadow: 0 7px 7px rgba(63, 142, 90, 0.1);
+}
+
+.nav-social-media-icon {
+  color: white !important;
+}
+
+.nav-social-media-icon:hover,
+.nav-social-media-icon:focus,
+.nav-social-media-icon:active {
+  color: #3FAC5A !important;
+}
+
+.half-colored-d {
+  background: linear-gradient(to right, #3FAC5A 55%, #ffffff 45%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .text-brand {
   font-weight: bold;
   font-size: 20px;
@@ -8,30 +36,18 @@
   margin-bottom: 0;
   min-width: 60px;
   color: rgb(241, 234, 234) !important;
-  font-family: 'Plain', sans-serif;
-  text-transform: capitalize;
+  text-transform: uppercase;
   font-size: 18px;
-  font-weight: 500;
-  line-height: 130%;
+  font-weight: 700 !important;
+  line-height: 0;
+  padding: 7px 10px;
 }
-
-.nav-link.active::before {
-  content: ''; /* Down arrow */
-  color: #01b574; /* Arrow color */
-  position: relative;
-  display: block;
-  top: -9px; /* Adjust the position of the arrow */
-  text-align: center; /* Center the arrow */
-  margin-bottom: -2px;
-  border-bottom: 2px solid
-}
-
 
 .link:hover,
 .link:focus,
 .link:active,
 .active .link {
-  color: #01b574 !important;
+  color: #3FAC5A !important;
 }
 
 .custom-toggler .navbar-toggler-icon {
@@ -42,7 +58,7 @@
   border: none !important;
 }
 
-.nav-link-icon{
+.nav-link-icon {
   margin-right: 5px;
   margin-left: -5px;
   margin-top: -5px;

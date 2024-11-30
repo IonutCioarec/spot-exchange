@@ -7,12 +7,14 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        plain: ['Plain', 'sans-serif'], // Custom font family
+        redrose: ['"Red Rose"', 'serif'],
       },
       fontWeight: {
-        regular: 400,
-        bold: 700,
         light: 300,
+        normal: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700,
       },
     },
   },

@@ -3,10 +3,11 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #0e140f;
-  box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
-  padding: 10px 0;
+  background-color: #141414;
+  padding: 5px 0;
   z-index: 1000;
+  box-shadow: 0 -12px 7px rgba(63, 142, 90, 0.1);
+  margin-bottom: -2px;
 }
 
 .nav-items {
@@ -24,7 +25,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: silver;
+  color: white;
   text-decoration: none;
   cursor: pointer;
   padding: 5px;
@@ -36,11 +37,11 @@
 }
 
 .nav-item svg {
-  font-size: 28px;
+  font-size: px;
 }
 
 .nav-item.active {
-  color: #01b574;
+  color: #3FAC5A;
 }
 
 .nav-items::-webkit-scrollbar {

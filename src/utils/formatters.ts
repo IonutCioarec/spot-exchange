@@ -17,6 +17,10 @@ export const formatSignificantDecimals = (input: number, decimals: number = 2): 
   const fixedInput = input.toFixed(20);
   const match = fixedInput.match(regexPattern);
 
+  if (parseFloat(fixedInput) === parseInt(fixedInput, 10)) {
+    return parseFloat(fixedInput).toFixed(decimals);
+  }
+
   if (match) {
     return match[0];
   } else {
@@ -46,3 +50,25 @@ export const denominatedAmountToIntlFormattedAmount = (
   const auxAmount = denominatedAmountToAmount(amount, denomination, decimals);
   return intlNumberFormat(parseFloat(auxAmount), decimals, decimals);
 }
+
+export const parseFormattedNumber = (formatted: string) => {
+  return parseFloat(formatted.replace(/,/g, ''));
+};
+
+export const formatNumberWithCommas = (value: any) => {
+  const parts = value.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+};
+
+// Return first signifiant decimals fromatted with intl
+export const intlFormatSignificantDecimals = (
+  input: number,
+  decimals: number = 2,
+  minDigits: number = 0,
+  maxDigits: number = 20,
+  locales?: string | string[]
+): string => {
+  const significantDecimals = Number(formatSignificantDecimals(input, decimals));
+  return intlNumberFormat(significantDecimals, minDigits, maxDigits, locales);
+};

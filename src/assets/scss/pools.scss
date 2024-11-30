@@ -13,36 +13,43 @@
 }
 
 .pool {
-  padding: 15px;
-  background-color: #17181d;
+  padding: 5px;
+  background-color: rgba(34, 34, 34, 0.6);
   border-radius: 10px;
   margin-top: 3px;
+  box-shadow: 10px 0 40px rgba(63, 142, 90, 0.1), -10px 0 40px rgba(63, 142, 90, 0.1);
 
   &:hover {
-    background-color: #282933;
+    background-color: rgba(63, 63, 63, 0.4);
     cursor: pointer;
+  }
+
+  @include maxQuery(675) {
+    padding: 15px;
+    box-shadow: 0 0 50px rgba(71, 160, 102, 0.1);
   }
 }
 
 .pool-sub-container {
-  background-color: #1e1f25;
+  background-color: rgba(18, 18, 18, 0.3);
   border-radius: 5px;
 }
+
 
 .custom-success-btn-outlined {
   position: relative !important;
   display: inline-block !important;
   text-align: center !important;
   text-decoration: none !important;
-  color: #00774c !important; /* Green color for text */
+  color: #00774c !important;
   cursor: pointer !important;
   transition: ease-out 0.5s !important;
   border-radius: 5px !important;
   box-shadow: inset 0 0 0 0 #0B0B12 !important;
   overflow: hidden !important;
   text-transform: capitalize !important;
-  border: 1px solid #00774c !important; /* Green border */
-  background-color: transparent !important; /* No background */
+  border: 1px solid #00774c !important;
+  background-color: transparent !important;
 
   span,
   i {
@@ -59,11 +66,11 @@
 
   &:hover {
     transition: 0.3s linear !important;
-    color: white !important; /* White text */
-    background-color: #00774c !important; /* Green background */
+    color: white !important;
+    background-color: #00774c !important;
     border-radius: 5px !important;
     box-shadow: inset 0 -100px 0 0 transparent !important;
-    border: 1px solid #00774c !important; /* Keep green border */
+    border: 1px solid #00774c !important;
 
     span {
       color: white !important;
@@ -99,4 +106,16 @@
     opacity: 1 !important;
     border: 1px solid #00774c !important;
   }
+}
+
+.pools-page-height {
+  min-height: 88vh;
+
+  @include maxQuery(700) {
+    min-height: 86.1vh;
+  }
+}
+
+.withdraw-input{
+  padding: 1px !important;
 }

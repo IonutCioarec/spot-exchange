@@ -1,7 +1,7 @@
 import { useMvxAPI } from 'hooks/useMvxAPI';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserTokens } from 'storeManager/slices/userTokensSlice';
+import { setUserTokens, setUserLpTokens } from 'storeManager/slices/userTokensSlice';
 import { userStateLoaderRefreshTime } from 'config';
 import { useGetPendingTransactions } from 'hooks';
 import { selectTokenIds } from 'storeManager/slices/tokensSlice';
@@ -17,7 +17,8 @@ export const UserStateLoader = () => {
   const loadState = async () => {
     if (tokenIds.length && address) {
       const userTokens = await getUserTokensBalance(address, tokenIds);
-      dispatch(setUserTokens(userTokens));
+      dispatch(setUserTokens(userTokens.pairTokens));
+      dispatch(setUserLpTokens(userTokens.lpTokens));
     }
   };
 
