@@ -3,7 +3,7 @@ import 'assets/scss/pools.scss';
 import { useMobile, useTablet } from 'utils/responsive';
 import { Pair, Token } from "types/backendTypes";
 import { useEffect, useState } from "react";
-import { intlNumberFormat, intlFormatSignificantDecimals } from 'utils/formatters';
+import { intlNumberFormat, intlFormatSignificantDecimals, amountToDenominatedAmount } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
 import { Button, IconButton } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
@@ -19,7 +19,9 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import WithdrawModal from './WithdrawModal';
+import AddModal from './AddModal';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import { useBackendAPI } from "hooks/useBackendAPI";
 
 interface PoolProps {
   pair: Pair;
@@ -43,6 +45,7 @@ const defaultTokenValues = {
 }
 
 export const Pool = ({ pair, index, token1Details, token2Details, userToken1Balance, userToken2Balance, userLpTokenBalance, lpTokenId, lpTokenSupply, sortBy, sortDirection }: PoolProps) => {
+  const { getSwapPrice } = useBackendAPI();
   const isMobile = useMobile();
   const isTablet = useTablet();
   const [open, setOpen] = useState(false);
@@ -51,6 +54,30 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const handleWithdrawOpen = () => {
     setIsWithdrawOpen(true);
+  }
+
+  const [token1ExchangeRate, setToken1ExchangeRate] = useState('0');
+  const [token2ExchangeRate, setToken2ExchangeRate] = useState('0');
+  const getPrice = async (fromToken: string, fromTokenDecimals: number, toToken: string, amount: string) => {
+    const amountScaled = amountToDenominatedAmount(amount, fromTokenDecimals, 20);
+    const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
+
+    if (!priceResponse) {
+      return '0';
+    }
+
+    const price = priceResponse?.final_output?.raw || '0';
+    return price;
+  };
+
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const handleAddOpen = async (fromToken: string, fromTokenDecimals: number, toToken: string, toTokenDecimals: number) => {
+    setIsAddOpen(true);
+    const price1 = await getPrice(fromToken, fromTokenDecimals, toToken, '1');
+    const price2 = await getPrice(toToken, toTokenDecimals, fromToken, '1');
+
+    setToken1ExchangeRate(price1);
+    setToken2ExchangeRate(price2);
   }
 
   if (!isMobile && !isTablet) {
@@ -289,7 +316,19 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
 
                   <div className="mt-2">
                     <div className="d-flex justify-content-between align-items-center gap-3 mt-1 mb-1 mx-1">
-                      <AwesomeButton className="aws-btn-primary full-width">ADD</AwesomeButton>
+                      <AwesomeButton className="aws-btn-primary full-width" onPress={() => handleAddOpen(token1Details?.token_id, token1Details?.decimals, token2Details?.token_id, token2Details?.decimals)}>ADD</AwesomeButton>
+                      <AddModal
+                        isOpen={isAddOpen}
+                        setIsOpen={setIsAddOpen}
+                        token1={token1Details?.ticker}
+                        token2={token2Details?.ticker}
+                        token1MaxAmount={userToken1Balance}
+                        token2MaxAmount={userToken2Balance}
+                        token1Image={token1Details?.logo_url}
+                        token2Image={token2Details?.logo_url}
+                        token1ExchangeRate={token1ExchangeRate}
+                        token2ExchangeRate={token2ExchangeRate}
+                      />
                       <AwesomeButton className="aws-btn-danger full-width" onPress={handleWithdrawOpen}>WITHDRAW</AwesomeButton>
                       <WithdrawModal
                         isOpen={isWithdrawOpen}
@@ -525,7 +564,19 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               </div>
               <div className="mt-2">
                 <div className="d-flex justify-content-between align-items-center gap-2 mt-1 mx-1">
-                  <AwesomeButton className="aws-btn-primary full-width">ADD</AwesomeButton>
+                  <AwesomeButton className="aws-btn-primary full-width" onPress={() => handleAddOpen(token1Details?.token_id, token1Details?.decimals, token2Details?.token_id, token2Details?.decimals)}>ADD</AwesomeButton>
+                  <AddModal
+                    isOpen={isAddOpen}
+                    setIsOpen={setIsAddOpen}
+                    token1={token1Details?.ticker}
+                    token2={token2Details?.ticker}
+                    token1MaxAmount={userToken1Balance}
+                    token2MaxAmount={userToken2Balance}
+                    token1Image={token1Details?.logo_url}
+                    token2Image={token2Details?.logo_url}
+                    token1ExchangeRate={token1ExchangeRate}
+                    token2ExchangeRate={token2ExchangeRate}
+                  />
                   <AwesomeButton className="aws-btn-danger full-width" onPress={handleWithdrawOpen}>WITHDRAW</AwesomeButton>
                   <WithdrawModal
                     isOpen={isWithdrawOpen}
