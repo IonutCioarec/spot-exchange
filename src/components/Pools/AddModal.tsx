@@ -115,15 +115,15 @@ const AddModal: React.FC<WithdrawModal> = ({
         <DialogContent>
           <div className='d-flex justify-content-between align-items-center'>
             <div className='d-flex justify-content-start align-items-center'>
-              <p className='text-silver font-size-md mb-0 ms-2'>First token:</p>
-              <p className='text-white font-size-md mb-0 ms-2'>
+              <p className={`text-silver ${isMobile ? 'font-size-xs' : 'font-size-md'} mb-0 ms-2`}>First token:</p>
+              <p className={`text-white ${isMobile ? 'font-size-xs' : 'font-size-md'} mb-0 ms-2`}>
                 {token1}
               </p>
               <img
                 src={token1Image}
                 alt={token1}
-                style={{ width: 20, height: 20 }}
-                className='ms-1'
+                style={{ width: isMobile ? 15 : 20, height: isMobile ? 15 : 20 }}
+                className='ms-1 m-t-n-xxs'
               />
             </div>
             <p className='text-silver font-size-xs mb-0 me-2'>Balance: <span className='text-white'>{intlNumberFormat(Number(formatSignificantDecimals(Number(token1MaxAmount), 3)), 0, 20)}</span></p>
@@ -193,15 +193,15 @@ const AddModal: React.FC<WithdrawModal> = ({
 
           <div className='d-flex justify-content-between align-items-center mt-2'>
             <div className='d-flex justify-content-start align-items-center'>
-              <p className='text-silver font-size-md mb-0 ms-2'>Second token:</p>
-              <p className='text-white font-size-md mb-0 ms-2'>
+              <p className={`text-silver ${isMobile ? 'font-size-xs' : 'font-size-md'} mb-0 ms-2`}>Second token:</p>
+              <p className={`text-white ${isMobile ? 'font-size-xs' : 'font-size-md'} mb-0 ms-2`}>
                 {token2}
               </p>
               <img
                 src={token2Image}
                 alt={token2}
-                style={{ width: 20, height: 20 }}
-                className='ms-1'
+                style={{ width: isMobile ? 15 : 20, height: isMobile ? 15 : 20 }}
+                className='ms-1 m-t-n-xxs'
               />
             </div>
             <p className='text-silver font-size-xs mb-0 me-2'>Balance: <span className='text-white'>{intlNumberFormat(Number(formatSignificantDecimals(Number(token2MaxAmount), 3)), 0, 20)}</span></p>
@@ -271,8 +271,8 @@ const AddModal: React.FC<WithdrawModal> = ({
           <div className='d-flex justify-content-between mt-2'>
             <p className='px-2 font-size-xs text-silver mb-0'>Tokens rate: </p>
             <div>
-              <p className='px-2 font-size-xs mb-0 text-white'>1 {token1} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(token1ExchangeRate), 3)), 0, 20)} {token2}</p>
-              <p className='px-2 font-size-xs mb-0 text-white'>1 {token2} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(token2ExchangeRate), 3)), 0, 20)} {token1}</p>
+              <p className={`px-2 ${isMobile ? 'font-size-xxs' : 'font-size-xs'} mb-0 text-white`}>1 {token1} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(token1ExchangeRate), 3)), 0, 20)} {token2}</p>
+              <p className={`px-2 ${isMobile ? 'font-size-xxs' : 'font-size-xs'} mb-0 text-white`}>1 {token2} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(token2ExchangeRate), 3)), 0, 20)} {token1}</p>
             </div>
           </div>
 
