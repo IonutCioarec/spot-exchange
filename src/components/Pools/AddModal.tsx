@@ -88,7 +88,9 @@ const AddModal: React.FC<WithdrawModal> = ({
     <>
       <Dialog
         open={isOpen}
-        onClose={handleClose}
+        onClose={(e, reason) => {
+          if (reason !== 'backdropClick') handleClose();
+        }}
         style={{ borderRadius: '10px' }}
         TransitionComponent={Transition}
         maxWidth='xs'
