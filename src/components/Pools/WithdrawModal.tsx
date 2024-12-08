@@ -32,7 +32,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
   lpTokenId,
   lpTokenMaxAmount
 }) => {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState('');
   const isMobile = useMobile();
 
   const handleClose = () => {
@@ -41,16 +41,16 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setAmount(Number(value));
+    setAmount(value);
   };
 
   const handleMaxAmount = () => {
-    setAmount(Number(lpTokenMaxAmount));
+    setAmount(lpTokenMaxAmount.toString());
   };
 
   const handleWithdraw = () => {
     setIsOpen(false);
-    setAmount(0);
+    setAmount('');
   };
 
   return (
@@ -85,7 +85,8 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
         </DialogTitle>
         <DialogContent>
           <TextField
-            type='number'
+            type='text'
+            placeholder='Token amount'
             fullWidth
             size='small'
             variant='outlined'
