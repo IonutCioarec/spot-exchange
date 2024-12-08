@@ -444,12 +444,12 @@ const Swap = () => {
             </div>
             {showSlippageModal &&
               <div className={`d-flex justify-content-between align-items-center mt-1 swap-token-container b-r-xs py-2 px-3 ${isMobile ? 'font-size-xs' : ''}`}>
-                <div className='font-size-sm text-white text-center input-container  bg-[#3FAC5A] p-1 b-r-sm' style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('1'); setShowSlippageModal(false) }}>1.00%</div>
-                <div className='font-size-sm text-white text-center input-container bg-[#3FAC5A] p-1 b-r-sm' style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('5'); setShowSlippageModal(false) }}>5.00%</div>
+                <div className={`font-size-sm text-white text-center input-container  ${Number(slippage) == 1 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('1');}}>1.00%</div>
+                <div className={`font-size-sm text-white text-center input-container ${Number(slippage) == 5 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('5');}}>5.00%</div>
                 {!isMobile &&
-                  <div className='font-size-sm text-white text-center input-container bg-[#3FAC5A] p-1 b-r-sm' style={{ minWidth: '20%' }} onClick={() => { setSlippage('10'); setShowSlippageModal(false) }}>10.00%</div>
+                  <div className={`font-size-sm text-white text-center input-container ${Number(slippage) == 10 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ minWidth: '20%' }} onClick={() => { setSlippage('10'); }}>10.00%</div>
                 }
-                <div className='d-flex align-items-center text-white text-center input-container bg-[#3FAC5A] p-1 b-r-sm' style={{ maxWidth: isMobile ? '45%' : '30%' }}>
+                <div className={`d-flex align-items-center text-white text-center input-container ${Number(slippage) > 10.00 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ maxWidth: isMobile ? '45%' : '30%' }}>
                   <span className='font-size-sm text-white'>Custom:</span>
                   <TextField
                     id="custom-slippage"
@@ -458,7 +458,6 @@ const Swap = () => {
                     value={slippage}
                     autoComplete="off"
                     onChange={handleSlippageAmount}
-                    onBlur={() => setShowSlippageModal(false)}
                     size="small"
                     variant="standard"
                     InputProps={{
