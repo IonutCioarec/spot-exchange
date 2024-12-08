@@ -70,7 +70,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
       >
         <DialogTitle id="scroll-dialog-title">
           <div className='d-flex justify-content-between font-rose align-items-center'>
-            <p className='text-white mx-auto mb-0'>Withdraw Liquidity</p>
+            <p className='text-white mx-auto mb-0'>Remove Liquidity</p>
             <IconButton
               edge="end"
               color="inherit"
@@ -84,77 +84,79 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
           </div>
         </DialogTitle>
         <DialogContent>
-          <p className='text-white font-size-xs mb-0 ms-2 mt-3'>Balance: <span>{intlNumberFormat(Number(formatSignificantDecimals(Number(lpTokenMaxAmount), 3)), 0, 20)} {lpTokenId}</span></p>
+          <TextField
+            type='number'
+            fullWidth
+            size='small'
+            variant='outlined'
+            value={amount}
+            autoComplete="off"
+            onChange={handleAmountChange}
+            className='withdraw-input'
+            autoFocus
+            InputProps={{
+              endAdornment: (
+                <Button
+                  onClick={handleMaxAmount}
+                  sx={{
+                    minWidth: 'unset',
+                    padding: '0 8px',
+                    color: '#3fac5a',
+                    textTransform: 'none',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    fontFamily: 'Red Rose'
+                  }}
+                >
+                  Max
+                </Button>
+              ),
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            InputLabelProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'silver',
+                  borderRadius: '15px',
+                  color: 'silver',
+                  fontSize: '12px'
+                },
+                '&:hover fieldset': {
+                  borderColor: 'rgba(63, 172, 90, 0.6)',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'rgba(63, 172, 90, 0.6)',
+                },
+                fontFamily: 'Red Rose',
+                fontSize: '12px',
+                height: '30px'
+              },
+              '& input[type=number]': {
+                MozAppearance: 'textfield',
+                WebkitAppearance: 'none',
+                appearance: 'none',
+              },
+              '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                WebkitAppearance: 'none',
+                margin: 0,
+              },
+            }}
+          />
           <div className='d-flex justify-content-between align-items-center mb-3'>
-            <TextField
-              type='number'
-              fullWidth
-              size='small'
-              variant='outlined'
-              value={amount}
-              autoComplete="off"
-              onChange={handleAmountChange}
-              className='withdraw-input'
-              autoFocus
-              InputProps={{
-                endAdornment: (
-                  <Button
-                    onClick={handleMaxAmount}
-                    sx={{
-                      minWidth: 'unset',
-                      padding: '0 8px',
-                      color: 'white',
-                      textTransform: 'none',
-                      fontSize: '12px',
-                      fontWeight: 'bold',
-                      fontFamily: 'Red Rose'
-                    }}
-                  >
-                    Max
-                  </Button>
-                ),
-                style: { color: 'silver', fontFamily: 'Red Rose' },
-              }}
-              InputLabelProps={{
-                style: { color: 'silver', fontFamily: 'Red Rose' },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'silver',
-                    borderRadius: '15px',
-                    color: 'silver',
-                    fontSize: '12px'
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(63, 172, 90, 0.6)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'rgba(63, 172, 90, 0.6)',
-                  },
-                  fontFamily: 'Red Rose',
-                  fontSize: '12px',
-                  height: '30px'
-                },
-                '& input[type=number]': {
-                  MozAppearance: 'textfield',
-                  WebkitAppearance: 'none',
-                  appearance: 'none',
-                },
-                '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                  WebkitAppearance: 'none',
-                  margin: 0,
-                },
-              }}
-            />
-            <Button
-              className="btn-intense-default btn-intense-danger hover-btn ms-2"
-              onClick={handleWithdraw}
-              sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
-            >
-              Withdraw
-            </Button>
+            <p className='text-white font-size-xs mb-0 ms-2 mt-1'>Balance:</p>
+            <p className='text-white font-size-xs mb-0 me-2 mt-1'><span>{intlNumberFormat(Number(formatSignificantDecimals(Number(lpTokenMaxAmount), 3)), 0, 20)} {lpTokenId}</span></p>
           </div>
+          <Button
+            className="btn-intense-default btn-intense-danger hover-btn"
+            onClick={handleWithdraw}
+            sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
+            fullWidth
+          >
+            Remove
+          </Button>
         </DialogContent>
       </Dialog>
     </>
