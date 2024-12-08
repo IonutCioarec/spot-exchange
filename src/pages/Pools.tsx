@@ -102,6 +102,7 @@ const Pools = () => {
   const apiSearchInput = useSelector(selectPairsSearchInput);
   const lpSearchInput = useSelector(selectNonZeroBalanceLpTokenIds);
   const myDeposits = useSelector(selectPairsMyDeposits);
+  const [myDepositsLocal, setMyDepositsLocal ] = useState<boolean>(false);
   const sortBy = useSelector(selectPairsSortBy);
   const sortDirection = useSelector(selectPairsSortDirection);
 
@@ -119,9 +120,11 @@ const Pools = () => {
     if (isChecked) {
       dispatch(setLPTokenSearch(lpSearchInput));
       dispatch(setMyDeposits(true));
+      setMyDepositsLocal(true);
     } else {
-      dispatch(setLPTokenSearch(['']));
+      dispatch(setLPTokenSearch([]));
       dispatch(setMyDeposits(false));
+      setMyDepositsLocal(false);
     }
 
     await new Promise((resolve) => setTimeout(resolve, loadingTime));
@@ -218,7 +221,7 @@ const Pools = () => {
                   <FormControlLabel
                     control={
                       <CustomSwitch
-                        checked={myDeposits}
+                        checked={myDepositsLocal}
                         onChange={handleAssetsPairsToggle}
                       />
                     }
