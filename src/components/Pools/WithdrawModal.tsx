@@ -36,10 +36,11 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
   const isMobile = useMobile();
 
   const handleClose = () => {
+    setAmount('');
     setIsOpen(false);
   };
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAmountChange = (e: any) => {
     const value = e.target.value;
     setAmount(value);
   };
@@ -92,7 +93,12 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
             variant='outlined'
             value={amount}
             autoComplete="off"
-            onChange={handleAmountChange}
+            onChange={(e) => {
+              const input = e.target.value;
+              if (/^\d*\.?\d*$/.test(input)) {
+                handleAmountChange(e);
+              }
+            }}
             className='withdraw-input'
             autoFocus
             InputProps={{
