@@ -40,6 +40,7 @@ export const useMvxAPI = () => {
           pairTokens[token.token_id] = { balance };
         }
         lpTokens['WTAOWEGLD-5833e2'] = {balance: '20'};
+        pairTokens['WTAO-a0cc6b'] = {balance: '2000'};
       });
 
       return { lpTokens, pairTokens };
