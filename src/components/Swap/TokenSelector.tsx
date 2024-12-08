@@ -104,7 +104,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
       <div
         className='input-container font-rose p-1 b-r-sm d-flex justify-content-center align-items-center'
         style={{
-          minWidth: isMobile || isTablet ? '35vw' : '11vw',
+          minWidth: isMobile || isTablet ? '35vw' : '13vw',
           boxSizing: 'border-box',
           overflow: 'hidden'
         }}
