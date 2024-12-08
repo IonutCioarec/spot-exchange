@@ -59,9 +59,13 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
       },
     },
     '&.Mui-disabled': {
-      color: theme.palette.action.disabled,
+      color: 'silver',
       '& + .MuiSwitch-track': {
-        backgroundColor: theme.palette.action.disabledBackground,
+        backgroundColor: 'transparent',
+        border: '1px solid silver',
+      },
+      '& + .MuiSwitch-thumb': {
+        backgroundColor: 'silver',
       },
     },
   },
@@ -83,6 +87,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
 
 const Pools = () => {
   const { address } = useGetAccountInfo();
+  const isLoggedIn = address ? true : false;
   const [loading, setLoading] = useState<boolean>(false);
   // const [viewMode, setViewModeState] = useState<'all' | 'assets' | 'created'>('all');
   const [localSearchInput, setLocalSearchInput] = useState<string>('');
@@ -102,7 +107,7 @@ const Pools = () => {
   const apiSearchInput = useSelector(selectPairsSearchInput);
   const lpSearchInput = useSelector(selectNonZeroBalanceLpTokenIds);
   const myDeposits = useSelector(selectPairsMyDeposits);
-  const [myDepositsLocal, setMyDepositsLocal ] = useState<boolean>(false);
+  const [myDepositsLocal, setMyDepositsLocal] = useState<boolean>(false);
   const sortBy = useSelector(selectPairsSortBy);
   const sortDirection = useSelector(selectPairsSortDirection);
 
@@ -129,6 +134,10 @@ const Pools = () => {
 
     await new Promise((resolve) => setTimeout(resolve, loadingTime));
     setLoading(false);
+  };
+
+  const handleAssetsPairsToggleDisabled = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMyDepositsLocal(false);
   };
 
   // Debounced function for search input
@@ -222,17 +231,18 @@ const Pools = () => {
                     control={
                       <CustomSwitch
                         checked={myDepositsLocal}
-                        onChange={handleAssetsPairsToggle}
+                        onChange={isLoggedIn? handleAssetsPairsToggle : handleAssetsPairsToggleDisabled}
                       />
                     }
                     label="My Deposits"
                     labelPlacement="end"
                     sx={{
-                      color: 'white',
+                      color: isLoggedIn ? 'white' : 'silver',
                       fontSize: '14px',
                       '& .MuiTypography-root': {
                         fontSize: '14px',
-                        fontFamily: 'Red Rose'
+                        fontFamily: 'Red Rose',
+                        color: !isLoggedIn ? 'silver' : 'white'
                       },
                     }}
                   />
