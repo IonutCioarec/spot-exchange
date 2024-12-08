@@ -48,9 +48,11 @@ const AddModal: React.FC<WithdrawModal> = ({
 
   const handleClose = () => {
     setIsOpen(false);
+    setAmountToken1('');
+    setAmountToken2('');
   };
 
-  const handleAmountToken1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAmountToken1Change = (e: any) => {
     const value = e.target.value;
 
     if (!value) {
@@ -60,7 +62,7 @@ const AddModal: React.FC<WithdrawModal> = ({
 
     setAmountToken1((value));
   };
-  const handleAmountToken2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAmountToken2Change = (e: any) => {
     const value = e.target.value;
 
     if (!value) {
@@ -138,7 +140,12 @@ const AddModal: React.FC<WithdrawModal> = ({
             variant='outlined'
             value={amountToken1}
             autoComplete="off"
-            onChange={handleAmountToken1Change}
+            onChange={(e) => {
+              const input = e.target.value;
+              if (/^\d*\.?\d*$/.test(input)) {
+                handleAmountToken1Change(e);
+              }
+            }}
             className='withdraw-input'
             autoFocus
             InputProps={{
@@ -216,7 +223,12 @@ const AddModal: React.FC<WithdrawModal> = ({
             variant='outlined'
             value={amountToken2}
             autoComplete="off"
-            onChange={handleAmountToken2Change}
+            onChange={(e) => {
+              const input = e.target.value;
+              if (/^\d*\.?\d*$/.test(input)) {
+                handleAmountToken2Change(e);
+              }
+            }}
             className='withdraw-input'
             autoFocus
             InputProps={{
