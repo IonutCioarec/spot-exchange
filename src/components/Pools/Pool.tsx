@@ -93,7 +93,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 src={token1Details?.logo_url ?? defaultTokenValues.image_url}
                 alt={pair.token1}
                 className='d-inline'
-                style={{ width: 30, height: 30, border: '1px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
+                style={{ width: 35, height: 35, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
               />
               <motion.img
                 src={token2Details?.logo_url ?? defaultTokenValues.image_url}
@@ -107,9 +107,9 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   delay: 0.3,
                 }}
                 style={{
-                  width: 30,
-                  height: 30,
-                  border: '1px solid rgba(63, 172, 90, 0.3)',
+                  width: 35,
+                  height: 35,
+                  border: '2px solid rgba(63, 172, 90, 0.3)',
                   borderRadius: '20px',
                   position: 'relative',
                   left: '0px',
