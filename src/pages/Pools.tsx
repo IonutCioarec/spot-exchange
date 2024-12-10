@@ -95,6 +95,47 @@ const Pools = () => {
   const isMobile = useMobile();
   const isTablet = useTablet();
 
+  const CustomSwitch = styled(Switch)(({ theme }) => ({
+    padding: 8,
+    '& .MuiSwitch-switchBase': {
+      transitionDuration: '300ms',
+      '&.Mui-checked': {
+        color: '#3FAC5A',
+        '& + .MuiSwitch-track': {
+          backgroundColor: 'transparent',
+          border: '1px solid #3FAC5A',
+        },
+        '& + .MuiSwitch-thumb': {
+          backgroundColor: '#3FAC5A',
+        },
+      },
+      '&.Mui-disabled': {
+        color: 'silver',
+        '& + .MuiSwitch-track': {
+          backgroundColor: 'transparent',
+          border: '1px solid silver',
+        },
+        '& + .MuiSwitch-thumb': {
+          backgroundColor: 'silver',
+        },
+      },
+    },
+    '& .MuiSwitch-track': {
+      borderRadius: 10,
+      backgroundColor: 'transparent',
+      border: '1px solid #3FAC5A',
+      height: isMobile ? 12 : 16,
+      width: isMobile ? 32 : 34,
+      margin: 'auto',
+    },
+    '& .MuiSwitch-thumb': {
+      boxShadow: 'none',
+      width: isMobile ? 8 : 10,
+      height: isMobile ? 8 : 10,
+      margin: isMobile ? 6 : 5,
+    },
+  }));
+
   const dispatch = useDispatch();
   const pairs = useSelector(selectPairs);
   const allTokens = useSelector(selectAllTokensById);
@@ -209,6 +250,17 @@ const Pools = () => {
     }
   };
 
+  // Helper function to get display label based on selected value
+  const getSelectedLabel = () => {
+    if (sortBy === 'liquidity' && sortDirection === 'desc') return 'Highest Liquidity';
+    if (sortBy === 'liquidity' && sortDirection === 'asc') return 'Lowest Liquidity';
+    if (sortBy === 'volume24h' && sortDirection === 'desc') return 'Highest Volume 24h';
+    if (sortBy === 'volume24h' && sortDirection === 'asc') return 'Lowest Volume 24h';
+    if (sortBy === 'fees24h' && sortDirection === 'desc') return 'Highest Fees 24h';
+    if (sortBy === 'fees24h' && sortDirection === 'asc') return 'Lowest Fees 24h';
+    return 'Highest Liquidity'; // Default
+  };
+
   return (
     <div className='pools-page-height'>
       <Row>
@@ -231,7 +283,7 @@ const Pools = () => {
                     control={
                       <CustomSwitch
                         checked={myDepositsLocal}
-                        onChange={isLoggedIn? handleAssetsPairsToggle : handleAssetsPairsToggleDisabled}
+                        onChange={isLoggedIn ? handleAssetsPairsToggle : handleAssetsPairsToggleDisabled}
                       />
                     }
                     label="My Deposits"
@@ -240,19 +292,24 @@ const Pools = () => {
                       color: isLoggedIn ? 'white' : 'silver',
                       fontSize: '14px',
                       '& .MuiTypography-root': {
-                        fontSize: '14px',
+                        fontSize: '16px',
                         fontFamily: 'Red Rose',
                         color: !isLoggedIn ? 'silver' : 'white'
                       },
                     }}
                   />
-                  <span className='font-size-sm font-regular text-white m-r-n-sm'>Sort-by: </span>
+                  <span className='font-size-md font-regular text-white m-r-n-xs'>Sort-by: </span>
                   <Select
                     id="sort-by"
-                    value={""}
+                    value={`${sortBy}_${sortDirection}`}
                     onChange={handleSortByChange}
                     input={<OutlinedInput />}
                     size='small'
+                    renderValue={() => (
+                      <div className='font-size-md font-regular' style={{ marginTop: '2px', color: '#3fac5a' }}>
+                        {getSelectedLabel()}
+                      </div>
+                    )}
                     sx={{
                       color: 'white',
                       fontSize: '12px',
@@ -262,7 +319,7 @@ const Pools = () => {
                         border: 'none',
                       },
                       '& .MuiSvgIcon-root': {
-                        color: 'white',
+                        color: '#3fac5a',
                         marginLeft: '-50px !important'
                       },
                       backgroundColor: 'transparent',
@@ -343,7 +400,7 @@ const Pools = () => {
               </div>
             </div>
             {isMobile &&
-              <div className='text-right m-t-n-sm d-flex align-items-center justify-content-end'>
+              <div className='text-right font-size-sm d-flex align-items-center justify-content-end'>
                 <FormControlLabel
                   control={
                     <CustomSwitch
@@ -356,30 +413,35 @@ const Pools = () => {
                   labelPlacement="end"
                   sx={{
                     color: 'white',
-                    fontSize: '14px',
+                    fontSize: '13px',
                     '& .MuiTypography-root': {
-                      fontSize: '14px',
+                      fontSize: '13px',
                       fontFamily: 'Red Rose'
                     },
                   }}
                 />
-                <span className='font-size-sm font-regular text-white m-r-n-sm'>Sort-by: </span>
+                <span className='font-regular text-white m-r-n-sm' style={{ fontSize: '13px' }}>Sort-by: </span>
                 <Select
                   id="sort-by"
-                  value={""}
+                  value={`${sortBy}_${sortDirection}`}
                   onChange={handleSortByChange}
                   input={<OutlinedInput />}
                   size='small'
+                  renderValue={() => (
+                    <div className='font-regular m-r-n-xs' style={{ marginTop: '-1px', color: '#3fac5a', fontSize: '13px' }}>
+                      {getSelectedLabel()}
+                    </div>
+                  )}
                   sx={{
                     color: 'white',
-                    fontSize: '12px',
+                    fontSize: '13px',
                     fontFamily: 'Red Rose',
                     padding: 0,
                     '.MuiOutlinedInput-notchedOutline': {
                       border: 'none',
                     },
                     '& .MuiSvgIcon-root': {
-                      color: 'white',
+                      color: '#3fac5a',
                       marginLeft: '-50px !important'
                     },
                     backgroundColor: 'transparent',
