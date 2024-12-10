@@ -2,6 +2,7 @@ import Dashboard from 'pages/Dashboard';
 import Pools from 'pages/Pools';
 import Swap from 'pages/Swap';
 import Farms from 'pages/Farms';
+import CreatePool from 'pages/CreatePool';
 
 interface RouteWithTitleType extends RouteType {
   title: string;
@@ -17,7 +18,8 @@ export const routeNames = {
   unlock: '/unlock',
   pools: '/pools',
   swap: '/swap',
-  farms: '/farms'
+  farms: '/farms',
+  createPool: '/create-pool'
 };
 
 export const routes: RouteWithTitleType[] = [
@@ -40,6 +42,11 @@ export const routes: RouteWithTitleType[] = [
     path: routeNames.farms,
     title: 'Farms',
     component: Farms
+  },
+  {
+    path: routeNames.createPool,
+    title: 'Create Pool',
+    component: CreatePool
   }
 ];
 
@@ -47,5 +54,6 @@ export enum RouteNamesEnum {
   home = '/',
   swap = '/swap',
   pools = '/pools',
-  farms = '/farms'
+  farms = '/farms',
+  createPool = '/create-pool',
 }
