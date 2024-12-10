@@ -36,6 +36,12 @@
   }
 }
 
+.selected-side {
+  border: 1px solid #3fac5a;
+  box-shadow: 1px 0 15px rgba(63, 172, 90, 0.3), -1px 0 15px rgba(63, 172, 90, 0.3),
+    0 1px 15px rgba(63, 172, 90, 0.3), 0 -1px 15px rgba(63, 172, 90, 0.3);
+}
+
 .input-container {
   &:hover {
     background-color: rgba(56, 56, 56, 0.3);
@@ -43,7 +49,7 @@
   }
 
   @include maxQuery(700) {
-    padding: 2px;    
+    padding: 2px;
   }
 }
 

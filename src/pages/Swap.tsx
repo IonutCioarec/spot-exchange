@@ -77,6 +77,8 @@ const Swap = () => {
   const [swapPrice, setSwapPrice] = useState<number | 0>(0);
   const [showSlippageModal, setShowSlippageModal] = useState<boolean>(false);
   const [exchangeRate, setExchangeRate] = useState('0');
+  const [activeContainer1, setActiveContainer1] = useState<boolean>(false);
+  const [activeContainer2, setActiveContainer2] = useState<boolean>(false);
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
@@ -111,6 +113,8 @@ const Swap = () => {
       setToken2AmountPrice('0.000');
       setSteps([{}]);
       setExchangeRate('0');
+      setActiveContainer1(false);
+      setActiveContainer2(false);
       return;
     }
 
@@ -120,6 +124,8 @@ const Swap = () => {
     if (!token1 || !token2) return;
 
     debouncedToken1Calculation(rawValue);
+    setActiveContainer1(true);
+    setActiveContainer2(false);
   };
 
   const handleToken2AmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +140,8 @@ const Swap = () => {
       setToken2AmountPrice('0.000');
       setSteps([{}]);
       setExchangeRate('0');
+      setActiveContainer1(false);
+      setActiveContainer2(false);
       return;
     }
 
@@ -143,6 +151,8 @@ const Swap = () => {
     if (!token1 || !token2) return;
 
     debouncedToken2Calculation(rawValue);
+    setActiveContainer2(true);
+    setActiveContainer1(false);
   };
 
   // Define the debounced functions
@@ -211,6 +221,8 @@ const Swap = () => {
       setToken2AmountPrice('0.000');
       setExchangeRate('0');
       setSteps([{}]);
+      setActiveContainer1(false);
+      setActiveContainer2(false);
       return;
     }
 
@@ -233,6 +245,8 @@ const Swap = () => {
     if (price?.steps) {
       setSteps(price.steps);
     }
+    setActiveContainer1(true);
+    setActiveContainer2(false);
   };
 
   const handleSwapTokens = async () => {
@@ -240,6 +254,8 @@ const Swap = () => {
     setToken1(token2);
     setToken2(tempToken);
     resetAmounts();
+    setActiveContainer1(false);
+    setActiveContainer2(false);
   };
 
   const handleMaxAmount = async () => {
@@ -277,6 +293,8 @@ const Swap = () => {
     setToken2AmountPrice('0.000');
     setSteps([{}]);
     setExchangeRate('0');
+    setActiveContainer1(false);
+    setActiveContainer2(false);
   };
 
   // Update token1 and token2 if query params change
@@ -302,7 +320,7 @@ const Swap = () => {
       </Row>
       <Row className={`${isMobile ? 'mt-4' : 'mt-5'}`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
-          <div className='swap-container text-white mt-1'>
+          <div className={`swap-container text-white mt-1 ${activeContainer1 ? 'selected-side' : ''}`}>
             <p className='mb-0 ml-1 small'>From</p>
             <div className='d-flex justify-content-between mt-2 align-items-center gap-2 swap-token-container'>
               <div className='input-container b-r-sm'>
@@ -358,7 +376,7 @@ const Swap = () => {
             </div>
           </div>
 
-          <div className={`swap-container ${isMobile ? '' : 'mt-1'} text-white`}>
+          <div className={`swap-container ${isMobile ? '' : 'mt-1'} text-white ${activeContainer2 ? 'selected-side' : ''}`}>
             {refreshingAmount &&
               <SimpleLoader />
             }
@@ -444,8 +462,8 @@ const Swap = () => {
             </div>
             {showSlippageModal &&
               <div className={`d-flex justify-content-between align-items-center mt-1 swap-token-container b-r-xs py-2 px-3 ${isMobile ? 'font-size-xs' : ''}`}>
-                <div className={`font-size-sm text-white text-center input-container  ${Number(slippage) == 1 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('1');}}>1.00%</div>
-                <div className={`font-size-sm text-white text-center input-container ${Number(slippage) == 5 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('5');}}>5.00%</div>
+                <div className={`font-size-sm text-white text-center input-container  ${Number(slippage) == 1 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('1'); }}>1.00%</div>
+                <div className={`font-size-sm text-white text-center input-container ${Number(slippage) == 5 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ minWidth: isMobile ? '23%' : '20%' }} onClick={() => { setSlippage('5'); }}>5.00%</div>
                 {!isMobile &&
                   <div className={`font-size-sm text-white text-center input-container ${Number(slippage) == 10 ? 'bg-[#3FAC5A]' : 'bg-[#3f3f3f66]'} p-1 b-r-sm`} style={{ minWidth: '20%' }} onClick={() => { setSlippage('10'); }}>10.00%</div>
                 }
