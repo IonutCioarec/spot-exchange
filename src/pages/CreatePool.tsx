@@ -7,6 +7,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { useGetAccountInfo } from 'hooks';
 import { useMobile } from 'utils/responsive';
 import { poolBaseTokens } from 'config';
@@ -14,6 +15,65 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
+import { Check } from '@mui/icons-material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { StepIconProps } from '@mui/material/StepIcon';
+import AddIcon from '@mui/icons-material/Add';
+import AddModeratorIcon from '@mui/icons-material/AddModerator';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+
+const ColorlibStepIconRoot = styled('div')<{
+  ownerState: { completed?: boolean; active?: boolean };
+}>(({ theme }) => ({
+  backgroundColor: '#f47272',
+  marginLeft: '-5px',
+  zIndex: 1,
+  color: 'white',
+  width: 34,
+  height: 34,
+  display: 'flex',
+  borderRadius: '50%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  variants: [
+    {
+      props: ({ ownerState }) => ownerState.active,
+      style: {
+        backgroundColor: '#fd9b38',
+        boxShadow: '0 0 10px 0 rgba(0,0,0,.25)',
+        color: 'white'
+      },
+    },
+    {
+      props: ({ ownerState }) => ownerState.completed,
+      style: {
+        backgroundColor: '#3FAC5A',
+      },
+    },
+  ],
+}));
+
+function ColorlibStepIcon(props: StepIconProps & { index: number }) {
+  const { active, completed, className, index } = props;
+
+  const icons: { [key: number]: React.ReactElement } = {
+    1: <AddIcon style={{fontSize: '18px'}}/>,
+    2: <AddModeratorIcon style={{fontSize: '18px'}}/>,
+    3: <SettingsIcon style={{fontSize: '18px'}}/>,
+    4: <MonetizationOnIcon style={{fontSize: '18px'}}/>,
+  };
+
+  return (
+    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+      {completed ? (
+        <Check />
+      ) : (
+        icons[index]
+      )}
+    </ColorlibStepIconRoot>
+  );
+}
+
 
 const CreatePool = () => {
   const { address } = useGetAccountInfo();
@@ -81,6 +141,21 @@ const CreatePool = () => {
     setSecondTokenAmount('6673.231');
   };
 
+  const CustomStepConnector = () => (
+    <StepConnector
+      sx={{
+        [`&.${stepConnectorClasses.completed} .${stepConnectorClasses.line}`]: {
+          borderColor: '#3FAC5A',
+        },
+        [`&.${stepConnectorClasses.active}`]: {
+          [`& .${stepConnectorClasses.line}`]: {
+            borderColor: '#3FAC5A',
+          },
+        },
+      }}
+    />
+  );
+
   return (
     <Container className='create-pool-page-height font-rose'>
       <Row>
@@ -96,9 +171,13 @@ const CreatePool = () => {
       <Row className={`${isMobile ? 'mt-4' : 'mt-3'} mb-5`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className={`create-container text-white`}>
-            <Stepper activeStep={activeStep} orientation="vertical">
+            <Stepper
+              activeStep={activeStep}
+              orientation="vertical"
+              connector={<CustomStepConnector />}
+            >
               <Step>
-                <StepLabel>
+                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={1} />)}>
                   <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Create Swap Pool</p>
                 </StepLabel>
                 <StepContent>
@@ -171,7 +250,7 @@ const CreatePool = () => {
                       className='mb-0 token-container fullWidth b-r-md'
                       style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
                     />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>*Only created tokens can be used</p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>*Only created tokens by you can be used</p>
                     <div className='d-flex justify-content-between'>
                       <p className='mb-0 mt-1 ms-2 font-size-sm'>Pool Fee</p>
                       <p className='mb-0 mt-1 me-2 font-size-sm text-right'>1%</p>
@@ -188,7 +267,7 @@ const CreatePool = () => {
                 </StepContent>
               </Step>
               <Step>
-                <StepLabel>
+                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={2} />)}>
                   <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Issue LP Token</p>
                 </StepLabel>
                 <StepContent>
@@ -205,7 +284,7 @@ const CreatePool = () => {
                 </StepContent>
               </Step>
               <Step>
-                <StepLabel>
+                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={3} />)}>
                   <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Set Role</p>
                 </StepLabel>
                 <StepContent>
@@ -223,7 +302,7 @@ const CreatePool = () => {
                 </StepContent>
               </Step>
               <Step>
-                <StepLabel>
+                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={4} />)}>
                   <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Add Initial Liquidity</p>
                 </StepLabel>
                 <StepContent>
