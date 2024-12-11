@@ -44,47 +44,6 @@ import { color } from 'framer-motion';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounceSearchTime } from 'config';
 
-const CustomSwitch = styled(Switch)(({ theme }) => ({
-  padding: 8,
-  '& .MuiSwitch-switchBase': {
-    transitionDuration: '300ms',
-    '&.Mui-checked': {
-      color: '#3FAC5A',
-      '& + .MuiSwitch-track': {
-        backgroundColor: 'transparent',
-        border: '1px solid #3FAC5A',
-      },
-      '& + .MuiSwitch-thumb': {
-        backgroundColor: '#3FAC5A',
-      },
-    },
-    '&.Mui-disabled': {
-      color: 'silver',
-      '& + .MuiSwitch-track': {
-        backgroundColor: 'transparent',
-        border: '1px solid silver',
-      },
-      '& + .MuiSwitch-thumb': {
-        backgroundColor: 'silver',
-      },
-    },
-  },
-  '& .MuiSwitch-track': {
-    borderRadius: 10,
-    backgroundColor: 'transparent',
-    border: '1px solid #3FAC5A',
-    height: 16,
-    width: 34,
-    margin: 'auto',
-  },
-  '& .MuiSwitch-thumb': {
-    boxShadow: 'none',
-    width: 10,
-    height: 10,
-    margin: 5,
-  },
-}));
-
 const Pools = () => {
   const { address } = useGetAccountInfo();
   const isLoggedIn = address ? true : false;

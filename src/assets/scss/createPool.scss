@@ -19,3 +19,50 @@
     min-height: 87.1vh;
   }
 }
+
+.create-container {
+  padding: 25px;
+  background-color: rgba(34, 34, 34, 0.6);
+  border-radius: 10px;
+  box-shadow: 10px 0 40px rgba(63, 142, 90, 0.1), -10px 0 40px rgba(63, 142, 90, 0.1);
+
+  @include maxQuery(700) {
+    border-radius: 15px;
+    padding: 15px;
+  }
+}
+
+//rgb(63, 172, 90);
+.token-container {
+  background-color: rgba(63, 172, 90, 0.2) !important;
+  border-radius: 15px;
+  padding: 5px;
+  border: 1px solid rgba(63, 142, 90, 0.1);
+  box-shadow: 10px 0 40px rgba(63, 142, 90, 0.1), -10px 0 40px rgba(63, 142, 90, 0.1);
+
+  @include maxQuery(700) {
+    font-size: 12px !important;
+  }
+}
+
+.token-container:hover {
+  background-color: rgba(63, 172, 90, 0.4) !important;
+  cursor: pointer;
+}
+
+.token-search-container {
+  background-color: rgba(18, 18, 18, 0.3);
+  border-radius: 20px;
+}
+
+.roles-container {
+  background-color: rgba(63, 172, 90, 0.2) !important;
+  border-radius: 15px;
+  padding: 3px;
+  border: 1px solid rgba(63, 142, 90, 0.1);
+  box-shadow: 10px 0 40px rgba(63, 142, 90, 0.1), -10px 0 40px rgba(63, 142, 90, 0.1);
+
+  @include maxQuery(700) {
+    font-size: 12px !important;
+  }
+}
