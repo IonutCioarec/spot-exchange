@@ -21,6 +21,7 @@ import { StepIconProps } from '@mui/material/StepIcon';
 import AddIcon from '@mui/icons-material/Add';
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import LightSpot from 'components/LightSpot';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -421,6 +422,8 @@ const CreatePool = () => {
           </div>
         </Col>
       </Row>
+
+      <LightSpot size={isMobile ? 220 : 360} x={isMobile ? '25%' : '40%'} y="36%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
     </Container>
   );
 }
