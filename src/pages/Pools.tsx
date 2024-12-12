@@ -43,6 +43,7 @@ import LightTrapezoid from 'components/LightTrapezoid';
 import { color } from 'framer-motion';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounceSearchTime } from 'config';
+import { Link } from 'react-router-dom';
 
 const Pools = () => {
   const { address } = useGetAccountInfo();
@@ -305,6 +306,8 @@ const Pools = () => {
               }
               <div className='d-flex justify-content-end'>
                 <Button
+                  component={Link}
+                  to="/create-pool"
                   className="btn-intense-green hover-btn"
                   sx={{ minWidth: isMobile ? '170px' : '120px', height: '30px' }}
                 >
