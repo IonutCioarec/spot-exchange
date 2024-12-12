@@ -1,4 +1,5 @@
 import { EnvironmentsEnum } from 'types/sdkDappTypes';
+import egldLogo from 'assets/img/egld_logo.svg';
 export * from './sharedConfig';
 
 export const API_URL = 'https://devnet-api.multiversx.com';
@@ -11,7 +12,7 @@ export const poolBaseTokens = {
     token1: {
         id: 'xEGLD',
         ticker: 'xEGLD',
-        image: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/EGLD/icon.png'
+        image: egldLogo
     },
     token2: {
         id: 'USDC-350c4e',

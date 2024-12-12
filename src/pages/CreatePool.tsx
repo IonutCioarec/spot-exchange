@@ -58,10 +58,10 @@ function ColorlibStepIcon(props: StepIconProps & { index: number }) {
   const { active, completed, className, index } = props;
 
   const icons: { [key: number]: React.ReactElement } = {
-    1: <AddIcon style={{fontSize: '18px'}}/>,
-    2: <AddModeratorIcon style={{fontSize: '18px'}}/>,
-    3: <SettingsIcon style={{fontSize: '18px'}}/>,
-    4: <MonetizationOnIcon style={{fontSize: '18px'}}/>,
+    1: <AddIcon style={{ fontSize: '18px' }} />,
+    2: <AddModeratorIcon style={{ fontSize: '18px' }} />,
+    3: <SettingsIcon style={{ fontSize: '18px' }} />,
+    4: <MonetizationOnIcon style={{ fontSize: '18px' }} />,
   };
 
   return (
@@ -191,7 +191,13 @@ const CreatePool = () => {
                       input={<OutlinedInput />}
                       size='small'
                       renderValue={() => (
-                        <div className='font-size-sm font-regular text-white'>
+                        <div className='font-size-sm font-regular text-white d-flex align-items-center'>
+                          <img
+                            src={baseTokenImage}
+                            alt={baseTokenId}
+                            style={{ width: 18, height: 18, flexShrink: 0 }}
+                            className='me-1'
+                          />
                           {baseTokenTicker}
                         </div>
                       )}
@@ -221,9 +227,33 @@ const CreatePool = () => {
                         },
                       }}
                     >
-                      <MenuItem value={poolBaseTokens.token1.id} className={`font-rose select-menu-item font-size-xs`}>{poolBaseTokens.token1.ticker}</MenuItem>
-                      <MenuItem value={poolBaseTokens.token2.id} className={`font-rose select-menu-item font-size-xs`}>{poolBaseTokens.token2.ticker}</MenuItem>
-                      <MenuItem value={poolBaseTokens.token3.id} className={`font-rose select-menu-item font-size-xs`} style={{ marginBottom: '-4px' }}>{poolBaseTokens.token3.ticker}</MenuItem>
+                      <MenuItem value={poolBaseTokens.token1.id} className={`font-rose select-menu-item font-size-xs`}>
+                        <img
+                          src={poolBaseTokens.token1.image}
+                          alt={poolBaseTokens.token1.ticker}
+                          style={{ width: 16, height: 16, flexShrink: 0 }}
+                          className='me-1'
+                        />
+                        {poolBaseTokens.token1.ticker}
+                      </MenuItem>
+                      <MenuItem value={poolBaseTokens.token2.id} className={`font-rose select-menu-item font-size-xs`}>
+                        <img
+                          src={poolBaseTokens.token2.image}
+                          alt={poolBaseTokens.token2.ticker}
+                          style={{ width: 16, height: 16, flexShrink: 0 }}
+                          className='me-1'
+                        />
+                        {poolBaseTokens.token2.ticker}
+                      </MenuItem>
+                      <MenuItem value={poolBaseTokens.token3.id} className={`font-rose select-menu-item font-size-xs`} style={{ marginBottom: '-4px' }}>
+                        <img
+                          src={poolBaseTokens.token3.image}
+                          alt={poolBaseTokens.token3.ticker}
+                          style={{ width: 16, height: 16, flexShrink: 0 }}
+                          className='me-1'
+                        />
+                        {poolBaseTokens.token3.ticker}
+                      </MenuItem>
                     </Select>
 
                     <p className='font-size-sm mt-3 mb-1 ms-2'>Pool second token</p>
