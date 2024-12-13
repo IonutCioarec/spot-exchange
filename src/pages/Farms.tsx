@@ -4,8 +4,12 @@ import { Row, Col } from 'react-bootstrap';
 import Farm from 'components/Farms/Farm';
 import { poolBaseTokens } from 'config';
 import { intlFormatSignificantDecimals } from 'utils/formatters';
+import LightSpot from 'components/LightSpot';
+import { useMobile } from 'utils/responsive';
 
 const Farms = () => {
+  const isMobile = useMobile();
+  
   return (
     <div className='farms-page-height'>
       <Row>
@@ -97,6 +101,8 @@ const Farms = () => {
           />
         </Col>
       </Row>
+
+      <LightSpot size={isMobile ? 220 : 360} x={isMobile ? '25%' : '40%'} y="36%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
     </div>
   );
 }
