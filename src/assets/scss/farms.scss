@@ -19,3 +19,28 @@
     min-height: 86.1vh;
   }
 }
+
+.farm-card {
+  padding: 10px;
+  border-radius: 20px;
+  background-color: rgba(20, 20, 20, 0.5);
+  min-height: 300px;
+  font-family: 'Red Rose';
+  font-size: 0.8rem;
+  color: rgb(255, 255, 255);
+  font-weight: 500;
+}
+
+.farm-container1 {
+  background: url('../../assets/img/farm1.jpg') no-repeat center center;
+  background-size: cover;
+  border-radius: 20px;
+  box-shadow: 5px 0 15px rgba(63, 142, 90, 0.4), -5px 0 15px rgba(63, 142, 90, 0.4);
+}
+
+.farm-container2 {
+  background: url('../../assets/img/farm2.jpg') no-repeat center center;
+  background-size: cover;
+  border-radius: 20px;
+  box-shadow: 5px 0 15px rgba(63, 142, 90, 0.4), -5px 0 15px rgba(63, 142, 90, 0.4);
+}

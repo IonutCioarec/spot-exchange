@@ -1,6 +1,7 @@
 import { Container } from 'react-bootstrap';
 import 'assets/scss/farms.scss';
 import { Row, Col } from 'react-bootstrap';
+import Farm from 'components/Farms/Farm';
 
 const Farms = () => {
   return (
@@ -13,6 +14,21 @@ const Farms = () => {
               <p className='text-white mb-0'>Stake your tokens in following farms and earn great rewards</p>
             </div>
           </div>
+        </Col>
+      </Row>
+
+      <Row >
+        <Col lg={3} className='mt-4'>
+          <Farm title='1' cardImage={1} subContainerBg='rgba(20,20,20, 0.8)' />
+        </Col>
+        <Col lg={3} className='mt-4'>
+          <Farm title='1' cardImage={1} subContainerBg='rgba(20,20,20, 0.8)' />
+        </Col>
+        <Col lg={3} className='mt-4'>
+          <Farm title='1' cardImage={1} subContainerBg='rgba(20,20,20, 0.8)' />
+        </Col>
+        <Col lg={3} className='mt-4'>
+          <Farm title='1' cardImage={1} subContainerBg='rgba(20,20,20, 0.8)' />
         </Col>
       </Row>
     </div>
