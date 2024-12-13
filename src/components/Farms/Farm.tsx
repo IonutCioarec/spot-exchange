@@ -17,6 +17,7 @@ import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import { motion } from "framer-motion";
 import { intlFormatSignificantDecimals } from 'utils/formatters';
+import UnstakeModal from './UnstakeModal';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -41,6 +42,7 @@ interface FarmProps {
   stakingUsers: string;
   userStake: number;
   userRewards: number;
+  lpTokenId: string;
   userLpTokenBalance: number;
 }
 
@@ -58,12 +60,18 @@ const Farm: React.FC<FarmProps> = ({
   stakingUsers,
   userStake,
   userRewards,
+  lpTokenId,
   userLpTokenBalance
 }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const isMobile = useMobile();
   const isTablet = useTablet();
+
+  const [isUnstakeOpen, setIsUnstakeOpen] = useState(false);
+  const handleUnstakeOpen = () => {
+    setIsUnstakeOpen(true);
+  }
 
   return (
     <>
@@ -77,7 +85,7 @@ const Farm: React.FC<FarmProps> = ({
                 alt={imageToken1}
                 className='d-inline'
                 style={{ width: 45, height: 45, border: '2px solid rgba(63, 172, 90, 0)', borderRadius: '20px' }}
-              />              
+              />
               <img
                 src={imageToken2}
                 alt={imageToken2}
@@ -104,7 +112,7 @@ const Farm: React.FC<FarmProps> = ({
           </div>
 
           <div className='b-r-sm p-2 mt-2' style={{ backgroundColor: subContainerBg }}>
-            
+
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Total Staked</p>
               <p className='mb-0'>${intlFormatSignificantDecimals(totalStaked, 2)}</p>
@@ -119,7 +127,7 @@ const Farm: React.FC<FarmProps> = ({
             </div>
           </div>
 
-          <div className='b-r-sm p-2 mt-2' style={{ backgroundColor: subContainerBg }}>            
+          <div className='b-r-sm p-2 mt-2' style={{ backgroundColor: subContainerBg }}>
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Your Stake</p>
               <p className='mb-0'>${intlFormatSignificantDecimals(userStake, 2)}</p>
@@ -145,12 +153,20 @@ const Farm: React.FC<FarmProps> = ({
           <Button
             variant="contained"
             className='mt-1 btn-intense-default hover-btn btn-intense-danger fullWidth xxs'
+            onClick={handleUnstakeOpen}
           >
             Unstake
           </Button>
 
         </div>
       </div>
+
+      <UnstakeModal
+        isOpen={isUnstakeOpen}
+        setIsOpen={setIsUnstakeOpen}
+        lpTokenId={lpTokenId}
+        lpTokenMaxAmount={userLpTokenBalance}
+      />
     </>
   );
 };

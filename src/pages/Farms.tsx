@@ -36,6 +36,7 @@ const Farms = () => {
             userStake={17324.79}
             userRewards={123}
             userLpTokenBalance={323.87}
+            lpTokenId='EGLDPRIZE-4a453'
           />
         </Col>
         <Col lg={3} className='mt-4'>
@@ -53,7 +54,8 @@ const Farms = () => {
             stakingUsers='234'
             userStake={17324.79}
             userRewards={123}
-            userLpTokenBalance={323.87}
+            userLpTokenBalance={60}
+            lpTokenId='PRIZEEGLD-4a453'
           />
         </Col>
         <Col lg={3} className='mt-4'>
@@ -72,6 +74,7 @@ const Farms = () => {
             userStake={17324.79}
             userRewards={123}
             userLpTokenBalance={323.87}
+            lpTokenId='USDCEGLD-4a453'
           />
         </Col>
         <Col lg={3} className='mt-4'>
@@ -90,6 +93,7 @@ const Farms = () => {
             userStake={17324.79}
             userRewards={123}
             userLpTokenBalance={323.87}
+            lpTokenId='USDCPRIZE-4a453'
           />
         </Col>
       </Row>
