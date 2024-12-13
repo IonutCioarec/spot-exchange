@@ -19,14 +19,14 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface WithdrawModal {
+interface StakeModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   lpTokenId: string;
   lpTokenMaxAmount: number;
 }
 
-const WithdrawModal: React.FC<WithdrawModal> = ({
+const StakeModal: React.FC<StakeModalProps> = ({
   isOpen,
   setIsOpen,
   lpTokenId,
@@ -49,7 +49,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
     setAmount(lpTokenMaxAmount.toString());
   };
 
-  const handleWithdraw = () => {
+  const handleStake = () => {
     setIsOpen(false);
     setAmount('');
   };
@@ -58,9 +58,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
     <>
       <Dialog
         open={isOpen}
-        onClose={(e, reason) => {
-          if (reason !== 'backdropClick') handleClose(); // Prevent accidental close
-        }}
+        onClose={handleClose}
         style={{ borderRadius: '10px' }}
         TransitionComponent={Transition}
         maxWidth='xs'
@@ -71,7 +69,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
       >
         <DialogTitle id="scroll-dialog-title">
           <div className='d-flex justify-content-between font-rose align-items-center'>
-            <p className='text-white mx-auto mb-0'>Remove Liquidity</p>
+            <p className='text-white mx-auto mb-0'>Stake LP Amount</p>
             <IconButton
               edge="end"
               color="inherit"
@@ -108,7 +106,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
                   sx={{
                     minWidth: 'unset',
                     padding: '0 8px',
-                    color: '#f47272',
+                    color: '#1976d2',
                     textTransform: 'none',
                     fontSize: '12px',
                     fontWeight: 'bold',
@@ -132,10 +130,10 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
                   fontSize: '12px'
                 },
                 '&:hover fieldset': {
-                  borderColor: 'rgba(244, 114, 114, 0.7)',
+                  borderColor: 'rgba(25, 118, 210, 0.7)',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: 'rgba(244, 114, 114, 0.7)',
+                  borderColor: 'rgba(25, 118, 210, 0.7)',
                 },
                 fontFamily: 'Red Rose',
                 fontSize: '12px',
@@ -157,12 +155,12 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
             <p className='text-white font-size-xs mb-0 me-2 mt-1'><span>{intlNumberFormat(Number(formatSignificantDecimals(Number(lpTokenMaxAmount), 3)), 0, 20)} {lpTokenId}</span></p>
           </div>
           <Button
-            className="btn-intense-default btn-intense-danger hover-btn"
-            onClick={handleWithdraw}
-            sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
+            variant="contained"
+            className="btn-intense-default hover-btn smaller"
+            onClick={handleStake}
             fullWidth
           >
-            Remove
+            Stake
           </Button>
         </DialogContent>
       </Dialog>
@@ -170,4 +168,4 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
   );
 };
 
-export default WithdrawModal;
+export default StakeModal;

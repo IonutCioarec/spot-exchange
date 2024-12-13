@@ -18,6 +18,7 @@ import { debounceSearchTime } from 'config';
 import { motion } from "framer-motion";
 import { intlFormatSignificantDecimals } from 'utils/formatters';
 import UnstakeModal from './UnstakeModal';
+import StakeModal from './StakeModal';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -71,6 +72,11 @@ const Farm: React.FC<FarmProps> = ({
   const [isUnstakeOpen, setIsUnstakeOpen] = useState(false);
   const handleUnstakeOpen = () => {
     setIsUnstakeOpen(true);
+  }
+
+  const [isStakeOpen, setIsStakeOpen] = useState(false);
+  const handleStakeOpen = () => {
+    setIsStakeOpen(true);
   }
 
   return (
@@ -141,6 +147,7 @@ const Farm: React.FC<FarmProps> = ({
           <Button
             variant="contained"
             className='mt-3 btn-intense-default hover-btn btn-intense-info fullWidth xxs'
+            onClick={handleStakeOpen}
           >
             Stake
           </Button>
@@ -161,11 +168,18 @@ const Farm: React.FC<FarmProps> = ({
         </div>
       </div>
 
+      <StakeModal
+        isOpen={isStakeOpen}
+        setIsOpen={setIsStakeOpen}
+        lpTokenId={lpTokenId}
+        lpTokenMaxAmount={userLpTokenBalance}
+      />
+
       <UnstakeModal
         isOpen={isUnstakeOpen}
         setIsOpen={setIsUnstakeOpen}
         lpTokenId={lpTokenId}
-        lpTokenMaxAmount={userLpTokenBalance}
+        lpTokenMaxAmount={userStake}
       />
     </>
   );
