@@ -19,7 +19,7 @@ const Farms = () => {
         </Col>
       </Row>
 
-      <Row >
+      <Row className='mb-5'>
         <Col lg={3} className='mt-4'>
           <Farm
             title='EGLDPRIZE'

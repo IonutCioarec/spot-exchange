@@ -90,17 +90,17 @@ const Farm: React.FC<FarmProps> = ({
                 src={imageToken1}
                 alt={imageToken1}
                 className='d-inline'
-                style={{ width: 45, height: 45, border: '2px solid rgba(63, 172, 90, 0)', borderRadius: '20px' }}
+                style={{ width: isMobile? 40 : 45, height: isMobile? 40 : 45, border: '2px solid rgba(63, 172, 90, 0)', borderRadius: '20px' }}
               />
               <img
                 src={imageToken2}
                 alt={imageToken2}
                 className='d-inline m-l-n-md'
-                style={{ width: 45, height: 45, border: '2px solid rgba(63, 172, 90, 0)', borderRadius: '20px' }}
+                style={{ width: isMobile? 40 : 45, height: isMobile? 40 : 45, border: '2px solid rgba(63, 172, 90, 0)', borderRadius: '20px' }}
               />
             </div>
           </div>
-          <p className='mb-0 mx-auto text-center font-bold' style={{ fontSize: '25px' }}>{title}</p>
+          <p className='mb-0 mx-auto text-center font-bold' style={{ fontSize: isMobile ? '20px' : '25px' }}>{title}</p>
 
           <div className='b-r-sm p-2 mt-2' style={{ backgroundColor: subContainerBg }}>
             <div className='d-flex justify-content-between align-items-center'>
