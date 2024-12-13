@@ -16,7 +16,7 @@ import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArro
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import { motion } from "framer-motion";
-import { poolBaseTokens } from 'config';
+import { intlFormatSignificantDecimals } from 'utils/formatters';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -31,12 +31,34 @@ interface FarmProps {
   title: string;
   cardImage: number;
   subContainerBg: string;
+  imageToken1: string;
+  imageToken2: string;
+  totalAPR: number;
+  feesAPR: number;
+  boostedAPR: number;
+  totalStaked: number;
+  totalRewards: number;
+  stakingUsers: string;
+  userStake: number;
+  userRewards: number;
+  userLpTokenBalance: number;
 }
 
 const Farm: React.FC<FarmProps> = ({
   title,
   cardImage,
-  subContainerBg
+  subContainerBg,
+  imageToken1,
+  imageToken2,
+  totalAPR,
+  feesAPR,
+  boostedAPR,
+  totalStaked,
+  totalRewards,
+  stakingUsers,
+  userStake,
+  userRewards,
+  userLpTokenBalance
 }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -51,33 +73,33 @@ const Farm: React.FC<FarmProps> = ({
           <div className='d-flex align-items-center justify-content-center'>
             <div>
               <img
-                src={poolBaseTokens.token2.image}
-                alt={poolBaseTokens.token2.image}
+                src={imageToken1}
+                alt={imageToken1}
                 className='d-inline'
                 style={{ width: 45, height: 45, border: '2px solid rgba(63, 172, 90, 0)', borderRadius: '20px' }}
               />              
               <img
-                src={poolBaseTokens.token3.image}
-                alt={poolBaseTokens.token3.image}
+                src={imageToken2}
+                alt={imageToken2}
                 className='d-inline m-l-n-md'
                 style={{ width: 45, height: 45, border: '2px solid rgba(63, 172, 90, 0)', borderRadius: '20px' }}
               />
             </div>
           </div>
-          <p className='mb-0 mx-auto text-center font-bold' style={{ fontSize: '25px' }}>USDCEGLD</p>
+          <p className='mb-0 mx-auto text-center font-bold' style={{ fontSize: '25px' }}>{title}</p>
 
           <div className='b-r-sm p-2 mt-2' style={{ backgroundColor: subContainerBg }}>
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0 font-size-sm'>Total APR</p>
-              <p className='mb-0 font-size-md'>58%</p>
+              <p className='mb-0 font-size-md'>{intlFormatSignificantDecimals(totalAPR, 2)}%</p>
             </div>
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Fees APR</p>
-              <p className='mb-0'>34%</p>
+              <p className='mb-0'>{intlFormatSignificantDecimals(feesAPR, 2)}%</p>
             </div>
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Boosted APR</p>
-              <p className='mb-0'>24%</p>
+              <p className='mb-0'>{intlFormatSignificantDecimals(boostedAPR, 2)}%</p>
             </div>
           </div>
 
@@ -85,26 +107,26 @@ const Farm: React.FC<FarmProps> = ({
             
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Total Staked</p>
-              <p className='mb-0'>$1,888,999.23</p>
+              <p className='mb-0'>${intlFormatSignificantDecimals(totalStaked, 2)}</p>
             </div>
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Total Rewards</p>
-              <p className='mb-0'>$1,987.29</p>
+              <p className='mb-0'>${intlFormatSignificantDecimals(totalRewards, 2)}</p>
             </div>
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Staking Users</p>
-              <p className='mb-0'>234</p>
+              <p className='mb-0'>{stakingUsers}</p>
             </div>
           </div>
 
           <div className='b-r-sm p-2 mt-2' style={{ backgroundColor: subContainerBg }}>            
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Your Stake</p>
-              <p className='mb-0'>$1,987.29</p>
+              <p className='mb-0'>${intlFormatSignificantDecimals(userStake, 2)}</p>
             </div>
             <div className='d-flex justify-content-between align-items-center'>
               <p className='mb-0'>Your Rewards</p>
-              <p className='mb-0'>$1,987.29</p>
+              <p className='mb-0'>${intlFormatSignificantDecimals(userRewards, 2)}</p>
             </div>
           </div>
 

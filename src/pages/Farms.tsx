@@ -2,6 +2,8 @@ import { Container } from 'react-bootstrap';
 import 'assets/scss/farms.scss';
 import { Row, Col } from 'react-bootstrap';
 import Farm from 'components/Farms/Farm';
+import { poolBaseTokens } from 'config';
+import { intlFormatSignificantDecimals } from 'utils/formatters';
 
 const Farms = () => {
   return (
@@ -19,16 +21,76 @@ const Farms = () => {
 
       <Row >
         <Col lg={3} className='mt-4'>
-          <Farm title='1' cardImage={1} subContainerBg='rgba(20,20,20, 0.8)' />
+          <Farm
+            title='EGLDPRIZE'
+            cardImage={1}
+            subContainerBg='rgba(20,20,20, 0.8)'
+            imageToken1={poolBaseTokens.token1.image}
+            imageToken2={poolBaseTokens.token3.image}
+            totalAPR={30.25}
+            feesAPR={20.21}
+            boostedAPR={10.05}
+            totalStaked={1888999.23}
+            totalRewards={1987.29}
+            stakingUsers='234'
+            userStake={17324.79}
+            userRewards={123}
+            userLpTokenBalance={323.87}
+          />
         </Col>
         <Col lg={3} className='mt-4'>
-          <Farm title='1' cardImage={1} subContainerBg='rgba(20,20,20, 0.8)' />
+          <Farm
+            title='PRIZEEGLD'
+            cardImage={1}
+            subContainerBg='rgba(20,20,20, 0.8)'
+            imageToken1={poolBaseTokens.token3.image}
+            imageToken2={poolBaseTokens.token1.image}
+            totalAPR={30.25}
+            feesAPR={20.21}
+            boostedAPR={10.05}
+            totalStaked={1888999.23}
+            totalRewards={1987.29}
+            stakingUsers='234'
+            userStake={17324.79}
+            userRewards={123}
+            userLpTokenBalance={323.87}
+          />
         </Col>
         <Col lg={3} className='mt-4'>
-          <Farm title='1' cardImage={1} subContainerBg='rgba(20,20,20, 0.8)' />
+          <Farm
+            title='USDCEGLD'
+            cardImage={1}
+            subContainerBg='rgba(20,20,20, 0.8)'
+            imageToken1={poolBaseTokens.token2.image}
+            imageToken2={poolBaseTokens.token1.image}
+            totalAPR={30.25}
+            feesAPR={20.21}
+            boostedAPR={10.05}
+            totalStaked={1888999.23}
+            totalRewards={1987.29}
+            stakingUsers='234'
+            userStake={17324.79}
+            userRewards={123}
+            userLpTokenBalance={323.87}
+          />
         </Col>
         <Col lg={3} className='mt-4'>
-          <Farm title='1' cardImage={1} subContainerBg='rgba(20,20,20, 0.8)' />
+          <Farm
+            title='USDCPRIZE'
+            cardImage={1}
+            subContainerBg='rgba(20,20,20, 0.8)'
+            imageToken1={poolBaseTokens.token2.image}
+            imageToken2={poolBaseTokens.token3.image}
+            totalAPR={30.25}
+            feesAPR={20.21}
+            boostedAPR={10.05}
+            totalStaked={1888999.23}
+            totalRewards={1987.29}
+            stakingUsers='234'
+            userStake={17324.79}
+            userRewards={123}
+            userLpTokenBalance={323.87}
+          />
         </Col>
       </Row>
     </div>
