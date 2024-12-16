@@ -21,6 +21,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      'abi': '/src/abi',
       'assets': '/src/assets',
       'components': '/src/components',
       'config': '/src/config',
