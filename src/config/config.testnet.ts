@@ -6,7 +6,7 @@ export const API_URL = 'https://testnet-api.multiversx.com';
 export const sampleAuthenticatedDomains = [API_URL];
 export const environment = EnvironmentsEnum.testnet;
 export const routerContractAddress = '';
-export const poolsContractAddress = '';
+export const pairsContractAddress = '';
 export const farmsContractAddress = '';
 export const dexAPI = '';
 
