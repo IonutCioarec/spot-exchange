@@ -28,3 +28,16 @@ export const sendAndSignTransactions = async (
     return { success: false, error: error.message, sessionId: null };
   }
 };
+
+interface TransactionDisplayInfoProps {
+  transactionName: string;
+  successTransactionName: string;
+}
+
+export const transactionDisplayInfo = ({ transactionName, successTransactionName = 'Transaction' }: TransactionDisplayInfoProps) => {
+  return {
+    processingMessage: `Processing ${transactionName} transaction`,
+    errorMessage: 'An error has occurred while processing the transaction',
+    successMessage: `${successTransactionName} successfully`
+  };
+};
