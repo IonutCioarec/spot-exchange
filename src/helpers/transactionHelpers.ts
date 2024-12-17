@@ -2,7 +2,7 @@ import { Transaction } from '@multiversx/sdk-core/out';
 import { sendTransactions } from '@multiversx/sdk-dapp/services';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
 import { refreshAccount } from '@multiversx/sdk-dapp/utils';
- 
+
 export const sendAndSignTransactions = async (
   transactions: Transaction[],
   transactionsDisplayInfo: TransactionsDisplayInfoType,
@@ -14,13 +14,13 @@ export const sendAndSignTransactions = async (
 }> => {
   try {
     await refreshAccount();
- 
+
     const { sessionId, error } = await sendTransactions({
       transactions: transactions.map((t) => t.toPlainObject()),
       transactionsDisplayInfo,
       minGasLimit
     });
- 
+
     await refreshAccount();
     return { success: error !== undefined, error: error ?? '', sessionId };
   } catch (error: any) {
