@@ -2,7 +2,7 @@ import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
 import { network } from 'config';
 import { Transaction, TokenIdentifierValue } from '@multiversx/sdk-core/out';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
-import { getPairsSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
+import { getRouterSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
 
 const sendAndSignTransactionsWrapped = async (
   transactions: Transaction[],
@@ -21,7 +21,7 @@ export const usePoolsAdminCreatePool = (first_token_id: string, second_token_id:
   const { account } = useGetAccountInfo();
 
   const createPool = async () => {
-    const contract = await getPairsSmartContractObj();
+    const contract = await getRouterSmartContractObj();
     const interaction = contract.methodsExplicit.adminCreatePair([new TokenIdentifierValue(first_token_id), new TokenIdentifierValue(second_token_id)]);
 
     const transaction = interaction
