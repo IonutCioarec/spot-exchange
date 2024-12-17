@@ -10,6 +10,7 @@ export const pairsContractAddress = '';
 export const farmsContractAddress = '';
 export const dexAPI = 'https://priv-backend.x-launcher.com/api';
 export const poolLPTokenPrice = 1;
+export const poolEnableSwapPrice = 1;
 
 export const poolBaseTokens = {
   token1: {
