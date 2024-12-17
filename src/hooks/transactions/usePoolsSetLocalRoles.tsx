@@ -1,9 +1,8 @@
 import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
-import { network, poolLPTokenPrice } from 'config';
-import { Transaction, BytesValue, Address, AddressValue, BigUIntValue } from '@multiversx/sdk-core/out';
+import { network } from 'config';
+import { Transaction, Address, AddressValue } from '@multiversx/sdk-core/out';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
 import { getRouterSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
-import BigNumber from 'bignumber.js';
 
 const sendAndSignTransactionsWrapped = async (
   transactions: Transaction[],
@@ -18,30 +17,27 @@ const sendAndSignTransactionsWrapped = async (
   return result;
 };
 
-export const usePoolsIssueLPToken = (pair_address: string, lp_token_display_name: string, lp_token_ticker: string) => {
+export const usePoolsSetLocalRoles = (pair_address: string) => {
   const { account } = useGetAccountInfo();
 
-  const issueLpToken = async () => {
+  const setLocalRoles = async () => {
     const contract = await getRouterSmartContractObj();
-    const interaction = contract.methodsExplicit.issueLpToken([
-      new AddressValue(new Address(pair_address)),
-      BytesValue.fromHex(lp_token_display_name),
-      BytesValue.fromHex(lp_token_ticker)
+    const interaction = contract.methodsExplicit.setLocalRoles([
+      new AddressValue(new Address(pair_address))
     ]);
 
-    const valueBig = new BigNumber(poolLPTokenPrice).multipliedBy(new BigNumber(10).pow(18));
     const transaction = interaction
       .withNonce(account.nonce)
       .withGasLimit(10_000_000)
       .withChainID(network.chainId)
-      .withValue(new BigUIntValue(valueBig))
+      .withValue(0)
       .buildTransaction();
     const sessionId = await sendAndSignTransactionsWrapped(
       [transaction],
-      transactionDisplayInfo({ transactionName: 'issue LP token', successTransactionName: 'LP token issued' })
+      transactionDisplayInfo({ transactionName: 'set local roles', successTransactionName: 'Local roles setted' })
     );
     return sessionId;
   };
 
-  return issueLpToken;
+  return setLocalRoles;
 };
