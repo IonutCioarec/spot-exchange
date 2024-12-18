@@ -14,8 +14,8 @@ export const poolEnableSwapPrice = 1;
 
 export const poolBaseTokens = {
   token1: {
-    id: 'EGLD',
-    ticker: 'EGLD',
+    id: 'WEGLD-bd4d79',
+    ticker: 'WEGLD',
     image: egldLogo,
     decimals: 18
   },
