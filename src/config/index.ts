@@ -16,17 +16,20 @@ export const poolBaseTokens = {
   token1: {
     id: 'xEGLD',
     ticker: 'xEGLD',
-    image: egldLogo
+    image: egldLogo,
+    decimals: 18
   },
   token2: {
     id: 'USDC-350c4e',
     ticker: 'USDC',
-    image: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/USDC-350c4e/icon.png'
+    image: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/USDC-350c4e/icon.png',
+    decimals: 6
   },
   token3: {
     id: 'XTICKET-6e9b83',
     ticker: 'XTICKET',
-    image: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/XTICKET-6e9b83/icon.svg'
+    image: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/XTICKET-6e9b83/icon.svg',
+    decimals: 18
   },
 };
 

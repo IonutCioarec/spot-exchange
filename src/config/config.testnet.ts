@@ -16,17 +16,20 @@ export const poolBaseTokens = {
   token1: {
     id: 'xEGLD',
     ticker: 'xEGLD',
-    image: egldLogo
+    image: egldLogo,
+    decimals: 18
   },
   token2: {
     id: '',
     ticker: '',
-    image: ''
+    image: '',
+    decimals: 0
   },
   token3: {
     id: '',
     ticker: '',
-    image: ''
+    image: '',
+    decimals: 0
   },
 };
 
