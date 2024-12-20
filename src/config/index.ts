@@ -9,8 +9,7 @@ export const routerContractAddress = 'erd1qqqqqqqqqqqqqpgq7me8c9fnh272rf3vk5s20t
 export const pairsContractAddress = 'erd1qqqqqqqqqqqqqpgqzqssw63jn0ep64t5mzghuhxdl5n6wf6mv2vsvyf97u';
 export const farmsContractAddress = 'erd1qqqqqqqqqqqqqpgqhpj7s6f9jy0t593mcl4zpehmxwp56r7uv2vsg8tuma';
 export const dexAPI = 'https://priv-backend.x-launcher.com/api';
-export const poolLPTokenPrice = 1;
-export const poolEnableSwapPrice = 1;
+export const poolLPTokenPrice = 0.05;
 
 export const poolBaseTokens = {
   token1: {

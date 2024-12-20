@@ -1,6 +1,6 @@
 import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
-import { network, poolEnableSwapPrice } from 'config';
-import { Transaction, Address, AddressValue, BigUIntValue } from '@multiversx/sdk-core/out';
+import { network } from 'config';
+import { Transaction, Address, AddressValue, BigUIntValue, TokenTransfer } from '@multiversx/sdk-core/out';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
 import { getRouterSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
 import BigNumber from 'bignumber.js';
@@ -18,7 +18,13 @@ const sendAndSignTransactionsWrapped = async (
   return result;
 };
 
-export const usePoolsEnableSwap = (pair_address: string) => {
+interface TokenProps {
+  token_id: string,
+  token_decimals: number,
+  token_amount: number
+}
+
+export const usePoolsEnableSwap = (pair_address: string, token: TokenProps) => {
   const { account } = useGetAccountInfo();
 
   const setSwapEnabledByUser = async () => {
@@ -27,12 +33,12 @@ export const usePoolsEnableSwap = (pair_address: string) => {
       new AddressValue(new Address(pair_address))
     ]);
 
-    const valueBig = new BigNumber(poolEnableSwapPrice).multipliedBy(new BigNumber(10).pow(18));
     const transaction = interaction
       .withNonce(account.nonce)
       .withGasLimit(35_000_000)
       .withChainID(network.chainId)
-      .withValue(new BigUIntValue(valueBig))
+      .withValue(0)
+      .withSingleESDTTransfer(TokenTransfer.fungibleFromAmount(token.token_id, token.token_amount, token.token_decimals))
       .buildTransaction();
     const sessionId = await sendAndSignTransactionsWrapped(
       [transaction],
