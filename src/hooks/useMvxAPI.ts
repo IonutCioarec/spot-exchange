@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { API_URL } from 'config';
+import logo from 'assets/img/no_logo.png';
+import { CreatedTokens } from 'types/mvxTypes';
 
 export const useMvxAPI = () => {
   const getUserTokensBalance = async (
@@ -39,8 +41,8 @@ export const useMvxAPI = () => {
         } else {
           pairTokens[token.token_id] = { balance };
         }
-        lpTokens['WTAOWEGLD-5833e2'] = {balance: '20'};
-        pairTokens['WTAO-a0cc6b'] = {balance: '2000'};
+        lpTokens['WTAOWEGLD-5833e2'] = { balance: '20' };
+        pairTokens['WTAO-a0cc6b'] = { balance: '2000' };
       });
 
       return { lpTokens, pairTokens };
@@ -50,7 +52,37 @@ export const useMvxAPI = () => {
     }
   };
 
+  //get tokens created by user
+  const getUserCreatedTokens = async (address: string): Promise<CreatedTokens> => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/accounts/${address}/roles/tokens?size=1000&owner=${address}&includeMetaESDT=true`,
+        {
+          headers: { Accept: 'application/json' },
+        }
+      );
+
+      const tokenData: CreatedTokens = {};
+      if (response.data) {
+        response.data.forEach((token: any) => {
+          tokenData[token.identifier] = {
+            token_id: token.identifier,
+            ticker: token.identifier.split('-')[0],
+            decimals: token.decimals,
+            logo: token?.assets?.pngUrl ?? logo,
+            balance: token.balance            
+          };
+        });
+      }
+      return tokenData;
+    } catch (e) {
+      console.error(e);
+      return {};
+    }
+  };
+
   return {
-    getUserTokensBalance
+    getUserTokensBalance,
+    getUserCreatedTokens
   };
 };
