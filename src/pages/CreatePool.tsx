@@ -11,7 +11,7 @@ import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector
 import { useGetAccountInfo } from 'hooks';
 import { useMobile } from 'utils/responsive';
 import { poolBaseTokens } from 'config';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
@@ -22,6 +22,10 @@ import AddIcon from '@mui/icons-material/Add';
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import LightSpot from 'components/LightSpot';
+import { useBackendAPI } from 'hooks/useBackendAPI';
+import { useMvxAPI } from 'hooks/useMvxAPI';
+import { usePoolsCreatePool } from 'hooks/transactions/usePoolsCreatePool';
+import { CreatedTokens } from 'types/mvxTypes';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -75,15 +79,35 @@ function ColorlibStepIcon(props: StepIconProps & { index: number }) {
   );
 }
 
+const CustomStepConnector = () => (
+  <StepConnector
+    sx={{
+      [`&.${stepConnectorClasses.completed} .${stepConnectorClasses.line}`]: {
+        borderColor: '#3FAC5A',
+      },
+      [`&.${stepConnectorClasses.active}`]: {
+        [`& .${stepConnectorClasses.line}`]: {
+          borderColor: '#3FAC5A',
+        },
+      },
+    }}
+  />
+);
 
 const CreatePool = () => {
   const { address } = useGetAccountInfo();
+  const { getValidationSignature } = useBackendAPI();
   const isMobile = useMobile();
   const [baseTokenId, setBaseTokenId] = useState(poolBaseTokens.token1.id);
   const [baseTokenTicker, setBaseTokenTicker] = useState(poolBaseTokens.token1.ticker);
   const [baseTokenImage, setBaseTokenImage] = useState(poolBaseTokens.token1.image);
-  const [secondToken, setSecondToken] = useState('');
+  const [secondTokenId, setSecondTokenId] = useState('');
+  const [secondTokenTicker, setSecondTokenTicker] = useState('');
+  const [secondTokenImage, setSecondTokenImage] = useState('');
   const [activeStep, setActiveStep] = useState(0);
+  const [signature, setSignature] = useState('');
+  const { getUserCreatedTokens } = useMvxAPI();
+  const [createdTokens, setCreatedTokens] = useState<CreatedTokens>({});
 
   const [firstTokenAmount, setFirstTokenAmount] = useState('');
   const [secondTokenAmount, setSecondTokenAmount] = useState('');
@@ -119,9 +143,16 @@ const CreatePool = () => {
     }
   };
 
-  const handleSecondTokenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSecondToken(value);
+  const handleSecondTokenChange = (event: SelectChangeEvent) => {
+    const selectedTokenId = event.target.value;
+    const selectedToken = createdTokens[selectedTokenId];
+
+    if (selectedToken) {
+      setSecondTokenId(selectedToken.token_id);
+      setSecondTokenTicker(selectedToken.ticker);
+      setSecondTokenImage(selectedToken.logo);
+      handleValidation(selectedToken.token_id);
+    }
   };
 
   const handleFirstTokenAmount = (event: any) => {
@@ -142,20 +173,31 @@ const CreatePool = () => {
     setSecondTokenAmount('6673.231');
   };
 
-  const CustomStepConnector = () => (
-    <StepConnector
-      sx={{
-        [`&.${stepConnectorClasses.completed} .${stepConnectorClasses.line}`]: {
-          borderColor: '#3FAC5A',
-        },
-        [`&.${stepConnectorClasses.active}`]: {
-          [`& .${stepConnectorClasses.line}`]: {
-            borderColor: '#3FAC5A',
-          },
-        },
-      }}
-    />
-  );
+  //get the validation message
+  const handleValidation = async (token: string) => {
+    const message = await getValidationSignature(token);
+    setSignature(message.signature);
+  };
+
+  // load the tokens created by the user through the api
+  const loadCreatedTokens = async () => {
+    if (address) {
+      const userTokens = await getUserCreatedTokens(address);
+      setCreatedTokens(userTokens);
+      const defaultTokenValues = Object.entries(userTokens)[0][1];
+      setSecondTokenId(defaultTokenValues.token_id);
+      setSecondTokenTicker(defaultTokenValues.ticker);
+      setSecondTokenImage(defaultTokenValues.logo);
+      handleValidation(defaultTokenValues.token_id);
+    }
+  };
+
+  useEffect(() => {
+    loadCreatedTokens();
+  }, [address]);
+
+  // create pair hook
+  const createPool = usePoolsCreatePool(baseTokenId, secondTokenId, signature);
 
   return (
     <Container className='create-pool-page-height font-rose'>
@@ -257,30 +299,63 @@ const CreatePool = () => {
                     </Select>
 
                     <p className='font-size-sm mt-3 mb-1 ms-2'>Pool second token</p>
-                    <TextField
-                      id="second-token"
-                      placeholder='Token ticker'
-                      type="text"
-                      value={secondToken}
-                      autoComplete="off"
+                    <Select
+                      id="second_token"
+                      value={secondTokenId}
                       onChange={handleSecondTokenChange}
-                      size="medium"
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: true,
-                        style: {
+                      input={<OutlinedInput />}
+                      size='small'
+                      renderValue={() => (
+                        <div className='font-size-sm font-regular text-white d-flex align-items-center'>
+                          <img
+                            src={secondTokenImage}
+                            alt={secondTokenId}
+                            style={{ width: 18, height: 18, flexShrink: 0 }}
+                            className='me-1'
+                          />
+                          {secondTokenTicker}
+                        </div>
+                      )}
+                      className='fullWidth token-container b-r-md'
+                      sx={{
+                        color: 'white',
+                        fontSize: '12px',
+                        fontFamily: 'Red Rose',
+                        padding: 0,
+                        '.MuiOutlinedInput-notchedOutline': {
+                          border: 'none',
+                        },
+                        '& .MuiSvgIcon-root': {
                           color: 'white',
-                          fontSize: isMobile ? '17px' : '14px',
-                          caretColor: 'white',
-                          paddingLeft: '15px',
-                          fontFamily: 'Red Rose',
-                          paddingTop: '3px',
-                          paddingBottom: '3px'
+                          marginLeft: '-50px !important'
+                        },
+                        backgroundColor: 'transparent',
+                      }}
+                      MenuProps={{
+                        PaperProps: {
+                          sx: {
+                            backgroundColor: 'rgba(32, 32, 32, 1)',
+                            color: 'white',
+                            fontFamily: 'Red Rose',
+                            borderRadius: '12px',
+                          },
                         },
                       }}
-                      className='mb-0 token-container fullWidth b-r-md'
-                      style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
-                    />
+                    >
+                      {Object.values(createdTokens).length && (
+                        Object.values(createdTokens).map((token: any) => (
+                          <MenuItem key={token?.token_id} value={token?.token_id} className={`font-rose select-menu-item font-size-xs`}>
+                            <img
+                              src={token.logo}
+                              alt={token.ticker}
+                              style={{ width: 16, height: 16, flexShrink: 0 }}
+                              className='me-1'
+                            />
+                            {token?.ticker}
+                          </MenuItem>
+                        ))
+                      )}
+                    </Select>
                     <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>*Only created tokens by you can be used</p>
                     <div className='d-flex justify-content-between'>
                       <p className='mb-0 mt-1 ms-2 font-size-sm'>Pool Fee</p>
@@ -289,7 +364,7 @@ const CreatePool = () => {
 
                     <Button
                       variant="contained"
-                      onClick={() => handleStepChange(1)}
+                      onClick={createPool}
                       className='btn-intense-default hover-btn btn-intense-success mt-2 fullWidth smaller'
                     >
                       Create Pool
