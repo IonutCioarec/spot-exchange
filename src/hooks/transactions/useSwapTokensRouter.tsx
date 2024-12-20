@@ -2,7 +2,7 @@ import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
 import { network, poolLPTokenPrice } from 'config';
 import { Transaction, BytesValue, Address, AddressValue, BigUIntValue, TokenTransfer, TokenIdentifierValue } from '@multiversx/sdk-core/out';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
-import { getPairsSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
+import { getRouterSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
 import BigNumber from 'bignumber.js';
 
 const sendAndSignTransactionsWrapped = async (
@@ -24,12 +24,14 @@ interface TokenProps {
   token_amount: number
 }
 
-export const useSwapPairsTokens = (token1: TokenProps, token2: TokenProps) => {
+export const useSwapTokensRouter = (token1: TokenProps, token2: TokenProps, pair_address: string) => {
   const { account } = useGetAccountInfo();
 
   const swapTokensFixedInput = async () => {
-    const contract = await getPairsSmartContractObj();
+    const contract = await getRouterSmartContractObj();
     const interaction = contract.methodsExplicit.swapTokensFixedInput([
+      new AddressValue(new Address(pair_address)),
+      BytesValue.fromHex('swapTokensFixedInput'),
       new TokenIdentifierValue(token2.token_id),
       new BigUIntValue(new BigNumber(token2.token_amount).multipliedBy(new BigNumber(10).pow(token2.token_decimals)))
     ]);
