@@ -140,7 +140,7 @@ export const useBackendAPI = () => {
   };
 
   // get validation signature for create new pool
-  const getValidationSignature = async (token_id: string): Promise<string> => {
+  const getValidationSignature = async (token_id: string): Promise<{signature:string}> => {
     try {
       const response = await axios.get(`${dexAPI}/validation/token-owner?token_identifier=${token_id}`, {
         headers: { Accept: 'application/json' },
@@ -149,7 +149,7 @@ export const useBackendAPI = () => {
     } catch (e) {
       console.error(e);
     }
-    return '';
+    return {signature: ''};
   };
 
   return {
