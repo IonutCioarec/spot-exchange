@@ -32,7 +32,7 @@ export const usePoolsIssueLPToken = (pair_address: string, lp_token_display_name
     const valueBig = new BigNumber(poolLPTokenPrice).multipliedBy(new BigNumber(10).pow(18));
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(10_000_000)
+      .withGasLimit(85_000_000)
       .withChainID(network.chainId)
       .withValue(new BigUIntValue(valueBig))
       .buildTransaction();

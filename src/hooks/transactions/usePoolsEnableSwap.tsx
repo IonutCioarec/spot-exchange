@@ -30,7 +30,7 @@ export const usePoolsEnableSwap = (pair_address: string) => {
     const valueBig = new BigNumber(poolEnableSwapPrice).multipliedBy(new BigNumber(10).pow(18));
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(10_000_000)
+      .withGasLimit(35_000_000)
       .withChainID(network.chainId)
       .withValue(new BigUIntValue(valueBig))
       .buildTransaction();

@@ -28,7 +28,7 @@ export const usePoolsSetLocalRoles = (pair_address: string) => {
 
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(10_000_000)
+      .withGasLimit(85_000_000)
       .withChainID(network.chainId)
       .withValue(0)
       .buildTransaction();
