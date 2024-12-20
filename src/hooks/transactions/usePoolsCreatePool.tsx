@@ -2,20 +2,7 @@ import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
 import { network } from 'config';
 import { Transaction, TokenIdentifierValue, BytesValue } from '@multiversx/sdk-core/out';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
-import { getRouterSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
-
-const sendAndSignTransactionsWrapped = async (
-  transactions: Transaction[],
-  displayInfo: TransactionsDisplayInfoType
-): Promise<{
-  success: boolean;
-  error: string;
-  sessionId: string | null;
-}> => {
-  const result = await sendAndSignTransactions(transactions, displayInfo);
-  await watcher.awaitCompleted(transactions[0]);
-  return result;
-};
+import { getRouterSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo, watcher } from 'helpers';
 
 export const usePoolsCreatePool = (first_token_id: string, second_token_id: string, signature: any) => {
   const { account } = useGetAccountInfo();

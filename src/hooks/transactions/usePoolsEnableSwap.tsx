@@ -2,21 +2,8 @@ import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
 import { network } from 'config';
 import { Transaction, Address, AddressValue, BigUIntValue, TokenTransfer } from '@multiversx/sdk-core/out';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
-import { getRouterSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
+import { getRouterSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo, watcher } from 'helpers';
 import BigNumber from 'bignumber.js';
-
-const sendAndSignTransactionsWrapped = async (
-  transactions: Transaction[],
-  displayInfo: TransactionsDisplayInfoType
-): Promise<{
-  success: boolean;
-  error: string;
-  sessionId: string | null;
-}> => {
-  const result = await sendAndSignTransactions(transactions, displayInfo);
-  await watcher.awaitCompleted(transactions[0]);
-  return result;
-};
 
 interface TokenProps {
   token_id: string,

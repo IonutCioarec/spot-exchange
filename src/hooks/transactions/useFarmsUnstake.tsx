@@ -2,21 +2,8 @@ import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
 import { network, poolLPTokenPrice } from 'config';
 import { Transaction, BytesValue, Address, AddressValue, BigUIntValue, TokenTransfer } from '@multiversx/sdk-core/out';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
-import { getFarmsSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
+import { getFarmsSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo, watcher } from 'helpers';
 import BigNumber from 'bignumber.js';
-
-const sendAndSignTransactionsWrapped = async (
-  transactions: Transaction[],
-  displayInfo: TransactionsDisplayInfoType
-): Promise<{
-  success: boolean;
-  error: string;
-  sessionId: string | null;
-}> => {
-  const result = await sendAndSignTransactions(transactions, displayInfo);
-  await watcher.awaitCompleted(transactions[0]);
-  return result;
-};
 
 export const useFarmsUnstake = (token_id: string, token_decimals: number, token_amount: number) => {
   const { account } = useGetAccountInfo();

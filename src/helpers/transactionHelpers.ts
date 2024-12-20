@@ -46,3 +46,16 @@ export const sendAndSignTransactions = async (
     return { success: false, error: error.message, sessionId: null };
   }
 };
+
+export const sendAndSignTransactionsWrapped = async (
+  transactions: Transaction[],
+  displayInfo: TransactionsDisplayInfoType
+): Promise<{
+  success: boolean;
+  error: string;
+  sessionId: string | null;
+}> => {
+  const result = await sendAndSignTransactions(transactions, displayInfo);
+  await watcher.awaitCompleted(transactions[0]);
+  return result;
+};

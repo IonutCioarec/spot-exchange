@@ -2,21 +2,8 @@ import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
 import { network, poolLPTokenPrice } from 'config';
 import { Transaction, BytesValue, Address, AddressValue, BigUIntValue } from '@multiversx/sdk-core/out';
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
-import { getRouterSmartContractObj, sendAndSignTransactions, transactionDisplayInfo, watcher } from 'helpers';
+import { getRouterSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo, watcher } from 'helpers';
 import BigNumber from 'bignumber.js';
-
-const sendAndSignTransactionsWrapped = async (
-  transactions: Transaction[],
-  displayInfo: TransactionsDisplayInfoType
-): Promise<{
-  success: boolean;
-  error: string;
-  sessionId: string | null;
-}> => {
-  const result = await sendAndSignTransactions(transactions, displayInfo);
-  await watcher.awaitCompleted(transactions[0]);
-  return result;
-};
 
 export const usePoolsIssueLPToken = (pair_address: string, lp_token_display_name: string, lp_token_ticker: string) => {
   const { account } = useGetAccountInfo();
