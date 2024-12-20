@@ -36,7 +36,7 @@ export const useSwapTokensPairs = (token1: TokenProps, token2: TokenProps) => {
 
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(20_000_000)
+      .withGasLimit(70_000_000)
       .withChainID(network.chainId)
       .withValue(0)
       .withSingleESDTTransfer(TokenTransfer.fungibleFromAmount(token1.token_id, token1.token_amount, token1.token_decimals))

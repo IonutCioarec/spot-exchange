@@ -27,7 +27,7 @@ export const useFarmsClaim = () => {
 
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(20_000_000)
+      .withGasLimit(70_000_000)
       .withChainID(network.chainId)
       .withValue(0)
       .buildTransaction();

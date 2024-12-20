@@ -27,7 +27,7 @@ export const useFarmsStake = (token_id: string, token_decimals: number, token_am
 
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(20_000_000)
+      .withGasLimit(70_000_000)
       .withChainID(network.chainId)
       .withValue(0)
       .withSingleESDTTransfer(TokenTransfer.fungibleFromAmount(token_id, token_amount, token_decimals))
