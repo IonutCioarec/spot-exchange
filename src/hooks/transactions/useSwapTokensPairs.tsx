@@ -16,7 +16,7 @@ export const useSwapTokensPairs = (token1: TokenProps, token2: TokenProps) => {
 
   const multiPairSwap = async () => {
     const contract = await getPairsSmartContractObj();
-    const interaction = contract.methodsExplicit.multiPairSwap([
+    const interaction = contract.methodsExplicit.swapTokensFixedInput([
       new TokenIdentifierValue(token2.token_id),
       new BigUIntValue(new BigNumber(token2.token_amount).multipliedBy(new BigNumber(10).pow(token2.token_decimals)))
     ]);

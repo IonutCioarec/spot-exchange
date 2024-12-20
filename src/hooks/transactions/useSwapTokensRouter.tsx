@@ -16,7 +16,7 @@ export const useSwapTokensRouter = (token1: TokenProps, token2: TokenProps, pair
 
   const swapTokensFixedInput = async () => {
     const contract = await getRouterSmartContractObj();
-    const interaction = contract.methodsExplicit.swapTokensFixedInput([
+    const interaction = contract.methodsExplicit.multiPairSwap([
       new AddressValue(new Address(pair_address)),
       BytesValue.fromHex('swapTokensFixedInput'),
       new TokenIdentifierValue(token2.token_id),
