@@ -139,9 +139,23 @@ export const useBackendAPI = () => {
     };
   };
 
+  // get validation signature for create new pool
+  const getValidationSignature = async (token_id: string): Promise<string> => {
+    try {
+      const response = await axios.get(`${dexAPI}/validation/token-owner?token_identifier=${token_id}`, {
+        headers: { Accept: 'application/json' },
+      });
+      return response.data;
+    } catch (e) {
+      console.error(e);
+    }
+    return '';
+  };
+
   return {
     getPairs,
     getTokens,
-    getSwapPrice
+    getSwapPrice,
+    getValidationSignature
   };
 };
