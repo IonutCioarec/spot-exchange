@@ -10,7 +10,7 @@ import StepContent from '@mui/material/StepContent';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { useGetAccountInfo } from 'hooks';
 import { useMobile } from 'utils/responsive';
-import { poolBaseTokens } from 'config';
+import { pairsContractAddress, poolBaseTokens } from 'config';
 import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
@@ -25,6 +25,9 @@ import LightSpot from 'components/LightSpot';
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import { useMvxAPI } from 'hooks/useMvxAPI';
 import { usePoolsCreatePool } from 'hooks/transactions/usePoolsCreatePool';
+import { usePoolsIssueLPToken } from 'hooks/transactions/usePoolsIssueLPToken';
+import { usePoolsSetLocalRoles } from 'hooks/transactions/usePoolsSetLocalRoles';
+import { usePoolsAddInitialLiquidity } from 'hooks/transactions/usePoolsAddInitialLiquidity';
 import { CreatedTokens } from 'types/mvxTypes';
 
 const ColorlibStepIconRoot = styled('div')<{
@@ -101,9 +104,11 @@ const CreatePool = () => {
   const [baseTokenId, setBaseTokenId] = useState(poolBaseTokens.token1.id);
   const [baseTokenTicker, setBaseTokenTicker] = useState(poolBaseTokens.token1.ticker);
   const [baseTokenImage, setBaseTokenImage] = useState(poolBaseTokens.token1.image);
+  const [baseTokenDecimals, setBaseTokenDecimals] = useState(poolBaseTokens.token1.decimals);
   const [secondTokenId, setSecondTokenId] = useState('');
   const [secondTokenTicker, setSecondTokenTicker] = useState('');
   const [secondTokenImage, setSecondTokenImage] = useState('');
+  const [secondTokenDecimals, setSecondTokenDecimals] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [signature, setSignature] = useState('');
   const { getUserCreatedTokens } = useMvxAPI();
@@ -124,21 +129,25 @@ const CreatePool = () => {
         setBaseTokenId(poolBaseTokens.token1.id);
         setBaseTokenTicker(poolBaseTokens.token1.ticker);
         setBaseTokenImage(poolBaseTokens.token1.image);
+        setBaseTokenDecimals(poolBaseTokens.token1.decimals);
         break;
       case poolBaseTokens.token2.id:
         setBaseTokenId(poolBaseTokens.token2.id);
         setBaseTokenTicker(poolBaseTokens.token2.ticker);
         setBaseTokenImage(poolBaseTokens.token2.image);
+        setBaseTokenDecimals(poolBaseTokens.token2.decimals);
         break;
       case poolBaseTokens.token3.id:
         setBaseTokenId(poolBaseTokens.token3.id);
         setBaseTokenTicker(poolBaseTokens.token3.ticker);
         setBaseTokenImage(poolBaseTokens.token3.image);
+        setBaseTokenDecimals(poolBaseTokens.token3.decimals);
         break;
       default:
         setBaseTokenId(poolBaseTokens.token1.id);
         setBaseTokenTicker(poolBaseTokens.token1.ticker);
         setBaseTokenImage(poolBaseTokens.token1.image);
+        setBaseTokenDecimals(poolBaseTokens.token1.decimals);
         break;
     }
   };
@@ -151,6 +160,7 @@ const CreatePool = () => {
       setSecondTokenId(selectedToken.token_id);
       setSecondTokenTicker(selectedToken.ticker);
       setSecondTokenImage(selectedToken.logo);
+      setSecondTokenDecimals(selectedToken.decimals);
       handleValidation(selectedToken.token_id);
     }
   };
@@ -196,8 +206,22 @@ const CreatePool = () => {
     loadCreatedTokens();
   }, [address]);
 
-  // create pair hook
+  // create pair hook (for all steps)
   const createPool = usePoolsCreatePool(baseTokenId, secondTokenId, signature);
+  const issueLpToken = usePoolsIssueLPToken(pairsContractAddress, baseTokenId.split('-')[0] + secondTokenId.split('-')[0], baseTokenId.split('-')[0] + secondTokenId.split('-')[0]);
+  const setLocalRoles = usePoolsSetLocalRoles(pairsContractAddress);
+  const addInitialLiquidity = usePoolsAddInitialLiquidity(
+    {
+      token_id: baseTokenId,
+      token_decimals: baseTokenDecimals,
+      token_amount: Number(firstTokenAmount)
+    },
+    {
+      token_id: secondTokenId,
+      token_decimals: secondTokenDecimals,
+      token_amount: Number(secondTokenAmount)
+    }
+  );
 
   return (
     <Container className='create-pool-page-height font-rose'>
@@ -364,7 +388,7 @@ const CreatePool = () => {
 
                     <Button
                       variant="contained"
-                      onClick={createPool}
+                      onClick={() => {createPool(); handleStepChange(1);}}
                       className='btn-intense-default hover-btn btn-intense-success mt-2 fullWidth smaller'
                     >
                       Create Pool
@@ -381,7 +405,7 @@ const CreatePool = () => {
                     <p className='text-center text-intense-green mt-2 font-size-md font-bold mb-2'>Press the button to automatically generate and create the LP token</p>
                     <Button
                       variant="contained"
-                      onClick={() => handleStepChange(2)}
+                      onClick={() => { issueLpToken(); handleStepChange(2); }}
                       className='btn-intense-default hover-btn btn-intense-success fullWidth smaller'
                     >
                       Token Issue
@@ -399,7 +423,7 @@ const CreatePool = () => {
                     <p className='roles-container fullWidth text-center font-size-sm mb-2'>ELGDPRIZE-a6789</p>
                     <Button
                       variant="contained"
-                      onClick={() => handleStepChange(3)}
+                      onClick={() => { setLocalRoles(); handleStepChange(3); }}
                       className='btn-intense-default hover-btn btn-intense-success fullWidth smaller'
                     >
                       Set Roles
@@ -515,7 +539,7 @@ const CreatePool = () => {
 
                     <Button
                       variant="contained"
-                      onClick={() => handleStepChange(0)}
+                      onClick={() => { addInitialLiquidity(); handleStepChange(0); }}
                       className='mt-3 btn-intense-default hover-btn btn-intense-success fullWidth smaller'
                     >
                       Add Liquidity
