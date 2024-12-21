@@ -23,6 +23,7 @@ import { faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { Telegram, Facebook, X, MenuBook } from '@mui/icons-material';
 import LightLine from 'components/LightLine';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
+import SecurityIcon from '@mui/icons-material/Security';
 
 export const Header = () => {
   const [expanded, setExpanded] = useState(false);
@@ -121,6 +122,16 @@ export const Header = () => {
                       Farms
                     </p>
                   </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/admin-operations"
+                    className={`mx-1 ${location.pathname === '/admin-operations' ? 'active' : ''}`}
+                    onClick={handleSelect}
+                  >
+                    <p className="nav-link mb-0 mt-0 link font-size-sm">
+                      Admin
+                    </p>
+                  </Nav.Link>
                 </Nav>
 
               </Navbar>
@@ -174,6 +185,13 @@ export const Header = () => {
             >
               <AgricultureIcon />
               <p className='mb-0'>Farms</p>
+            </Link>
+            <Link
+              to="/admin-operations"
+              className={`nav-item ${location.pathname === '/admin-operations' ? 'active' : ''}`}
+            >
+              <SecurityIcon />
+              <p className='mb-0'>Admin</p>
             </Link>
           </div>
         </div>
