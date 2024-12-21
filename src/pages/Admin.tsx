@@ -27,6 +27,8 @@ import { usePoolsAdminCreatePool } from 'hooks/transactions/usePoolsAdminCreateP
 import { usePoolsAddInitialLiquidity } from 'hooks/transactions/usePoolsAddInitialLiquidity';
 import { usePoolsSetLocalRoles } from 'hooks/transactions/usePoolsSetLocalRoles';
 import { usePoolsIssueLPToken } from 'hooks/transactions/usePoolsIssueLPToken';
+import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
+import { useSelector } from 'react-redux';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -107,6 +109,7 @@ const Admin = () => {
   const [secondTokenTicker, setSecondTokenTicker] = useState('');
   const [secondTokenDecimals, setSecondTokenDecimals] = useState(18);
   const [activeStep, setActiveStep] = useState(0);
+  const userTokens = useSelector(selectUserTokens);
 
   const [firstTokenAmount, setFirstTokenAmount] = useState('');
   const [secondTokenAmount, setSecondTokenAmount] = useState('');
@@ -162,11 +165,11 @@ const Admin = () => {
   };
 
   const handleMaxToken1Amount = () => {
-    setFirstTokenAmount('0');
+    setFirstTokenAmount(userTokens[baseTokenId]?.balance ?? '0');
   };
 
   const handleMaxToken2Amount = () => {
-    setSecondTokenAmount('0');
+    setSecondTokenAmount(userTokens[secondTokenId]?.balance ?? '0');
   };
 
   // create pair hook (for all steps)
@@ -447,7 +450,7 @@ const Admin = () => {
                       className='mb-0 token-container fullWidth b-r-md'
                       style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
                     />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(0)} <span className='text-uppercase'>{baseTokenTicker}</span></p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[baseTokenId]?.balance ?? '0'))} <span className='text-uppercase'>{baseTokenTicker}</span></p>
 
                     <p className='font-size-sm mb-1 ms-2 text-uppercase'>{secondTokenId.split('-')[0]}</p>
                     <TextField
@@ -497,7 +500,7 @@ const Admin = () => {
                       className='mb-0 token-container fullWidth b-r-md'
                       style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
                     />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(0)} <span className='text-uppercase'>{secondTokenId.split('-')[0]}</span></p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[secondTokenId]?.balance ?? '0'))} <span className='text-uppercase'>{secondTokenId.split('-')[0]}</span></p>
 
                     <Button
                       variant="contained"
