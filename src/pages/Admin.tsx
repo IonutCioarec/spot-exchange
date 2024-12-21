@@ -399,7 +399,7 @@ const Admin = () => {
                 </StepLabel>
                 <StepContent>
                   <div className='my-3'>
-                    <p className='font-size-sm mt-3 mb-1 ms-2'>{baseTokenId.split('-')[0]}</p>
+                    <p className='font-size-sm mt-3 mb-1 ms-2 text-uppercase'>{baseTokenId.split('-')[0]}</p>
                     <TextField
                       id="first-token"
                       placeholder='First token amount'
@@ -447,7 +447,7 @@ const Admin = () => {
                       className='mb-0 token-container fullWidth b-r-md'
                       style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
                     />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(0)} {baseTokenTicker}</p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(0)} <span className='text-uppercase'>{baseTokenTicker}</span></p>
 
                     <p className='font-size-sm mb-1 ms-2 text-uppercase'>{secondTokenId.split('-')[0]}</p>
                     <TextField

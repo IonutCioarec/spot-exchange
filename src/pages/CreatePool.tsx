@@ -176,11 +176,11 @@ const CreatePool = () => {
   };
 
   const handleMaxToken1Amount = () => {
-    setFirstTokenAmount('123.23');
+    setFirstTokenAmount('0');
   };
 
   const handleMaxToken2Amount = () => {
-    setSecondTokenAmount('6673.231');
+    setSecondTokenAmount('0');
   };
 
   //get the validation message
@@ -235,6 +235,12 @@ const CreatePool = () => {
           </div>
         </Col>
       </Row>
+      <div className='d-flex justify-content-end'>
+        <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(0)}> Step 1 </Button>
+        <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(1)}> Step 2 </Button>
+        <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(2)}> Step 3 </Button>
+        <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(3)}> Step 4 </Button>
+      </div>
       <Row className={`${isMobile ? 'mt-4' : 'mt-3'} mb-5`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className={`create-container text-white`}>
@@ -420,7 +426,7 @@ const CreatePool = () => {
                 <StepContent>
                   <div className='my-3'>
                     <p className='text-center text-intense-green mt-2 font-size-md font-bold'>MINT/BURN LP TOKEN ROLES</p>
-                    <p className='roles-container fullWidth text-center font-size-sm mb-2'>ELGDPRIZE-a6789</p>
+                    <p className='roles-container fullWidth text-center font-size-sm mb-2 text-uppercase'>{baseTokenId.split('-')[0] + secondTokenId.split('-')[0]}</p>
                     <Button
                       variant="contained"
                       onClick={() => { setLocalRoles(); handleStepChange(3); }}
@@ -437,7 +443,7 @@ const CreatePool = () => {
                 </StepLabel>
                 <StepContent>
                   <div className='my-3'>
-                    <p className='font-size-sm mt-3 mb-1 ms-2'>xEGLD</p>
+                    <p className='font-size-sm mt-3 mb-1 ms-2 text-uppercase'>{baseTokenId.split('-')[0]}</p>
                     <TextField
                       id="first-token"
                       placeholder='First token amount'
@@ -485,9 +491,9 @@ const CreatePool = () => {
                       className='mb-0 token-container fullWidth b-r-md'
                       style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
                     />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(123.23)} xEGLD</p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(0)} <span className='text-uppercase'>{baseTokenId.split('-')[0]}</span></p>
 
-                    <p className='font-size-sm mb-1 ms-2'>XTICKET</p>
+                    <p className='font-size-sm mb-1 ms-2 text-uppercase'>{secondTokenId.split('-')[0]}</p>
                     <TextField
                       id="second-token"
                       placeholder='Second token amount'
@@ -535,7 +541,7 @@ const CreatePool = () => {
                       className='mb-0 token-container fullWidth b-r-md'
                       style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
                     />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(6673.231)} XTICKET</p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(0)} <span className='text-uppercase'>{secondTokenId.split('-')[0]}</span></p>
 
                     <Button
                       variant="contained"
