@@ -35,6 +35,7 @@ import LightSpot from 'components/LightSpot';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import { useSwapTokensRouter } from 'hooks/transactions/useSwapTokensRouter';
+import { setTokenSearch, selectPairs } from 'storeManager/slices/pairsSlice';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -80,6 +81,7 @@ const Swap = () => {
   const [exchangeRate, setExchangeRate] = useState('0');
   const [activeContainer1, setActiveContainer1] = useState<boolean>(false);
   const [activeContainer2, setActiveContainer2] = useState<boolean>(false);
+  const pairs = useSelector(selectPairs);
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
