@@ -88,7 +88,7 @@ const Swap = () => {
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-    console.log(JSON.stringify(priceResponse, null, 2));
+    //console.log(JSON.stringify(priceResponse, null, 2));
 
     if (!priceResponse) {
       return { swapPrice: '0', steps: [], exchangeRate: '0' };
