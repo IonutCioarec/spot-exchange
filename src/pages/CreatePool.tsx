@@ -234,13 +234,7 @@ const CreatePool = () => {
             </div>
           </div>
         </Col>
-      </Row>
-      <div className='d-flex justify-content-end'>
-        <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(0)}> Step 1 </Button>
-        <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(1)}> Step 2 </Button>
-        <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(2)}> Step 3 </Button>
-        <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(3)}> Step 4 </Button>
-      </div>
+      </Row>      
       <Row className={`${isMobile ? 'mt-4' : 'mt-3'} mb-5`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className={`create-container text-white`}>
