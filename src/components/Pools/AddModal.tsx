@@ -7,6 +7,7 @@ import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
+import { usePoolsAddLiquidity } from "hooks/transactions/usePoolsAddLiquidity";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -22,12 +23,16 @@ interface WithdrawModal {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   token1: string;
   token2: string;
+  token1Id: string;
+  token2Id: string;
   token1MaxAmount: number;
   token2MaxAmount: number;
   token1Image: string;
   token2Image: string;
   token1ExchangeRate: string;
   token2ExchangeRate: string;
+  token1Decimals: number;
+  token2Decimals: number;
 }
 
 const AddModal: React.FC<WithdrawModal> = ({
@@ -35,12 +40,16 @@ const AddModal: React.FC<WithdrawModal> = ({
   setIsOpen,
   token1,
   token2,
+  token1Id,
+  token2Id,
   token1MaxAmount,
   token2MaxAmount,
   token1Image,
   token2Image,
   token1ExchangeRate,
   token2ExchangeRate,
+  token1Decimals,
+  token2Decimals,
 }) => {
   const [amountToken1, setAmountToken1] = useState('');
   const [amountToken2, setAmountToken2] = useState('');
@@ -85,6 +94,20 @@ const AddModal: React.FC<WithdrawModal> = ({
     setAmountToken1('');
     setAmountToken2('');
   };
+
+  // add liquidity hook
+  const addLiquidity = usePoolsAddLiquidity(
+    {
+      token_id: token1Id,
+      token_decimals: token1Decimals,
+      token_amount: Number(amountToken1)
+    },
+    {
+      token_id: token2Id,
+      token_decimals: token2Decimals,
+      token_amount: Number(amountToken2)
+    },
+  );
 
   return (
     <>
@@ -293,7 +316,7 @@ const AddModal: React.FC<WithdrawModal> = ({
 
           <Button
             className="btn-intense-green hover-btn fullWidth mt-3"
-            onClick={handleAdd}
+            onClick={() => {addLiquidity(); handleAdd();}}
             sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
           >
             Add
