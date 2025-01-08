@@ -400,13 +400,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             </div>
             <div>
               <IconButton
-                className="m-0 btn-info"
-                size="small"
-                color="success"
-              >
-                <RocketLaunchIcon sx={{ fontSize: '15px' }} />
-              </IconButton>
-              <IconButton
                 className="m-0 btn-success ms-2"
                 size="small"
                 color="success"
