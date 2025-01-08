@@ -383,7 +383,7 @@ const CreatePool = () => {
                         ))
                       )}
                     </Select>
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>*Only created tokens by you can be used</p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>*Only the token owner can create a pool</p>
                     <div className='d-flex justify-content-between'>
                       <p className='mb-0 mt-1 ms-2 font-size-sm'>Pool Fee</p>
                       <p className='mb-0 mt-1 me-2 font-size-sm text-right'>1%</p>
