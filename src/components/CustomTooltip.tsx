@@ -2,7 +2,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
 import { TooltipProps } from "@mui/material/Tooltip";
 
-const CustomTooltip = ({ title, children, ...props }: TooltipProps) => {
+const CustomTooltip = ({ title, placement = 'bottom', children, ...props }: TooltipProps) => {
   const componentsProps = {
     tooltip: {
       sx: {
@@ -27,7 +27,7 @@ const CustomTooltip = ({ title, children, ...props }: TooltipProps) => {
   };
 
   return (
-    <Tooltip title={title} arrow placement="bottom" componentsProps={componentsProps} {...props}>
+    <Tooltip title={title} arrow placement={placement} componentsProps={componentsProps} {...props}>
       {children}
     </Tooltip>
   );
