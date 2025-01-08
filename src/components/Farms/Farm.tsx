@@ -90,7 +90,9 @@ const Farm: React.FC<FarmProps> = ({
   const aprModalContent =
     <div className='font-rose text-white font-size-sm'>
       <p className='mb-0'><span className='text-intense-green'>Total APR</span>: dex_token + boosted token</p>
+      <hr className='my-1' style={{ opacity: '0.3', color: 'green' }} />
       <p className='mb-0'><span className='text-intense-green'>Fees APR</span>: you receive dex_token or 0.4% of the lp fees</p>
+      <hr className='my-1' style={{ opacity: '0.3', color: 'green' }} />
       <p className='mb-0'><span className='text-intense-green'>Boosted APR</span>: the reward token is XPRIZE (1,000.34 left) </p>
     </div>;
 
@@ -104,6 +106,7 @@ const Farm: React.FC<FarmProps> = ({
         <p className='mb-0'>Total Staked Amount</p>
         <p className='mb-0'>100,234.87 PRIZEEGLD</p>
       </div>
+      <hr className='my-1' style={{ opacity: '0.3', color: 'green' }} />
       <div className='d-flex align-items-center justify-content-between'>
         <p className='mb-0'>Total Rewards Amount</p>
         <p className='mb-0'>100,234.87 XPRIZE</p>
@@ -120,10 +123,10 @@ const Farm: React.FC<FarmProps> = ({
         <p className='mb-0'>Your Staked Amount</p>
         <p className='mb-0'>10,234.87 PRIZEEGLD</p>
       </div>
-      <hr className='my-1' style={{opacity: '0.3'}}/>
+      <hr className='my-1' style={{ opacity: '0.3', color: 'green' }} />
       <div className='d-flex justify-content-between'>
         <p className='mb-0'>Your Rewards</p>
-        <div className='text-right text-intense-green'>
+        <div className='text-right'>
           <p className='mb-0'>100,234.87 XPRIZE</p>
           <p className='mb-0'>20,234.87 XRRDS</p>
           <p className='mb-0'>1,234.87 ASFT</p>
