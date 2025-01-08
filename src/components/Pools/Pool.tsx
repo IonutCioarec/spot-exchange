@@ -356,122 +356,124 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
     return (
       <Fragment>
         <div className={`pool text-white ${open ? 'mb-5' : 'mb-3'}`}>
-          <div className="d-flex justify-content-between">
-            <div className="d-flex justify-content-start align-items-center">
-              <img
-                src={token1Details?.logo_url ?? defaultTokenValues.image_url}
-                alt={pair.token1}
-                className='d-inline'
-                style={{ width: 27, height: 27, border: '1px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
-              />
-              <motion.img
-                src={token2Details?.logo_url ?? defaultTokenValues.image_url}
-                alt={pair.token2}
-                className="d-inline m-l-n-xxl"
-                initial={{ x: 0 }}
-                animate={{ x: 20 }}
-                transition={{
-                  duration: 2.5,
-                  ease: 'easeInOut',
-                  delay: 0.3,
-                }}
-                style={{
-                  width: 27,
-                  height: 27,
-                  border: '1px solid rgba(63, 172, 90, 0.3)',
-                  borderRadius: '20px',
-                  position: 'relative',
-                  left: '0px',
-                }}
-              />
-              <div className=" mb-0 ms-4">
-                <p className="mb-0 font-size-sm">{token1Details?.ticker ?? defaultTokenValues.name}</p>
-                <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
+          <div onClick={() => setOpen(!open)}>
+            <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-start align-items-center">
+                <img
+                  src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                  alt={pair.token1}
+                  className='d-inline'
+                  style={{ width: 27, height: 27, border: '1px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
+                />
+                <motion.img
+                  src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                  alt={pair.token2}
+                  className="d-inline m-l-n-xxl"
+                  initial={{ x: 0 }}
+                  animate={{ x: 20 }}
+                  transition={{
+                    duration: 2.5,
+                    ease: 'easeInOut',
+                    delay: 0.3,
+                  }}
+                  style={{
+                    width: 27,
+                    height: 27,
+                    border: '1px solid rgba(63, 172, 90, 0.3)',
+                    borderRadius: '20px',
+                    position: 'relative',
+                    left: '0px',
+                  }}
+                />
+                <div className=" mb-0 ms-4">
+                  <p className="mb-0 font-size-sm">{token1Details?.ticker ?? defaultTokenValues.name}</p>
+                  <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
+                  </p>
+                </div>
+                <div className="mx-2 mb-0">
+                  <span>/</span>
+                </div>
+                <div className="">
+                  <p className="mb-0 font-size-sm">{token2Details?.ticker ?? defaultTokenValues.name}</p>
+                  <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <IconButton
+                  className="m-0 btn-success ms-2"
+                  size="small"
+                  color="success"
+                  onClick={() => setOpen(!open)}
+                >
+                  {open ? (<KeyboardDoubleArrowUpIcon sx={{ fontSize: '15px' }} />) : (<KeyboardDoubleArrowDownIcon sx={{ fontSize: '15px' }} />)}
+                </IconButton>
+              </div>
+            </div>
+            <div className="pool-sub-container p-2 mt-1">
+              <div className="d-flex justify-content-between">
+                <p className={`mb-0 font-size-sm ${sortBy === 'liquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                  Liquidity
+                  {sortBy === 'liquidity' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                  {sortBy === 'liquidity' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+                </p>
+                <p className="mb-0 font-size-sm text-silver">
+                  $
+                  <CountUp
+                    start={0}
+                    end={Number(pair?.tvl)}
+                    duration={1.5}
+                    separator=","
+                    decimals={3}
+                    decimal="."
+                    delay={0.1}
+                  />
                 </p>
               </div>
-              <div className="mx-2 mb-0">
-                <span>/</span>
-              </div>
-              <div className="">
-                <p className="mb-0 font-size-sm">{token2Details?.ticker ?? defaultTokenValues.name}</p>
-                <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
+            </div>
+            <div className="pool-sub-container p-2 mt-1">
+              <div className="d-flex justify-content-between">
+                <p className={`mb-0 font-size-sm ${sortBy === 'volume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                  Volume (24h)
+                  {sortBy === 'volume24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                  {sortBy === 'volume24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+                </p>
+                <p className="mb-0 font-size-sm text-silver">
+                  $
+                  <CountUp
+                    start={0}
+                    // end={Number(pair?.volume_24h)}
+                    end={4563.764}
+                    duration={1.5}
+                    separator=","
+                    decimals={3}
+                    decimal="."
+                    delay={0.1}
+                  />
                 </p>
               </div>
             </div>
-            <div>
-              <IconButton
-                className="m-0 btn-success ms-2"
-                size="small"
-                color="success"
-                onClick={() => setOpen(!open)}
-              >
-                {open ? (<KeyboardDoubleArrowUpIcon sx={{ fontSize: '15px' }} />) : (<KeyboardDoubleArrowDownIcon sx={{ fontSize: '15px' }} />)}
-              </IconButton>
-            </div>
-          </div>
-          <div className="pool-sub-container p-2 mt-1">
-            <div className="d-flex justify-content-between">
-              <p className={`mb-0 font-size-sm ${sortBy === 'liquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                Liquidity
-                {sortBy === 'liquidity' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
-                {sortBy === 'liquidity' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
-              </p>
-              <p className="mb-0 font-size-sm text-silver">
-                $
-                <CountUp
-                  start={0}
-                  end={Number(pair?.tvl)}
-                  duration={1.5}
-                  separator=","
-                  decimals={3}
-                  decimal="."
-                  delay={0.1}
-                />
-              </p>
-            </div>
-          </div>
-          <div className="pool-sub-container p-2 mt-1">
-            <div className="d-flex justify-content-between">
-              <p className={`mb-0 font-size-sm ${sortBy === 'volume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                Volume (24h)
-                {sortBy === 'volume24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
-                {sortBy === 'volume24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
-              </p>
-              <p className="mb-0 font-size-sm text-silver">
-                $
-                <CountUp
-                  start={0}
-                  // end={Number(pair?.volume_24h)}
-                  end={4563.764}
-                  duration={1.5}
-                  separator=","
-                  decimals={3}
-                  decimal="."
-                  delay={0.1}
-                />
-              </p>
-            </div>
-          </div>
-          <div className="pool-sub-container p-2 mt-1">
-            <div className="d-flex justify-content-between">
-              <p className={`mb-0 font-size-sm ${sortBy === 'fees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                Fees (24h)
-                {sortBy === 'fees24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
-                {sortBy === 'fees24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
-              </p>
-              <p className="mb-0 font-size-sm text-silver">
-                $
-                <CountUp
-                  start={0}
-                  // end={Number(pair?.fees_24h)}
-                  end={423.245}
-                  duration={1.5}
-                  separator=","
-                  decimals={3}
-                  decimal="."
-                  delay={0.1}
-                />
-              </p>
+            <div className="pool-sub-container p-2 mt-1">
+              <div className="d-flex justify-content-between">
+                <p className={`mb-0 font-size-sm ${sortBy === 'fees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                  Fees (24h)
+                  {sortBy === 'fees24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                  {sortBy === 'fees24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+                </p>
+                <p className="mb-0 font-size-sm text-silver">
+                  $
+                  <CountUp
+                    start={0}
+                    // end={Number(pair?.fees_24h)}
+                    end={423.245}
+                    duration={1.5}
+                    separator=","
+                    decimals={3}
+                    decimal="."
+                    delay={0.1}
+                  />
+                </p>
+              </div>
             </div>
           </div>
           <motion.div
