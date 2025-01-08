@@ -81,7 +81,7 @@ const Farms = () => {
             lpTokenId='USDCEGLD-4a453'
           />
         </Col>
-        <Col lg={3} className='mt-4'>
+        <Col lg={3} className='mt-4 mb-5'>
           <Farm
             title='USDCPRIZE'
             cardImage={1}
