@@ -392,7 +392,7 @@ const CreatePool = () => {
                     <Button
                       variant="contained"
                       onClick={() => {createPool(); handleStepChange(1);}}
-                      className='btn-intense-default hover-btn btn-intense-success mt-2 fullWidth smaller'
+                      className='btn-intense-default hover-btn btn-intense-success2 mt-2 fullWidth smaller'
                     >
                       Create Pool
                     </Button>
@@ -409,7 +409,7 @@ const CreatePool = () => {
                     <Button
                       variant="contained"
                       onClick={() => { issueLpToken(); handleStepChange(2); }}
-                      className='btn-intense-default hover-btn btn-intense-success fullWidth smaller'
+                      className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Token Issue
                     </Button>
@@ -427,7 +427,7 @@ const CreatePool = () => {
                     <Button
                       variant="contained"
                       onClick={() => { setLocalRoles(); handleStepChange(3); }}
-                      className='btn-intense-default hover-btn btn-intense-success fullWidth smaller'
+                      className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Set Roles
                     </Button>
@@ -543,7 +543,7 @@ const CreatePool = () => {
                     <Button
                       variant="contained"
                       onClick={() => { addInitialLiquidity(); handleStepChange(0); }}
-                      className='mt-3 btn-intense-default hover-btn btn-intense-success fullWidth smaller'
+                      className='mt-3 btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Add Liquidity
                     </Button>

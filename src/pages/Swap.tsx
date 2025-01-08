@@ -597,7 +597,7 @@ return (
           )}
         </div>
         <Button
-          className="btn-intense-green hover-btn fullWidth mt-3 font-size-sm mb-5"
+          className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
           onClick={swapTokensRouter}
         >
           SWAP

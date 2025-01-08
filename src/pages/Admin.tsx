@@ -206,10 +206,10 @@ const Admin = () => {
           <div className={`create-container text-white`}>
             <p className='font-bold font-size-xxl text-center text-intense-green underline'>CREATE POOL</p>
             <div className='d-flex justify-content-end'>
-              <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(0)}> Step 1 </Button>
-              <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(1)}> Step 2 </Button>
-              <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(2)}> Step 3 </Button>
-              <Button className='cursor-pointer mx-1 font-size-xxs btn-success' variant='contained' size='small' onClick={() => handleStepChange(3)}> Step 4 </Button>
+              <Button className='cursor-pointer mx-1 font-size-xxs btn-intense-default hover-btn btn-intense-success2 xxs b-r-xs' variant='contained' size='small' onClick={() => handleStepChange(0)}> Step 1 </Button>
+              <Button className='cursor-pointer mx-1 font-size-xxs btn-intense-default hover-btn btn-intense-success2 xxs b-r-xs' variant='contained' size='small' onClick={() => handleStepChange(1)}> Step 2 </Button>
+              <Button className='cursor-pointer mx-1 font-size-xxs btn-intense-default hover-btn btn-intense-success2 xxs b-r-xs' variant='contained' size='small' onClick={() => handleStepChange(2)}> Step 3 </Button>
+              <Button className='cursor-pointer mx-1 font-size-xxs btn-intense-default hover-btn btn-intense-success2 xxs b-r-xs' variant='contained' size='small' onClick={() => handleStepChange(3)}> Step 4 </Button>
             </div>
             <Stepper
               activeStep={activeStep}
@@ -354,7 +354,7 @@ const Admin = () => {
                     <Button
                       variant="contained"
                       onClick={createPool}
-                      className='btn-intense-default hover-btn btn-intense-success mt-2 fullWidth smaller'
+                      className='btn-intense-default hover-btn btn-intense-success2 mt-2 fullWidth smaller'
                     >
                       Create Pool
                     </Button>
@@ -371,7 +371,7 @@ const Admin = () => {
                     <Button
                       variant="contained"
                       onClick={issueLpToken}
-                      className='btn-intense-default hover-btn btn-intense-success fullWidth smaller'
+                      className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Token Issue
                     </Button>
@@ -389,7 +389,7 @@ const Admin = () => {
                     <Button
                       variant="contained"
                       onClick={setLocalRoles}
-                      className='btn-intense-default hover-btn btn-intense-success fullWidth smaller'
+                      className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Set Roles
                     </Button>
@@ -505,7 +505,7 @@ const Admin = () => {
                     <Button
                       variant="contained"
                       onClick={addInitialLiquidity}
-                      className='mt-3 btn-intense-default hover-btn btn-intense-success fullWidth smaller'
+                      className='mt-3 btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Add Liquidity
                     </Button>

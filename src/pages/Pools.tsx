@@ -308,7 +308,7 @@ const Pools = () => {
                 <Button
                   component={Link}
                   to="/create-pool"
-                  className="btn-intense-green hover-btn"
+                  className="btn-intense-default btn-intense-success2 hover-btn text-white"
                   sx={{ minWidth: isMobile ? '170px' : '120px', height: '30px' }}
                 >
                   New Pool

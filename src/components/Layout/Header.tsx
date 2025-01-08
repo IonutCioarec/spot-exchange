@@ -142,14 +142,14 @@ export const Header = () => {
               <Button
                 component={Link}
                 to="/unlock"
-                className="btn-intense-green hover-btn"
+                className="btn-intense-default btn-intense-success2 hover-btn"
               >
                 Connect Wallet
               </Button>
             ) : (
               <Button
                 onClick={handleLogout}
-                className="btn-intense-green hover-btn"
+                className="btn-intense-default btn-intense-success2 hover-btn"
               >
                 Disconnect
               </Button>
