@@ -106,7 +106,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
                   sx={{
                     minWidth: 'unset',
                     padding: '0 8px',
-                    color: '#1976d2',
+                    color: '#3fac5a',
                     textTransform: 'none',
                     fontSize: '12px',
                     fontWeight: 'bold',
@@ -130,10 +130,10 @@ const StakeModal: React.FC<StakeModalProps> = ({
                   fontSize: '12px'
                 },
                 '&:hover fieldset': {
-                  borderColor: 'rgba(25, 118, 210, 0.7)',
+                  borderColor: 'rgba(63, 172, 90, 0.6)',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: 'rgba(25, 118, 210, 0.7)',
+                  borderColor: 'rgba(63, 172, 90, 0.6)',
                 },
                 fontFamily: 'Red Rose',
                 fontSize: '12px',
@@ -156,7 +156,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
           </div>
           <Button
             variant="contained"
-            className="btn-intense-default hover-btn smaller"
+            className="btn-intense-default hover-btn btn-intense-success2 smaller"
             onClick={handleStake}
             fullWidth
           >
