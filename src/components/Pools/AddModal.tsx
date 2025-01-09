@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useState, useCallback } from 'react';
 import { Dialog, DialogContent, TextField, DialogTitle, IconButton, Button } from '@mui/material';
-import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
+import { amountToDenominatedAmount, formatNumberWithCommas, formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { defaultSwapToken1, defaultSwapToken2 } from 'config';
@@ -8,6 +8,9 @@ import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
 import { usePoolsAddLiquidity } from "hooks/transactions/usePoolsAddLiquidity";
+import { useBackendAPI } from 'hooks/useBackendAPI';
+import { debounce } from 'lodash';
+import { debounceSearchTime } from 'config';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -54,6 +57,23 @@ const AddModal: React.FC<WithdrawModal> = ({
   const [amountToken1, setAmountToken1] = useState('');
   const [amountToken2, setAmountToken2] = useState('');
   const isMobile = useMobile();
+  const { getSwapPrice } = useBackendAPI();
+
+  const getPrice = async (fromToken: string, toToken: string, amount: string, fromTokenDecimals: number) => {
+    const amountScaled = amountToDenominatedAmount(amount, fromTokenDecimals, 20);
+    if (parseFloat(amountScaled) === 0) {
+      return '0';
+    }
+    const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
+    //console.log(JSON.stringify(priceResponse, null, 2));
+
+    if (!priceResponse) {
+      return '0';
+    }
+
+    const rate = priceResponse ? priceResponse?.cumulative_exchange_rate?.raw : '0';
+    return rate;
+  };
 
   const handleClose = () => {
     setIsOpen(false);
@@ -61,32 +81,92 @@ const AddModal: React.FC<WithdrawModal> = ({
     setAmountToken2('');
   };
 
-  const handleAmountToken1Change = (e: any) => {
-    const value = e.target.value;
-
-    if (!value) {
-      setAmountToken1('');
-      return;
+  const handleAmountToken1Change = (input: any) => {
+    let value: string;
+    if (typeof input === 'string') {
+      value = input;
+    } else {
+      value = input.target.value;
     }
+    const rawValue = value.replace(/,/g, '');
 
-    setAmountToken1((value));
-  };
-  const handleAmountToken2Change = (e: any) => {
-    const value = e.target.value;
-
-    if (!value) {
+    if (rawValue === '' || isNaN(Number(rawValue)) || !rawValue) {
+      debouncedToken1Calculation.cancel();
+      setAmountToken1('');
       setAmountToken2('');
       return;
     }
 
-    setAmountToken2(value);
+    if (parseFloat(rawValue) === 0 && !rawValue.includes('.')) {
+      debouncedToken1Calculation.cancel();
+      setAmountToken1('0');
+      setAmountToken2('0');
+      return;
+    }
+
+    const formattedValue = formatNumberWithCommas(rawValue);
+    setAmountToken1(formattedValue);
+
+    if (!token1Id || !token2Id) return;
+    debouncedToken1Calculation(rawValue);
   };
 
+  const handleAmountToken2Change = (input: any) => {
+    let value: string;
+    if (typeof input === 'string') {
+      value = input;
+    } else {
+      value = input.target.value;
+    }
+    const rawValue = value.replace(/,/g, '');
+
+    if (rawValue === '' || isNaN(Number(rawValue)) || !rawValue) {
+      debouncedToken2Calculation.cancel();
+      setAmountToken1('');
+      setAmountToken2('');
+      return;
+    }
+
+    if (parseFloat(rawValue) === 0 && !rawValue.includes('.')) {
+      debouncedToken2Calculation.cancel();
+      setAmountToken1('0');
+      setAmountToken2('0');
+      return;
+    }
+
+    const formattedValue = formatNumberWithCommas(rawValue);
+    setAmountToken2(formattedValue);
+
+    if (!token1Id || !token2Id) return;
+    debouncedToken2Calculation(rawValue);
+  };
+
+  // Define the debounced functions
+  const debouncedToken1Calculation = useCallback(
+    debounce(async (value: string) => {
+      if (!token1Id || !token2Id) return;
+
+      const price = await getPrice(token1Id, token2Id, value, token1Decimals);
+      setAmountToken2(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
+    }, debounceSearchTime),
+    [token1Id, token2Id]
+  );
+
+  const debouncedToken2Calculation = useCallback(
+    debounce(async (value: string) => {
+      if (!token1Id || !token2Id) return;
+
+      const price = await getPrice(token2Id, token1Id, value, token2Decimals);
+      setAmountToken1(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
+    }, debounceSearchTime),
+    [token1Id, token2Id]
+  );
+
   const handleMaxToken1Amount = () => {
-    setAmountToken1(token1MaxAmount.toString());
+    handleAmountToken1Change(token1MaxAmount.toString());
   };
   const handleMaxToken2Amount = () => {
-    setAmountToken2(token1MaxAmount.toString());
+    handleAmountToken1Change(token2MaxAmount.toString());
   };
 
   const handleAdd = () => {
@@ -154,7 +234,7 @@ const AddModal: React.FC<WithdrawModal> = ({
               />
             </div>
             <p className='text-silver font-size-xs mb-0 me-2'>Balance: <span className='text-white'>{intlNumberFormat(Number(formatSignificantDecimals(Number(token1MaxAmount), 3)), 0, 20)}</span></p>
-          </div>
+          </div>          
           <TextField
             type='text'
             placeholder='First token amount'
@@ -163,12 +243,7 @@ const AddModal: React.FC<WithdrawModal> = ({
             variant='outlined'
             value={amountToken1}
             autoComplete="off"
-            onChange={(e) => {
-              const input = e.target.value;
-              if (/^\d*\.?\d*$/.test(input)) {
-                handleAmountToken1Change(e);
-              }
-            }}
+            onChange={handleAmountToken1Change}
             className='withdraw-input'
             autoFocus
             InputProps={{
@@ -246,12 +321,7 @@ const AddModal: React.FC<WithdrawModal> = ({
             variant='outlined'
             value={amountToken2}
             autoComplete="off"
-            onChange={(e) => {
-              const input = e.target.value;
-              if (/^\d*\.?\d*$/.test(input)) {
-                handleAmountToken2Change(e);
-              }
-            }}
+            onChange={handleAmountToken2Change}
             className='withdraw-input'
             autoFocus
             InputProps={{
@@ -306,7 +376,7 @@ const AddModal: React.FC<WithdrawModal> = ({
             }}
           />
           <div className='d-flex justify-content-between mt-2'>
-            <p className='px-2 font-size-xs text-silver mb-0'>Tokens rate: </p>
+            <p className='px-2 font-size-xs text-silver mb-0'>Rate: </p>
             <div>
               <p className={`px-2 ${isMobile ? 'font-size-xxs' : 'font-size-xs'} mb-0 text-white`}>1 {token1} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(token1ExchangeRate), 3)), 0, 20)} {token2}</p>
               <p className={`px-2 ${isMobile ? 'font-size-xxs' : 'font-size-xs'} mb-0 text-white`}>1 {token2} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(token2ExchangeRate), 3)), 0, 20)} {token1}</p>
@@ -316,7 +386,7 @@ const AddModal: React.FC<WithdrawModal> = ({
 
           <Button
             className="btn-intense-green hover-btn fullWidth mt-3"
-            onClick={() => {addLiquidity(); handleAdd();}}
+            onClick={() => { addLiquidity(); handleAdd(); }}
             sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
           >
             Add
