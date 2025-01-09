@@ -240,7 +240,7 @@ const CreatePool = () => {
       </Row>      
       <Row className={`${isMobile ? 'mt-4' : 'mt-3'} mb-5`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
-          <div className={`create-container text-white`}>
+          <div className={`create-container text-white mb-5`}>
             <Stepper
               activeStep={activeStep}
               orientation="vertical"
