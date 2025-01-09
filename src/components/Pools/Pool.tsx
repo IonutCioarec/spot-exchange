@@ -74,10 +74,10 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
   const handleAddOpen = async (fromToken: string, fromTokenDecimals: number, toToken: string, toTokenDecimals: number) => {
     setIsAddOpen(true);
     const price1 = await getPrice(fromToken, fromTokenDecimals, toToken, '1');
-    const price2 = await getPrice(toToken, toTokenDecimals, fromToken, '1');
+    const price2 = price1 ? 1 / parseFloat(price1) : 0;
 
     setToken1ExchangeRate(price1);
-    setToken2ExchangeRate(price2);
+    setToken2ExchangeRate(price2.toString());
   }
 
   if (!isMobile && !isTablet) {
