@@ -87,9 +87,12 @@ const Swap = () => {
 
   const getPrice = async (fromToken: string, toToken: string, amount: string) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
+    if (parseFloat(amountScaled) === 0) {
+      return { swapPrice: '0', steps: [], exchangeRate: '0' };
+    }
+
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
     //console.log(JSON.stringify(priceResponse, null, 2));
-
     if (!priceResponse) {
       return { swapPrice: '0', steps: [], exchangeRate: '0' };
     }
@@ -105,14 +108,32 @@ const Swap = () => {
     };
   };
 
-  const handleToken1AmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+  const handleToken1AmountChange = (input: any) => {
+    let value: string;
+    if (typeof input === 'string') {
+      value = input;
+    } else {
+      value = input.target.value;
+    }
     const rawValue = value.replace(/,/g, '');
 
-    if (value === '' || isNaN(Number(rawValue)) || !rawValue) {
+    if (rawValue === '' || isNaN(Number(rawValue)) || !rawValue) {
       debouncedToken1Calculation.cancel();
       setToken1Amount('');
       setToken2Amount('');
+      setToken1AmountPrice('0.000');
+      setToken2AmountPrice('0.000');
+      setSteps([{}]);
+      setExchangeRate('0');
+      setActiveContainer1(false);
+      setActiveContainer2(false);
+      return;
+    }
+
+    if (parseFloat(rawValue) === 0 && !rawValue.includes('.')) {
+      debouncedToken1Calculation.cancel();
+      setToken1Amount('0');
+      setToken2Amount('0');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
       setSteps([{}]);
@@ -132,14 +153,32 @@ const Swap = () => {
     setActiveContainer2(false);
   };
 
-  const handleToken2AmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+  const handleToken2AmountChange = (input: any) => {
+    let value: string;
+    if (typeof input === 'string') {
+      value = input;
+    } else {
+      value = input.target.value;
+    }
     const rawValue = value.replace(/,/g, '');
 
-    if (value === '' || isNaN(Number(rawValue)) || !rawValue) {
+    if (rawValue === '' || isNaN(Number(rawValue)) || !rawValue) {
       debouncedToken2Calculation.cancel();
       setToken1Amount('');
       setToken2Amount('');
+      setToken1AmountPrice('0.000');
+      setToken2AmountPrice('0.000');
+      setSteps([{}]);
+      setExchangeRate('0');
+      setActiveContainer1(false);
+      setActiveContainer2(false);
+      return;
+    }
+
+    if (parseFloat(rawValue) === 0 && !rawValue.includes('.')) {
+      debouncedToken2Calculation.cancel();
+      setToken1Amount('0');
+      setToken2Amount('0');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
       setSteps([{}]);
@@ -215,44 +254,6 @@ const Swap = () => {
     setSlippage(value);
   };
 
-  const token1AmountChange = async (amount: string) => {
-    const rawValue = amount.replace(/,/g, '');
-
-    if (isNaN(Number(rawValue)) || !rawValue) {
-      setToken1Amount('');
-      setToken2Amount('');
-      setToken1AmountPrice('0.000');
-      setToken2AmountPrice('0.000');
-      setExchangeRate('0');
-      setSteps([{}]);
-      setActiveContainer1(false);
-      setActiveContainer2(false);
-      return;
-    }
-
-    const formattedValue = formatNumberWithCommas(rawValue);
-    setToken1Amount(formattedValue);
-
-    if (amount === '' || !token1 || !token2) {
-      setToken2Amount('');
-      return;
-    }
-
-    const price = (await getPrice(token1, token2, parseFormattedNumber(rawValue).toString()));
-    setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
-
-    const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-    const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
-    setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
-    setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
-
-    if (price?.steps) {
-      setSteps(price.steps);
-    }
-    setActiveContainer1(true);
-    setActiveContainer2(false);
-  };
-
   const handleSwapTokens = async () => {
     const tempToken = token1;
     setToken1(token2);
@@ -264,7 +265,7 @@ const Swap = () => {
 
   const handleMaxAmount = async () => {
     const newAmount = intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20);
-    token1AmountChange(newAmount)
+    handleToken1AmountChange(newAmount);
   };
 
   // update minReceived when token2Amount, token1Amount, or slippage change
@@ -285,7 +286,7 @@ const Swap = () => {
   const handleRefreshingAmount = async () => {
     setRefreshingAmount(true);
     await new Promise((resolve) => setTimeout(resolve, 700));
-    token1AmountChange(token1Amount);
+    handleToken1AmountChange(token1Amount);
 
     setRefreshingAmount(false);
   };
