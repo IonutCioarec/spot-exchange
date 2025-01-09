@@ -385,7 +385,7 @@ const AddModal: React.FC<WithdrawModal> = ({
 
 
           <Button
-            className="btn-intense-green hover-btn fullWidth mt-3"
+            className="btn-intense-default hover-btn btn-intense-success2 mt-2 smaller fullWidth mt-3"
             onClick={() => { addLiquidity(); handleAdd(); }}
             sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
           >
