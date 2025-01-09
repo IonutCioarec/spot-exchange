@@ -96,7 +96,7 @@ const Swap = () => {
 
     const price = priceResponse?.final_output?.raw || '0';
     const steps = priceResponse?.steps || [];
-    const rate = priceResponse ? priceResponse?.cumulative_exchange_rate?.formatted : '0';
+    const rate = priceResponse ? priceResponse?.cumulative_exchange_rate?.raw : '0';
 
     return {
       swapPrice: price,
@@ -549,7 +549,7 @@ return (
                     <div className='d-flex justify-content-between align-items-center' key={`step2-${index}`}>
 
                       <p className='font-size-sm text-white mb-0'>
-                        {formatSignificantDecimals(Number(step?.price_impact?.formatted || 0), 2)}%
+                        {formatSignificantDecimals(Number(step?.price_impact?.raw || 0), 2)}%
                       </p>
                     </div>
                   ))}

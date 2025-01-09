@@ -66,7 +66,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
       return '0';
     }
 
-    const price = priceResponse?.final_output?.raw || '0';
+    const price = priceResponse?.cumulative_exchange_rate?.raw || '0';
     return price;
   };
 
