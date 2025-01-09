@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useEffect, useState, useCallback } from 'react';
+import { forwardRef, Fragment, useEffect, useState, useCallback, useRef } from 'react';
 import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton, Button } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowDown, Search, ArrowDropDown } from '@mui/icons-material';
@@ -34,6 +34,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
 }) => {
   const [amount, setAmount] = useState('');
   const isMobile = useMobile();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClose = () => {
     setAmount('');
@@ -53,6 +54,12 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
     setIsOpen(false);
     setAmount('');
   };
+
+  useEffect(() => {
+    if (isOpen && isMobile && inputRef.current) {
+      inputRef.current.blur();
+    }
+  }, [isOpen, isMobile]);
 
   return (
     <>
@@ -99,6 +106,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
                 handleAmountChange(e);
               }
             }}
+            ref={inputRef}
             className='withdraw-input'
             autoFocus
             InputProps={{

@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState, useCallback } from 'react';
+import { forwardRef, useEffect, useState, useCallback, useRef } from 'react';
 import { Dialog, DialogContent, TextField, DialogTitle, IconButton, Button } from '@mui/material';
 import { amountToDenominatedAmount, formatNumberWithCommas, formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import Slide from '@mui/material/Slide';
@@ -58,6 +58,7 @@ const AddModal: React.FC<WithdrawModal> = ({
   const [amountToken2, setAmountToken2] = useState('');
   const isMobile = useMobile();
   const { getSwapPrice } = useBackendAPI();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const getPrice = async (fromToken: string, toToken: string, amount: string, fromTokenDecimals: number) => {
     const amountScaled = amountToDenominatedAmount(amount, fromTokenDecimals, 20);
@@ -189,6 +190,12 @@ const AddModal: React.FC<WithdrawModal> = ({
     },
   );
 
+  useEffect(() => {
+    if (isOpen && isMobile && inputRef.current) {
+      inputRef.current.blur();
+    }
+  }, [isOpen, isMobile]);
+
   return (
     <>
       <Dialog
@@ -201,8 +208,14 @@ const AddModal: React.FC<WithdrawModal> = ({
         maxWidth='xs'
         fullWidth
         PaperProps={{
-          style: { backgroundColor: 'rgba(20, 20, 20, 0.9)', borderRadius: '10px', minHeight: '100px', zIndex: 1300 },
-        }}
+        style: { 
+          backgroundColor: 'rgba(20, 20, 20, 0.9)', 
+          borderRadius: '10px',
+          minHeight: '100px', 
+          zIndex: 1300,
+          display: 'flex',
+        },
+      }}
       >
         <DialogTitle id="scroll-dialog-title">
           <div className='d-flex justify-content-between font-rose align-items-center'>
@@ -324,6 +337,7 @@ const AddModal: React.FC<WithdrawModal> = ({
             onChange={handleAmountToken2Change}
             className='withdraw-input'
             autoFocus
+            ref={inputRef}
             InputProps={{
               endAdornment: (
                 <Button

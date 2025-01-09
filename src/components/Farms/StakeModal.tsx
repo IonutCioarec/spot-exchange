@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useEffect, useState, useCallback } from 'react';
+import { forwardRef, Fragment, useEffect, useState, useCallback, useRef } from 'react';
 import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton, Button } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowDown, Search, ArrowDropDown } from '@mui/icons-material';
@@ -34,6 +34,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
 }) => {
   const [amount, setAmount] = useState('');
   const isMobile = useMobile();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClose = () => {
     setAmount('');
@@ -53,6 +54,12 @@ const StakeModal: React.FC<StakeModalProps> = ({
     setIsOpen(false);
     setAmount('');
   };
+
+  useEffect(() => {
+    if (isOpen && isMobile && inputRef.current) {
+      inputRef.current.blur();
+    }
+  }, [isOpen, isMobile]);
 
   return (
     <>
@@ -89,6 +96,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
             fullWidth
             size='small'
             variant='outlined'
+            ref={inputRef}
             value={amount}
             autoComplete="off"
             onChange={(e) => {
