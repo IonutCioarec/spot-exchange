@@ -106,7 +106,7 @@ const UnstakeModal: React.FC<UnstakeModalProps> = ({
                   sx={{
                     minWidth: 'unset',
                     padding: '0 8px',
-                    color: '#f47272',
+                    color: '#3fac5a',
                     textTransform: 'none',
                     fontSize: '12px',
                     fontWeight: 'bold',
@@ -130,10 +130,10 @@ const UnstakeModal: React.FC<UnstakeModalProps> = ({
                   fontSize: '12px'
                 },
                 '&:hover fieldset': {
-                  borderColor: 'rgba(244, 114, 114, 0.7)',
+                  borderColor: 'rgba(63, 172, 90, 0.6)',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: 'rgba(244, 114, 114, 0.7)',
+                  borderColor: 'rgba(63, 172, 90, 0.6)',
                 },
                 fontFamily: 'Red Rose',
                 fontSize: '12px',
@@ -156,7 +156,7 @@ const UnstakeModal: React.FC<UnstakeModalProps> = ({
           </div>
           <Button
             variant="contained"
-            className="btn-intense-default btn-intense-danger hover-btn smaller"
+            className="btn-intense-default hover-btn btn-intense-success2 smaller"
             onClick={handleWithdraw}            
             fullWidth
           >
