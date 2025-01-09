@@ -200,10 +200,9 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           <motion.div
             style={{ overflow: 'hidden' }}
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
-            transition={{ duration: 0.5, ease: [0.17, 0.25, 0.3, 0.3], delay: 0.1 }} // Adjust duration and easing as desired
+            animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}            
           >
-            <div className="mt-2" style={{ borderTop: '3px solid rgba(10, 10, 10, 0.3)' }}>
+            <div className="mt-2" style={{ borderTop: '3px solid rgba(10, 10, 10, 0.3)', padding: '10px' }}>
               <Row className="g-1" style={{ marginTop: '0' }}>
                 <Col lg={8}>
                   <div className="pool-sub-container px-4 py-2 ">
@@ -482,7 +481,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             style={{ overflow: 'hidden' }}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
-            transition={{ duration: 0.5, ease: [0.17, 0.25, 0.3, 0.3], delay: 0.1 }} // Adjust duration and easing as desired
           >
             <div className="b-r-sm mt-2 p-2" style={{ border: '1px solid rgba(100,100,100, 0.7)' }}>
               <div className="pool-sub-container p-1 mt-1">
