@@ -2,7 +2,7 @@ import { Fragment } from "react/jsx-runtime";
 import 'assets/scss/pools.scss';
 import { useMobile, useTablet } from 'utils/responsive';
 import { Pair, Token } from "types/backendTypes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { intlNumberFormat, intlFormatSignificantDecimals, amountToDenominatedAmount } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
 import { Button, IconButton } from "@mui/material";
@@ -50,6 +50,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
   const isTablet = useTablet();
   const [open, setOpen] = useState(false);
   const { address } = useGetAccountInfo();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const handleWithdrawOpen = () => {
@@ -79,6 +80,12 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
     setToken1ExchangeRate(price1);
     setToken2ExchangeRate(price2);
   }
+
+  useEffect(() => {
+    if (open && containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [open]);
 
   if (!isMobile && !isTablet) {
     return (
@@ -356,7 +363,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
   } else {
     return (
       <Fragment>
-        <div className={`pool text-white ${open ? 'mb-5' : 'mb-3'}`}>
+        <div className={`pool scroll-margin-top text-white ${open ? 'mb-5' : 'mb-3'}`} ref={containerRef}>
           <div onClick={() => setOpen(!open)}>
             <div className="d-flex justify-content-between">
               <div className="d-flex justify-content-start align-items-center">
