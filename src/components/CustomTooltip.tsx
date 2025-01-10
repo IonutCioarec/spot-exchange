@@ -7,15 +7,16 @@ const CustomTooltip = ({ title, placement = 'bottom', children, ...props }: Tool
     tooltip: {
       sx: {
         maxWidth: '200px',
-        backgroundColor: 'rgba(12,12,12, 1)',
+        backgroundColor: 'rgba(20,20,20,1)',
         color: 'white',
-        fontSize: '12px',
+        fontSize: '13px',
         fontWeight: '400',
         textAlign: 'center',
         borderRadius: '10px',
         padding: '10px',
         top: '-10px',
         fontFamily: 'Red Rose',
+        boxShadow: '1px 0 5px rgba(63, 142, 90, 0.2), -1px 0 5px rgba(63, 142, 90, 0.2) !important'
       },
     },
     arrow: {
