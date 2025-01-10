@@ -362,23 +362,23 @@ const Pools = () => {
               </div>
             </div>
             {isMobile &&
-              <div className='text-right font-size-sm d-flex align-items-center justify-content-end'>
+              <div className='text-right font-size-sm d-flex align-items-center justify-content-end'>                
                 <FormControlLabel
                   control={
                     <CustomSwitch
-                      checked={myDeposits === true}
-                      onChange={handleAssetsPairsToggle}
-                      color='success'
+                      checked={myDepositsLocal}
+                      onChange={isLoggedIn ? handleAssetsPairsToggle : handleAssetsPairsToggleDisabled}
                     />
                   }
                   label="My Deposits"
                   labelPlacement="end"
                   sx={{
-                    color: 'white',
+                    color: isLoggedIn ? 'white' : 'silver',
                     fontSize: '13px',
                     '& .MuiTypography-root': {
                       fontSize: '13px',
-                      fontFamily: 'Red Rose'
+                      fontFamily: 'Red Rose',
+                      color: !isLoggedIn ? 'silver' : 'white'
                     },
                   }}
                 />
