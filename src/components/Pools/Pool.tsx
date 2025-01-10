@@ -22,6 +22,7 @@ import WithdrawModal from './WithdrawModal';
 import AddModal from './AddModal';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { useBackendAPI } from "hooks/useBackendAPI";
+import ReduceZerosFormat from "components/ReduceZerosFormat";
 
 interface PoolProps {
   pair: Pair;
@@ -127,15 +128,17 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               <Col lg={3}>
                 <div className="d-inline-grid mb-0">
                   <p className="mb-0">{token1Details?.ticker ?? defaultTokenValues.name}</p>
-                  <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
+                  <p className="mt-0 mb-0 font-size-xxs text-silver">
+                    ~ $<ReduceZerosFormat numberString={intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)} />
                   </p>
                 </div>
                 <div className="d-inline-grid mx-2 mb-0">
                   <span>/</span>
                 </div>
-                <div className="d-inline-grid text-center">
+                <div className="d-inline-grid">
                   <p className="mb-0">{token2Details?.ticker ?? defaultTokenValues.name}</p>
-                  <p className="mt-0 mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
+                  <p className="mt-0 mb-0 font-size-xxs text-silver">
+                    ~ $<ReduceZerosFormat numberString={intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)} />
                   </p>
                 </div>
               </Col>
