@@ -7,7 +7,7 @@ interface NumberFormatterProps {
 
 const ReduceZerosFormat: React.FC<NumberFormatterProps> = ({ numberString }) => {
   const formatNumber = (numStr: string): { formatted: string; isFormatted: boolean } => {
-    const regex = /(0{4,})([1-9])/g;  // Match 4 or more consecutive zeros followed by a non-zero digit
+    const regex = /(0{5,})([1-9])/g;  // Match 4 or more consecutive zeros followed by a non-zero digit
     let match;
     let formattedString = '';
     let lastIndex = 0;

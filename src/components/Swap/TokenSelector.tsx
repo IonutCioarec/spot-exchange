@@ -15,6 +15,7 @@ import { Token } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
+import ReduceZerosFormat from "components/ReduceZerosFormat";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -125,9 +126,11 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
           }}>
           <p className='m-0 font-bold'>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
           <p className='mt-0 mb-0 font-size-xxs text-silver'>
-            ${intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[selectedToken]?.price_usd) ?? 0, 3)), 0, 20) ||
-              intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.price_usd) || 0, 3)), 0, 20)
-            }
+            $<ReduceZerosFormat
+              numberString={intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[selectedToken]?.price_usd) ?? 0, 3)), 0, 20) ||
+                intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.price_usd) || 0, 3)), 0, 20)
+              }
+            />
           </p>
         </div>
         <div className={` ${isMobile ? 'm-l-sm' : ''}`}>
@@ -212,11 +215,19 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
                     </div>
                     <div className='text-right' style={{ width: '35%' }}>
                       <p className='font-size-xxs mb-0 text-silver'>Price</p>
-                      <p className='font-size-xs mb-0'>${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}</p>
+                      <p className='font-size-xs mb-0'>
+                        $<ReduceZerosFormat
+                          numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}
+                        />                        
+                      </p>
                     </div>
                     <div className='text-right' style={{ width: '20%' }}>
                       <p className='font-size-xxs mb-0 text-silver'>Balance</p>
-                      <p className='font-size-xs mb-0'>{intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0'), 3)), 0, 20)}</p>
+                      <p className='font-size-xs mb-0'>
+                        <ReduceZerosFormat
+                          numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0'), 3)), 0, 20)}
+                        />                        
+                      </p>
                     </div>
 
                   </div>
