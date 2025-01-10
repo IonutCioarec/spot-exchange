@@ -86,7 +86,7 @@ const Farms = () => {
           label="My Deposits"
           labelPlacement="end"
           sx={{
-            width: '50%',
+            width: isMobile ? '50%' : 'auto',
             color: isLoggedIn ? 'white' : 'silver',
             fontSize: '14px',
             '& .MuiTypography-root': {
