@@ -83,7 +83,7 @@ const Farms = () => {
             <CustomSwitch
             />
           }
-          label="My Deposits"
+          label="My Farms"
           labelPlacement="end"
           sx={{
             width: isMobile ? '50%' : 'auto',
