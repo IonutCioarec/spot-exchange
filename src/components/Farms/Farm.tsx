@@ -103,13 +103,18 @@ const Farm: React.FC<FarmProps> = ({
   const totalsModalContent =
     <div className='font-rose text-white font-size-sm'>
       <div className='d-flex align-items-center justify-content-between'>
-        <p className='mb-0'>Total Staked Amount</p>
         <p className='mb-0'>100,234.87 PRIZEEGLD</p>
+        <p className='mb-0'>$1,888,999.22</p>
       </div>
       <hr className='my-1' style={{ opacity: '0.3', color: 'green' }} />
+      <p className='mt-4 text-center font-size-xl'>Total Rewards Amount</p>
       <div className='d-flex align-items-center justify-content-between'>
-        <p className='mb-0'>Total Rewards Amount</p>
-        <p className='mb-0'>100,234.87 XPRIZE</p>
+        <p className='mb-0'>100,234.87 PRIZEEGLD</p>
+        <p className='mb-0'>$456.32</p>
+      </div>
+      <div className='d-flex align-items-center justify-content-between'>
+        <p className='mb-0'>98,234.87 XPRIZE</p>
+        <p className='mb-0'>$256.563</p>
       </div>
     </div>;
 
@@ -263,7 +268,7 @@ const Farm: React.FC<FarmProps> = ({
       <DisplayModal
         isOpen={isTotalsModalOpen}
         setIsOpen={setIsTotalsModalOpen}
-        title='Farm Totals Details'
+        title='Total Staked Amount'
         content={totalsModalContent}
       />
 
