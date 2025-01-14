@@ -44,6 +44,7 @@ import { color } from 'framer-motion';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounceSearchTime } from 'config';
 import { Link } from 'react-router-dom';
+import ScrollToTopButton from 'components/ScrollToTopButton';
 
 const Pools = () => {
   const { address } = useGetAccountInfo();
@@ -223,7 +224,7 @@ const Pools = () => {
 
   return (
     <div className='pools-page-height'>
-      <Row>
+      <Row id='topSection'>
         <Col xs={12}>
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
             <div className='p-5'>
@@ -233,6 +234,9 @@ const Pools = () => {
           </div>
         </Col>
       </Row>
+      {isMobile && !isEmpty(pairs) && (
+        <ScrollToTopButton targetRefId='topSection' />
+      )}
       <Row className='mb-5 mt-2'>
         <Col xs={12} lg={12}>
           <div className=''>
@@ -503,9 +507,9 @@ const Pools = () => {
             {/* Add light spots */}
             <LightSpot size={isMobile ? 220 : 350} x={isMobile ? '25%' : '40%'} y="40%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
             {/* <LightSpot size={300} x="10%" y="70%" color="rgba(63, 172, 90, 0.6)" /> */}
-            {/* <LightSpot size={250} x="85%" y="30%" color="rgba(63, 172, 90, 0.3)" /> */}            
+            {/* <LightSpot size={250} x="85%" y="30%" color="rgba(63, 172, 90, 0.3)" /> */}
           </div>
-        </Col>        
+        </Col>
       </Row>
     </div>
   );
