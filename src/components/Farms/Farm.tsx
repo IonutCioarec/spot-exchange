@@ -59,6 +59,7 @@ interface FarmProps {
   userRewards: number;
   lpTokenId: string;
   userLpTokenBalance: number;
+  boosted: boolean
 }
 
 const Farm: React.FC<FarmProps> = ({
@@ -76,7 +77,8 @@ const Farm: React.FC<FarmProps> = ({
   userStake,
   userRewards,
   lpTokenId,
-  userLpTokenBalance
+  userLpTokenBalance,
+  boosted
 }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -153,15 +155,19 @@ const Farm: React.FC<FarmProps> = ({
     <>
       <div className={`farm-container${cardImage}`}>
         <div className={`farm-card`} style={{ position: 'relative' }}>
-          {/* Tag/Label Icon */}
-          <div className='boosted-tag'>
-            <BookmarkIcon style={{fontSize: '60px'}} />
-          </div>
+          {/* Boosted indicator */}
+          {boosted && (
+            <>
+              <div className='boosted-tag'>
+                <BookmarkIcon style={{ fontSize: '60px' }} />
+              </div>
 
-          {/* Boosted Icon */}
-          <div className='boosted-icon'>
-            <RocketLaunchIcon style={{ fontSize: '25px' }} />
-          </div>
+              <div className='boosted-icon'>
+                <RocketLaunchIcon style={{ fontSize: '25px' }} />
+              </div>
+            </>
+          )}
+
 
           <div className='d-flex align-items-center justify-content-center'>
             <div>
