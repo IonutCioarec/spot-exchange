@@ -432,3 +432,9 @@
 .scroll-margin-top {
   scroll-margin-top: 110px;
 }
+
+.btn-scroll-top {
+  background: rgba(10, 10, 10, 0.9) !important;
+  color: white !important;
+  box-shadow: 1px 0 2px rgba(63, 142, 90, 0.9) inset, -1px 0 2px rgba(63, 142, 90, 0.9) inset;
+}
