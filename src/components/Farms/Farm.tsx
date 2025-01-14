@@ -23,6 +23,16 @@ import DisplayModal from './DisplayModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import CustomTooltip from 'components/CustomTooltip';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import 'assets/scss/farms.scss';
+import { faRocket } from '@fortawesome/free-solid-svg-icons';
+import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faCrown } from '@fortawesome/free-solid-svg-icons';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+
+
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'; // Example icon for tag/label
+import StarIcon from '@mui/icons-material/Star';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -142,7 +152,16 @@ const Farm: React.FC<FarmProps> = ({
   return (
     <>
       <div className={`farm-container${cardImage}`}>
-        <div className={`farm-card`}>
+        <div className={`farm-card`} style={{ position: 'relative' }}>
+          {/* Tag/Label Icon */}
+          <div className='boosted-tag'>
+            <BookmarkIcon style={{fontSize: '60px'}} />
+          </div>
+
+          {/* Boosted Icon */}
+          <div className='boosted-icon'>
+            <RocketLaunchIcon style={{ fontSize: '25px' }} />
+          </div>
 
           <div className='d-flex align-items-center justify-content-center'>
             <div>

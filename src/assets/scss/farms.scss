@@ -44,3 +44,19 @@
   border-radius: 20px;
   box-shadow: 5px 0 15px rgba(63, 142, 90, 0.4), -5px 0 15px rgba(63, 142, 90, 0.4);
 }
+
+.boosted-tag {
+  position: absolute !important;
+  top: -7px !important;
+  right: 0 !important;
+  color: #3FAC5A !important;
+  z-index: 1 !important;
+}
+
+.boosted-icon {
+  position: absolute !important;
+  top: 7px !important;
+  right: 17px !important;
+  color: white !important;
+  z-index: 2 !important;
+}
