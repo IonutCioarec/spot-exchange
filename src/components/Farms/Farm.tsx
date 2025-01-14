@@ -25,9 +25,6 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import CustomTooltip from 'components/CustomTooltip';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import 'assets/scss/farms.scss';
-import { faRocket } from '@fortawesome/free-solid-svg-icons';
-import { faBolt } from '@fortawesome/free-solid-svg-icons';
-import { faCrown } from '@fortawesome/free-solid-svg-icons';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 
@@ -157,15 +154,14 @@ const Farm: React.FC<FarmProps> = ({
         <div className={`farm-card`} style={{ position: 'relative' }}>
           {/* Boosted indicator */}
           {boosted && (
-            <>
+            <CustomTooltip key="boostedTag" title={'This farm has boosted rewards'} placement='bottom-end' >
               <div className='boosted-tag'>
                 <BookmarkIcon style={{ fontSize: '60px' }} />
+                <div className='boosted-icon'>
+                  <RocketLaunchIcon style={{ fontSize: '25px' }} />
+                </div>
               </div>
-
-              <div className='boosted-icon'>
-                <RocketLaunchIcon style={{ fontSize: '25px' }} />
-              </div>
-            </>
+            </CustomTooltip>
           )}
 
 
