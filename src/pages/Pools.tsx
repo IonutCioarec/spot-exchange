@@ -362,7 +362,7 @@ const Pools = () => {
               </div>
             </div>
             {isMobile &&
-              <div className='text-right font-size-sm d-flex align-items-center justify-content-end'>                
+              <div className='text-right font-size-sm d-flex align-items-center justify-content-end'>
                 <FormControlLabel
                   control={
                     <CustomSwitch
@@ -503,9 +503,9 @@ const Pools = () => {
             {/* Add light spots */}
             <LightSpot size={isMobile ? 220 : 350} x={isMobile ? '25%' : '40%'} y="40%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
             {/* <LightSpot size={300} x="10%" y="70%" color="rgba(63, 172, 90, 0.6)" /> */}
-            {/* <LightSpot size={250} x="85%" y="30%" color="rgba(63, 172, 90, 0.3)" /> */}
+            {/* <LightSpot size={250} x="85%" y="30%" color="rgba(63, 172, 90, 0.3)" /> */}            
           </div>
-        </Col>
+        </Col>        
       </Row>
     </div>
   );
