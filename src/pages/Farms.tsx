@@ -10,6 +10,7 @@ import { FormControlLabel, styled, Switch, TextField } from '@mui/material';
 import { useGetAccountInfo } from 'hooks';
 import { Search } from '@mui/icons-material';
 import { useState } from 'react';
+import ScrollToTopButton from 'components/ScrollToTopButton';
 
 const Farms = () => {
   const isMobile = useMobile();
@@ -67,7 +68,7 @@ const Farms = () => {
   return (
     <div className='farms-page-height'>
       <Row>
-        <Col xs={12}>
+        <Col xs={12} id='topSection'>
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
             <div className='p-5'>
               <h2 className='text-white text-center'>Farms</h2>
@@ -76,6 +77,9 @@ const Farms = () => {
           </div>
         </Col>
       </Row>
+      {isMobile && (
+        <ScrollToTopButton targetRefId='topSection' />
+      )}
 
       <div className='d-flex justify-content-end align-items-center mt-2'>
         <FormControlLabel
