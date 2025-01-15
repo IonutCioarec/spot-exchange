@@ -13,17 +13,39 @@
 }
 
 .unlock-page-height {
-  min-height: 68vh;
+  min-height: 80.5vh;
 
   @include maxQuery(700) {
-    min-height: 66.1vh;
+    min-height: 69.1vh;
   }
 }
 
 .container-bg {
-  margin-top: 20vh !important;
+  margin-top: 7.5vh !important;
 
   @include maxQuery(700) {
-    margin-top: 20vh !important;
+    margin-top: 17vh !important;
   }
+}
+
+.wallet-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.wallet-logo.normal {
+  display: inline-block;
+}
+
+.wallet-logo.hover {
+  display: none;
+}
+
+.wallet-container:hover .wallet-logo.normal {
+  display: none;
+}
+
+.wallet-container:hover .wallet-logo.hover {
+  display: inline-block;
 }
