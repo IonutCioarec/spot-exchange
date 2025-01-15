@@ -229,7 +229,7 @@ const Pools = () => {
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
             <div className='p-5'>
               <h2 className='text-white text-center'>Pools</h2>
-              <p className='text-white text-justified mb-0'>It is a long established fact that a reader will be distracted by the readable content of a page</p>
+              <p className='text-white text-justified mb-0'>Empower your assets: create pools, add liquidity, explore top pools and earn swap fees effortlessly</p>
             </div>
           </div>
         </Col>
