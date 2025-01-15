@@ -157,7 +157,7 @@ const Farm: React.FC<FarmProps> = ({
             <CustomTooltip key="boostedTag" title={'This farm has boosted rewards'} placement='bottom-end' >
               <div className='boosted-tag'>
                 <BookmarkIcon style={{ fontSize: '60px' }} />
-                <div className='boosted-icon'>
+                <div className='boosted-icon full-blinking-icon'>
                   <RocketLaunchIcon style={{ fontSize: '25px' }} />
                 </div>
               </div>
