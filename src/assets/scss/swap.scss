@@ -150,7 +150,7 @@
 }
 
 .swap-page-height {
-  min-height: 88.4vh;
+  min-height: 88vh;
 
   @include maxQuery(700) {
     min-height: 87.1vh;
