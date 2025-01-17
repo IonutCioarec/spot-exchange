@@ -19,3 +19,21 @@
     min-height: 86.1vh;
   }
 }
+
+.burning-section {
+  background: linear-gradient(135deg, #38b74e 0%, #0b6e6f 100%);
+  background-size: cover;
+  color: white;
+  font-family: "Red Rose", serif !important;
+  //box-shadow: 5px 0 15px rgba(63, 142, 90, 0.4), -5px 0 15px rgba(63, 142, 90, 0.4);
+}
+
+.label-bg {
+  background-color: rgba(12, 12, 12, 0.8) !important;
+}
+
+.label2-bg {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+}
