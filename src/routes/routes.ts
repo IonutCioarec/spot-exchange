@@ -4,6 +4,7 @@ import Swap from 'pages/Swap';
 import Farms from 'pages/Farms';
 import CreatePool from 'pages/CreatePool';
 import Admin from 'pages/Admin';
+import Analytics from 'pages/Analytics';
 
 interface RouteWithTitleType extends RouteType {
   title: string;
@@ -21,7 +22,8 @@ export const routeNames = {
   swap: '/swap',
   farms: '/farms',
   createPool: '/create-pool',
-  adminOperations: '/admin-operations'
+  adminOperations: '/admin-operations',
+  analytics: '/analytics'
 };
 
 export const routes: RouteWithTitleType[] = [
@@ -54,6 +56,11 @@ export const routes: RouteWithTitleType[] = [
     path: routeNames.adminOperations,
     title: 'Admin',
     component: Admin
+  },
+  {
+    path: routeNames.analytics,
+    title: 'Analytics',
+    component: Analytics
   }
 ];
 
@@ -64,4 +71,5 @@ export enum RouteNamesEnum {
   farms = '/farms',
   createPool = '/create-pool',
   adminOperations = '/admin-operations',
+  analytics = '/analytics',
 }

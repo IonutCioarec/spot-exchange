@@ -16,6 +16,8 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import LogoutIcon from '@mui/icons-material/Logout';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import BadgeIcon from '@mui/icons-material/Badge';
 import { Container } from 'react-bootstrap';
 import logo from 'assets/img/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -124,6 +126,16 @@ export const Header = () => {
                   </Nav.Link>
                   <Nav.Link
                     as={Link}
+                    to="/analytics"
+                    className={`mx-1 ${location.pathname === '/analytics' ? 'active' : ''}`}
+                    onClick={handleSelect}
+                  >
+                    <p className="nav-link mb-0 mt-0 link font-size-sm">
+                      Analytics
+                    </p>
+                  </Nav.Link>
+                  <Nav.Link
+                    as={Link}
                     to="/admin-operations"
                     className={`mx-1 ${location.pathname === '/admin-operations' ? 'active' : ''}`}
                     onClick={handleSelect}
@@ -162,7 +174,7 @@ export const Header = () => {
         <div className="bottom-nav">
           <div className="nav-items">
             <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-              <AnalyticsIcon />
+              <BadgeIcon />
               <p className='mb-0'>Dashboard</p>
             </Link>
             <Link
@@ -185,6 +197,13 @@ export const Header = () => {
             >
               <AgricultureIcon />
               <p className='mb-0'>Farms</p>
+            </Link>
+            <Link
+              to="/analytics"
+              className={`nav-item ${location.pathname === '/analytics' ? 'active' : ''}`}
+            >
+              <AnalyticsIcon />
+              <p className='mb-0'>Analytics</p>
             </Link>
             <Link
               to="/admin-operations"
