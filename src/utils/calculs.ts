@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import toast from 'react-hot-toast';
 
 export const getPercentage = (amount: number, totalAmount: number): number => {
   const percentage = totalAmount > 0 ? (amount * 100) / totalAmount : 0;
@@ -25,3 +26,9 @@ export const getAmountFromPercentageBigNumber = (percentage: number, totalAmount
 
   return Number(amount);
 };
+
+//Copy to Clipboard Utility
+export function CopyToClipboard(text: string) {
+  navigator.clipboard.writeText(text);
+  toast.success('Successfully copied', { duration: 3000 });
+}

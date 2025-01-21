@@ -10,6 +10,7 @@ import StaticLightSpot from 'components/StaticLightSpot';
 import aux1 from 'assets/img/aux1.png';
 import aux2 from 'assets/img/aux2.png';
 import { motion } from 'framer-motion';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface LayoutProps {
   children: ReactNode;
@@ -47,6 +48,27 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
         <Footer />
       </main>
+
+      <Toaster
+        toastOptions={{
+          position: 'top-right',
+          style: {
+            padding: '16px',
+            color: '#fff',
+            background: '#333',
+          },
+          error: {
+            style: {
+              border: '1px solid rgb(238, 60, 60)',
+            },
+          },
+          success: {
+            style: {
+              border: '1px solid rgba(63, 172, 90, 0.5)',
+            },
+          },
+        }}
+      />
 
     </div>
   );
