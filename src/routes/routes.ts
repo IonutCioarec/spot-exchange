@@ -1,4 +1,3 @@
-import Dashboard from 'pages/Dashboard';
 import Pools from 'pages/Pools';
 import Swap from 'pages/Swap';
 import Farms from 'pages/Farms';
@@ -19,7 +18,6 @@ export const routeNames = {
   home: '/',
   unlock: '/unlock',
   pools: '/pools',
-  swap: '/swap',
   farms: '/farms',
   createPool: '/create-pool',
   adminOperations: '/admin-operations',
@@ -29,18 +27,13 @@ export const routeNames = {
 export const routes: RouteWithTitleType[] = [
   {
     path: routeNames.home,
-    title: 'Dashboard',
-    component: Dashboard
+    title: 'Swap',
+    component: Swap
   },
   {
     path: routeNames.pools,
     title: 'Pools',
     component: Pools
-  },
-  {
-    path: routeNames.swap,
-    title: 'Swap',
-    component: Swap
   },
   {
     path: routeNames.farms,
@@ -66,7 +59,6 @@ export const routes: RouteWithTitleType[] = [
 
 export enum RouteNamesEnum {
   home = '/',
-  swap = '/swap',
   pools = '/pools',
   farms = '/farms',
   createPool = '/create-pool',

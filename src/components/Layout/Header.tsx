@@ -91,19 +91,9 @@ export const Header = () => {
                     onClick={handleSelect}
                   >
                     <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
-                      Dashboard
-                    </p>
-                  </Nav.Link>
-                  <Nav.Link
-                    as={Link}
-                    to="/swap"
-                    className={`mx-1 ${location.pathname === '/swap' ? 'active' : ''}`}
-                    onClick={handleSelect}
-                  >
-                    <p className="nav-link mb-0 mt-0 link font-size-sm">
                       Swap
                     </p>
-                  </Nav.Link>
+                  </Nav.Link>                  
                   <Nav.Link
                     as={Link}
                     to="/pools"
@@ -175,13 +165,6 @@ export const Header = () => {
           <div className="nav-items">
             <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
               <BadgeIcon />
-              <p className='mb-0'>Dashboard</p>
-            </Link>
-            <Link
-              to="/swap"
-              className={`nav-item ${location.pathname === '/swap' ? 'active' : ''}`}
-            >
-              <SwapHorizIcon />
               <p className='mb-0'>Swap</p>
             </Link>
             <Link

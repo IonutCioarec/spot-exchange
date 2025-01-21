@@ -351,7 +351,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         lpTokenId={lpTokenId}
                         lpTokenMaxAmount={userLpTokenBalance}
                       />
-                      <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
+                      <Link to={`/?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
                         <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
                       </Link>
                     </div>
@@ -597,7 +597,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     lpTokenId={lpTokenId}
                     lpTokenMaxAmount={userLpTokenBalance}
                   />
-                  <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
+                  <Link to={`/?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
                     <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
                   </Link>
                 </div>
