@@ -1,0 +1,58 @@
+import React from 'react';
+import ReactECharts from 'echarts-for-react';
+import { intlNumberFormat } from 'utils/formatters';
+import { PortofolioProps } from 'types/frontendTypes';
+import { portofolioColors } from 'config';
+
+const PortofolioChart: React.FC<PortofolioProps> = ({ data }) => {
+  const option = {
+    series: [
+      {
+        name: 'Token Distribution',
+        type: 'pie',
+        radius: ['70%', '80%'],
+        label: {
+          show: false,
+          position: 'center',
+          formatter: (params: any) => {
+            const name = params.name || 'N/A';
+            const percentage = params.percent ? `${params.percent}%` : '0%';
+            const value = params.value !== undefined ? `$${intlNumberFormat(params.value, 0, 2)}` : '$0.000';
+
+            return `${name} - ${percentage}\n${value}`;
+          },
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 20,
+            fontWeight: 'bold',
+            backgroundColor: 'transparent',
+            color: 'white',
+            fontFamily: 'Red Rose',
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        padAngle: 2,
+        data: data.map((item, index) => ({
+          value: item.value,
+          name: item.name,
+          itemStyle: {
+            color: portofolioColors[index],
+            borderRadius: 10,
+          },
+        })),
+      },
+    ],
+  };
+
+  return (
+    <div style={{ width: '100%' }}>
+      <ReactECharts option={option} style={{ height: '280px', width: '100%' }} />
+    </div>
+  );
+};
+
+export default PortofolioChart;
