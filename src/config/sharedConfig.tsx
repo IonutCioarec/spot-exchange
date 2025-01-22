@@ -24,7 +24,7 @@ export const portofolioImages = [
 ];
 
 export const portofolioColors = [
-  '#3FAC5A',
-  '#0075ff',
-  '#4318ff'
+  '#0dcaf0',
+  '#0d6efd',
+  '#3FAC5A'  
 ];
