@@ -12,7 +12,7 @@ const Portofolio: React.FC<PortofolioProps> = ({ data, rewardsData, walletBalanc
 
   return (
     <>
-      <h3 className='mt-5 text-white mb-1'>Your Portofolio Stats</h3>
+      <h3 className='mt-5 text-white mb-1'>Your Portofolio</h3>
       {address && <p className='adress-text'><span className='address-copy-text'>Account: {address.slice(0, 5)} ... {address.slice(58, 62)} <ClipboardCopy text={address} /></span></p>}
       {address ? (
         <Row>
