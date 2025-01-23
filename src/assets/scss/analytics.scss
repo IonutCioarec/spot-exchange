@@ -38,7 +38,7 @@
   font-weight: bold;
 }
 
-.adress-text{
+.adress-text {
   color: white;
   font-size: 12px !important;
   margin-bottom: 16px;
@@ -51,8 +51,13 @@
 }
 
 .portofolio-container {
-  background-color: rgba(32,32,32, 0.5);
-  min-height: 100px;
+  background-color: rgba(32, 32, 32, 0.5);
+  border-radius: 10px;
+  padding: 28px;
+}
+
+.rewards-container {
+  background: linear-gradient(180deg, #2e693896 0%, #123c3d79 100%);
   border-radius: 10px;
   padding: 28px;
 }

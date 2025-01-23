@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import { intlNumberFormat } from 'utils/formatters';
-import { PortofolioProps } from 'types/frontendTypes';
+import { PortofolioChartProps } from 'types/frontendTypes';
 import { portofolioColors } from 'config';
 
-const PortofolioChart: React.FC<PortofolioProps> = ({ data }) => {
+const PortofolioChart: React.FC<PortofolioChartProps> = ({ data }) => {
   const option = {
     series: [
       {
         name: 'Token Distribution',
         type: 'pie',
-        radius: ['70%', '80%'],
+        radius: ['80%', '90%'],
         label: {
           show: false,
           position: 'center',
@@ -25,7 +25,7 @@ const PortofolioChart: React.FC<PortofolioProps> = ({ data }) => {
         emphasis: {
           label: {
             show: true,
-            fontSize: 20,
+            fontSize: 17,
             fontWeight: 'bold',
             backgroundColor: 'transparent',
             color: 'white',
