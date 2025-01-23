@@ -1,6 +1,8 @@
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import PercentIcon from '@mui/icons-material/Percent';
 
 export const walletConnectV2ProjectId = '6f6471a542f7f4a270ebacb54fc2b793';
 export const apiTimeout = 6000;
@@ -20,6 +22,12 @@ export const debounceSearchTime = 1000;
 export const portofolioImages = [
   <AccountBalanceWalletIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />,
   <WorkspacesIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />,
+  <AgricultureIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />
+];
+
+export const portofolioRewardsImages = [
+  <PercentIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />,
+  <RocketLaunchIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />,
   <AgricultureIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />
 ];
 
