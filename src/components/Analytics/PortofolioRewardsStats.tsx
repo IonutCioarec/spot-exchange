@@ -33,7 +33,7 @@ const PortofolioRewardsStats: React.FC<PortofolioStatsProps> = ({ data, balance 
           </Col>
 
           <Col xs={12} lg={6}>
-            {isMobile && (
+            {!isMobile && (
               <div className='m-t-n-xl'>
                 <PortofolioRewardsChart data={data} />
               </div>

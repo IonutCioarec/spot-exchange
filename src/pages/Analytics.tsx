@@ -1,25 +1,42 @@
-import { Container } from 'react-bootstrap';
 import 'assets/scss/analytics.scss';
 import { Row, Col } from 'react-bootstrap';
 import Badge from '@mui/material/Badge';
+import EChartsPseudo3DExample from 'components/EChartsPseudo3DExample';
+import LineChartWithButtons from 'components/LineChartWithButtons';
+import Portofolio from 'components/Analytics/Portofolio';
 
 const Analytics = () => {
+  const portofolioData = [
+    { name: 'Tokens', value: 300.78},
+    { name: 'Pools', value: 100},
+    { name: 'Farms', value: 153},
+  ];
+
+  const rewardsData = [
+    { name: 'Fees', value: 84.36},    
+    { name: 'Boosted Farms', value: 26.07},
+    { name: 'Farms', value: 43.35},
+  ];
+
   return (
-    <div className="analytics-page-height">
+    <div className="analytics-page-height mb-5">
       <Row id='topSection'>
         <Col xs={12}>
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
             <div className='p-5'>
               <h2 className='text-white text-center'>Analytics</h2>
-              <p className='text-white text-justified mb-0'>Gain Insights with Our Analytics Page: Track trading volumes, liquidity trends, pools stats, etc to make informed decisions. Stay ahead with real-time data and historical analysis.</p>
+              <p className='text-white text-justified mb-0'>Gain Insights with Our Analytics Page: real-time portfolio updates, track trading volumes, liquidity trends, pools stats and others to make informed decisions. Stay ahead with real-time data and historical analysis.</p>
             </div>
           </div>
         </Col>
       </Row>
 
+      <Portofolio data={portofolioData} rewardsData={rewardsData} walletBalance={453.78} rewardsBalance={153.78} />
+
       <Row className='mt-3'>
         <Col xs={12}>
-          <div className='b-r-sm mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
+          <h3 className='mt-4 text-white'>Burned Token Details</h3>
+          <div className='b-r-sm ' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
             <div className='p-3'>
               <div className='burning-section b-r-sm px-4 py-3'>
                 <Row>
@@ -88,6 +105,22 @@ const Analytics = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={12}>
+          {/* Top pools by liquidity */}
+          <h3 className='mt-4 text-white mt-5'>TOP Liquidity Pools</h3>
+          <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
+            <EChartsPseudo3DExample />
+          </div>
+
+          {/* Top pools by liquidity */}
+          <h3 className='mt-4 text-white mt-5'>Chart example 2</h3>
+          <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
+            <LineChartWithButtons />
           </div>
         </Col>
       </Row>
