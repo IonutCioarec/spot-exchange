@@ -3,10 +3,10 @@ import ReactECharts from 'echarts-for-react';
 import { intlNumberFormat } from 'utils/formatters';
 import { PortofolioChartProps } from 'types/frontendTypes';
 import { portofolioColors } from 'config';
-import { useGetAccountInfo } from 'hooks';
+import { useMobile } from 'utils/responsive';
 
 const PortofolioChart: React.FC<PortofolioChartProps> = ({ data }) => {
-  const { address } = useGetAccountInfo();
+  const isMobile = useMobile();
   
   const option = {
     series: [
@@ -52,8 +52,8 @@ const PortofolioChart: React.FC<PortofolioChartProps> = ({ data }) => {
   };
 
   return (
-    <div style={{ width: '100%' }} className={`${address ? 'mt-3' : ''}`}>
-      <ReactECharts option={option} style={{ height: address ? '200px' : '280px', width: '100%' }} />
+    <div style={{ width: '100%' }} className={`${isMobile ? 'mt-3' : ''}`}>
+      <ReactECharts option={option} style={{ height: isMobile ? '200px' : '280px', width: '100%' }} />
     </div>
   );
 };

@@ -7,10 +7,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
-import { useGetAccountInfo } from 'hooks';
+import { useMobile } from 'utils/responsive';
 
 const PortofolioStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
-  const { address } = useGetAccountInfo();
+  const isMobile = useMobile();
 
   return (
     <>
@@ -39,7 +39,7 @@ const PortofolioStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
         </Link>
       </div>
 
-      <p className={`font-size-sm ${address ? 'mt-4' : 'mt-5'} mb-1 text-silver`}>Distribution</p>
+      <p className={`font-size-sm ${isMobile ? 'mt-4' : 'mt-5'} mb-1 text-silver`}>Distribution</p>
       <table className='text-white font-size-sm fullWidth'>
         <tbody>
           {data.map((item: PortofolioDataObject, index: number) => {

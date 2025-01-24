@@ -6,9 +6,11 @@ import PortofolioChart from 'components/Analytics/PortofolioChart';
 import { PortofolioProps } from 'types/frontendTypes';
 import PortofolioStats from 'components/Analytics/PortofolioStats';
 import PortofolioRewardsStats from './PortofolioRewardsStats';
+import { useMobile } from 'utils/responsive';
 
 const Portofolio: React.FC<PortofolioProps> = ({ data, rewardsData, walletBalance, rewardsBalance }) => {
   const { address } = useGetAccountInfo();
+  const isMobile = useMobile();
 
   return (
     <>
@@ -28,7 +30,7 @@ const Portofolio: React.FC<PortofolioProps> = ({ data, rewardsData, walletBalanc
               </Row>
             </div>
           </Col>
-          <Col xs={12} lg={6} className={`${address ? 'mt-4' : ''}`}>
+          <Col xs={12} lg={6} className={`${isMobile ? 'mt-4' : ''}`}>
             <PortofolioRewardsStats data={rewardsData} balance={rewardsBalance} />
           </Col>
         </Row>

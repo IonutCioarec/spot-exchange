@@ -7,10 +7,10 @@ import { Button } from '@mui/material';
 import RedeemIcon from '@mui/icons-material/Redeem';
 import { Col, Row } from 'react-bootstrap';
 import PortofolioRewardsChart from './PortofolioRewardsChart';
-import { useGetAccountInfo } from 'hooks';
+import { useMobile } from 'utils/responsive';
 
 const PortofolioRewardsStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
-  const { address } = useGetAccountInfo();
+  const isMobile = useMobile();
   
   return (
     <>
@@ -33,7 +33,7 @@ const PortofolioRewardsStats: React.FC<PortofolioStatsProps> = ({ data, balance 
           </Col>
 
           <Col xs={12} lg={6}>
-            {!address && (
+            {isMobile && (
               <div className='m-t-n-xl'>
                 <PortofolioRewardsChart data={data} />
               </div>
