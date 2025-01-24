@@ -7,12 +7,15 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import { useGetAccountInfo } from 'hooks';
 
 const PortofolioStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
+  const { address } = useGetAccountInfo();
+
   return (
     <>
       <p className='font-size-sm text-silver mb-0'>Total Balance</p>
-      <p className='text-white mb-0' style={{ fontSize: '40px' }}>${intlNumberFormat(balance, 0, 2)}</p>
+      <p className={`text-white mb-0 `} style={{ fontSize: '40px' }}>${intlNumberFormat(balance, 0, 2)}</p>
       <div className='flex'>
         <Link to={'/pools'}>
           <Button
@@ -36,7 +39,7 @@ const PortofolioStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
         </Link>
       </div>
 
-      <p className='font-size-sm mt-5 mb-1 text-silver'>Distribution</p>
+      <p className={`font-size-sm ${address ? 'mt-4' : 'mt-5'} mb-1 text-silver`}>Distribution</p>
       <table className='text-white font-size-sm fullWidth'>
         <tbody>
           {data.map((item: PortofolioDataObject, index: number) => {

@@ -3,8 +3,11 @@ import ReactECharts from 'echarts-for-react';
 import { intlNumberFormat } from 'utils/formatters';
 import { PortofolioChartProps } from 'types/frontendTypes';
 import { portofolioColors } from 'config';
+import { useGetAccountInfo } from 'hooks';
 
 const PortofolioChart: React.FC<PortofolioChartProps> = ({ data }) => {
+  const { address } = useGetAccountInfo();
+  
   const option = {
     series: [
       {
@@ -49,8 +52,8 @@ const PortofolioChart: React.FC<PortofolioChartProps> = ({ data }) => {
   };
 
   return (
-    <div style={{ width: '100%' }}>
-      <ReactECharts option={option} style={{ height: '280px', width: '100%' }} />
+    <div style={{ width: '100%' }} className={`${address ? 'mt-3' : ''}`}>
+      <ReactECharts option={option} style={{ height: address ? '200px' : '280px', width: '100%' }} />
     </div>
   );
 };

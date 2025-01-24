@@ -28,10 +28,10 @@ const Portofolio: React.FC<PortofolioProps> = ({ data, rewardsData, walletBalanc
               </Row>
             </div>
           </Col>
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={6} className={`${address ? 'mt-4' : ''}`}>
             <PortofolioRewardsStats data={rewardsData} balance={rewardsBalance} />
           </Col>
-        </Row >
+        </Row>
       ) : (
         <div className='portofolio-container'>
           <p className='h5 text-silver mb-0 text-center mt-1'>Connect to see details</p>

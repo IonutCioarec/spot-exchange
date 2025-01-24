@@ -7,8 +7,11 @@ import { Button } from '@mui/material';
 import RedeemIcon from '@mui/icons-material/Redeem';
 import { Col, Row } from 'react-bootstrap';
 import PortofolioRewardsChart from './PortofolioRewardsChart';
+import { useGetAccountInfo } from 'hooks';
 
 const PortofolioRewardsStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
+  const { address } = useGetAccountInfo();
+  
   return (
     <>
       <div className='rewards-container' style={{ minHeight: '336px' }}>
@@ -16,7 +19,7 @@ const PortofolioRewardsStats: React.FC<PortofolioStatsProps> = ({ data, balance 
           <Col xs={12} lg={6}>
             <p className='font-size-sm text-silver mb-0'>Available Rewards</p>
             <p className='text-white mb-0' style={{ fontSize: '40px' }}>${intlNumberFormat(balance, 0, 2)}</p>
-
+        
             <Link to={'/pools'}>
               <Button
                 size='small'
@@ -30,9 +33,11 @@ const PortofolioRewardsStats: React.FC<PortofolioStatsProps> = ({ data, balance 
           </Col>
 
           <Col xs={12} lg={6}>
-            <div className='m-t-n-xl'>
-              <PortofolioRewardsChart data={data} />
-            </div>
+            {!address && (
+              <div className='m-t-n-xl'>
+                <PortofolioRewardsChart data={data} />
+              </div>
+            )}
           </Col>
 
           <Col xs={12} lg={12}>
