@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
-
-const tickerItems = [
-  { label: 'Token', value: 'ABC' },
-  { label: 'Supply', value: '100.23' },
-  { label: 'Burned', value: '25k' },
-  { label: 'Liquidity', value: '$500k' },
-  { label: 'Holders', value: '10,345' },
-  { label: 'Holders', value: '10,345' },
-  { label: 'Holders', value: '10,345' },
-];
+import { useMobile } from "utils/responsive";
 
 const TokenRow = ({ items }: { items: { label: string; value: string, icon: JSX.Element | string, isImage: boolean }[] }) => {
+  const isMobile = useMobile();
+  
   return (
     <div className="w-full py-2">
       <Marquee gradient={false} speed={50} pauseOnHover={true}>
         {items.map((item, index) => (
           <div
             key={index}
-            className="text-white px-4 py-1 rounded-lg text-sm mx-2"
+            className={`text-white ${isMobile ? 'px-3' : 'px-4'} py-1 rounded-lg text-sm mx-2`}
           >
             <div className="d-flex align-items-center justify-content-between">              
               {item.isImage ? (
