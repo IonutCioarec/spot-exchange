@@ -4,19 +4,42 @@ import Badge from '@mui/material/Badge';
 import EChartsPseudo3DExample from 'components/EChartsPseudo3DExample';
 import LineChartWithButtons from 'components/LineChartWithButtons';
 import Portofolio from 'components/Analytics/Portofolio';
+import TokenRow from 'components/Analytics/TokenRow';
+import { useState } from 'react';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import RecyclingIcon from '@mui/icons-material/Recycling';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import ContactsIcon from '@mui/icons-material/Contacts';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import PaymentsIcon from '@mui/icons-material/Payments';
 
 const Analytics = () => {
   const portofolioData = [
-    { name: 'Tokens', value: 300.78},
-    { name: 'Pools', value: 100},
-    { name: 'Farms', value: 153},
+    { name: 'Tokens', value: 300.78 },
+    { name: 'Pools', value: 100 },
+    { name: 'Farms', value: 153 },
   ];
 
   const rewardsData = [
-    { name: 'Fees', value: 84.36},    
-    { name: 'Boosted Farms', value: 26.07},
-    { name: 'Farms', value: 43.35},
+    { name: 'Fees', value: 84.36 },
+    { name: 'Boosted Farms', value: 26.07 },
+    { name: 'Farms', value: 43.35 },
   ];
+
+  const initialTokenRowItems = [
+    { label: "DEX Token", value: "XTICKET", icon: "https://tools.multiversx.com/assets-cdn/devnet/tokens/XTICKET-6e9b83/icon.svg", isImage: true },
+    { label: "Minted", value: "100M", icon: <AccountTreeIcon className='token-row-icon' />, isImage: false },
+    { label: "Burned", value: "10.5M", icon: <LocalFireDepartmentIcon className='token-row-icon' />, isImage: false },
+    { label: "Supply", value: "89.5M", icon: <RecyclingIcon className='token-row-icon' />, isImage: false },
+    { label: "Holders", value: "124", icon: <ContactsIcon className='token-row-icon smaller' />, isImage: false },
+    { label: "Price", value: "$1,34", icon: <AttachMoneyIcon className='token-row-icon' style={{ marginRight: '-10px' }} />, isImage: false },
+    { label: "Volume 24h", value: "$10,345", icon: <TimelineIcon className='token-row-icon' />, isImage: false },
+    { label: "Liquidity", value: "$100,345", icon: <PaymentsIcon className='token-row-icon' />, isImage: false },
+    { label: "Transactions", value: "10,345", icon: <SwapHorizontalCircleIcon className='token-row-icon' />, isImage: false },
+  ];
+  const [tokenRowItems, setTokenRowItems] = useState(initialTokenRowItems);
 
   return (
     <div className="analytics-page-height mb-5">
@@ -31,83 +54,15 @@ const Analytics = () => {
         </Col>
       </Row>
 
-      <Portofolio data={portofolioData} rewardsData={rewardsData} walletBalance={453.78} rewardsBalance={153.78} />
+      {/* User portofolio */}
+      <div>
+        <Portofolio data={portofolioData} rewardsData={rewardsData} walletBalance={453.78} rewardsBalance={153.78} />
+      </div>
 
-      <Row className='mt-3'>
-        <Col xs={12}>
-          <h3 className='mt-4 text-white'>Burned Token Details</h3>
-          <div className='b-r-sm ' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
-            <div className='p-3'>
-              <div className='burning-section b-r-sm px-4 py-3'>
-                <Row>
-                  <Col xs={12} lg={6}>
-                    <p className='mb-0'>Total Burned:</p>
-                    <div className='mb-0 h3 d-flex align-items-center mt-1'>
-                      <p className='mb-0 h3'>25,000,000</p>
-                      <span className='label2-bg font-size-sm py-1 b-r-xs ms-2 px-2'>25.00%</span>
-                    </div>
-                    <p className='font-size-sm m-t-n-xs mb-0'>$456,786.23</p>
-                    <p className='mb-0 font-size-sm mt-3'><span className='label-bg py-1 px-2 b-r-xs'>Adresses amount that burned token: 345</span></p>
-                  </Col>
-                  <Col xs={12} lg={6}>
-                    <p className='mb-0'>Left Supply:</p>
-                    <div className='mb-0 h3 d-flex align-items-center mt-1'>
-                      <p className='mb-0 h3'>75,000,000</p>
-                      <span className='label2-bg font-size-sm py-1 b-r-xs ms-2 px-2'>75.00%</span>
-                    </div>
-                    <p className='font-size-sm m-t-n-xs mb-0'>$1,256,786.23</p>
-                    <p className='mb-0 font-size-sm mt-3'><span className='label-bg py-1 px-2 b-r-xs'>Obtained from total supply minus total burned</span></p>
-                  </Col>
-                </Row>
-              </div>
-              <div className='mt-2 text-white d-flex justify-content-around align-items-center'>
-                <div className='text-center font-size-sm'>
-                  <p className='mb-0'>500,000</p>
-                  <div>
-                    <Badge
-                      variant="dot"
-                      sx={{
-                        '& .MuiBadge-dot': {
-                          backgroundColor: '#B0C4DE',
-                        },
-                      }}
-                    />
-                    <span className='ms-2'>24 Hours</span>
-                  </div>
-                </div>
-                <div className='text-center font-size-sm'>
-                  <p className='mb-0'>5,300,000</p>
-                  <div>
-                    <Badge
-                      variant="dot"
-                      sx={{
-                        '& .MuiBadge-dot': {
-                          backgroundColor: '#FF6F61',
-                        },
-                      }}
-                    />
-                    <span className='ms-2'>7 Days</span>
-                  </div>
-                </div>
-                <div className='text-center font-size-sm'>
-                  <p className='mb-0'>10,500,000</p>
-                  <div>
-                    <Badge
-                      variant="dot"
-                      sx={{
-                        '& .MuiBadge-dot': {
-                          backgroundColor: '#FFD700',
-                        },
-                      }}
-                    />
-                    <span className='ms-2'>30 Days</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Col>
-      </Row>
+      {/* DEX Token details animated row */}
+      <div className='mt-4'>
+        <TokenRow items={tokenRowItems} />;
+      </div>
 
       <Row>
         <Col xs={12}>
