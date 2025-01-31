@@ -2,7 +2,7 @@ import 'assets/scss/analytics.scss';
 import { Row, Col } from 'react-bootstrap';
 import Badge from '@mui/material/Badge';
 import EChartsPseudo3DExample from 'components/EChartsPseudo3DExample';
-import LineChartWithButtons from 'components/LineChartWithButtons';
+import LiquidityChart from 'components/Analytics/LiquidityChart';
 import Portofolio from 'components/Analytics/Portofolio';
 import TokenRow from 'components/Analytics/TokenRow';
 import { useState } from 'react';
@@ -14,20 +14,24 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import { ChartViewType } from 'types/frontendTypes';
 
 const Analytics = () => {
+  // user portofolio data
   const portofolioData = [
     { name: 'Tokens', value: 300.78 },
     { name: 'Pools', value: 100 },
     { name: 'Farms', value: 153 },
   ];
 
+  // user rewards portofolio data
   const rewardsData = [
     { name: 'Fees', value: 84.36 },
     { name: 'Boosted Farms', value: 26.07 },
     { name: 'Farms', value: 43.35 },
   ];
 
+  // dex token details data
   const initialTokenRowItems = [
     { label: "DEX Token", value: "XTICKET", icon: "https://tools.multiversx.com/assets-cdn/devnet/tokens/XTICKET-6e9b83/icon.svg", isImage: true },
     { label: "Minted", value: "100M", icon: <AccountTreeIcon className='token-row-icon' />, isImage: false },
@@ -40,6 +44,51 @@ const Analytics = () => {
     { label: "Transactions", value: "10,345", icon: <SwapHorizontalCircleIcon className='token-row-icon' />, isImage: false },
   ];
   const [tokenRowItems, setTokenRowItems] = useState(initialTokenRowItems);
+
+  // dex total liquidity chart data
+  const liquidityData: Record<ChartViewType, { xData: string[] | number[]; yData: number[] }> = {
+    "24H": {
+      xData: [
+        1738350000, 1738353600, 1738357200, 1738360800, 1738364400, 1738368000, 1738371600, 1738375200,
+        1738378800, 1738382400, 1738386000, 1738389600, 1738393200, 1738396800, 1738400400, 1738404000,
+        1738407600, 1738411200, 1738414800, 1738418400, 1738422000, 1738425600, 1738429200, 1738432800
+      ],
+      yData: [
+        15936348.65, 16840702.06, 21611352.37, 11680709.54, 10323804.60, 20576949.92, 15131505.31, 2832207.97,
+        18235333.19, 19389270.81, 20017611.36, 11068872.69, 6328977.52, 6040826.43, 7965947.73, 14911932.46,
+        14414244.91, 21297734.89, 4363974.66, 2254807.61, 7970282.11, 13242533.87, 1251326.12, 16312743.09
+      ],
+    },
+    "1M": {
+      xData: [
+        1735682400, 1735768800, 1735855200, 1735941600, 1736028000, 1736114400, 1736200800, 1736287200,
+        1736373600, 1736460000, 1736546400, 1736632800, 1736719200, 1736805600, 1736892000, 1736978400,
+        1737064800, 1737151200, 1737237600, 1737324000, 1737410400, 1737496800, 1737583200, 1737669600,
+        1737756000, 1737842400, 1737928800, 1738015200, 1738101600, 1738188000, 1738274400
+      ],
+      yData: [
+        21448919.7042592, 13129396.806487199, 11229505.149675399, 14126651.500460453, 32538229.70858672, 32193408.931353275,
+        9519114.308921052, 11213943.086444028, 2385087.3818649976, 31937206.053772476, 28727245.285178587, 10281290.967526961,
+        10799408.648133302, 6028306.834877387, 21522892.36940829, 2598063.0484833545, 16747906.362408105, 15853339.760194179,
+        35263272.17331292, 3247097.7687312514, 23550141.684581824, 26116683.226115726, 7886806.983286265, 33502814.051269602,
+        37358467.531057134, 38208450.82704037, 21506562.671409357, 11287520.951344468, 31207028.707629155, 38585237.51618704, 37358467.531057134,
+      ],
+    },
+    "Full": {
+      xData: [
+        1675202400, 1677621600, 1680296400, 1682888400, 1685566800, 1688158800, 1690837200, 1693515600,
+        1696107600, 1698789600, 1701381600, 1704060000, 1706738400, 1709244000, 1711918800, 1714510800,
+        1717189200, 1719781200, 1722459600, 1725138000, 1727730000, 1730412000, 1733004000, 1735682400
+      ],
+      yData: [
+        24673003.774368457, 24332076.879032053, 94074264.81955348, 45232201.253985174, 78205953.19127107, 4813981.414919505,
+        7485874.382860777, 98681155.34508994, 27791560.9100051, 41689437.439571775, 27905309.322849564, 54861230.510773145,
+        13988807.834374893, 78233647.28302935, 82148134.07969071, 70544161.6449941, 36715500.07306666, 55772084.46790108,
+        58208735.036481775, 40992155.116027735, 82417562.70844117, 72987433.81935692, 33243737.603022713, 45001991.08933292
+      ],
+    },
+  };
+  const [totalLiquidityView, setTotalLiquidityView] = useState<ChartViewType>('24H');
 
   return (
     <div className="analytics-page-height mb-5">
@@ -60,23 +109,22 @@ const Analytics = () => {
       </div>
 
       {/* DEX Token details animated row */}
-      <div className='mt-4'>
-        <TokenRow items={tokenRowItems} />;
+      <div className='mt-5'>
+        <TokenRow items={tokenRowItems} />
       </div>
 
-      <Row>
-        <Col xs={12}>
-          {/* Top pools by liquidity */}
-          <h3 className='mt-4 text-white mt-5'>TOP Liquidity Pools</h3>
-          <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
-            <EChartsPseudo3DExample />
-          </div>
+      {/* Dex total liquidity / volume */}
+      <Row className='mt-4'>
+        <Col xs={12} lg={6} className='mt-3'>
+          <LiquidityChart
+            xData={liquidityData[totalLiquidityView].xData}
+            yData={liquidityData[totalLiquidityView].yData}
+            view={totalLiquidityView}
+            setView={setTotalLiquidityView}
+          />
+        </Col>
+        <Col xs={12} lg={6} className='mt-3'>
 
-          {/* Top pools by liquidity */}
-          <h3 className='mt-4 text-white mt-5'>Chart example 2</h3>
-          <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
-            <LineChartWithButtons />
-          </div>
         </Col>
       </Row>
     </div>

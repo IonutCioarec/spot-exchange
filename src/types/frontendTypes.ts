@@ -18,3 +18,5 @@ export interface PortofolioProps {
   walletBalance: number;
   rewardsBalance: number;
 }
+
+export type ChartViewType = '24H' | '1M' | 'Full';
