@@ -72,3 +72,16 @@ export const intlFormatSignificantDecimals = (
   const significantDecimals = Number(formatSignificantDecimals(input, decimals));
   return intlNumberFormat(significantDecimals, minDigits, maxDigits, locales);
 };
+
+// Formats large numbers into a more readable format (K for thousands, M for millions, B for billions, etc.)
+export const abbreviateNumber = (num: number, decimals = 2): string => {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(decimals) + "B"; // Billion
+  } else if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(decimals) + "M"; // Million
+  } else if (num >= 1_000) {
+    return (num / 1_000).toFixed(decimals) + "K"; // Thousand
+  } else {
+    return num.toFixed(decimals); // Less than 1K
+  }
+};
