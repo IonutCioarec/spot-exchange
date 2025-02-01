@@ -12,7 +12,7 @@ const TokenRow = ({ items }: { items: { label: string; value: string, icon: JSX.
           DEX Token Details
         </p>
       </div> */}
-      <Marquee gradient={false} speed={50} pauseOnHover={true}>
+      <Marquee gradient={true} speed={50} pauseOnHover={true} autoFill={true} gradientColor={'rgba(20, 20, 20, 1)'} gradientWidth={'20px'}>
         {items.map((item, index) => (
           <div
             key={index}

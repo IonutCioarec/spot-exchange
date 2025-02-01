@@ -16,6 +16,10 @@ import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import { ChartViewType } from 'types/frontendTypes';
+import WorkspacesIcon from '@mui/icons-material/Workspaces';
+import PercentIcon from '@mui/icons-material/Percent';
+import AnimationIcon from '@mui/icons-material/Animation';
+import { abbreviateNumber } from 'utils/formatters';
 
 const Analytics = () => {
   // user portofolio data
@@ -136,6 +140,16 @@ const Analytics = () => {
   };
   const [totalVolumeView, setTotalVolumeView] = useState<ChartViewType>('24H');
 
+  // dex totals details data
+  const initialTotalsRowItems = [
+    { label: "Liquidity", value: abbreviateNumber(16312743.09, 0), icon: <PaymentsIcon className='token-row-icon' />, isImage: false },
+    { label: "Volume (24h)", value: abbreviateNumber(163123.09, 0), icon: <TimelineIcon className='token-row-icon' />, isImage: false },
+    { label: "Fees (24h)", value: abbreviateNumber(47123, 0), icon: <PercentIcon className='token-row-icon' />, isImage: false },
+    { label: "Liquidity Pools", value: "324", icon: <WorkspacesIcon className='token-row-icon' />, isImage: false },
+    { label: "Tokens", value: "656", icon: <AnimationIcon className='token-row-icon' />, isImage: false },
+  ];
+  const [totalsRowItems, setTotalsRowItems] = useState(initialTotalsRowItems);
+
   return (
     <div className="analytics-page-height mb-5">
       <Row id='topSection'>
@@ -178,6 +192,11 @@ const Analytics = () => {
           />
         </Col>
       </Row>
+
+      {/* DEX Totals details animated row */}
+      <div className='mt-5'>
+        <TokenRow items={totalsRowItems} />
+      </div>
     </div>
   );
 }
