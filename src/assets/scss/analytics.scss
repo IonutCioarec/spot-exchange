@@ -70,3 +70,27 @@
 .token-row-icon.smaller {
   font-size: 30px !important;
 }
+
+.arrow-box {
+  position: relative;
+  background-color: rgba(26, 26, 26, 1);
+  color: white;
+  display: inline-block;
+  border-radius: 5px;
+}
+
+.arrow-box::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -13px;
+  /* Adjusts triangle position */
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 15px solid rgba(26, 26, 26, 1);
+  /* Triangle color same as background */
+  border-top: 30px solid transparent;
+  border-bottom: 30px solid transparent;
+  z-index: 3;
+}

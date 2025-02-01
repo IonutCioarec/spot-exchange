@@ -6,12 +6,18 @@ const TokenRow = ({ items }: { items: { label: string; value: string, icon: JSX.
   const isMobile = useMobile();
   
   return (
-    <div className="w-full py-2">
+    <div className="w-full py-2 d-flex justify-content-between align-items-center">
+      {/* <div className="arrow-box">
+        <p className="text-center font-size-sm my-2 font-rose text-white">
+          DEX Token Details
+        </p>
+      </div> */}
       <Marquee gradient={false} speed={50} pauseOnHover={true}>
         {items.map((item, index) => (
           <div
             key={index}
             className={`text-white ${isMobile ? 'px-3' : 'px-4'} py-1 rounded-lg text-sm mx-2`}
+            style={{zIndex: 2}}
           >
             <div className="d-flex align-items-center justify-content-between">              
               {item.isImage ? (
