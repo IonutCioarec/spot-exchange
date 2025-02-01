@@ -31,24 +31,37 @@ const LiquidityChart: React.FC<LiquidityChartProps> = ({ xData, yData, view, set
     return `${month} ${year}`;
   };
 
-  // Set default tooltip value when component mounts or when the view changes
-  useEffect(() => {
+  const getDefaultTooltipValues = (selectedView: ChartViewType) => {
     if (xData.length > 0 && yData.length > 0) {
       const lastTimestamp = Number(xData[xData.length - 1]);
       const lastValue = yData[yData.length - 1];
-      setTooltipValue(`$${abbreviateNumber(lastValue, 0)}`);
-      setTooltipDate(formatDateLabel(lastTimestamp, view));
+      return {
+        value: `$${abbreviateNumber(lastValue, 0)}`,
+        date: formatDateLabel(lastTimestamp, selectedView),
+      };
     }
+    return { value: '', date: '' };
+  };
+
+  useEffect(() => {
+    const { value, date } = getDefaultTooltipValues(view);
+    setTooltipValue(value);
+    setTooltipDate(date);
   }, [xData, yData, view]);
 
   const handleClick = (selectedView: ChartViewType) => {
     setView(selectedView);
-    if (xData.length > 0 && yData.length > 0) {
-      const lastTimestamp = Number(xData[xData.length - 1]);
-      const lastValue = yData[yData.length - 1];
-      setTooltipValue(`$${abbreviateNumber(lastValue, 0)}`);
-      setTooltipDate(formatDateLabel(lastTimestamp, selectedView));
-    }
+    const { value, date } = getDefaultTooltipValues(selectedView);
+    setTooltipValue(value);
+    setTooltipDate(date);
+  };
+
+  const onEvents = {
+    globalout: () => {
+      const { value, date } = getDefaultTooltipValues(view);
+      setTooltipValue(value);
+      setTooltipDate(date);
+    },
   };
 
   const option = {
@@ -172,8 +185,8 @@ const LiquidityChart: React.FC<LiquidityChartProps> = ({ xData, yData, view, set
         <p className='text-white mb-0' style={{ fontSize: '50px' }}>{tooltipValue}</p>
         <p className='text-silver font-size-sm mb-0 m-t-n-sm'>{tooltipDate}</p>
       </div>
-      <div className='d-flex m-t-n-xl'>
-        <ReactECharts className='font-rose' option={option} style={{ height: '350px', width: '95%' }} />
+      <div className='d-flex m-t-n-xl m-l-n-md'>
+        <ReactECharts className='font-rose' option={option} style={{ height: '350px', width: '96%' }} onEvents={onEvents}  />
       </div>
     </div>
   );
