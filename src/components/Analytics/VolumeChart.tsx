@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { ButtonGroup, Button } from '@mui/material';
 import { ChartViewType } from 'types/frontendTypes';
@@ -148,12 +148,15 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
     },
   };
 
-  const onEvents = {
-    globalout: () => {
-      setTooltipValue(getDefaultTooltipValue());
-      setTooltipDate(formatLabel(view));
-    },
-  };
+  const onEvents = useMemo(
+    () => ({
+      globalout: () => {
+        setTooltipValue(getDefaultTooltipValue());
+        setTooltipDate(formatLabel(view));
+      },
+    }),
+    [view]
+  );
 
   return (
     <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { ButtonGroup, Button } from '@mui/material';
 import { ChartViewType } from 'types/frontendTypes';
@@ -56,13 +56,16 @@ const LiquidityChart: React.FC<LiquidityChartProps> = ({ xData, yData, view, set
     setTooltipDate(date);
   };
 
-  const onEvents = {
-    globalout: () => {
-      const { value, date } = getDefaultTooltipValues(view);
-      setTooltipValue(value);
-      setTooltipDate(date);
-    },
-  };
+  const onEvents = useMemo(
+    () => ({
+      globalout: () => {
+        const { value, date } = getDefaultTooltipValues(view);
+        setTooltipValue(value);
+        setTooltipDate(date);
+      },
+    }),
+    [view]
+  );
 
   const option = {
     xAxis: {
@@ -186,7 +189,7 @@ const LiquidityChart: React.FC<LiquidityChartProps> = ({ xData, yData, view, set
         <p className='text-silver font-size-sm mb-0 m-t-n-sm'>{tooltipDate}</p>
       </div>
       <div className='d-flex m-t-n-xl m-l-n-md'>
-        <ReactECharts className='font-rose' option={option} style={{ height: '350px', width: '96%' }} onEvents={onEvents}  />
+        <ReactECharts className='font-rose' option={option} style={{ height: '350px', width: '96%' }} onEvents={onEvents} />
       </div>
     </div>
   );
