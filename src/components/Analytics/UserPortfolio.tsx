@@ -7,6 +7,7 @@ import { PortfolioProps } from 'types/frontendTypes';
 import PortfolioStats from 'components/Analytics/PortfolioStats';
 import PortfolioRewardsStats from './PortfolioRewardsStats';
 import { useMobile } from 'utils/responsive';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
 const UserPortfolio: React.FC<PortfolioProps> = ({ data, rewardsData, walletBalance, rewardsBalance }) => {
   const { address } = useGetAccountInfo();
@@ -15,7 +16,20 @@ const UserPortfolio: React.FC<PortfolioProps> = ({ data, rewardsData, walletBala
   return (
     <>
       <h3 className='mt-5 text-white mb-1'>Your Portfolio</h3>
-      {address && <p className='adress-text'><span className='address-copy-text'>Account: {address.slice(0, 5)} ... {address.slice(58, 62)} <ClipboardCopy text={address} /></span></p>}
+      {address &&
+        <p className='adress-text'>
+          <span className='address-copy-text'>
+            <span className='me-1'>Account: {address.slice(0, 5)} ... {address.slice(58, 62)}</span>
+            <ClipboardCopy text={address} />
+            <span
+              onClick={() => window.open(`https://explorer.multiversx.com/accounts/${address}`, '_blank', 'noopener,noreferrer')}
+              className="cursor-pointer"
+            >
+              <ArrowOutwardIcon className="ms-2" style={{ fontSize: '19px', marginTop: '-3px' }} />
+            </span>
+          </span>
+        </p>
+      }
       {address ? (
         <Row>
           <Col xs={12} lg={6}>
