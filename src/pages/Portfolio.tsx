@@ -28,8 +28,7 @@ const Portfolio = () => {
   // user rewards portofolio data
   const rewardsData = [
     { name: 'Fees', value: 84.36 },
-    { name: 'Boosted Farms', value: 26.07 },
-    { name: 'Farms', value: 43.35 },
+    { name: 'Boosted Farms', value: 26.07 }
   ];
 
   // dex token details data
