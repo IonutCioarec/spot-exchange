@@ -26,6 +26,7 @@ import { Telegram, Facebook, X, MenuBook } from '@mui/icons-material';
 import LightLine from 'components/LightLine';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import SecurityIcon from '@mui/icons-material/Security';
+import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
 
 export const Header = () => {
   const [expanded, setExpanded] = useState(false);
@@ -84,16 +85,41 @@ export const Header = () => {
             {!isMobile && (
               <Navbar>
                 <Nav>
-                  <Nav.Link
-                    as={Link}
-                    to="/"
-                    className={`mx-1 ${location.pathname === '/' ? 'active' : ''}`}
-                    onClick={handleSelect}
-                  >
-                    <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
-                      Swap
-                    </p>
-                  </Nav.Link>                  
+                  {isLoggedIn && (
+                    <Nav.Link
+                      as={Link}
+                      to="/"
+                      className={`mx-1 ${location.pathname === '/' ? 'active' : ''}`}
+                      onClick={handleSelect}
+                    >
+                      <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
+                        Portfolio
+                      </p>
+                    </Nav.Link>
+                  )}
+                  {isLoggedIn ? (
+                    <Nav.Link
+                      as={Link}
+                      to="/swap"
+                      className={`mx-1 ${location.pathname === '/swap' ? 'active' : ''}`}
+                      onClick={handleSelect}
+                    >
+                      <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
+                        Swap
+                      </p>
+                    </Nav.Link>
+                  ) : (
+                    <Nav.Link
+                      as={Link}
+                      to="/"
+                        className={`mx-1 ${(location.pathname === '/' || location.pathname === '/swap') ? 'active' : ''}`}
+                      onClick={handleSelect}
+                    >
+                      <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
+                        Swap
+                      </p>
+                    </Nav.Link>
+                  )}
                   <Nav.Link
                     as={Link}
                     to="/pools"
@@ -163,10 +189,23 @@ export const Header = () => {
       {isMobile && (
         <div className="bottom-nav">
           <div className="nav-items">
-            <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-              <BadgeIcon />
-              <p className='mb-0'>Swap</p>
-            </Link>
+            {isLoggedIn && (
+              <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+                <FolderSpecialIcon />
+                <p className='mb-0'>Portfolio</p>
+              </Link>
+            )}
+            {isLoggedIn ? (
+              <Link to="/swap" className={`nav-item ${location.pathname === '/swap' ? 'active' : ''}`}>
+                <BadgeIcon />
+                <p className='mb-0'>Swap</p>
+              </Link>
+            ) : (
+                <Link to="/" className={`nav-item ${(location.pathname === '/' || location.pathname === '/swap') ? 'active' : ''}`}>
+                <BadgeIcon />
+                <p className='mb-0'>Swap</p>
+              </Link>
+            )}
             <Link
               to="/pools"
               className={`nav-item ${location.pathname === '/pools' ? 'active' : ''}`}
