@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import { intlNumberFormat } from 'utils/formatters';
-import { PortofolioChartProps } from 'types/frontendTypes';
-import { portofolioColors } from 'config';
+import { PortfolioChartProps } from 'types/frontendTypes';
+import { portfolioColors } from 'config';
 
-const PortofolioRewardsChart: React.FC<PortofolioChartProps> = ({ data }) => {
+const PortfolioRewardsChart: React.FC<PortfolioChartProps> = ({ data }) => {
   const totalValue = data.reduce((sum, item) => sum + item.value, 0);
 
   const option = {
@@ -50,7 +50,7 @@ const PortofolioRewardsChart: React.FC<PortofolioChartProps> = ({ data }) => {
           value: item.value,
           name: item.name,
           itemStyle: {
-            color: `${portofolioColors[index]}`,
+            color: `${portfolioColors[index]}`,
             borderRadius: [10, 10, 0, 0],
             whiteSpace: 'nowrap',
           },
@@ -66,4 +66,4 @@ const PortofolioRewardsChart: React.FC<PortofolioChartProps> = ({ data }) => {
   );
 };
 
-export default PortofolioRewardsChart;
+export default PortfolioRewardsChart;

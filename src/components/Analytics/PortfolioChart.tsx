@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import { intlNumberFormat } from 'utils/formatters';
-import { PortofolioChartProps } from 'types/frontendTypes';
-import { portofolioColors } from 'config';
+import { PortfolioChartProps } from 'types/frontendTypes';
+import { portfolioColors } from 'config';
 import { useMobile } from 'utils/responsive';
 
-const PortofolioChart: React.FC<PortofolioChartProps> = ({ data }) => {
+const PortfolioChart: React.FC<PortfolioChartProps> = ({ data }) => {
   const isMobile = useMobile();
   
   const option = {
@@ -43,7 +43,7 @@ const PortofolioChart: React.FC<PortofolioChartProps> = ({ data }) => {
           value: item.value,
           name: item.name,
           itemStyle: {
-            color: portofolioColors[index],
+            color: portfolioColors[index],
             borderRadius: 10,
           },
         })),
@@ -58,4 +58,4 @@ const PortofolioChart: React.FC<PortofolioChartProps> = ({ data }) => {
   );
 };
 
-export default PortofolioChart;
+export default PortfolioChart;

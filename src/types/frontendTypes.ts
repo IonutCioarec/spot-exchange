@@ -1,20 +1,20 @@
-export interface PortofolioDataObject {
+export interface PortfolioDataObject {
   name: string;
   value: number;
 }
 
-export interface PortofolioChartProps {
-  data: PortofolioDataObject[];
+export interface PortfolioChartProps {
+  data: PortfolioDataObject[];
 }
 
-export interface PortofolioStatsProps {
-  data: PortofolioDataObject[];
+export interface PortfolioStatsProps {
+  data: PortfolioDataObject[];
   balance: number;
 }
 
-export interface PortofolioProps {
-  data: PortofolioDataObject[];
-  rewardsData: PortofolioDataObject[];
+export interface PortfolioProps {
+  data: PortfolioDataObject[];
+  rewardsData: PortfolioDataObject[];
   walletBalance: number;
   rewardsBalance: number;
 }

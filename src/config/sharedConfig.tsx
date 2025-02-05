@@ -19,19 +19,19 @@ export const tokensItemsPerPage = 10;
 export const poolsItemsPerPage = 10;
 export const debounceSearchTime = 1000;
 
-export const portofolioImages = [
+export const portfolioImages = [
   <AccountBalanceWalletIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />,
   <WorkspacesIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />,
   <AgricultureIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />
 ];
 
-export const portofolioRewardsImages = [
+export const portfolioRewardsImages = [
   <PercentIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />,
   <RocketLaunchIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />,
   <AgricultureIcon className='m-t-n-xxs' style={{ fontSize: '16px' }} />
 ];
 
-export const portofolioColors = [
+export const portfolioColors = [
   '#0dcaf0',
   '#0d6efd',
   '#3FAC5A'  

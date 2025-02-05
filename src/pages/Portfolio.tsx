@@ -1,6 +1,6 @@
 import 'assets/scss/analytics.scss';
 import { Row, Col } from 'react-bootstrap';
-import Portofolio from 'components/Analytics/Portofolio';
+import UserPortfolio from 'components/Analytics/UserPortfolio';
 import TokenRow from 'components/Analytics/TokenRow';
 import { useEffect, useState } from 'react';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
@@ -18,14 +18,14 @@ import { Navigate } from 'react-router-dom';
 const Portfolio = () => {
   const isLoggedIn = useGetIsLoggedIn();
   
-  // user portofolio data
-  const portofolioData = [
+  // user portfolio data
+  const portfolioData = [
     { name: 'Tokens', value: 300.78 },
     { name: 'Pools', value: 100 },
     { name: 'Farms', value: 153 },
   ];
 
-  // user rewards portofolio data
+  // user rewards portfolio data
   const rewardsData = [
     { name: 'Fees', value: 84.36 },
     { name: 'Boosted Farms', value: 26.07 }
@@ -64,9 +64,9 @@ const Portfolio = () => {
         </Col>
       </Row>
 
-      {/* User portofolio */}
+      {/* User portfolio */}
       <div>
-        <Portofolio data={portofolioData} rewardsData={rewardsData} walletBalance={453.78} rewardsBalance={153.78} />
+        <UserPortfolio data={portfolioData} rewardsData={rewardsData} walletBalance={453.78} rewardsBalance={153.78} />
       </div>
 
       {/* DEX Token details animated row */}

@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import { intlNumberFormat } from 'utils/formatters';
-import { PortofolioStatsProps, PortofolioDataObject } from 'types/frontendTypes';
-import { portofolioColors, portofolioImages } from 'config';
+import { PortfolioStatsProps, PortfolioDataObject } from 'types/frontendTypes';
+import { portfolioColors, portfolioImages } from 'config';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import { useMobile } from 'utils/responsive';
 
-const PortofolioStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
+const PortfolioStats: React.FC<PortfolioStatsProps> = ({ data, balance }) => {
   const isMobile = useMobile();
 
   return (
@@ -42,14 +42,14 @@ const PortofolioStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
       <p className={`font-size-sm ${isMobile ? 'mt-4' : 'mt-5'} mb-1 text-silver`}>Distribution</p>
       <table className='text-white font-size-sm fullWidth'>
         <tbody>
-          {data.map((item: PortofolioDataObject, index: number) => {
+          {data.map((item: PortfolioDataObject, index: number) => {
             const totalValue = data.reduce((sum, currentItem) => sum + currentItem.value, 0);
             const percentage = ((item.value / totalValue) * 100).toFixed(2);
 
             return (
               <tr key={index} style={{ borderBottom: '1px solid rgba(100,100,100, 0.3)' }}>
-                <td style={{ color: portofolioColors[index] }} width={'35%'}>
-                  {portofolioImages[index]} {item.name}
+                <td style={{ color: portfolioColors[index] }} width={'35%'}>
+                  {portfolioImages[index]} {item.name}
                 </td>
                 <td width={'35%'} align="right">
                   ${item.value.toFixed(2)}
@@ -66,4 +66,4 @@ const PortofolioStats: React.FC<PortofolioStatsProps> = ({ data, balance }) => {
   );
 };
 
-export default PortofolioStats;
+export default PortfolioStats;
