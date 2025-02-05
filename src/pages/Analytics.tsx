@@ -1,11 +1,8 @@
 import 'assets/scss/analytics.scss';
 import { Row, Col } from 'react-bootstrap';
-import Badge from '@mui/material/Badge';
-import EChartsPseudo3DExample from 'components/EChartsPseudo3DExample';
 import LiquidityChart from 'components/Analytics/LiquidityChart';
 import VolumeChart from 'components/Analytics/VolumeChart';
 import FeesChart from 'components/Analytics/FeesChart';
-import Portofolio from 'components/Analytics/Portofolio';
 import TokenRow from 'components/Analytics/TokenRow';
 import { useState } from 'react';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
@@ -23,20 +20,6 @@ import AnimationIcon from '@mui/icons-material/Animation';
 import { abbreviateNumber } from 'utils/formatters';
 
 const Analytics = () => {
-  // user portofolio data
-  const portofolioData = [
-    { name: 'Tokens', value: 300.78 },
-    { name: 'Pools', value: 100 },
-    { name: 'Farms', value: 153 },
-  ];
-
-  // user rewards portofolio data
-  const rewardsData = [
-    { name: 'Fees', value: 84.36 },
-    { name: 'Boosted Farms', value: 26.07 },
-    { name: 'Farms', value: 43.35 },
-  ];
-
   // dex token details data
   const initialTokenRowItems = [
     { label: "DEX Token", value: "XTICKET", icon: "https://tools.multiversx.com/assets-cdn/devnet/tokens/XTICKET-6e9b83/icon.svg", isImage: true },
@@ -203,16 +186,11 @@ const Analytics = () => {
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
             <div className='p-5'>
               <h2 className='text-white text-center'>Analytics</h2>
-              <p className='text-white text-justified mb-0'>Gain Insights with Our Analytics Page: real-time portfolio updates, track trading volumes, liquidity trends, pools stats and others to make informed decisions. Stay ahead with real-time data and historical analysis.</p>
+              <p className='text-white text-justified mb-0'>Gain Insights with Our Analytics Page: track trading volumes, liquidity trends, pools stats and others to make informed decisions. Stay ahead with real-time data and historical analysis.</p>
             </div>
           </div>
         </Col>
       </Row>
-
-      {/* User portofolio */}
-      <div>
-        <Portofolio data={portofolioData} rewardsData={rewardsData} walletBalance={453.78} rewardsBalance={153.78} />
-      </div>
 
       {/* DEX Token details animated row */}
       <div className='mt-5'>
