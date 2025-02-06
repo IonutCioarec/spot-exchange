@@ -12,12 +12,47 @@ import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import { abbreviateNumber } from 'utils/formatters';
-import { useGetIsLoggedIn } from 'hooks';
+import { useGetAccountInfo, useGetIsLoggedIn, useGetAccountProvider } from 'hooks';
 import { Navigate } from 'react-router-dom';
+import XLogo from 'assets/img/xlogo.svg?react';
+import { denominatedAmountToIntlFormattedAmount, intlNumberFormat } from 'utils/formatters';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LayersIcon from '@mui/icons-material/Layers';
+import WallpaperIcon from '@mui/icons-material/Wallpaper';
+import AnimationIcon from '@mui/icons-material/Animation';
+import { CreatedTokens, UserNFTs } from 'types/mvxTypes';
+import { useMvxAPI } from 'hooks/useMvxAPI';
 
 const Portfolio = () => {
   const isLoggedIn = useGetIsLoggedIn();
-  
+  const { account, address } = useGetAccountInfo();
+  const [userTokens, setUserTokens] = useState<CreatedTokens>({});
+  const [userTokensCount, setUserTokensCount] = useState<number>(0);
+  const [userNFTs, setUserNFTs] = useState<UserNFTs>({});
+  const [userNFTsCount, setUserNFTsCount] = useState<number>(0);
+  const { getAllUserTokens, getAllUserNFTs } = useMvxAPI();
+
+  // load the tokens created by the user through the api
+  const loadUserData = async () => {
+    const userTokensData = await getAllUserTokens(address);
+    if (userTokensData && typeof userTokensData === 'object') {
+      setUserTokensCount(Object.keys(userTokensData).length);
+      setUserTokens(userTokensData);
+    }
+
+    const userNftsData = await getAllUserNFTs(address);
+    if (userNftsData && typeof userNftsData === 'object') {
+      setUserNFTsCount(Object.keys(userNftsData).length);
+      setUserNFTs(userNftsData);
+    }
+  };
+
+  useEffect(() => {
+    if(address){
+      loadUserData();
+    }
+  }, []);
+
   // user portfolio data
   const portfolioData = [
     { name: 'Tokens', value: 300.78 },
@@ -32,19 +67,14 @@ const Portfolio = () => {
   ];
 
   // dex token details data
-  const initialTokenRowItems = [
-    { label: "DEX Token", value: "XTICKET", icon: "https://tools.multiversx.com/assets-cdn/devnet/tokens/XTICKET-6e9b83/icon.svg", isImage: true },
-    { label: "Minted", value: "100M", icon: <AccountTreeIcon className='token-row-icon' />, isImage: false },
-    { label: "Burned", value: "10.5M", icon: <LocalFireDepartmentIcon className='token-row-icon' />, isImage: false },
-    { label: "Supply", value: "89.5M", icon: <RecyclingIcon className='token-row-icon' />, isImage: false },
-    { label: "Holders", value: "124", icon: <ContactsIcon className='token-row-icon smaller' />, isImage: false },
-    { label: "Price", value: "$1,34", icon: <AttachMoneyIcon className='token-row-icon' style={{ marginRight: '-10px' }} />, isImage: false },
-    { label: "Volume 24h", value: "$10,345", icon: <TimelineIcon className='token-row-icon' />, isImage: false },
-    { label: "Liquidity", value: "$100,345", icon: <PaymentsIcon className='token-row-icon' />, isImage: false },
-    { label: "Transactions", value: "10,345", icon: <SwapHorizontalCircleIcon className='token-row-icon' />, isImage: false },
+  const initialWalletRowItems = [
+    { label: "Balance", value: denominatedAmountToIntlFormattedAmount(account.balance || 0, 18, 2) + ' EGLD', icon: <XLogo className="text-[rgb(90,214,121)]" />, isImage: false },
+    { label: "Tokens", value: intlNumberFormat(userTokensCount ?? 0, 0, 0), icon: <AnimationIcon className='token-row-icon' />, isImage: false },
+    { label: "NFTs", value: intlNumberFormat(userNFTsCount ?? 0, 0, 0), icon: <WallpaperIcon className='token-row-icon' />, isImage: false },
+    { label: "Shard", value: 'Shard ' + (account.shard?.toString() || '0'), icon: <LayersIcon className='token-row-icon' />, isImage: false },
+    { label: "Nonce", value: intlNumberFormat(account.nonce || 0, 0, 0), icon: <AccountBoxIcon className='token-row-icon' />, isImage: false },
   ];
-  const [tokenRowItems, setTokenRowItems] = useState(initialTokenRowItems);
-
+  const [walletRowItems, setWalletwRowItems] = useState(initialWalletRowItems);
 
   // navigate to swap page is the use is not logged in
   if (!isLoggedIn) {
@@ -71,7 +101,7 @@ const Portfolio = () => {
 
       {/* DEX Token details animated row */}
       <div className='mt-5'>
-        <TokenRow items={tokenRowItems} />
+        <TokenRow items={walletRowItems} />
       </div>
     </div>
   );
