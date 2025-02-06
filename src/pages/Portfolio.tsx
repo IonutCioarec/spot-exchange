@@ -1,6 +1,6 @@
 import 'assets/scss/analytics.scss';
 import { Row, Col } from 'react-bootstrap';
-import UserPortfolio from 'components/Analytics/UserPortfolio';
+import UserPortfolio from 'components/Portfolio/UserPortfolio';
 import TokenRow from 'components/Analytics/TokenRow';
 import { useEffect, useState } from 'react';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
