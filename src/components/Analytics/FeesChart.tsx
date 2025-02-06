@@ -18,6 +18,7 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
   // Function to format the view label
   const formatLabel = (selectedView: ChartViewType) => {
     if (selectedView === '24H') return `Last 24 hours`;
+    if (selectedView === '1W') return `Last week`;
     if (selectedView === '1M') return `Last month`;
     return `All time`;
   };
@@ -52,6 +53,11 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
         formatter: (value: number | string) => {
           const date = new Date(Number(value) * 1000);
           if (view === '24H') return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+          if (view === '1W') {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            return `${day}.${month}`;
+          }
           if (view === '1M') return date.getDate().toString().padStart(2, '0');
           return (date.getMonth() + 1).toString().padStart(2, '0');
         },
@@ -147,6 +153,7 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
         <div className='me-3'>
           <ButtonGroup className='b-r-md p-1' size="small" variant="outlined" aria-label="outlined volume button group" style={{ border: '1px solid rgb(13, 202, 240)' }}>
             <Button className={`btn-intense-default b-r-sm  hover-btn px-3 py-1 ${view === '24H' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('24H')}>24H</Button>
+            <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === '1W' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1W')}>1W</Button>
             <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === '1M' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1M')}>1M</Button>
             <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === 'Full' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('Full')}>Full</Button>
           </ButtonGroup>

@@ -19,4 +19,4 @@ export interface PortfolioProps {
   rewardsBalance: number;
 }
 
-export type ChartViewType = '24H' | '1M' | 'Full';
+export type ChartViewType = '24H' | '1W' | '1M' | 'Full';

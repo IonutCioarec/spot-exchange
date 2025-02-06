@@ -25,7 +25,7 @@ const LiquidityChart: React.FC<LiquidityChartProps> = ({ xData, yData, view, set
     if (selectedView === '24H') {
       return `${day} ${month}, ${year} ` + date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
     }
-    if (selectedView === '1M') {
+    if (selectedView === '1W' || selectedView === '1M') {
       return `${day} ${month}, ${year}`;
     }
     return `${month} ${year}`;
@@ -77,8 +77,12 @@ const LiquidityChart: React.FC<LiquidityChartProps> = ({ xData, yData, view, set
         formatter: (value: number | string) => {
           const date = new Date(Number(value) * 1000);
           if (view === '24H') return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+          if (view === '1W') {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            return `${day}.${month}`;
+          }
           if (view === '1M') {
-            const date = new Date(Number(value) * 1000);
             const day = date.getDate().toString().padStart(2, '0');
             return `${day}`;
           }
@@ -180,6 +184,7 @@ const LiquidityChart: React.FC<LiquidityChartProps> = ({ xData, yData, view, set
         <p className='mb-0 text-silver font-size-md font-bold'>DEX Liquidity </p>
         <ButtonGroup className='b-r-md p-1' size="small" variant="outlined" aria-label="outlined button group" style={{ border: '1px solid #3FAC5A' }}>
           <Button className={`btn-intense-default b-r-sm  hover-btn px-3 py-1 ${view === '24H' ? 'btn-intense-success' : 'text-silver'}`} onClick={() => handleClick('24H')}>24H</Button>
+          <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === '1W' ? 'btn-intense-success' : 'text-silver'}`} onClick={() => handleClick('1W')}>1W</Button>
           <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === '1M' ? 'btn-intense-success' : 'text-silver'}`} onClick={() => handleClick('1M')}>1M</Button>
           <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === 'Full' ? 'btn-intense-success' : 'text-silver'}`} onClick={() => handleClick('Full')}>Full</Button>
         </ButtonGroup>
