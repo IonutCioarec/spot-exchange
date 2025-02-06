@@ -51,7 +51,7 @@ const Portfolio = () => {
     if(address){
       loadUserData();
     }
-  }, []);
+  }, [address]);
 
   // user portfolio data
   const portfolioData = [
@@ -101,7 +101,7 @@ const Portfolio = () => {
 
       {/* DEX Token details animated row */}
       <div className='mt-5'>
-        <TokenRow items={walletRowItems} />
+        <TokenRow items={initialWalletRowItems} />
       </div>
     </div>
   );
