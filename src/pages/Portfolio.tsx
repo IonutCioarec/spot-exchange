@@ -76,11 +76,6 @@ const Portfolio = () => {
   ];
   const [walletRowItems, setWalletwRowItems] = useState(initialWalletRowItems);
 
-  // navigate to swap page is the use is not logged in
-  if (!isLoggedIn) {
-    return <Navigate to="/swap" replace />;
-  }
-
   return (
     <div className="analytics-page-height mb-5">
       <Row id='topSection'>

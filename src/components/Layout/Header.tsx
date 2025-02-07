@@ -73,9 +73,9 @@ export const Header = () => {
               alt='logo'
               className='cursor-pointer ms-1'
               style={{ width: 25, height: 25 }}
-              onClick={() => handleClick('')}
+              onClick={() => handleClick(isLoggedIn ? 'portfolio' : '')}
             />
-            <p className='header-area1-text font-size-xxl mb-0 ms-2' onClick={() => handleClick('')}>
+            <p className='header-area1-text font-size-xxl mb-0 ms-2' onClick={() => handleClick(isLoggedIn ? 'portfolio' : '')}>
               Emeral
               <span className='half-colored-d'>D</span>
               <span className='text-white'>EX</span>
@@ -88,8 +88,8 @@ export const Header = () => {
                   {isLoggedIn && (
                     <Nav.Link
                       as={Link}
-                      to="/"
-                      className={`mx-1 ${location.pathname === '/' ? 'active' : ''}`}
+                      to="/portfolio"
+                      className={`mx-1 ${location.pathname === '/portfolio' ? 'active' : ''}`}
                       onClick={handleSelect}
                     >
                       <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
@@ -97,29 +97,16 @@ export const Header = () => {
                       </p>
                     </Nav.Link>
                   )}
-                  {isLoggedIn ? (
-                    <Nav.Link
-                      as={Link}
-                      to="/swap"
-                      className={`mx-1 ${location.pathname === '/swap' ? 'active' : ''}`}
-                      onClick={handleSelect}
-                    >
-                      <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
-                        Swap
-                      </p>
-                    </Nav.Link>
-                  ) : (
-                    <Nav.Link
-                      as={Link}
-                      to="/"
-                        className={`mx-1 ${(location.pathname === '/' || location.pathname === '/swap') ? 'active' : ''}`}
-                      onClick={handleSelect}
-                    >
-                      <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
-                        Swap
-                      </p>
-                    </Nav.Link>
-                  )}
+                  <Nav.Link
+                    as={Link}
+                    to="/"
+                    className={`mx-1 ${(location.pathname === '/' || location.pathname === '/swap') ? 'active' : ''}`}
+                    onClick={handleSelect}
+                  >
+                    <p className="nav-link mb-0 mt-0 link font-size-sm m-l-n-xs">
+                      Swap
+                    </p>
+                  </Nav.Link>
                   <Nav.Link
                     as={Link}
                     to="/pools"

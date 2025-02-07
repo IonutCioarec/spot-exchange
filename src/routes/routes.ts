@@ -17,6 +17,7 @@ export interface RouteType {
 
 export const routeNames = {
   home: '/',
+  portfolio: '/portfolio',
   swap: '/swap',
   unlock: '/unlock',
   pools: '/pools',
@@ -29,6 +30,11 @@ export const routeNames = {
 export const routes: RouteWithTitleType[] = [
   {
     path: routeNames.home,
+    title: 'Swap',
+    component: Swap
+  },
+  {
+    path: routeNames.portfolio,
     title: 'Portfolio',
     component: Portfolio
   },
@@ -66,6 +72,7 @@ export const routes: RouteWithTitleType[] = [
 
 export enum RouteNamesEnum {
   home = '/',
+  portfolio = '/portfolio',
   swap = '/swap',
   pools = '/pools',
   farms = '/farms',

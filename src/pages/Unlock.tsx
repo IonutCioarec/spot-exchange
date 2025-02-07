@@ -38,10 +38,10 @@ export const Unlock = () => {
   const isMobile = useMobile();
   const navigate = useNavigate();
   const commonProps: CommonPropsType = {
-    callbackRoute: RouteNamesEnum.home,
+    callbackRoute: RouteNamesEnum.portfolio,
     nativeAuth,
     onLoginRedirect: () => {
-      navigate(RouteNamesEnum.pools);
+      navigate(RouteNamesEnum.portfolio);
     }
   };
 
