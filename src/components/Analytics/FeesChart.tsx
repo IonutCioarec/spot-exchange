@@ -4,14 +4,26 @@ import { ButtonGroup, Button } from '@mui/material';
 import { ChartViewType } from 'types/frontendTypes';
 import { abbreviateNumber } from 'utils/formatters';
 
-interface VolumeChartProps {
+interface FeesChartProps {
   xData: number[] | string[];
   yData: number[];
   view: ChartViewType;
   setView: (view: ChartViewType) => void;
+  title: string;
+  subtitle?: string;
+  color1?: string;
+  color2?: string;
+  tooltipBorderColor?: string;
+  viewBtnType?: string;
 }
 
-const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }) => {
+const VolumeChart: React.FC<FeesChartProps> = ({
+  xData, yData, view, setView, title, subtitle, 
+  color1 = 'rgba(13, 202, 240, 0.8)', 
+  color2 = 'rgba(5, 120, 150, 0.4)', 
+  tooltipBorderColor = 'rgb(13, 202, 240)', 
+  viewBtnType = 'btn-intense-info2'
+}) => {
   const [tooltipValue, setTooltipValue] = useState<string>('');
   const [tooltipDate, setTooltipDate] = useState<string>('');
 
@@ -26,7 +38,7 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
   // Function to calculate default tooltip value (sum of yData)
   const getDefaultTooltipValue = () => {
     const sum = yData.reduce((acc, value) => acc + value, 0);
-    return `$${abbreviateNumber(sum, 0)}`;
+    return `${abbreviateNumber(sum, 2)} XPRIZE ($${abbreviateNumber(sum * 0.2, 0)})`;
   };
 
   // Set default tooltip value when component mounts or when data changes
@@ -87,8 +99,8 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
             x2: 0,
             y2: 1,
             colorStops: [
-              { offset: 0, color: 'rgba(13, 202, 240, 0.8)' },
-              { offset: 1, color: 'rgba(5, 120, 150, 0.4)' },
+              { offset: 0, color: color1 },
+              { offset: 1, color: color2 },
             ],
           },
         },
@@ -96,7 +108,7 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
     ],
     tooltip: {
       backgroundColor: 'rgb(20,20,20)',
-      borderColor: 'rgb(13, 202, 240)',
+      borderColor: tooltipBorderColor,
       borderWidth: 1,
       borderRadius: 12,
       textStyle: {
@@ -127,10 +139,11 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
           formattedDate = `${month} ${year}`;
         }
 
-        const value = abbreviateNumber(params[0].data, 0);
-        setTooltipValue(`$${value}`);
+        const amount = abbreviateNumber(params[0].data, 2);
+        const value = abbreviateNumber(params[0].data * 0.2, 0);
+        setTooltipValue(`${amount} XPRIZE ($${value})`);
         setTooltipDate(`${formattedDate}${timeLabel}`);
-        return `${formattedDate}${timeLabel} - $${value}`;
+        return `${formattedDate}${timeLabel} - ${amount} XPRIZE ($${value})`;
       },
     },
   };
@@ -148,23 +161,24 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
 
   return (
     <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
-      <div className='d-flex justify-content-between align-items-center px-5 py-4'>
-        <p className='mb-0 text-silver font-size-md font-bold'>DEX Fees </p>
-        <div className='me-3'>
-          <ButtonGroup className='b-r-md p-1' size="small" variant="outlined" aria-label="outlined volume button group" style={{ border: '1px solid rgb(13, 202, 240)' }}>
-            <Button className={`btn-intense-default b-r-sm  hover-btn px-3 py-1 ${view === '24H' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('24H')}>24H</Button>
-            <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === '1W' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1W')}>1W</Button>
-            <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === '1M' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1M')}>1M</Button>
-            <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === 'Full' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('Full')}>Full</Button>
+      <div className='px-5 py-4 text-center text-white'>
+        <p className='mb-0 font-size-md'>{title}</p>
+        <p className='mb-0 font-size-sm'>{subtitle}</p>
+        <div className='mt-1'>
+          <ButtonGroup className='b-r-md p-1' size="small" variant="outlined" aria-label="outlined volume button group" style={{ border: `1px solid ${tooltipBorderColor}` }}>
+            <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === '24H' ? viewBtnType : 'text-silver'}`} onClick={() => handleClick('24H')}>24H</Button>
+            <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === '1W' ? viewBtnType : 'text-silver'}`} onClick={() => handleClick('1W')}>1W</Button>
+            <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === '1M' ? viewBtnType : 'text-silver'}`} onClick={() => handleClick('1M')}>1M</Button>
+            <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === 'Full' ? viewBtnType : 'text-silver'}`} onClick={() => handleClick('Full')}>Full</Button>
           </ButtonGroup>
         </div>
       </div>
       <div className='px-5'>
-        <p className='text-white mb-0' style={{ fontSize: '50px' }}>{tooltipValue}</p>
+        <p className='text-white mb-0' style={{ fontSize: '22px' }}>{tooltipValue}</p>
         <p className='text-silver font-size-sm mb-0 m-t-n-sm'>{tooltipDate}</p>
       </div>
-      <div className='d-flex m-t-n-md'>
-        <ReactECharts className='font-rose' option={option} style={{ height: '400px', width: '100%' }} onEvents={onEvents} />
+      <div className='d-flex m-t-n-md ms-2'>
+        <ReactECharts className='font-rose' option={option} style={{ height: '340px', width: '90%' }} onEvents={onEvents} />
       </div>
     </div>
   );
