@@ -3,6 +3,7 @@ import ReactECharts from 'echarts-for-react';
 import { ButtonGroup, Button } from '@mui/material';
 import { ChartViewType } from 'types/frontendTypes';
 import { abbreviateNumber } from 'utils/formatters';
+import { useMobile } from 'utils/responsive';
 
 interface VolumeChartProps {
   xData: number[] | string[];
@@ -12,6 +13,7 @@ interface VolumeChartProps {
 }
 
 const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }) => {
+  const isMobile = useMobile();
   const [tooltipValue, setTooltipValue] = useState<string>('');
   const [tooltipDate, setTooltipDate] = useState<string>('');
 
@@ -165,16 +167,16 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
 
   return (
     <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
-      <div className='d-flex justify-content-between align-items-center px-5 py-4'>
-        <p className='mb-0 text-silver font-size-md font-bold'>DEX Volume </p>
-        <ButtonGroup className='b-r-md p-1' size="small" variant="outlined" aria-label="outlined volume button group" style={{ border: '1px solid rgb(13, 202, 240)' }}>
+      <div className={`${isMobile ? 'p-4 text-center' : 'd-flex justify-content-between align-items-center px-5 py-4'}`}>
+        <p className='mb-0 text-white font-size-md font-bold'>DEX Volume </p>
+        <ButtonGroup className={`b-r-md p-1 ${isMobile && 'mt-1'}`} size="small" variant="outlined" aria-label="outlined volume button group" style={{ border: '1px solid rgb(13, 202, 240)' }}>
           <Button className={`btn-intense-default b-r-sm  hover-btn px-3 py-0 ${view === '24H' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('24H')}>24H</Button>
           <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === '1W' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1W')}>1W</Button>
           <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === '1M' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1M')}>1M</Button>
           <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === 'Full' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('Full')}>Full</Button>
         </ButtonGroup>
       </div>
-      <div className='px-5'>
+      <div className={`${isMobile ? 'px-4' : 'px-5'}`}>
         <p className='text-white mb-0' style={{ fontSize: '50px' }}>{tooltipValue}</p>
         <p className='text-silver font-size-sm mb-0 m-t-n-sm'>{tooltipDate}</p>
       </div>
