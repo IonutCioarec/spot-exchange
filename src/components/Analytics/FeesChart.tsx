@@ -3,6 +3,7 @@ import ReactECharts from 'echarts-for-react';
 import { ButtonGroup, Button } from '@mui/material';
 import { ChartViewType } from 'types/frontendTypes';
 import { abbreviateNumber } from 'utils/formatters';
+import { useMobile } from 'utils/responsive';
 
 interface FeesChartProps {
   xData: number[] | string[];
@@ -24,6 +25,7 @@ const VolumeChart: React.FC<FeesChartProps> = ({
   tooltipBorderColor = 'rgb(13, 202, 240)', 
   viewBtnType = 'btn-intense-info2'
 }) => {
+  const isMobile = useMobile();
   const [tooltipValue, setTooltipValue] = useState<string>('');
   const [tooltipDate, setTooltipDate] = useState<string>('');
 
@@ -173,12 +175,12 @@ const VolumeChart: React.FC<FeesChartProps> = ({
           </ButtonGroup>
         </div>
       </div>
-      <div className='px-5'>
+      <div className={`${isMobile ? 'px-4' : 'px-5'}`}>
         <p className='text-white mb-0' style={{ fontSize: '22px' }}>{tooltipValue}</p>
         <p className='text-silver font-size-sm mb-0 m-t-n-sm'>{tooltipDate}</p>
       </div>
-      <div className='d-flex m-t-n-md ms-2'>
-        <ReactECharts className='font-rose' option={option} style={{ height: '340px', width: '90%' }} onEvents={onEvents} />
+      <div className={`m-t-n-md ${isMobile ? 'm-l-n-md' : 'ms-2'}`}>
+        <ReactECharts className='font-rose' option={option} style={{ height: '340px', width: '95%' }} onEvents={onEvents} />
       </div>
     </div>
   );
