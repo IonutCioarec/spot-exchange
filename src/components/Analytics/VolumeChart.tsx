@@ -168,10 +168,10 @@ const VolumeChart: React.FC<VolumeChartProps> = ({ xData, yData, view, setView }
       <div className='d-flex justify-content-between align-items-center px-5 py-4'>
         <p className='mb-0 text-silver font-size-md font-bold'>DEX Volume </p>
         <ButtonGroup className='b-r-md p-1' size="small" variant="outlined" aria-label="outlined volume button group" style={{ border: '1px solid rgb(13, 202, 240)' }}>
-          <Button className={`btn-intense-default b-r-sm  hover-btn px-3 py-1 ${view === '24H' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('24H')}>24H</Button>
-          <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === '1W' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1W')}>1W</Button>
-          <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === '1M' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1M')}>1M</Button>
-          <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-1 ${view === 'Full' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('Full')}>Full</Button>
+          <Button className={`btn-intense-default b-r-sm  hover-btn px-3 py-0 ${view === '24H' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('24H')}>24H</Button>
+          <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === '1W' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1W')}>1W</Button>
+          <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === '1M' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('1M')}>1M</Button>
+          <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === 'Full' ? 'btn-intense-info2' : 'text-silver'}`} onClick={() => handleClick('Full')}>Full</Button>
         </ButtonGroup>
       </div>
       <div className='px-5'>
