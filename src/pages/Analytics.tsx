@@ -18,6 +18,7 @@ import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import PercentIcon from '@mui/icons-material/Percent';
 import AnimationIcon from '@mui/icons-material/Animation';
 import { abbreviateNumber } from 'utils/formatters';
+import TokensList from 'components/Analytics/TokensList';
 
 const Analytics = () => {
   // dex token details data
@@ -360,7 +361,7 @@ const Analytics = () => {
             subtitle='10%'
           />
         </Col>
-        <Col xs={12} lg={4} className='mt-3 mb-5'>
+        <Col xs={12} lg={4} className='mt-3'>
           <FeesChart
             xData={feesStakingData[feesStakingView].xData}
             yData={feesStakingData[feesStakingView].yData}
@@ -375,6 +376,24 @@ const Analytics = () => {
           />
         </Col>
       </Row>
+
+      {/* Dex total fees */}
+      <Row className='mt-4'>
+        <Col xs={12} lg={12} className='mt-3 mb-5'>
+          <TokensList
+            xData={feesPLPData[feesPLPView].xData}
+            yData={feesPLPData[feesPLPView].yData}
+            view={feesPLPView}
+            setView={setFeesPLPView}
+            title='Platform & LP rewards from fees'
+            subtitle='40% + 40%'
+            color1='rgba(13, 240, 153, 0.8)'
+            color2='rgba(5, 150, 36, 0.4)'
+            tooltipBorderColor='#3FAC5A'
+            viewBtnType='btn-intense-success'
+          />
+        </Col>
+        </Row>
     </div>
   );
 }
