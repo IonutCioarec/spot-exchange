@@ -9,7 +9,7 @@ export interface CreatedToken {
   ticker: string;
   decimals: number;
   logo: string;
-  balance: number;
+  balance: string;
 }
 export type CreatedTokens = Record<string, CreatedToken>;
 

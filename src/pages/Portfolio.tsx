@@ -22,11 +22,12 @@ import WallpaperIcon from '@mui/icons-material/Wallpaper';
 import AnimationIcon from '@mui/icons-material/Animation';
 import { CreatedTokens, UserNFTs } from 'types/mvxTypes';
 import { useMvxAPI } from 'hooks/useMvxAPI';
+import UserTokensList from 'components/Portfolio/UserTokensList';
 
 const Portfolio = () => {
   const isLoggedIn = useGetIsLoggedIn();
   const { account, address } = useGetAccountInfo();
-  const [userTokens, setUserTokens] = useState<CreatedTokens>({});
+  const [userTokens, setUserTokens] = useState<any>({});
   const [userTokensCount, setUserTokensCount] = useState<number>(0);
   const [userNFTs, setUserNFTs] = useState<UserNFTs>({});
   const [userNFTsCount, setUserNFTsCount] = useState<number>(0);
@@ -97,6 +98,11 @@ const Portfolio = () => {
       {/* DEX Token details animated row */}
       <div className='mt-5'>
         <TokenRow items={initialWalletRowItems} />
+      </div>
+
+      {/* User Tokens List */}
+      <div className='mt-5'>
+        <UserTokensList tokens={userTokens}/>
       </div>
     </div>
   );
