@@ -94,3 +94,17 @@
   border-bottom: 30px solid transparent;
   z-index: 3;
 }
+
+.overflow-auto {
+  scrollbar-width: none;
+  /* Hide scrollbar */
+  -ms-overflow-style: none;
+  /* Hide scrollbar in IE */
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+}
+
+.overflow-auto::-webkit-scrollbar {
+  display: none;
+}
