@@ -177,22 +177,15 @@ export const Header = () => {
         <div className="bottom-nav">
           <div className="nav-items">
             {isLoggedIn && (
-              <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+              <Link to="/portfolio" className={`nav-item ${location.pathname === '/portfolio' ? 'active' : ''}`}>
                 <FolderSpecialIcon />
                 <p className='mb-0'>Portfolio</p>
               </Link>
             )}
-            {isLoggedIn ? (
-              <Link to="/swap" className={`nav-item ${location.pathname === '/swap' ? 'active' : ''}`}>
-                <BadgeIcon />
-                <p className='mb-0'>Swap</p>
-              </Link>
-            ) : (
-                <Link to="/" className={`nav-item ${(location.pathname === '/' || location.pathname === '/swap') ? 'active' : ''}`}>
-                <BadgeIcon />
-                <p className='mb-0'>Swap</p>
-              </Link>
-            )}
+            <Link to="/" className={`nav-item ${(location.pathname === '/' || location.pathname === '/swap') ? 'active' : ''}`}>
+              <SwapHorizIcon />
+              <p className='mb-0'>Swap</p>
+            </Link>
             <Link
               to="/pools"
               className={`nav-item ${location.pathname === '/pools' ? 'active' : ''}`}
