@@ -12,11 +12,13 @@ import {
   selectPairsSortBy,
   selectPairsSortDirection,
   setPage,
+  setLimit,
   setTokenSearch,
   setLPTokenSearch,
   setMyDeposits,
   setSortBy,
-  setSortDirection
+  setSortDirection,
+  selectPairsLimit
 } from 'storeManager/slices/pairsSlice';
 import { selectPairTokensById, selectLpTokensById, selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import { selectUserTokens, selectNonZeroBalanceLpTokenIds } from 'storeManager/slices/userTokensSlice';
@@ -112,6 +114,7 @@ const Pools = () => {
   const [myDepositsLocal, setMyDepositsLocal] = useState<boolean>(false);
   const sortBy = useSelector(selectPairsSortBy);
   const sortDirection = useSelector(selectPairsSortDirection);
+  const pairsItemsPerPage = useSelector(selectPairsLimit);
 
   // Reset the viewMode to 'all' when the component is first mounted
   useEffect(() => {
@@ -451,7 +454,7 @@ const Pools = () => {
                   <Pool
                     key={`pairs-${index}`}
                     pair={pair}
-                    index={index + (currentPage - 1) * 15}
+                    index={index + (currentPage - 1) * 10}
                     token1Details={allTokens[pair.token1]}
                     token2Details={allTokens[pair.token2]}
                     userToken1Balance={Number(userTokens[pair.token1]?.balance ?? 0)}

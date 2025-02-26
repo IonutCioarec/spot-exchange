@@ -42,6 +42,9 @@ const pairsSlice = createSlice({
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
     },
+    setLimit: (state, action: PayloadAction<number>) => {
+      state.limit = action.payload;
+    },
     setMyDeposits: (state, action: PayloadAction<boolean>) => {
       state.my_deposits = action.payload;
     },
@@ -54,13 +57,14 @@ const pairsSlice = createSlice({
   },
 });
 
-export const { setPairs, setStatus, setTokenSearch, setPage, setMyDeposits, setLPTokenSearch, setSortBy, setSortDirection } = pairsSlice.actions;
+export const { setPairs, setStatus, setTokenSearch, setPage, setMyDeposits, setLPTokenSearch, setSortBy, setSortDirection, setLimit } = pairsSlice.actions;
 
 // Selectors
 export const selectPairs = (state: any) => state.pairs.pairs;
 export const selectPairsStatus = (state: any) => state.pairs.status;
 export const selectPairsPage = (state: any) => state.pairs.page;
 export const selectPairsTotalPages = (state: any) => state.pairs.total_pages;
+export const selectPairsLimit = (state: any) => state.pairs.limit;
 export const selectPairsSearchInput = (state: any) => state.pairs.token_search;
 export const selectPairsLpSearchInput = (state: any) => state.pairs.lp_token_search;
 export const selectPairsMyDeposits = (state: any) => state.pairs.my_deposits;
