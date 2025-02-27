@@ -19,8 +19,9 @@ export const useBackendAPI = () => {
 
       let lp_tokens = <string[]>[];
       if (lp_token_search?.length) {
+        url += '&lp_token_search=';
         lp_token_search.map((token: string) => {
-          url += `&lp_token_search=${token}`;
+          url += `${token},`;
           lp_tokens.push(token);
         })
       }

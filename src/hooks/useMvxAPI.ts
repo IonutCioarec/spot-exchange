@@ -41,7 +41,11 @@ export const useMvxAPI = () => {
         } else {
           pairTokens[token.token_id] = { balance };
         }
+        // Example data, will be removed when the sc are connected with the backend
         lpTokens['WTAOWEGLD-5833e2'] = { balance: '20' };
+        lpTokens['XGTXCR-386762'] = { balance: '20000' };
+        lpTokens['TADAWEGLD-e427f1'] = { balance: '4' };
+        lpTokens['CEGLDXCR-701cd5'] = { balance: '213' };
         pairTokens['WTAO-a0cc6b'] = { balance: '2000' };
       });
 
