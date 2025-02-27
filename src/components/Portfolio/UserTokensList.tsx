@@ -156,7 +156,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
   return (
     <div className='b-r-sm'>
       <div className={`${isMobile ? '' : 'd-flex'} justify-content-between align-items-center`}>
-        <p className='h3 mt-1 mb-0 text-white'>Tokens ({processedTokens.length})</p>
+        <p className='h3 mt-1 mb-0 text-white'>Your Tokens ({processedTokens.length})</p>
         <div className='d-flex justify-content-end align-items-center'>
           <span className={`${isMobile ? 'font-size-sm' : 'font-size-md'} font-regular text-white m-r-n-xs`} style={{ textWrap: 'nowrap' }}>Sort-by: </span>
           <Select
