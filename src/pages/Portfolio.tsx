@@ -3,28 +3,25 @@ import { Row, Col } from 'react-bootstrap';
 import UserPortfolio from 'components/Portfolio/UserPortfolio';
 import TokenRow from 'components/Analytics/TokenRow';
 import { useEffect, useState } from 'react';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import RecyclingIcon from '@mui/icons-material/Recycling';
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import ContactsIcon from '@mui/icons-material/Contacts';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import PaymentsIcon from '@mui/icons-material/Payments';
-import { abbreviateNumber } from 'utils/formatters';
-import { useGetAccountInfo, useGetIsLoggedIn, useGetAccountProvider } from 'hooks';
-import { Navigate } from 'react-router-dom';
+import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
 import XLogo from 'assets/img/xlogo.svg?react';
 import { denominatedAmountToIntlFormattedAmount, intlNumberFormat } from 'utils/formatters';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LayersIcon from '@mui/icons-material/Layers';
 import WallpaperIcon from '@mui/icons-material/Wallpaper';
 import AnimationIcon from '@mui/icons-material/Animation';
-import { CreatedTokens, UserNFTs } from 'types/mvxTypes';
+import { UserNFTs } from 'types/mvxTypes';
 import { useMvxAPI } from 'hooks/useMvxAPI';
 import UserTokensList from 'components/Portfolio/UserTokensList';
+import UserPoolsList from 'components/Portfolio/UserPoolsList';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectNonZeroBalanceLpTokenIds, selectUserLpTokens } from 'storeManager/slices/userTokensSlice';
+import { useBackendAPI } from 'hooks/useBackendAPI';
+import { PairsState } from 'types/backendTypes';
 
 const Portfolio = () => {
+  const dispatch = useDispatch();
+  const { getTokens, getPairs } = useBackendAPI();
   const isLoggedIn = useGetIsLoggedIn();
   const { account, address } = useGetAccountInfo();
   const [userTokens, setUserTokens] = useState<any>({});
@@ -32,6 +29,26 @@ const Portfolio = () => {
   const [userNFTs, setUserNFTs] = useState<UserNFTs>({});
   const [userNFTsCount, setUserNFTsCount] = useState<number>(0);
   const { getAllUserTokens, getAllUserNFTs } = useMvxAPI();
+  const userLPTokens = useSelector(selectUserLpTokens);
+  const [userPairs, setUserPairs] = useState<PairsState>({
+    pairs: [],
+    page: 1,
+    limit: 50,
+    total: 0,
+    total_pages: 1,
+    token_search: '',
+    my_deposits: false,
+    sort_by: 'liquidity',
+    sort_direction: 'desc',
+    lp_token_search: [],
+    status: 'succeeded',
+  });
+  const lpSearchInput = useSelector(selectNonZeroBalanceLpTokenIds);
+  const [userFees24h, setUserFees24h] = useState<Record<string, { balance: number }>>({
+    'abcd-1234': { balance: 234 },
+    'rtefs-1234': { balance: 634 },
+  });
+
 
   // load the tokens created by the user through the api
   const loadUserData = async () => {
@@ -46,13 +63,19 @@ const Portfolio = () => {
       setUserNFTsCount(Object.keys(userNftsData).length);
       setUserNFTs(userNftsData);
     }
+
+    if (lpSearchInput && lpSearchInput.length > 0) {
+      await getPairs(1, 50, 'liquidity', 'desc', '', true, lpSearchInput).then((r: any) => {
+        setUserPairs(r);
+      });
+    }
   };
 
   useEffect(() => {
-    if(address){
+    if (address) {
       loadUserData();
     }
-  }, [address]);
+  }, [address, lpSearchInput]);
 
   // user portfolio data
   const portfolioData = [
@@ -102,7 +125,16 @@ const Portfolio = () => {
 
       {/* User Tokens List */}
       <div className='mt-5'>
-        <UserTokensList tokens={userTokens}/>
+        <UserTokensList tokens={userTokens} />
+      </div>
+
+      {/* User Pools List */}
+      <div className='mt-5'>
+        <UserPoolsList
+          pairs={userPairs}
+          userLpTokenBalance={userLPTokens}
+          userFees24h={userFees24h}
+        />
       </div>
     </div>
   );
