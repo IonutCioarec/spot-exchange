@@ -1,4 +1,6 @@
 import BigNumber from 'bignumber.js';
+import { getAmountFromPercentageBigNumber, getPercentageBigNumber } from './calculs';
+import { Pair, Token } from 'types/backendTypes';
 
 export const denominatedAmountToAmount = (amount: number | string, denomination: number, decimals: number) => {
   return new BigNumber(amount).shiftedBy(-denomination).decimalPlaces(decimals, BigNumber.ROUND_DOWN).toString(10);
@@ -84,4 +86,60 @@ export const abbreviateNumber = (num: number, decimals = 2): string => {
   } else {
     return num.toFixed(decimals); // Less than 1K
   }
+};
+
+// Get the pool user liquidity
+export const getFormattedUserPoolLiquidity = (userLpTokenBalance: string, tokenSupply: string, tokenDecimals: number, tvl: string, decimals: number = 3): string => {
+  const liquidity = intlFormatSignificantDecimals(
+    getAmountFromPercentageBigNumber(
+      getPercentageBigNumber(
+        Number(userLpTokenBalance) || 0,
+        (Number(denominatedAmountToAmount(tokenSupply || 0, tokenDecimals || 18, 20)) ?? 0)
+      ),
+      Number(tvl)
+    ), decimals, decimals)
+
+  return liquidity;
+}
+
+// Get a list with all the user pools liquidities
+export const getUserPoolsLiquidityList = (
+  pairs: Pair[],
+  userLpBalances: Record<string, string>, // Object mapping LP token ID to user balance
+  allTokens: Record<string, { supply: string; decimals: number }>
+): Record<string, string> => {
+  return pairs.reduce((acc, pair) => {
+    const userBalance = userLpBalances[pair.lp_token_id] || "0";
+    const tokenData = allTokens[pair.lp_token_id] || { supply: "0", decimals: 18 };
+
+    acc[pair.lp_token_id] = getFormattedUserPoolLiquidity(
+      userBalance,
+      tokenData.supply,
+      tokenData.decimals,
+      pair.tvl
+    );
+
+    return acc;
+  }, {} as Record<string, string>);
+};
+
+// Get the user total pools liquidity
+export const getUserPoolsLiquidityTotal = (
+  pairs: Pair[],
+  userLpBalances: Record<string, string>,
+  allTokens: Record<string, Token>,
+  decimals: number = 3
+): string => {
+  const totalLiquidity = pairs.reduce((sum, pair) => {
+    const userLiquidity = getFormattedUserPoolLiquidity(
+      userLpBalances[pair.lp_token_id] || "0",
+      allTokens[pair.lp_token_id]?.supply || "0",
+      allTokens[pair.lp_token_id]?.decimals || 18,
+      pair.tvl,
+      decimals
+    );
+    return sum + Number(userLiquidity);
+  }, 0);
+
+  return intlFormatSignificantDecimals(totalLiquidity, decimals, decimals);
 };

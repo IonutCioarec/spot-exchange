@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
+import { denominatedAmountToAmount } from './formatters';
 
 export const getPercentage = (amount: number, totalAmount: number): number => {
   const percentage = totalAmount > 0 ? (amount * 100) / totalAmount : 0;
@@ -31,4 +32,17 @@ export const getAmountFromPercentageBigNumber = (percentage: number, totalAmount
 export function CopyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
   toast.success('Successfully copied', { duration: 3000 });
+}
+
+// Get the pool user liquidity
+export const getUserPoolLiquidity = (userLpTokenBalance: string, supply: string, decimals: number, tvl: string): number => {
+  const liquidity = getAmountFromPercentageBigNumber(
+    getPercentageBigNumber(
+      Number(userLpTokenBalance) || 0,
+      (Number(denominatedAmountToAmount(supply || 0, decimals || 18, 20)) ?? 0)
+    ),
+    Number(tvl)
+  );
+
+  return liquidity;
 }
