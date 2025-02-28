@@ -46,3 +46,13 @@ export const getUserPoolLiquidity = (userLpTokenBalance: string, supply: string,
 
   return liquidity;
 }
+
+// Get the pool share of the user
+export const getUserPoolShare = (userLpTokenBalance: string, supply: string, decimals: number): number => {
+  const share = getPercentageBigNumber(
+    Number(userLpTokenBalance) || 0,
+    (Number(denominatedAmountToAmount(supply || 0, decimals || 18, 20)) ?? 0)
+  );
+
+  return share;
+}

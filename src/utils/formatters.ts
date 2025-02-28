@@ -143,3 +143,13 @@ export const getUserPoolsLiquidityTotal = (
 
   return intlFormatSignificantDecimals(totalLiquidity, decimals, decimals);
 };
+
+// Get the formatted pool share of the user
+export const getFormattedUserPoolShare = (userLpTokenBalance: string, tokenSupply: string, tokenDecimals: number, decimals: number = 3): string => {
+  const share = intlFormatSignificantDecimals(getPercentageBigNumber(
+    Number(userLpTokenBalance) || 0,
+    (Number(denominatedAmountToAmount(tokenSupply || 0, tokenDecimals || 18, 20)) ?? 0)
+  ), decimals)
+
+  return share;
+}
