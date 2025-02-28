@@ -5,7 +5,7 @@ import TokenRow from 'components/Analytics/TokenRow';
 import { useEffect, useState } from 'react';
 import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
 import XLogo from 'assets/img/xlogo.svg?react';
-import { denominatedAmountToIntlFormattedAmount, intlNumberFormat } from 'utils/formatters';
+import { denominatedAmountToIntlFormattedAmount, getUserPoolsLiquidityTotal, intlNumberFormat } from 'utils/formatters';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LayersIcon from '@mui/icons-material/Layers';
 import WallpaperIcon from '@mui/icons-material/Wallpaper';
@@ -18,6 +18,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectNonZeroBalanceLpTokenIds, selectUserLpTokens } from 'storeManager/slices/userTokensSlice';
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import { PairsState } from 'types/backendTypes';
+import WorkspacesIcon from '@mui/icons-material/Workspaces';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 const Portfolio = () => {
   const dispatch = useDispatch();
@@ -44,10 +51,11 @@ const Portfolio = () => {
     status: 'succeeded',
   });
   const lpSearchInput = useSelector(selectNonZeroBalanceLpTokenIds);
-  const [userFees24h, setUserFees24h] = useState<Record<string, { balance: number }>>({
-    'abcd-1234': { balance: 234 },
-    'rtefs-1234': { balance: 634 },
-  });
+  const [userFees24h, setUserFees24h] = useState<Record<string, { balance: number }>>({});
+  const [userFees7D, setUserFees7D] = useState<Record<string, { balance: number }>>({});
+  const [userFees30D, setUserFees30D] = useState<Record<string, { balance: number }>>({});
+  const [userFees, setUserFees] = useState<Record<string, { balance: number }>>({});
+  const allTokens = useSelector(selectAllTokensById);
 
 
   // load the tokens created by the user through the api
@@ -90,7 +98,7 @@ const Portfolio = () => {
     { name: 'Boosted Farms', value: 26.07 }
   ];
 
-  // dex token details data
+  // user wallet details data
   const initialWalletRowItems = [
     { label: "Balance", value: denominatedAmountToIntlFormattedAmount(account.balance || 0, 18, 2) + ' EGLD', icon: <XLogo className="text-[rgb(90,214,121)]" />, isImage: false },
     { label: "Tokens", value: intlNumberFormat(userTokensCount ?? 0, 0, 0), icon: <AnimationIcon className='token-row-icon' />, isImage: false },
@@ -98,7 +106,19 @@ const Portfolio = () => {
     { label: "Shard", value: 'Shard ' + (account.shard?.toString() || '0'), icon: <LayersIcon className='token-row-icon' />, isImage: false },
     { label: "Nonce", value: intlNumberFormat(account.nonce || 0, 0, 0), icon: <AccountBoxIcon className='token-row-icon' />, isImage: false },
   ];
-  const [walletRowItems, setWalletwRowItems] = useState(initialWalletRowItems);
+  const [walletRowItems, setWalletRowItems] = useState(initialWalletRowItems);
+
+
+  // user pools details data
+  const initialPoolsRowItems = [
+    { label: "Your Pools", value: userPairs?.pairs.length.toString(), icon: <WorkspacesIcon className="token-row-icon" />, isImage: false },
+    { label: "Total Liquidity", value: '$' + getUserPoolsLiquidityTotal(userPairs.pairs, userLPTokens, allTokens), icon: <PaymentsIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Fees (24h)", value: '$' + intlNumberFormat(Object.values(userFees24h).reduce((sum, item) => sum + (item.balance || 0), 0) ?? 0, 2, 2), icon: <AccessTimeIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Fees (7D)", value: '$' + intlNumberFormat(Object.values(userFees7D).reduce((sum, item) => sum + (item.balance || 0), 0) ?? 0, 2, 2), icon: <CalendarTodayIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Fees (30D)", value: '$' + intlNumberFormat(Object.values(userFees30D).reduce((sum, item) => sum + (item.balance || 0), 0) ?? 0, 2, 2), icon: <DateRangeIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Fees", value: '$' + intlNumberFormat(Object.values(userFees).reduce((sum, item) => sum + (item.balance || 0), 0) ?? 0, 2, 2), icon: <MonetizationOnIcon className='token-row-icon' />, isImage: false },
+  ];
+  const [poolsRowItems, setPoolsRowItems] = useState(initialWalletRowItems);
 
   return (
     <div className="analytics-page-height mb-5">
@@ -118,7 +138,7 @@ const Portfolio = () => {
         <UserPortfolio data={portfolioData} rewardsData={rewardsData} walletBalance={453.78} rewardsBalance={153.78} />
       </div>
 
-      {/* DEX Token details animated row */}
+      {/* User wallet details animated row */}
       <div className='mt-5'>
         <TokenRow items={initialWalletRowItems} />
       </div>
@@ -126,6 +146,11 @@ const Portfolio = () => {
       {/* User Tokens List */}
       <div className='mt-5'>
         <UserTokensList tokens={userTokens} />
+      </div>
+
+      {/* User pools details animated row */}
+      <div className='mt-5'>
+        <TokenRow items={initialPoolsRowItems} />
       </div>
 
       {/* User Pools List */}
