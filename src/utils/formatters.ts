@@ -105,7 +105,7 @@ export const getFormattedUserPoolLiquidity = (userLpTokenBalance: string, tokenS
 // Get a list with all the user pools liquidities
 export const getUserPoolsLiquidityList = (
   pairs: Pair[],
-  userLpBalances: Record<string, {balance: string}>,
+  userLpBalances: Record<string, { balance: string }>,
   allTokens: Record<string, { supply: string; decimals: number }>
 ): Record<string, string> => {
   return pairs.reduce((acc, pair) => {
@@ -126,7 +126,7 @@ export const getUserPoolsLiquidityList = (
 // Get the user total pools liquidity
 export const getUserPoolsLiquidityTotal = (
   pairs: Pair[],
-  userLpBalances: Record<string, {balance: string}>,
+  userLpBalances: Record<string, { balance: string }>,
   allTokens: Record<string, Token>,
   decimals: number = 3
 ): string => {
@@ -138,7 +138,9 @@ export const getUserPoolsLiquidityTotal = (
       pair.tvl,
       decimals
     );
-    return sum + Number(userLiquidity);
+
+    const numericLiquidity = parseFloat(userLiquidity.replace(/,/g, '')) || 0;
+    return sum + numericLiquidity;
   }, 0);
 
   return intlFormatSignificantDecimals(totalLiquidity, decimals, decimals);
