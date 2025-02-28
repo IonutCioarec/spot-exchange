@@ -1,20 +1,20 @@
 import { useState, useMemo, useRef } from 'react';
 import { Button, List, TextField } from '@mui/material';
-import { denominatedAmountToAmount, getFormattedUserPoolLiquidity, intlFormatSignificantDecimals } from 'utils/formatters';
+import { getFormattedUserPoolLiquidity, getFormattedUserPoolShare } from 'utils/formatters';
 import { Search } from '@mui/icons-material';
 import SimpleLoader from 'components/SimpleLoader';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import { useSelector } from 'react-redux';
 import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
-import { Pair, PairsState, Token } from 'types/backendTypes';
+import { Pair, PairsState } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { Select, MenuItem } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
-import { getAmountFromPercentageBigNumber, getPercentageBigNumber, getUserPoolLiquidity } from 'utils/calculs';
+import { getUserPoolLiquidity, getUserPoolShare } from 'utils/calculs';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -65,14 +65,8 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
     return filtered.sort((a: Pair, b: Pair) => {
       const yourLiquidityA = getUserPoolLiquidity(userLpTokenBalance[a.lp_token_id]?.balance, allTokens[a.lp_token_id]?.supply, allTokens[a.lp_token_id]?.decimals, a?.tvl);
       const yourLiquidityB = getUserPoolLiquidity(userLpTokenBalance[b.lp_token_id]?.balance, allTokens[b.lp_token_id]?.supply, allTokens[b.lp_token_id]?.decimals, b?.tvl);
-      const poolShareA = getPercentageBigNumber(
-        Number(userLpTokenBalance[a.lp_token_id]?.balance) || 0,
-        (Number(denominatedAmountToAmount(allTokens[a.lp_token_id]?.supply || 0, allTokens[a.lp_token_id]?.decimals || 18, 20)) ?? 0)
-      );
-      const poolShareB = getPercentageBigNumber(
-        Number(userLpTokenBalance[b.lp_token_id]?.balance) || 0,
-        (Number(denominatedAmountToAmount(allTokens[b.lp_token_id]?.supply || 0, allTokens[b.lp_token_id]?.decimals || 18, 20)) ?? 0)
-      );
+      const poolShareA = getUserPoolShare(userLpTokenBalance[a.lp_token_id]?.balance, allTokens[a.lp_token_id]?.supply, allTokens[a.lp_token_id]?.decimals);
+      const poolShareB = getUserPoolShare(userLpTokenBalance[b.lp_token_id]?.balance, allTokens[b.lp_token_id]?.supply, allTokens[b.lp_token_id]?.decimals);
       const feesA24h = userFees24h[a.lp_token_id]?.balance || 0;
       const feesB24h = userFees24h[b.lp_token_id]?.balance || 0;
 
@@ -291,14 +285,10 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                       {sortOption === 'lowestPoolShare' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">
-                      {intlFormatSignificantDecimals(getPercentageBigNumber(
-                        Number(userLpTokenBalance[pair.lp_token_id]?.balance) || 0,
-                        (Number(denominatedAmountToAmount(allTokens[pair.lp_token_id]?.supply || 0, allTokens[pair.lp_token_id]?.decimals || 18, 20)) ?? 0)
-                      ), 3)
-                      }%
+                      {getFormattedUserPoolShare(userLpTokenBalance[pair.lp_token_id]?.balance, allTokens[pair.lp_token_id]?.supply, allTokens[pair.lp_token_id]?.decimals)}%
                     </p>
                   </div>
-                  
+
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '18%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestYourLiquidity' || sortOption === 'lowestYourLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Your Liquidity
