@@ -36,7 +36,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
   const isTablet = useTablet();
 
   const [searchInput, setSearchInput] = useState('');
-  const [sortOption, setSortOption] = useState('highestYourLiquidity');
+  const [sortOption, setSortOption] = useState('highestYourStaked');
   const [currentPage, setCurrentPage] = useState(1);
 
   // Convert pools object to an array
@@ -156,18 +156,18 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
             }}
           >
             <MenuItem value="alphabetically" className={`font-rose select-menu-item font-size-sm ${sortOption === 'alphabetically' ? 'active' : ''}`}>Alphabetically</MenuItem>
-            <MenuItem value="highestYourLiquidity" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestYourLiquidity' ? 'active' : ''}`}>Your Highest Liquidity</MenuItem>
-            <MenuItem value="lowestYourLiquidity" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestYourLiquidity' ? 'active' : ''}`}>Your Lowest Liquidity</MenuItem>
-            <MenuItem value="highestYourFees24h" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestYourFees24h' ? 'active' : ''}`}>Your Highest Fees 24h</MenuItem>
-            <MenuItem value="lowestYourFees24h" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestYourFees24h' ? 'active' : ''}`}> Your Lowest Fees 24h</MenuItem>
-            <MenuItem value="highestPoolShare" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestPoolShare' ? 'active' : ''}`}>Highest Pool Share</MenuItem>
-            <MenuItem value="lowestPoolShare" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestPoolShare' ? 'active' : ''}`}>Lowest Pool Share</MenuItem>
-            <MenuItem value="highestLiquidity" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestLiquidity' ? 'active' : ''}`}>Highest Liquidity</MenuItem>
-            <MenuItem value="lowestLiquidity" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestLiquidity' ? 'active' : ''}`}>Lowest Liquidity</MenuItem>
-            <MenuItem value="highestFees24h" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestFees24h' ? 'active' : ''}`}>Highest Fees 24h</MenuItem>
-            <MenuItem value="lowestFees24h" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestFees24h' ? 'active' : ''}`}>Lowest Fees 24h</MenuItem>
-            <MenuItem value="highestVolume24h" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestVolume24h' ? 'active' : ''}`}>Highest Volume 24h</MenuItem>
-            <MenuItem value="lowestVolume24h" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestVolume24h' ? 'active' : ''}`}>Lowest Volume 24h</MenuItem>
+            <MenuItem value="highestYourStaked" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestYourStaked' ? 'active' : ''}`}>Your Highest Staked</MenuItem>
+            <MenuItem value="lowestYourStaked" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestYourStaked' ? 'active' : ''}`}>Your Lowest Staked</MenuItem>
+            <MenuItem value="highestYourRewards" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestYourRewards' ? 'active' : ''}`}>Your Highest Rewards</MenuItem>
+            <MenuItem value="lowestYourRewards" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestYourRewards' ? 'active' : ''}`}> Your Lowest Rewards</MenuItem>
+            <MenuItem value="highestStaked" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestStaked' ? 'active' : ''}`}>Highest Staked</MenuItem>
+            <MenuItem value="lowestStaked" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestStaked' ? 'active' : ''}`}>Lowest Staked</MenuItem>
+            <MenuItem value="highestRewards" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestRewards' ? 'active' : ''}`}>Highest Rewards</MenuItem>
+            <MenuItem value="lowestRewards" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestRewards' ? 'active' : ''}`}>Lowest Rewards</MenuItem>
+            <MenuItem value="highestFeesAPR" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestFeesAPR' ? 'active' : ''}`}>Highest Fees APR</MenuItem>
+            <MenuItem value="lowestFeesAPR" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestFeesAPR' ? 'active' : ''}`}>Lowest Fees APR</MenuItem>
+            <MenuItem value="highestBoostedAPR" className={`font-rose select-menu-item font-size-sm ${sortOption === 'highestBoostedAPR' ? 'active' : ''}`}>Highest Boosted APR</MenuItem>
+            <MenuItem value="lowestBoostedAPR" className={`font-rose select-menu-item font-size-sm ${sortOption === 'lowestBoostedAPR' ? 'active' : ''}`}>Lowest Boosted APR</MenuItem>
           </Select>
           <TextField
             fullWidth
@@ -272,10 +272,10 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '18%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestYourLiquidity' || sortOption === 'lowestYourLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestYourStaked' || sortOption === 'lowestYourStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Your Staked
-                      {sortOption === 'highestYourLiquidity' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestYourLiquidity' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'highestYourStaked' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestYourStaked' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">
                       $
@@ -292,10 +292,10 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   </div>
 
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestYourFees24h' || sortOption === 'lowestYourFees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestYourRewards' || sortOption === 'lowestYourRewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Your Rewards
-                      {sortOption === 'highestYourFees24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestYourFees24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'highestYourRewards' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestYourRewards' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">
                       $
@@ -312,10 +312,10 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   </div>
 
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '18%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestLiquidity' || sortOption === 'lowestLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestStaked' || sortOption === 'lowestStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Total Staked
-                      {sortOption === 'highestLiquidity' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestLiquidity' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'highestStaked' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestStaked' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">
                       $
@@ -332,10 +332,10 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   </div>
 
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestFees24h' || sortOption === 'lowestFees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestRewards' || sortOption === 'lowestRewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Total Rewards
-                      {sortOption === 'highestFees24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestFees24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'highestRewards' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestRewards' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">
                       $
@@ -352,10 +352,10 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   </div>
 
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestPoolShare' || sortOption === 'lowestPoolShare' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestFeesAPR' || sortOption === 'lowestFeesAPR' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Fees APR
-                      {sortOption === 'highestPoolShare' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestPoolShare' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'highestFeesAPR' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestFeesAPR' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">
                       {intlNumberFormat(Number(farm?.feesAPR))}%
@@ -363,10 +363,10 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   </div>
 
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestVolume24h' || sortOption === 'lowestVolume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestBoostedAPR' || sortOption === 'lowestBoostedAPR' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Boosted APR
-                      {sortOption === 'highestVolume24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestVolume24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'highestBoostedAPR' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestBoostedAPR' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">
                       {intlNumberFormat(Number(farm?.boostedAPR))}%
