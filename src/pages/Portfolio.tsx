@@ -32,6 +32,7 @@ import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import UserFarmsList from 'components/Portfolio/UserFarmsList';
 
 const Portfolio = () => {
   const dispatch = useDispatch();
@@ -182,6 +183,14 @@ const Portfolio = () => {
       {/* User farms details animated row */}
       <div className='mt-5'>
         <TokenRow items={initialFarmsRowItems} />
+      </div>
+
+      {/* User Farms List */}
+      <div className='mt-5'>
+        <UserFarmsList
+          farms={farmsDummy}
+          userData={userFarmsDummy}
+        />
       </div>
     </div>
   );
