@@ -101,3 +101,14 @@ export interface Farm {
 }
 
 export type FarmsState = Record<string, Farm>;
+
+interface UserFarm {
+  totalStaked: string;
+  totalRewards: string;
+  totalRewardsList: {
+    token: string;
+    value: string;
+  }[];
+}
+
+export type UserFarmsState = Record<string, UserFarm>;
