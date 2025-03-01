@@ -86,3 +86,18 @@ export interface TokensState {
   searchInput: string;
   status: 'loading' | 'succeeded' | 'failed';
 }
+
+export interface Farm {
+  token1: string;
+  token2: string;
+  feesAPR: string;
+  boostedAPR: string;
+  totalAPR: string;
+  totalStaked: string;
+  totalRewards: string;
+  stakingUsers: number;
+  lp_token_id: string;
+  totalRewardsList: { token: string; value: string }[];
+}
+
+export type FarmsState = Record<string, Farm>;
