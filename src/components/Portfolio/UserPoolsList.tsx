@@ -236,7 +236,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '160px' : '15%' }}>
+                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '185px' : '15%' }}>
                   <img
                     src={allTokens[pair.token1]?.logo_url ?? defaultTokenValues.image_url}
                     alt={pair.token1}
