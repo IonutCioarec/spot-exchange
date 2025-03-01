@@ -1,4 +1,4 @@
-import { FarmsState } from "types/backendTypes"
+import { FarmsState, UserFarmsState } from "types/backendTypes"
 
 export const farmsDummy: FarmsState = {
   "TADAWEGLD-e427f1": {
@@ -35,11 +35,11 @@ export const farmsDummy: FarmsState = {
     "totalRewardsList": [
       {
         token: 'CEGLDXCR-701cd5',
-        value: '1200'
+        value: '800'
       },
       {
         token: 'PRIZEEGLD-e427f1',
-        value: '600'
+        value: '800'
       }
     ]
   },
@@ -56,11 +56,11 @@ export const farmsDummy: FarmsState = {
     "totalRewardsList": [
       {
         token: 'XGTXCR-386762',
-        value: '1200'
+        value: '2100'
       },
       {
         token: 'PRIZEEGLD-e427f1',
-        value: '600'
+        value: '1540'
       }
     ]
   },
@@ -77,12 +77,47 @@ export const farmsDummy: FarmsState = {
     "totalRewardsList": [
       {
         token: 'WTAOWEGLD-5833e2',
-        value: '1200'
+        value: '150'
       },
       {
         token: 'PRIZEEGLD-e427f1',
-        value: '600'
+        value: '80'
       }
     ]
   }
+};
+
+export const userFarmsDummy: UserFarmsState = {
+  "TADAWEGLD-e427f1": {
+    totalStaked: "18889.22",
+    totalRewards: "19.28",
+    totalRewardsList: [
+      { token: "TADAWEGLD-e427f1", value: "120" },
+      { token: "PRIZEEGLD-e427f1", value: "60" },
+    ],
+  },
+  "CEGLDXCR-701cd5": {
+    totalStaked: "6983.83",
+    totalRewards: "8.63",
+    totalRewardsList: [
+      { token: "CEGLDXCR-701cd5", value: "80" },
+      { token: "PRIZEEGLD-e427f1", value: "80" },
+    ],
+  },
+  "XGTXCR-386762": {
+    totalStaked: "35498.00",
+    totalRewards: "105.28",
+    totalRewardsList: [
+      { token: "XGTXCR-386762", value: "210" },
+      { token: "PRIZEEGLD-e427f1", value: "154" },
+    ],
+  },
+  "WTAOWEGLD-5833e2": {
+    totalStaked: "987.31",
+    totalRewards: "0.98",
+    totalRewardsList: [
+      { token: "WTAOWEGLD-5833e2", value: "15" },
+      { token: "PRIZEEGLD-e427f1", value: "0.8" },
+    ],
+  },
 };
