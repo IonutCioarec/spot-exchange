@@ -25,6 +25,13 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { farmsDummy, userFarmsDummy } from 'utils/dummyData';
+import AgricultureIcon from '@mui/icons-material/Agriculture';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 const Portfolio = () => {
   const dispatch = useDispatch();
@@ -118,7 +125,17 @@ const Portfolio = () => {
     { label: "Total Fees (30D)", value: '$' + intlNumberFormat(Object.values(userFees30D).reduce((sum, item) => sum + (item.balance || 0), 0) ?? 0, 2, 2), icon: <DateRangeIcon className='token-row-icon' />, isImage: false },
     { label: "Total Fees", value: '$' + intlNumberFormat(Object.values(userFees).reduce((sum, item) => sum + (item.balance || 0), 0) ?? 0, 2, 2), icon: <MonetizationOnIcon className='token-row-icon' />, isImage: false },
   ];
-  const [poolsRowItems, setPoolsRowItems] = useState(initialWalletRowItems);
+  const [poolsRowItems, setPoolsRowItems] = useState(initialPoolsRowItems);
+
+  // user pools details data
+  const initialFarmsRowItems = [
+    { label: "Your Farms", value: Object.values(farmsDummy).length.toString(), icon: <AgricultureIcon className="token-row-icon" />, isImage: false },
+    { label: "Total Staked", value: '$' + intlNumberFormat(Object.values(userFarmsDummy).reduce((sum, item) => sum + (Number(item.staked) || 0), 0) ?? 0, 2, 2), icon: <AccountBalanceIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Rewards", value: '$' + intlNumberFormat(Object.values(userFarmsDummy).reduce((sum, item) => sum + (Number(item.rewards) || 0), 0) ?? 0, 2, 2), icon: <CardGiftcardIcon className='token-row-icon' />, isImage: false },
+    { label: "Highest Staked", value: '$' + intlNumberFormat(Math.max(...Object.values(userFarmsDummy).map(farm => parseFloat(farm.staked) || 0)), 2, 2), icon: <TrendingUpIcon className='token-row-icon' />, isImage: false },
+    { label: "Highest Reward", value: '$' + intlNumberFormat(Math.max(...Object.values(userFarmsDummy).map(farm => parseFloat(farm.rewards) || 0)), 2, 2), icon: <EmojiEventsIcon className='token-row-icon' />, isImage: false },
+  ];
+  const [farmsRowItems, setFarmsRowItems] = useState(initialFarmsRowItems);
 
   return (
     <div className="analytics-page-height mb-5">
@@ -160,6 +177,11 @@ const Portfolio = () => {
           userLpTokenBalance={userLPTokens}
           userFees24h={userFees24h}
         />
+      </div>
+
+      {/* User farms details animated row */}
+      <div className='mt-5'>
+        <TokenRow items={initialFarmsRowItems} />
       </div>
     </div>
   );
