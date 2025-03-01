@@ -26,8 +26,8 @@ export const farmsDummy: FarmsState = {
     "token1": "CEGLD-b22b50",
     "token2": "XCR-010281",
     "feesAPR": "10.51",
-    "boostedAPR": "11.72",
-    "totalAPR": "22.23",
+    "boostedAPR": "0.00",
+    "totalAPR": "10.51",
     "totalStaked": "698334.83",
     "totalRewards": "865.63",
     "stakingUsers": 119,
@@ -35,10 +35,6 @@ export const farmsDummy: FarmsState = {
     "totalRewardsList": [
       {
         token: 'CEGLDXCR-701cd5',
-        value: '800'
-      },
-      {
-        token: 'PRIZEEGLD-e427f1',
         value: '800'
       }
     ]
@@ -89,33 +85,32 @@ export const farmsDummy: FarmsState = {
 
 export const userFarmsDummy: UserFarmsState = {
   "TADAWEGLD-e427f1": {
-    totalStaked: "18889.22",
-    totalRewards: "19.28",
-    totalRewardsList: [
+    staked: "18889.22",
+    rewards: "19.28",
+    rewardsList: [
       { token: "TADAWEGLD-e427f1", value: "120" },
       { token: "PRIZEEGLD-e427f1", value: "60" },
     ],
   },
   "CEGLDXCR-701cd5": {
-    totalStaked: "6983.83",
-    totalRewards: "8.63",
-    totalRewardsList: [
-      { token: "CEGLDXCR-701cd5", value: "80" },
-      { token: "PRIZEEGLD-e427f1", value: "80" },
+    staked: "6983.83",
+    rewards: "8.63",
+    rewardsList: [
+      { token: "CEGLDXCR-701cd5", value: "80" }
     ],
   },
   "XGTXCR-386762": {
-    totalStaked: "35498.00",
-    totalRewards: "105.28",
-    totalRewardsList: [
+    staked: "35498.00",
+    rewards: "105.28",
+    rewardsList: [
       { token: "XGTXCR-386762", value: "210" },
       { token: "PRIZEEGLD-e427f1", value: "154" },
     ],
   },
   "WTAOWEGLD-5833e2": {
-    totalStaked: "987.31",
-    totalRewards: "0.98",
-    totalRewardsList: [
+    staked: "987.31",
+    rewards: "0.98",
+    rewardsList: [
       { token: "WTAOWEGLD-5833e2", value: "15" },
       { token: "PRIZEEGLD-e427f1", value: "0.8" },
     ],
