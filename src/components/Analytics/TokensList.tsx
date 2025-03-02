@@ -1,16 +1,12 @@
-import { forwardRef, Fragment, useEffect, useState, useCallback } from 'react';
-import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton, Button } from '@mui/material';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { TextField, List, Avatar, Button } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
-import { KeyboardArrowDown, Search, ArrowDropDown } from '@mui/icons-material';
-import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
+import { Search } from '@mui/icons-material';
 import SimpleLoader from 'components/SimpleLoader';
-import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
-import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPage, selectPairTokens, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput, selectPairTokensNumber } from 'storeManager/slices/tokensSlice';
+import { selectPage, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput, selectPairTokensNumber } from 'storeManager/slices/tokensSlice';
 import { Token } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounce } from 'lodash';
@@ -34,27 +30,7 @@ const getPriceChangePercentage = (currentPrice: number, previousPrice: number) =
   );
 };
 
-
-interface FeesChartProps {
-  xData?: number[] | string[];
-  yData?: number[];
-  view?: any;
-  setView?: (view: any) => void;
-  title?: string;
-  subtitle?: string;
-  color1?: string;
-  color2?: string;
-  tooltipBorderColor?: string;
-  viewBtnType?: string;
-}
-
-const TokensList: React.FC<FeesChartProps> = ({
-  xData, yData, view, setView, title, subtitle,
-  color1 = 'rgba(13, 202, 240, 0.8)',
-  color2 = 'rgba(5, 120, 150, 0.4)',
-  tooltipBorderColor = 'rgb(13, 202, 240)',
-  viewBtnType = 'btn-intense-info2'
-}) => {
+const TokensList = () => {
   const dispatch = useDispatch();
   const pairTokens = useSelector(selectPairTokensById);
   const currentPage = useSelector(selectPage);
@@ -108,9 +84,17 @@ const TokensList: React.FC<FeesChartProps> = ({
     handleClose();
   };
 
+  // Function to sync scroll for all elements
+  const scrollContainerRef = useRef<HTMLDivElement[]>([]);
+  const syncScroll = (index: number) => (event: React.UIEvent<HTMLDivElement>) => {
+    const { scrollLeft } = event.currentTarget;
 
-  console.log(JSON.stringify(pairTokens, null, 2));
-
+    scrollContainerRef.current.forEach((el, i) => {
+      if (el && i !== index) {
+        el.scrollLeft = scrollLeft;
+      }
+    });
+  };
 
   return (
     <div className='b-r-sm'>
@@ -159,54 +143,75 @@ const TokensList: React.FC<FeesChartProps> = ({
       <List>
         {!loading ? (
           Object.values(pairTokens).length > 0 ? (
-            Object.values(pairTokens).map((token: Token) => (
-              <div key={`list-item-${token.token_id}`} className='p-3 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
-                <Avatar className='ms-2' src={token.logo_url} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />
-                <div className='' style={{ width: '10%' }}>
-                  <p className='font-size-xs mb-0 text-silver'>Token</p>
-                  <p className='font-size-sm mb-0'>{token.token_id}</p>
+            Object.values(pairTokens).map((token: Token, index: number) => (
+              <div
+                key={`list-item-${token.token_id}`}
+                className='p-3 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item'
+                style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
+              >
+                {/* Fixed Token Column */}
+                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <Avatar className='ms-2' src={token.logo_url} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />
+                  <div className='ms-3'>
+                    <p className='font-size-xs mb-0 text-silver'>Token</p>
+                    <p className='font-size-sm mb-0'>{token.ticker}</p>
+                  </div>
                 </div>
-                <div className='text-right' style={{ width: '20%' }}>
-                  <p className='font-size-xs mb-0 text-silver'>Liquidity</p>
-                  <p className='font-size-sm mb-0'>
-                    ${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0') * parseFloat(pairTokens[token.token_id]?.supply || '0'), 3)), 0, 20)}
-                  </p>
-                </div>
-                <div className='text-right' style={{ width: '10%' }}>
-                  <p className='font-size-xs mb-0 text-silver'>Price</p>
-                  <p className='font-size-sm mb-0'>
-                    $<ReduceZerosFormat
-                      numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}
-                    />
-                  </p>
-                </div>
-                <div className='text-right' style={{ width: '10%' }}>
-                  <p className='font-size-xs mb-0 text-silver'>Price 24H</p>
-                  <p className='font-size-sm mb-0'>
-                    {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_24h))}
-                  </p>
-                </div>
-                <div className='text-right' style={{ width: '10%' }}>
-                  <p className='font-size-xs mb-0 text-silver'>Price 30D</p>
-                  <p className='font-size-sm mb-0'>
-                    {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_30d))}
-                  </p>
-                </div>
-                <div className='text-right' style={{ width: '15%' }}>
-                  <p className='font-size-xs mb-0 text-silver'>Volume 24H</p>
-                  <p className='font-size-sm mb-0'>
-                    $<ReduceZerosFormat
-                      numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.volume_24h || '0'), 3)), 0, 20)}
-                    />
-                  </p>
-                </div>
-                <div className='text-right' style={{ width: '15%' }}>
-                  <p className='font-size-xs mb-0 text-silver'>Volume 30D</p>
-                  <p className='font-size-sm mb-0'>
-                    $<ReduceZerosFormat
-                      numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.volume_30d || '0'), 3)), 0, 20)}
-                    />
-                  </p>
+
+                {/* Scrollable Section for Other Columns */}
+                <div
+                  ref={(el) => (scrollContainerRef.current[index] = el!)}
+                  onScroll={syncScroll(index)}
+                  className="d-flex overflow-auto"
+                  style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
+                >
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className='font-size-xs mb-0 text-silver'>Price</p>
+                    <p className='font-size-sm mb-0'>
+                      $<ReduceZerosFormat
+                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}
+                      />
+                    </p>
+                  </div>
+
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className='font-size-xs mb-0 text-silver'>Price 24H</p>
+                    <p className='font-size-sm mb-0'>
+                      {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_24h))}
+                    </p>
+                  </div>
+
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className='font-size-xs mb-0 text-silver'>Price 30D</p>
+                    <p className='font-size-sm mb-0'>
+                      {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_30d))}
+                    </p>
+                  </div>
+
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className='font-size-xs mb-0 text-silver'>Volume 24H</p>
+                    <p className='font-size-sm mb-0'>
+                      $<ReduceZerosFormat
+                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.volume_24h || '0'), 3)), 0, 20)}
+                      />
+                    </p>
+                  </div>
+
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className='font-size-xs mb-0 text-silver'>Volume 30D</p>
+                    <p className='font-size-sm mb-0'>
+                      $<ReduceZerosFormat
+                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.volume_30d || '0'), 3)), 0, 20)}
+                      />
+                    </p>
+                  </div>
+
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '20%' }}>
+                    <p className='font-size-xs mb-0 text-silver'>Liquidity</p>
+                    <p className='font-size-sm mb-0'>
+                      ${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0') * parseFloat(pairTokens[token.token_id]?.supply || '0'), 3)), 0, 20)}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))

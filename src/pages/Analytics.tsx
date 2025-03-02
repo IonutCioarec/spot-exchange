@@ -380,20 +380,9 @@ const Analytics = () => {
       {/* Dex total fees */}
       <Row className='mt-4'>
         <Col xs={12} lg={12} className='mt-3 mb-5'>
-          <TokensList
-            xData={feesPLPData[feesPLPView].xData}
-            yData={feesPLPData[feesPLPView].yData}
-            view={feesPLPView}
-            setView={setFeesPLPView}
-            title='Platform & LP rewards from fees'
-            subtitle='40% + 40%'
-            color1='rgba(13, 240, 153, 0.8)'
-            color2='rgba(5, 150, 36, 0.4)'
-            tooltipBorderColor='#3FAC5A'
-            viewBtnType='btn-intense-success'
-          />
+          <TokensList />
         </Col>
-        </Row>
+      </Row>
     </div>
   );
 }
