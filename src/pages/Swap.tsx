@@ -346,8 +346,8 @@ const Swap = () => {
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className={`swap-container text-white mt-1 ${activeContainer1 ? 'selected-side' : ''}`}>
             <p className='mb-0 ml-1 small'>From</p>
-            <div className='d-flex justify-content-between mt-2 align-items-center gap-2 swap-token-container'>
-              <div className='input-container b-r-sm'>
+            <div className='d-flex justify-content-between mt-2 align-items-center gap-2 '>
+              <div className='input-container b-r-sm swap-token-container'>
                 <TextField
                   id="first-token"
                   placeholder='0.000'
@@ -412,8 +412,8 @@ const Swap = () => {
                 </p>
               }
             </div>
-            <div className='d-flex justify-content-between align-items-center gap-4 swap-token-container mt-2'>
-              <div className='input-container b-r-sm'>
+            <div className='d-flex justify-content-between align-items-center gap-2 mt-2'>
+              <div className='input-container swap-token-container b-r-sm'>
                 <TextField
                   id="second-token"
                   placeholder='0.000'

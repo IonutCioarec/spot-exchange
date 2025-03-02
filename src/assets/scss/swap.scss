@@ -53,6 +53,19 @@
   }
 }
 
+.input-container2 {
+  background-color: rgba(63, 172, 90, 0.6);
+
+  &:hover {
+    background-color: rgba(74, 206, 107, 0.6);
+    cursor: pointer;
+  }
+
+  @include maxQuery(700) {
+    padding: 2px;
+  }
+}
+
 .token-search-container {
   background-color: rgba(18, 18, 18, 0.3);
   border-radius: 20px;
