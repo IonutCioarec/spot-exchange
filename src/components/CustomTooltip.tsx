@@ -21,7 +21,8 @@ const CustomTooltip = ({ title, placement = 'bottom', children, ...props }: Tool
     },
     arrow: {
       sx: {
-        color: 'black',
+        color: 'rgba(20,20,20,1)',
+        marginLeft: '-5px'
       },
     },
     TransitionComponent: Fade,
