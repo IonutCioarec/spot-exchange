@@ -353,26 +353,26 @@ const Analytics = () => {
         </Col>
         <Col xs={12} lg={4} className='mt-3'>
           <FeesChart
-            xData={feesBurnData[feesBurnView].xData}
-            yData={feesBurnData[feesBurnView].yData}
-            view={feesBurnView}
-            setView={setFeesBurnView}
-            title='Burn token from fees'
-            subtitle='10%'
-          />
-        </Col>
-        <Col xs={12} lg={4} className='mt-3'>
-          <FeesChart
             xData={feesStakingData[feesStakingView].xData}
             yData={feesStakingData[feesStakingView].yData}
             view={feesStakingView}
             setView={setFeesStakingView}
             title='Staking pool rewards from fees'
             subtitle='10%'
-            color1='rgba(13, 240, 153, 0.8)'
-            color2='rgba(5, 150, 36, 0.4)'
-            tooltipBorderColor='#3FAC5A'
-            viewBtnType='btn-intense-success'
+          />
+        </Col>
+        <Col xs={12} lg={4} className='mt-3'>
+          <FeesChart
+            xData={feesBurnData[feesBurnView].xData}
+            yData={feesBurnData[feesBurnView].yData}
+            view={feesBurnView}
+            setView={setFeesBurnView}
+            title='Burn token from fees'
+            subtitle='10%'
+            color1='rgba(255, 66, 66, 0.8)'
+            color2='rgba(220, 30, 30, 0.4)'
+            tooltipBorderColor='#e24e4e'
+            viewBtnType='btn-intense-danger2'
           />
         </Col>
       </Row>
