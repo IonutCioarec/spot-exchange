@@ -162,7 +162,7 @@ const Portfolio = () => {
       </div>
 
       {/* User Tokens List */}
-      <div className='mt-5'>
+      <div className='mt-5' id="TokensSection">
         <UserTokensList tokens={userTokens} />
       </div>
 
@@ -172,7 +172,7 @@ const Portfolio = () => {
       </div>
 
       {/* User Pools List */}
-      <div className='mt-5'>
+      <div className='mt-5' id="PoolsSection">
         <UserPoolsList
           pairs={userPairs}
           userLpTokenBalance={userLPTokens}
@@ -186,7 +186,7 @@ const Portfolio = () => {
       </div>
 
       {/* User Farms List */}
-      <div className='mt-5'>
+      <div className='mt-5' id="FarmsSection">
         <UserFarmsList
           farms={farmsDummy}
           userData={userFarmsDummy}

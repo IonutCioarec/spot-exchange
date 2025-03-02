@@ -8,6 +8,8 @@ import { Button } from '@mui/material';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import { useMobile } from 'utils/responsive';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import CustomTooltip from 'components/CustomTooltip';
 
 const PortfolioStats: React.FC<PortfolioStatsProps> = ({ data, balance }) => {
   const isMobile = useMobile();
@@ -48,14 +50,29 @@ const PortfolioStats: React.FC<PortfolioStatsProps> = ({ data, balance }) => {
 
             return (
               <tr key={index} style={{ borderBottom: '1px solid rgba(100,100,100, 0.3)' }}>
-                <td style={{ color: portfolioColors[index] }} width={'35%'}>
+                <td style={{ color: portfolioColors[index] }} width={'30%'}>
                   {portfolioImages[index]} {item.name}
                 </td>
-                <td width={'35%'} align="right">
+                <td width={'30%'} align="right">
                   ${item.value.toFixed(2)}
                 </td>
                 <td width={'30%'} align="right">
                   {percentage}%
+                </td>
+                <td width={'10%'} align="right">
+                  <CustomTooltip key="details" title={`View ${item.name} Details`} placement='bottom-end' >
+                    <ArrowRightAltIcon
+                      fontSize="small"
+                      style={{ color: portfolioColors[index], cursor: 'pointer' }}
+                      onClick={() => {
+                        const sectionId = `${item.name}Section`;
+                        const sectionElement = document.getElementById(sectionId);
+                        if (sectionElement) {
+                          sectionElement.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                    />
+                  </CustomTooltip>
                 </td>
               </tr>
             );
