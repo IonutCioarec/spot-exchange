@@ -226,7 +226,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
               style: {
                 color: 'white',
                 marginTop: '3px',
-                fontFamily: 'Red Rose' 
+                fontFamily: 'Red Rose'
               },
             }}
             sx={{
@@ -263,14 +263,8 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '170px' : '15%' }}>
-                  <Avatar className="ms-2" src={token.logo} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />
-                  <div className="ms-3">
-                    <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Token {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">{token.ticker}</p>
-                  </div>
+                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '50px' : '5%' }}>
+                  <Avatar className="ms-2" src={token.logo} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />                  
                 </div>
 
                 {/* Scrollable Section for Other Columns */}
@@ -280,6 +274,15 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                   className="d-flex overflow-auto"
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
+                  <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '90px' : '10%' }}>
+                    <div className="">
+                      <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                        Token {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                      </p>
+                      <p className="font-size-sm mb-0">{token.ticker}</p>
+                    </div>
+                  </div>
+
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestValue' || sortOption === 'lowestValue' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Value {sortOption === 'highestValue' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -289,7 +292,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                       ${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(allTokens[token.token_id]?.price_usd || '0') * parseFloat(denominatedAmountToIntlFormattedAmount(token.balance || 0, token.decimals || 18, 2) || '0'), 3)), 0, 20)}
                     </p>
                   </div>
-                  
+
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestBalance' || sortOption === 'lowestBalance' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Balance {sortOption === 'highestBalance' && <TrendingDownIcon className="ms-1 font-size-md" />}
