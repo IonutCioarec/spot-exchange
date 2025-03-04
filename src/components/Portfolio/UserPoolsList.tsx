@@ -236,7 +236,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '185px' : '15%' }}>
+                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '80px' : '5%' }}>
                   <img
                     src={allTokens[pair.token1]?.logo_url ?? defaultTokenValues.image_url}
                     alt={pair.token1}
@@ -262,13 +262,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                       position: 'relative',
                       left: '0px',
                     }}
-                  />
-                  <div className="ms-3">
-                    <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Pool {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">{allTokens[pair?.token1]?.ticker} / {allTokens[pair?.token2]?.ticker}</p>
-                  </div>
+                  />                  
                 </div>
 
                 {/* Scrollable Section for Other Columns */}
@@ -278,6 +272,13 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                   className="d-flex overflow-auto"
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
+                  <div className="ms-1" style={{ minWidth: isMobile ? '100px' : '10%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Pool {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">{allTokens[pair?.token1]?.ticker} / {allTokens[pair?.token2]?.ticker}</p>
+                  </div>
+
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestPoolShare' || sortOption === 'lowestPoolShare' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Pool Share
