@@ -1,20 +1,13 @@
-import { forwardRef, Fragment, useEffect, useState, useCallback, useMemo, useRef } from 'react';
-import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton, Button, SelectChangeEvent } from '@mui/material';
+import { useState, useMemo, useRef } from 'react';
+import { TextField, List, Avatar, Button } from '@mui/material';
 import { denominatedAmountToIntlFormattedAmount, formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
-import { KeyboardArrowDown, Search, ArrowDropDown } from '@mui/icons-material';
-import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
+import { Search } from '@mui/icons-material';
 import SimpleLoader from 'components/SimpleLoader';
-import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
-import CloseIcon from '@mui/icons-material/Close';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectPage, selectPairTokens, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput, selectPairTokensNumber, selectAllTokensById } from 'storeManager/slices/tokensSlice';
-import { Token } from 'types/backendTypes';
+import { useSelector } from 'react-redux';
+import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
-import { debounce } from 'lodash';
-import { debounceSearchTime } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
 import MovingIcon from '@mui/icons-material/Moving';
 import { CreatedToken, CreatedTokens } from 'types/mvxTypes';
@@ -271,7 +264,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                   ref={(el) => (scrollContainerRef.current[index] = el!)}
                   onScroll={syncScroll(index)}
                   className="d-flex overflow-auto py-2 pe-3 ps-0"
-                  style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
+                  style={{ flex: 1, gap: '10px', paddingLeft: '10px', willChange: 'scroll-position' }}
                 >
                   <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '90px' : '11%' }}>
                     <div className="">

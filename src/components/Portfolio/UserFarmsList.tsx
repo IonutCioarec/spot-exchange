@@ -262,7 +262,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   ref={(el) => (scrollContainerRef.current[index] = el!)}
                   onScroll={syncScroll(index)}
                   className="d-flex overflow-auto py-2 px-3"
-                  style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
+                  style={{ flex: 1, gap: '10px', paddingLeft: '10px', willChange: 'scroll-position' }}
                 >
                   <div className="" style={{ minWidth: isMobile ? '100px' : '10%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
