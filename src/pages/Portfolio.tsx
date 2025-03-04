@@ -33,9 +33,14 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import UserFarmsList from 'components/Portfolio/UserFarmsList';
+import { useMobile, useTablet } from 'utils/responsive';
+import ScrollToTopButton from 'components/ScrollToTopButton';
+import LightSpot from 'components/LightSpot';
 
 const Portfolio = () => {
   const dispatch = useDispatch();
+  const isMobile = useMobile();
+  const isTablet = useTablet();
   const { getTokens, getPairs } = useBackendAPI();
   const isLoggedIn = useGetIsLoggedIn();
   const { account, address } = useGetAccountInfo();
@@ -150,6 +155,9 @@ const Portfolio = () => {
           </div>
         </Col>
       </Row>
+      {isMobile && (
+        <ScrollToTopButton targetRefId='topSection' />
+      )}
 
       {/* User portfolio */}
       <div>
@@ -192,6 +200,9 @@ const Portfolio = () => {
           userData={userFarmsDummy}
         />
       </div>
+
+      {/* Add light spots */}
+      <LightSpot size={isMobile ? 220 : 350} x={isMobile ? '25%' : '40%'} y="40%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
     </div>
   );
 }
