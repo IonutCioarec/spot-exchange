@@ -231,11 +231,11 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
             processedPools.map((pair: Pair, index: number) => (
               <div
                 key={`list-item-${pair.lp_token_id}`}
-                className="p-3 mb-2 text-white d-flex align-items-center cursor-pointer token-list-item"
+                className="mb-1 text-white d-flex align-items-center cursor-pointer token-list-item"
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '80px' : '5%' }}>
+                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '80px' : '5%' }}>
                   <img
                     src={allTokens[pair.token1]?.logo_url ?? defaultTokenValues.image_url}
                     alt={pair.token1}
@@ -245,7 +245,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                   <motion.img
                     src={allTokens[pair.token2]?.logo_url ?? defaultTokenValues.image_url}
                     alt={pair.token2}
-                    className="d-inline m-l-n-xxl me-3"
+                    className="d-inline m-l-n-xxl"
                     initial={{ x: 0 }}
                     animate={{ x: 20 }}
                     transition={{
@@ -268,17 +268,17 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                 <div
                   ref={(el) => (scrollContainerRef.current[index] = el!)}
                   onScroll={syncScroll(index)}
-                  className="d-flex overflow-auto"
+                  className="d-flex overflow-auto py-2 px-3"
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
-                  <div className="ms-1" style={{ minWidth: isMobile ? '100px' : '10%' }}>
+                  <div className="" style={{ minWidth: isMobile ? '100px' : '10%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Pool {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">{allTokens[pair?.token1]?.ticker} / {allTokens[pair?.token2]?.ticker}</p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '8%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestPoolShare' || sortOption === 'lowestPoolShare' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Pool Share
                       {sortOption === 'highestPoolShare' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -289,7 +289,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                     </p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '18%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '17%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestYourLiquidity' || sortOption === 'lowestYourLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Your Liquidity
                       {sortOption === 'highestYourLiquidity' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -320,7 +320,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                     </p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '18%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '17%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestLiquidity' || sortOption === 'lowestLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Liquidity
                       {sortOption === 'highestLiquidity' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -340,7 +340,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
                     </p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestFees24h' || sortOption === 'lowestFees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Fees (24h)
                       {sortOption === 'highestFees24h' && <TrendingDownIcon className="ms-1 font-size-md" />}

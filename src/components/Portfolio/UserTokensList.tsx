@@ -258,22 +258,22 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
             paginatedTokens.map((token: CreatedToken, index: number) => (
               <div
                 key={`list-item-${token.token_id}`}
-                className="p-3 mb-2 text-white d-flex align-items-center cursor-pointer token-list-item"
+                className="mb-1 text-white d-flex align-items-center cursor-pointer token-list-item"
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '50px' : '5%' }}>
-                  <Avatar className="ms-2" src={token.logo} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />                  
+                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '30px' : '5%' }}>
+                  <Avatar className="" src={token.logo} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />                  
                 </div>
 
                 {/* Scrollable Section for Other Columns */}
                 <div
                   ref={(el) => (scrollContainerRef.current[index] = el!)}
                   onScroll={syncScroll(index)}
-                  className="d-flex overflow-auto"
+                  className="d-flex overflow-auto py-2 pe-3 ps-0"
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
-                  <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '90px' : '10%' }}>
+                  <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '90px' : '11%' }}>
                     <div className="">
                       <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                         Token {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
@@ -310,7 +310,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                     </p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '14%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice24h' || sortOption === 'lowestPrice24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Price 24h
                       {sortOption === 'highestPrice24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -319,7 +319,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                     <p className="font-size-sm mb-0">{getPriceChangePercentageComponent(parseFloat(allTokens[token.token_id]?.price_usd), parseFloat(allTokens[token.token_id]?.price_change_24h))}</p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '11%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice7D' || sortOption === 'lowestPrice7D' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Price 7D
                       {sortOption === 'highestPrice7D' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -328,7 +328,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                     <p className="font-size-sm mb-0">{getPriceChangePercentageComponent(parseFloat(allTokens[token.token_id]?.price_usd), parseFloat(allTokens[token.token_id]?.price_change_7d))}</p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '11%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice30D' || sortOption === 'lowestPrice30D' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Price 30D
                       {sortOption === 'highestPrice30D' && <TrendingDownIcon className="ms-1 font-size-md" />}

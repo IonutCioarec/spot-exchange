@@ -224,11 +224,11 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
             processedFarms.map((farm: Farm, index: number) => (
               <div
                 key={`list-item-${farm.lp_token_id}`}
-                className="p-3 mb-2 text-white d-flex align-items-center cursor-pointer token-list-item"
+                className="mb-1 text-white d-flex align-items-center cursor-pointer token-list-item"
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '80px' : '5%' }}>
+                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '80px' : '5%' }}>
                   <img
                     src={allTokens[farm.token1]?.logo_url ?? defaultTokenValues.image_url}
                     alt={farm.token1}
@@ -238,7 +238,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   <motion.img
                     src={allTokens[farm.token2]?.logo_url ?? defaultTokenValues.image_url}
                     alt={farm.token2}
-                    className="d-inline m-l-n-xxl me-3"
+                    className="d-inline m-l-n-xxl"
                     initial={{ x: 0 }}
                     animate={{ x: 20 }}
                     transition={{
@@ -261,17 +261,17 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                 <div
                   ref={(el) => (scrollContainerRef.current[index] = el!)}
                   onScroll={syncScroll(index)}
-                  className="d-flex overflow-auto"
+                  className="d-flex overflow-auto py-2 px-3"
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
-                  <div className="ms-1" style={{ minWidth: isMobile ? '100px' : '10%' }}>
+                  <div className="" style={{ minWidth: isMobile ? '100px' : '10%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Farm {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
                     </p>
                     <p className="font-size-sm mb-0">{allTokens[farm?.token1]?.ticker}{allTokens[farm?.token2]?.ticker}</p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '18%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestYourStaked' || sortOption === 'lowestYourStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Your Staked
                       {sortOption === 'highestYourStaked' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -311,7 +311,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                     </p>
                   </div>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '18%' }}>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestStaked' || sortOption === 'lowestStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Total Staked
                       {sortOption === 'highestStaked' && <TrendingDownIcon className="ms-1 font-size-md" />}
