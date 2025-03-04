@@ -145,13 +145,13 @@ const TokensList = () => {
             Object.values(pairTokens).map((token: Token, index: number) => (
               <div
                 key={`list-item-${token.token_id}`}
-                className='p-3 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item'
+                className='mb-1 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item'
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '150px' : '15%' }}>
-                  <Avatar className='ms-2' src={token.logo_url} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />
-                  <div className='ms-3'>
+                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '150px' : '10%' }}>
+                  <Avatar className='' src={token.logo_url} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />
+                  <div className='ms-1'>
                     <p className='font-size-xs mb-0 text-silver'>Token</p>
                     <p className='font-size-sm mb-0'>{token.ticker}</p>
                   </div>
@@ -161,7 +161,7 @@ const TokensList = () => {
                 <div
                   ref={(el) => (scrollContainerRef.current[index] = el!)}
                   onScroll={syncScroll(index)}
-                  className="d-flex overflow-auto"
+                  className="d-flex overflow-auto py-2 px-3"
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
                   <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
