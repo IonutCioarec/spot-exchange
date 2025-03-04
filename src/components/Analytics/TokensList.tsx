@@ -149,22 +149,23 @@ const TokensList = () => {
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '150px' : '10%' }}>
-                  <Avatar className='' src={token.logo_url} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />
-                  <div className='ms-1'>
-                    <p className='font-size-xs mb-0 text-silver'>Token</p>
-                    <p className='font-size-sm mb-0'>{token.ticker}</p>
-                  </div>
+                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '50px' : '5%' }}>
+                  <Avatar className='' src={token.logo_url} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />                  
                 </div>
 
                 {/* Scrollable Section for Other Columns */}
                 <div
                   ref={(el) => (scrollContainerRef.current[index] = el!)}
                   onScroll={syncScroll(index)}
-                  className="d-flex overflow-auto py-2 px-3"
+                  className="d-flex overflow-auto py-2 ps-0 pe-3"
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className='' style={{ minWidth: isMobile ? '70px' : '5%' }}>
+                    <p className='font-size-xs mb-0 text-silver'>Token</p>
+                    <p className='font-size-sm mb-0'>{token.ticker}</p>
+                  </div>
+
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '13%' }}>
                     <p className='font-size-xs mb-0 text-silver'>Price</p>
                     <p className='font-size-sm mb-0'>
                       $<ReduceZerosFormat
@@ -173,21 +174,21 @@ const TokensList = () => {
                     </p>
                   </div>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '13%' }}>
                     <p className='font-size-xs mb-0 text-silver'>Price 24H</p>
                     <p className='font-size-sm mb-0'>
                       {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_24h))}
                     </p>
                   </div>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '13%' }}>
                     <p className='font-size-xs mb-0 text-silver'>Price 30D</p>
                     <p className='font-size-sm mb-0'>
                       {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_30d))}
                     </p>
                   </div>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '16%' }}>
                     <p className='font-size-xs mb-0 text-silver'>Volume 24H</p>
                     <p className='font-size-sm mb-0'>
                       $<ReduceZerosFormat
@@ -196,7 +197,7 @@ const TokensList = () => {
                     </p>
                   </div>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '16%' }}>
                     <p className='font-size-xs mb-0 text-silver'>Volume 30D</p>
                     <p className='font-size-sm mb-0'>
                       $<ReduceZerosFormat
@@ -205,7 +206,7 @@ const TokensList = () => {
                     </p>
                   </div>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '20%' }}>
+                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '18%' }}>
                     <p className='font-size-xs mb-0 text-silver'>Liquidity</p>
                     <p className='font-size-sm mb-0'>
                       ${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0') * parseFloat(pairTokens[token.token_id]?.supply || '0'), 3)), 0, 20)}
