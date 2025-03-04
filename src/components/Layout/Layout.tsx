@@ -21,6 +21,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="flex flex-col min-h-screen">
       <Header />
 
+      <main>
+        <div className='container'>
+          {children}
+        </div>
+        <Footer />
+      </main>
+
       {/* Animate the auxiliary elements */}
       <motion.img
         src={aux1}
@@ -41,13 +48,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           left: '3%'
         }}
       />
-
-      <main>
-        <div className='main-container container'>
-          {children}
-        </div>
-        <Footer />
-      </main>
 
       <Toaster
         toastOptions={{

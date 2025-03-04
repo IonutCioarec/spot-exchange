@@ -21,8 +21,8 @@ const ScrollToRefButton: React.FC<ScrollToRefButtonProps> = ({ targetRefId }) =>
       className="btn-intense-default hover-btn small b-r-sm btn-scroll-top"
       style={{
         position: 'fixed',
-        bottom: '9vh',
-        right: '15px',
+        bottom: '11vh',
+        right: '13px',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '100%',

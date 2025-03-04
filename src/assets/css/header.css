@@ -7,6 +7,14 @@
 .header-area2 {
   background-color: rgba(20, 20, 20, 1);
   box-shadow: 0 7px 7px rgba(63, 142, 90, 0.1);
+  position: absolute;
+  width: 100%;
+  top: 0;
+  z-index: 999;
+}
+
+#topSection {
+  margin-top: 40px;
 }
 
 .nav-social-media-icon {
