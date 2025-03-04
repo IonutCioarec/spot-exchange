@@ -107,8 +107,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
               }
             }}
             ref={inputRef}
-            className='withdraw-input'
-            autoFocus
+            className='withdraw-input'            
             InputProps={{
               endAdornment: (
                 <Button

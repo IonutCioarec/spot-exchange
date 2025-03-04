@@ -109,8 +109,7 @@ const TokensList = () => {
             value={localSearchInput}
             autoComplete="off"
             onChange={handleSearchChange}
-            className="token-search-container mb-2"
-            autoFocus
+            className="token-search-container mb-2"            
             InputProps={{
               startAdornment: <Search sx={{ color: 'rgba(255, 255, 255, 0.7)', marginRight: '8px', fontSize: '18px' }} />,
               style: { color: 'silver', fontFamily: 'Red Rose' },

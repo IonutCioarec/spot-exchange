@@ -105,8 +105,7 @@ const UnstakeModal: React.FC<UnstakeModalProps> = ({
                 handleAmountChange(e);
               }
             }}
-            className='withdraw-input'
-            autoFocus
+            className='withdraw-input'            
             InputProps={{
               endAdornment: (
                 <Button

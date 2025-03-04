@@ -210,8 +210,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
             value={searchInput}
             autoComplete="off"
             onChange={handleSearchChange}
-            className="token-search-container mb-2"
-            autoFocus
+            className="token-search-container mb-2"            
             InputProps={{
               style: {
                 backgroundColor: 'rgba(63, 63, 63, 0.4)',

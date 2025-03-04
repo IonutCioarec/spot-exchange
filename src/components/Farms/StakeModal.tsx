@@ -105,8 +105,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
                 handleAmountChange(e);
               }
             }}
-            className='withdraw-input'
-            autoFocus
+            className='withdraw-input'            
             InputProps={{
               endAdornment: (
                 <Button

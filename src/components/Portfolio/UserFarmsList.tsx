@@ -177,7 +177,6 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
             autoComplete="off"
             onChange={handleSearchChange}
             className="token-search-container mb-2"
-            autoFocus
             InputProps={{
               style: {
                 backgroundColor: 'rgba(63, 63, 63, 0.4)',

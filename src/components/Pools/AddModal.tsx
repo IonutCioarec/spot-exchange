@@ -257,8 +257,7 @@ const AddModal: React.FC<WithdrawModal> = ({
             value={amountToken1}
             autoComplete="off"
             onChange={handleAmountToken1Change}
-            className='withdraw-input'
-            autoFocus
+            className='withdraw-input'            
             InputProps={{
               endAdornment: (
                 <Button
@@ -335,8 +334,7 @@ const AddModal: React.FC<WithdrawModal> = ({
             value={amountToken2}
             autoComplete="off"
             onChange={handleAmountToken2Change}
-            className='withdraw-input'
-            autoFocus
+            className='withdraw-input'            
             ref={inputRef}
             InputProps={{
               endAdornment: (
