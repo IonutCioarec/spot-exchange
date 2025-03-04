@@ -229,7 +229,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                 style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
               >
                 {/* Fixed Token Column */}
-                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '185px' : '15%' }}>
+                <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '80px' : '5%' }}>
                   <img
                     src={allTokens[farm.token1]?.logo_url ?? defaultTokenValues.image_url}
                     alt={farm.token1}
@@ -255,13 +255,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                       position: 'relative',
                       left: '0px',
                     }}
-                  />
-                  <div className="ms-3">
-                    <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Farm {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">{allTokens[farm?.token1]?.ticker}{allTokens[farm?.token2]?.ticker}</p>
-                  </div>
+                  />                  
                 </div>
 
                 {/* Scrollable Section for Other Columns */}
@@ -271,6 +265,13 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                   className="d-flex overflow-auto"
                   style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
                 >
+                  <div className="ms-1" style={{ minWidth: isMobile ? '100px' : '10%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Farm {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">{allTokens[farm?.token1]?.ticker}{allTokens[farm?.token2]?.ticker}</p>
+                  </div>
+
                   <div className="text-right" style={{ minWidth: isMobile ? '150px' : '18%' }}>
                     <p className={`font-size-xs mb-0 ${sortOption === 'highestYourStaked' || sortOption === 'lowestYourStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                       Your Staked
