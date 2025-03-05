@@ -17,12 +17,21 @@ import { ChartViewType } from 'types/frontendTypes';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import PercentIcon from '@mui/icons-material/Percent';
 import AnimationIcon from '@mui/icons-material/Animation';
-import { abbreviateNumber } from 'utils/formatters';
+import { abbreviateNumber, intlNumberFormat } from 'utils/formatters';
 import TokensList from 'components/Analytics/TokensList';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import AgricultureIcon from '@mui/icons-material/Agriculture';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import UserFarmsList from 'components/Portfolio/UserFarmsList';
+import PeopleIcon from '@mui/icons-material/People';
+import StarIcon from '@mui/icons-material/Star';
+import { farmsDummy } from 'utils/dummyData';
 
 const Analytics = () => {
   // dex token details data
@@ -304,8 +313,24 @@ const Analytics = () => {
     { label: "Total Fees (7D)", value: '$' + '6,898.34', icon: <CalendarTodayIcon className='token-row-icon' />, isImage: false },
     { label: "Total Fees (30D)", value: '$' + '45,650.342', icon: <DateRangeIcon className='token-row-icon' />, isImage: false },
     { label: "Total Fees", value: '$' + '1,546,145.98', icon: <MonetizationOnIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Volume (24h)", value: '$' + '876.45', icon: <AccessTimeIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Volume (7D)", value: '$' + '6,898.34', icon: <CalendarTodayIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Volume (30D)", value: '$' + '45,650.342', icon: <DateRangeIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Volume", value: '$' + '1,546,145.98', icon: <MonetizationOnIcon className='token-row-icon' />, isImage: false },
   ];
   const [poolsRowItems, setPoolsRowItems] = useState(initialPoolsRowItems);
+
+  // dex farms details data
+  const initialFarmsRowItems = [
+    { label: "Total Farms", value: Object.values(farmsDummy).length.toString(), icon: <AgricultureIcon className="token-row-icon" />, isImage: false },
+    { label: "Total Staked", value: '$' + intlNumberFormat(Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.totalStaked) || 0), 0) ?? 0, 2, 2), icon: <AccountBalanceIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Rewards", value: '$' + intlNumberFormat(Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.totalRewards) || 0), 0) ?? 0, 2, 2), icon: <CardGiftcardIcon className='token-row-icon' />, isImage: false },
+    { label: "Staking Users", value: Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.stakingUsers) || 0), 0).toString(), icon: <PeopleIcon className='token-row-icon' />, isImage: false },
+    { label: "Highest Staked", value: '$' + intlNumberFormat(Math.max(...Object.values(farmsDummy).map(farm => parseFloat(farm.totalStaked) || 0)), 2, 2), icon: <TrendingUpIcon className='token-row-icon' />, isImage: false },
+    { label: "Highest Reward", value: '$' + intlNumberFormat(Math.max(...Object.values(farmsDummy).map(farm => parseFloat(farm.totalRewards) || 0)), 2, 2), icon: <EmojiEventsIcon className='token-row-icon' />, isImage: false },
+    { label: "Most Staking Users", value: Math.max(...Object.values(farmsDummy).map(farm => farm.stakingUsers || 0)).toString(), icon: <StarIcon className='token-row-icon' />, isImage: false },
+  ];
+  const [farmsRowItems, setFarmsRowItems] = useState(initialFarmsRowItems);
 
   return (
     <div className="analytics-page-height mb-5">
@@ -402,6 +427,11 @@ const Analytics = () => {
       {/* DEX Pools details animated row */}
       <div className='mt-5'>
         <TokenRow items={initialPoolsRowItems} />
+      </div>
+
+      {/* DEX Farms details animated row */}
+      <div className='mt-5'>
+        <TokenRow items={initialFarmsRowItems} />
       </div>
     </div>
   );
