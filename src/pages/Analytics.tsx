@@ -19,6 +19,10 @@ import PercentIcon from '@mui/icons-material/Percent';
 import AnimationIcon from '@mui/icons-material/Animation';
 import { abbreviateNumber } from 'utils/formatters';
 import TokensList from 'components/Analytics/TokensList';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 const Analytics = () => {
   // dex token details data
@@ -292,6 +296,17 @@ const Analytics = () => {
   const [feesBurnView, setFeesBurnView] = useState<ChartViewType>('24H');
   const [feesStakingView, setFeesStakingView] = useState<ChartViewType>('24H');
 
+  // dex pools details data
+  const initialPoolsRowItems = [
+    { label: "Total Pools", value: '187', icon: <WorkspacesIcon className="token-row-icon" />, isImage: false },
+    { label: "Total Liquidity", value: '$' + '987,987,345.2', icon: <PaymentsIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Fees (24h)", value: '$' + '876.45', icon: <AccessTimeIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Fees (7D)", value: '$' + '6,898.34', icon: <CalendarTodayIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Fees (30D)", value: '$' + '45,650.342', icon: <DateRangeIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Fees", value: '$' + '1,546,145.98', icon: <MonetizationOnIcon className='token-row-icon' />, isImage: false },
+  ];
+  const [poolsRowItems, setPoolsRowItems] = useState(initialPoolsRowItems);
+
   return (
     <div className="analytics-page-height mb-5">
       <Row id='topSection'>
@@ -379,10 +394,15 @@ const Analytics = () => {
 
       {/* Dex total fees */}
       <Row className='mt-4'>
-        <Col xs={12} lg={12} className='mt-3 mb-5'>
+        <Col xs={12} lg={12} className='mt-3'>
           <TokensList />
         </Col>
       </Row>
+
+      {/* DEX Pools details animated row */}
+      <div className='mt-5'>
+        <TokenRow items={initialPoolsRowItems} />
+      </div>
     </div>
   );
 }
