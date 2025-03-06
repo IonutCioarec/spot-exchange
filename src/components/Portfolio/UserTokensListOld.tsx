@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
-import { TextField, Avatar, Button } from '@mui/material';
+import { TextField, List, Avatar, Button } from '@mui/material';
 import { denominatedAmountToIntlFormattedAmount, formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { Search } from '@mui/icons-material';
 import SimpleLoader from 'components/SimpleLoader';
@@ -14,7 +14,6 @@ import { CreatedToken, CreatedTokens } from 'types/mvxTypes';
 import { Select, MenuItem } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import Table from "react-bootstrap/Table";
 
 const getPriceChangePercentage = (currentPrice: number, previousPrice: number) => {
   if (previousPrice === 0) return 0;
@@ -47,7 +46,7 @@ const getPriceChangePercentageComponent = (currentPrice: number, previousPrice: 
 
 const ITEMS_PER_PAGE = 10;
 
-const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
+const UserTokensListOld: React.FC<CreatedTokens> = ({ tokens }) => {
   const allTokens = useSelector(selectAllTokensById);
   const [loading, setLoading] = useState(false);
   const isMobile = useMobile();
@@ -135,29 +134,16 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
     }
   };
 
-  const tableRef = useRef<HTMLDivElement>(null);
-  let isDown = false;
-  let startX: number;
-  let scrollLeft: number;
+  // Function to sync scroll for all elements
+  const scrollContainerRef = useRef<HTMLDivElement[]>([]);
+  const syncScroll = (index: number) => (event: React.UIEvent<HTMLDivElement>) => {
+    const { scrollLeft } = event.currentTarget;
 
-  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!tableRef.current) return;
-    isDown = true;
-    const event = "touches" in e ? e.touches[0] : e;
-    startX = event.pageX - tableRef.current.offsetLeft;
-    scrollLeft = tableRef.current.scrollLeft;
-  };
-
-  const handleEnd = () => {
-    isDown = false;
-  };
-
-  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDown || !tableRef.current) return;
-    const event = "touches" in e ? e.touches[0] : e;
-    const x = event.pageX - tableRef.current.offsetLeft;
-    const walk = (x - startX);
-    tableRef.current.scrollLeft = scrollLeft - walk;
+    scrollContainerRef.current.forEach((el, i) => {
+      if (el && i !== index) {
+        el.scrollLeft = scrollLeft;
+      }
+    });
   };
 
   return (
@@ -217,7 +203,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
             value={searchInput}
             autoComplete="off"
             onChange={handleSearchChange}
-            className="token-search-container mb-2"
+            className="token-search-container mb-2"            
             InputProps={{
               style: {
                 backgroundColor: 'rgba(63, 63, 63, 0.4)',
@@ -259,121 +245,103 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
           />
         </div>
       </div>
-      {!loading ? (
-        paginatedTokens.length > 0 && Object.values(allTokens).length > 0. ? (
-          <div
-            ref={tableRef}
-            className="portfolio-list-table-div"
-            onMouseDown={handleStart}
-            onMouseUp={handleEnd}
-            onMouseMove={handleMove}
-            onMouseLeave={handleEnd}
-            onTouchStart={handleStart}
-            onTouchEnd={handleEnd}
-            onTouchMove={handleMove}
-          >
-            <Table
-              className='portfolio-list-table'
-            >
-              <tbody>
-                {paginatedTokens.map((token: CreatedToken) => (
-                  <tr
-                    key={token.token_id}
-                  >
-                    {/* Sticky First Column */}
-                    <td width={5}>
-                      <Avatar src={token.logo} sx={{ height: '35px', width: '35px' }} />
-                    </td>
+      <List>
+        {!loading ? (
+          paginatedTokens.length > 0 ? (
+            paginatedTokens.map((token: CreatedToken, index: number) => (
+              <div
+                key={`list-item-${token.token_id}`}
+                className="mb-1 text-white d-flex align-items-center cursor-pointer token-list-item"
+                style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
+              >
+                {/* Fixed Token Column */}
+                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '30px' : '5%' }}>
+                  <Avatar className="" src={token.logo} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />                  
+                </div>
 
-                    {/* Scrollable Columns */}
-                    <td width={10}>
-                      <div className='m-l-n-xs'>
-                        <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Token {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">{token.ticker}</p>
-                      </div>
-                    </td>
+                {/* Scrollable Section for Other Columns */}
+                <div
+                  ref={(el) => (scrollContainerRef.current[index] = el!)}
+                  onScroll={syncScroll(index)}
+                  className="d-flex overflow-auto py-2 pe-3 ps-0"
+                  style={{ flex: 1, gap: '10px', paddingLeft: '10px', willChange: 'scroll-position' }}
+                >
+                  <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '90px' : '11%' }}>
+                    <div className="">
+                      <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                        Token {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                      </p>
+                      <p className="font-size-sm mb-0">{token.ticker}</p>
+                    </div>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestValue' || sortOption === 'lowestValue' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Value {sortOption === 'highestValue' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestValue' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">
-                          ${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(allTokens[token.token_id]?.price_usd || '0') * parseFloat(denominatedAmountToIntlFormattedAmount(token.balance || 0, token.decimals || 18, 2) || '0'), 3)), 0, 20)}
-                        </p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestValue' || sortOption === 'lowestValue' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Value {sortOption === 'highestValue' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestValue' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">
+                      ${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(allTokens[token.token_id]?.price_usd || '0') * parseFloat(denominatedAmountToIntlFormattedAmount(token.balance || 0, token.decimals || 18, 2) || '0'), 3)), 0, 20)}
+                    </p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestBalance' || sortOption === 'lowestBalance' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Balance {sortOption === 'highestBalance' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestBalance' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">{denominatedAmountToIntlFormattedAmount(token.balance || 0, token.decimals || 18, 2)}</p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestBalance' || sortOption === 'lowestBalance' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Balance {sortOption === 'highestBalance' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestBalance' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">{denominatedAmountToIntlFormattedAmount(token.balance || 0, token.decimals || 18, 2)}</p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice' || sortOption === 'lowestPrice' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Price {sortOption === 'highestPrice' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestPrice' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">
-                          $<ReduceZerosFormat numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(allTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)} />
-                        </p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice' || sortOption === 'lowestPrice' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Price {sortOption === 'highestPrice' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestPrice' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">
+                      $<ReduceZerosFormat numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(allTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)} />
+                    </p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '14%' }}>
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice24h' || sortOption === 'lowestPrice24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Price 24h
-                          {sortOption === 'highestPrice24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestPrice24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">{getPriceChangePercentageComponent(parseFloat(allTokens[token.token_id]?.price_usd), parseFloat(allTokens[token.token_id]?.price_change_24h))}</p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '14%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice24h' || sortOption === 'lowestPrice24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Price 24h
+                      {sortOption === 'highestPrice24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestPrice24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">{getPriceChangePercentageComponent(parseFloat(allTokens[token.token_id]?.price_usd), parseFloat(allTokens[token.token_id]?.price_change_24h))}</p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '11%' }}>
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice7D' || sortOption === 'lowestPrice7D' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Price 7D
-                          {sortOption === 'highestPrice7D' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestPrice7D' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">{getPriceChangePercentageComponent(parseFloat(allTokens[token.token_id]?.price_usd), parseFloat(allTokens[token.token_id]?.price_change_7d))}</p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '11%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice7D' || sortOption === 'lowestPrice7D' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Price 7D
+                      {sortOption === 'highestPrice7D' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestPrice7D' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">{getPriceChangePercentageComponent(parseFloat(allTokens[token.token_id]?.price_usd), parseFloat(allTokens[token.token_id]?.price_change_7d))}</p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '11%' }}>
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice30D' || sortOption === 'lowestPrice30D' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Price 30D
-                          {sortOption === 'highestPrice30D' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestPrice30D' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">{getPriceChangePercentageComponent(parseFloat(allTokens[token.token_id]?.price_usd), parseFloat(allTokens[token.token_id]?.price_change_30d))}</p>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '11%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestPrice30D' || sortOption === 'lowestPrice30D' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Price 30D
+                      {sortOption === 'highestPrice30D' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestPrice30D' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">{getPriceChangePercentageComponent(parseFloat(allTokens[token.token_id]?.price_usd), parseFloat(allTokens[token.token_id]?.price_change_30d))}</p>
+                  </div>
+                </div>
+              </div>
+
+            ))
+          ) : (
+            <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
+              <p className='text-silver text-center mt-2 h6'>No token found</p>
+            </div>
+          )
         ) : (
-          <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
-            <p className='text-silver text-center mt-2 h6'>No token found</p>
-          </div>
-        )
-      ) : (
-        <SimpleLoader />
-      )}
+          <SimpleLoader />
+        )}
+      </List>
       {/* Pagination Controls */}
       <div className="pagination-controls m-t-n-sm">
         <Button
@@ -417,4 +385,4 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
   );
 };
 
-export default UserTokensList;
+export default UserTokensListOld;
