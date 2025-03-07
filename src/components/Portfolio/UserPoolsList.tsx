@@ -243,7 +243,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
         </div>
       </div>
       {!loading ? (
-        paginatedPairs.length > 0 && Object.values(allTokens).length > 0. ? (
+        paginatedPairs.length > 0 && Object.values(allTokens).length > 0 ? (
           <div
             ref={tableRef}
             className="portfolio-list-table-div"

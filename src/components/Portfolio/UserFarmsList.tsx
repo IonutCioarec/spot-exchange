@@ -237,7 +237,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
         </div>
       </div>
       {!loading ? (
-        paginatedFarms.length > 0 && Object.values(allTokens).length > 0. ? (
+        paginatedFarms.length > 0 && Object.values(allTokens).length > 0 ? (
           <div
             ref={tableRef}
             className="portfolio-list-table-div"

@@ -260,7 +260,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
         </div>
       </div>
       {!loading ? (
-        paginatedTokens.length > 0 && Object.values(allTokens).length > 0. ? (
+        paginatedTokens.length > 0 && Object.values(allTokens).length > 0 ? (
           <div
             ref={tableRef}
             className="portfolio-list-table-div"
