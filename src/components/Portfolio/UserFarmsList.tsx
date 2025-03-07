@@ -1,17 +1,22 @@
 import { useState, useMemo, useRef } from 'react';
-import { Button, List, TextField } from '@mui/material';
-import { intlNumberFormat } from 'utils/formatters';
+import { TextField, Avatar, Button } from '@mui/material';
+import { denominatedAmountToIntlFormattedAmount, formatSignificantDecimals, getFormattedUserPoolLiquidity, getFormattedUserPoolShare, intlNumberFormat } from 'utils/formatters';
 import { Search } from '@mui/icons-material';
 import SimpleLoader from 'components/SimpleLoader';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import { useSelector } from 'react-redux';
 import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
-import { Farm, FarmsState, UserFarmsState } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
+import ReduceZerosFormat from "components/ReduceZerosFormat";
+import MovingIcon from '@mui/icons-material/Moving';
+import { CreatedToken, CreatedTokens } from 'types/mvxTypes';
 import { Select, MenuItem } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import Table from "react-bootstrap/Table";
+import { Farm, FarmsState, Pair, PairsState, UserFarmsState } from 'types/backendTypes';
+import { getUserPoolLiquidity, getUserPoolShare } from 'utils/calculs';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 
@@ -107,16 +112,29 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
     }
   };
 
-  // Function to sync scroll for all elements
-  const scrollContainerRef = useRef<HTMLDivElement[]>([]);
-  const syncScroll = (index: number) => (event: React.UIEvent<HTMLDivElement>) => {
-    const { scrollLeft } = event.currentTarget;
+  const tableRef = useRef<HTMLDivElement>(null);
+  let isDown = false;
+  let startX: number;
+  let scrollLeft: number;
 
-    scrollContainerRef.current.forEach((el, i) => {
-      if (el && i !== index) {
-        el.scrollLeft = scrollLeft;
-      }
-    });
+  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!tableRef.current) return;
+    isDown = true;
+    const event = "touches" in e ? e.touches[0] : e;
+    startX = event.pageX - tableRef.current.offsetLeft;
+    scrollLeft = tableRef.current.scrollLeft;
+  };
+
+  const handleEnd = () => {
+    isDown = false;
+  };
+
+  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDown || !tableRef.current) return;
+    const event = "touches" in e ? e.touches[0] : e;
+    const x = event.pageX - tableRef.current.offsetLeft;
+    const walk = (x - startX);
+    tableRef.current.scrollLeft = scrollLeft - walk;
   };
 
   return (
@@ -218,173 +236,195 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
           />
         </div>
       </div>
-      <List>
-        {!loading ? (
-          processedFarms.length > 0 ? (
-            processedFarms.map((farm: Farm, index: number) => (
-              <div
-                key={`list-item-${farm.lp_token_id}`}
-                className="mb-1 text-white d-flex align-items-center cursor-pointer token-list-item"
-                style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
-              >
-                {/* Fixed Token Column */}
-                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '80px' : '5%' }}>
-                  <img
-                    src={allTokens[farm.token1]?.logo_url ?? defaultTokenValues.image_url}
-                    alt={farm.token1}
-                    className='d-inline'
-                    style={{ width: 35, height: 35, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
-                  />
-                  <motion.img
-                    src={allTokens[farm.token2]?.logo_url ?? defaultTokenValues.image_url}
-                    alt={farm.token2}
-                    className="d-inline m-l-n-xxl"
-                    initial={{ x: 0 }}
-                    animate={{ x: 20 }}
-                    transition={{
-                      duration: 2.5,
-                      ease: 'easeInOut',
-                      delay: 0.3,
-                    }}
-                    style={{
-                      width: 35,
-                      height: 35,
-                      border: '2px solid rgba(63, 172, 90, 0.3)',
-                      borderRadius: '20px',
-                      position: 'relative',
-                      left: '0px',
-                    }}
-                  />                  
-                </div>
+      {!loading ? (
+        paginatedFarms.length > 0 && Object.values(allTokens).length > 0. ? (
+          <div
+            ref={tableRef}
+            className="portfolio-list-table-div"
+            onMouseDown={handleStart}
+            onMouseUp={handleEnd}
+            onMouseMove={handleMove}
+            onMouseLeave={handleEnd}
+            onTouchStart={handleStart}
+            onTouchEnd={handleEnd}
+            onTouchMove={handleMove}
+          >
+            <Table
+              className='portfolio-list-table'
+            >
+              <tbody>
+                {paginatedFarms.map((farm: Farm) => (
+                  <tr
+                    key={farm.lp_token_id}
+                  >
+                    {/* Sticky First Column */}
+                    <td>
+                      <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '60px' : 'inherit' }}>
+                        <img
+                          src={allTokens[farm.token1]?.logo_url ?? defaultTokenValues.image_url}
+                          alt={farm.token1}
+                          className='d-inline'
+                          style={{ width: 35, height: 35, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
+                        />
+                        <motion.img
+                          src={allTokens[farm.token2]?.logo_url ?? defaultTokenValues.image_url}
+                          alt={farm.token2}
+                          className="d-inline m-l-n-xxl"
+                          initial={{ x: 0 }}
+                          animate={{ x: 20 }}
+                          transition={{
+                            duration: 2.5,
+                            ease: 'easeInOut',
+                            delay: 0.3,
+                          }}
+                          style={{
+                            width: 35,
+                            height: 35,
+                            border: '2px solid rgba(63, 172, 90, 0.3)',
+                            borderRadius: '20px',
+                            position: 'relative',
+                            left: '0px',
+                          }}
+                        />
+                      </div>
+                    </td>
 
-                {/* Scrollable Section for Other Columns */}
-                <div
-                  ref={(el) => (scrollContainerRef.current[index] = el!)}
-                  onScroll={syncScroll(index)}
-                  className="d-flex overflow-auto py-2 px-3"
-                  style={{ flex: 1, gap: '10px', paddingLeft: '10px', willChange: 'scroll-position' }}
-                >
-                  <div className="" style={{ minWidth: isMobile ? '100px' : '10%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Farm {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">{allTokens[farm?.token1]?.ticker}{allTokens[farm?.token2]?.ticker}</p>
-                  </div>
+                    {/* Scrollable Columns */}
+                    <td width={10}>
+                      <div className="" style={{ minWidth: isMobile ? '100px' : '10%' }}>
+                        <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Farm {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">{allTokens[farm?.token1]?.ticker}{allTokens[farm?.token2]?.ticker}</p>
+                      </div>
+                    </td>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestYourStaked' || sortOption === 'lowestYourStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Your Staked
-                      {sortOption === 'highestYourStaked' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestYourStaked' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">
-                      $
-                      <CountUp
-                        start={0}
-                        end={Number(userData[farm?.lp_token_id]?.staked) || 0}
-                        duration={1.5}
-                        separator=","
-                        decimals={3}
-                        decimal="."
-                        delay={0.1}
-                      />
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                        <p className={`font-size-xs mb-0 ${sortOption === 'highestYourStaked' || sortOption === 'lowestYourStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Your Staked
+                          {sortOption === 'highestYourStaked' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                          {sortOption === 'lowestYourStaked' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          $
+                          <CountUp
+                            start={0}
+                            end={Number(userData[farm?.lp_token_id]?.staked) || 0}
+                            duration={1.5}
+                            separator=","
+                            decimals={3}
+                            decimal="."
+                            delay={0.1}
+                          />
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestYourRewards' || sortOption === 'lowestYourRewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Your Rewards
-                      {sortOption === 'highestYourRewards' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestYourRewards' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">
-                      $
-                      <CountUp
-                        start={0}
-                        end={Number(userData[farm?.lp_token_id]?.rewards) || 0}
-                        duration={1.5}
-                        separator=","
-                        decimals={3}
-                        decimal="."
-                        delay={0.1}
-                      />
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                        <p className={`font-size-xs mb-0 ${sortOption === 'highestYourRewards' || sortOption === 'lowestYourRewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Your Rewards
+                          {sortOption === 'highestYourRewards' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                          {sortOption === 'lowestYourRewards' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          $
+                          <CountUp
+                            start={0}
+                            end={Number(userData[farm?.lp_token_id]?.rewards) || 0}
+                            duration={1.5}
+                            separator=","
+                            decimals={3}
+                            decimal="."
+                            delay={0.1}
+                          />
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestStaked' || sortOption === 'lowestStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Total Staked
-                      {sortOption === 'highestStaked' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestStaked' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">
-                      $
-                      <CountUp
-                        start={0}
-                        end={Number(farm?.totalStaked)}
-                        duration={1.5}
-                        separator=","
-                        decimals={3}
-                        decimal="."
-                        delay={0.1}
-                      />
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                        <p className={`font-size-xs mb-0 ${sortOption === 'highestStaked' || sortOption === 'lowestStaked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Total Staked
+                          {sortOption === 'highestStaked' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                          {sortOption === 'lowestStaked' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          $
+                          <CountUp
+                            start={0}
+                            end={Number(farm?.totalStaked)}
+                            duration={1.5}
+                            separator=","
+                            decimals={3}
+                            decimal="."
+                            delay={0.1}
+                          />
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestRewards' || sortOption === 'lowestRewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Total Rewards
-                      {sortOption === 'highestRewards' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestRewards' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">
-                      $
-                      <CountUp
-                        start={0}
-                        end={Number(farm?.totalRewards)}
-                        duration={1.5}
-                        separator=","
-                        decimals={3}
-                        decimal="."
-                        delay={0.1}
-                      />
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                        <p className={`font-size-xs mb-0 ${sortOption === 'highestRewards' || sortOption === 'lowestRewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Total Rewards
+                          {sortOption === 'highestRewards' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                          {sortOption === 'lowestRewards' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          $
+                          <CountUp
+                            start={0}
+                            end={Number(farm?.totalRewards)}
+                            duration={1.5}
+                            separator=","
+                            decimals={3}
+                            decimal="."
+                            delay={0.1}
+                          />
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestFeesAPR' || sortOption === 'lowestFeesAPR' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Fees APR
-                      {sortOption === 'highestFeesAPR' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestFeesAPR' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">
-                      {intlNumberFormat(Number(farm?.feesAPR))}%
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
+                        <p className={`font-size-xs mb-0 ${sortOption === 'highestFeesAPR' || sortOption === 'lowestFeesAPR' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Fees APR
+                          {sortOption === 'highestFeesAPR' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                          {sortOption === 'lowestFeesAPR' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          {intlNumberFormat(Number(farm?.feesAPR))}%
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
-                    <p className={`font-size-xs mb-0 ${sortOption === 'highestBoostedAPR' || sortOption === 'lowestBoostedAPR' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                      Boosted APR
-                      {sortOption === 'highestBoostedAPR' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                      {sortOption === 'lowestBoostedAPR' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                    </p>
-                    <p className="font-size-sm mb-0">
-                      {intlNumberFormat(Number(farm?.boostedAPR))}%
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-            ))
-          ) : (
-            <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
-              <p className='text-silver text-center mt-2 h6'>No farm found</p>
-            </div>
-          )
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
+                        <p className={`font-size-xs mb-0 ${sortOption === 'highestBoostedAPR' || sortOption === 'lowestBoostedAPR' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Boosted APR
+                          {sortOption === 'highestBoostedAPR' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                          {sortOption === 'lowestBoostedAPR' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          {intlNumberFormat(Number(farm?.boostedAPR))}%
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
         ) : (
-          <SimpleLoader />
-        )}
-      </List>
+          <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
+            <p className='text-silver text-center mt-2 h6'>No farm found</p>
+          </div>
+        )
+      ) : (
+        <SimpleLoader />
+      )}
       {/* Pagination Controls */}
       <div className="pagination-controls m-t-n-sm">
         <Button
