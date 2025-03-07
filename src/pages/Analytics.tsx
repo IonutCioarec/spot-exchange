@@ -1,4 +1,5 @@
 import 'assets/scss/analytics.scss';
+import 'assets/scss/home.scss';
 import { Row, Col } from 'react-bootstrap';
 import LiquidityChart from 'components/Analytics/LiquidityChart';
 import VolumeChart from 'components/Analytics/VolumeChart';
@@ -28,7 +29,6 @@ import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import UserFarmsList from 'components/Portfolio/UserFarmsList';
 import PeopleIcon from '@mui/icons-material/People';
 import StarIcon from '@mui/icons-material/Star';
 import { farmsDummy } from 'utils/dummyData';

@@ -1,18 +1,21 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { TextField, List, Avatar, Button } from '@mui/material';
+import { TextField, List, Avatar, Button, SelectChangeEvent, Select, OutlinedInput, MenuItem} from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { Search } from '@mui/icons-material';
 import SimpleLoader from 'components/SimpleLoader';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPage, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput, selectPairTokensNumber } from 'storeManager/slices/tokensSlice';
+import { selectPage, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput, selectPairTokensNumber, setTokensSortBy, setTokensSortDirection, selectTokensSortBy, selectTokensSortDirection } from 'storeManager/slices/tokensSlice';
 import { Token } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
 import MovingIcon from '@mui/icons-material/Moving';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import Table from "react-bootstrap/Table";
 
 const getPriceChangePercentage = (currentPrice: number, previousPrice: number) => {
   if (previousPrice === 0) return <span> - </span>; // Avoid division by zero
@@ -23,9 +26,15 @@ const getPriceChangePercentage = (currentPrice: number, previousPrice: number) =
   const rotation = isPositive ? 'rotate(-45deg)' : 'rotate(-225deg)';
 
   return (
-    <span style={{ color }}>
-      <MovingIcon style={{ transform: rotation, fontSize: '20px' }} />
-      {Math.abs(percentageChange).toFixed(3)}%
+    <span style={{ color, textWrap: 'nowrap' }}>
+      {percentageChange ? (
+        <>
+          <MovingIcon style={{ transform: rotation, fontSize: '20px' }} />
+          {Math.abs(percentageChange).toFixed(3)}%
+        </>
+      ) : (
+        <span style={{ color: 'white' }}>-</span>
+      )}
     </span>
   );
 };
@@ -37,20 +46,14 @@ const TokensList = () => {
   const totalPages = useSelector(selectTotalPages);
   const pairTokensNumber = useSelector(selectPairTokensNumber);
   const apiSearchInput = useSelector(selectSearchInput);
+  const sortBy = useSelector(selectTokensSortBy);
+  const sortDirection = useSelector(selectTokensSortDirection);
 
   const [isOpen, setIsOpen] = useState(false);
   const [localSearchInput, setLocalSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const isMobile = useMobile();
   const isTablet = useTablet();
-
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => {
-    setIsOpen(false);
-    setLocalSearchInput('');
-    dispatch(setSearchInput(''));
-    dispatch(setPage(1));
-  };
 
   // Debounced function for updating Redux state
   const debouncedDispatch = useCallback(
@@ -80,150 +83,326 @@ const TokensList = () => {
     dispatch(setPage(newPage));
   };
 
-  const handleTokenSelect = (tokenId: string) => {
-    handleClose();
+  const handleSortByChange = (event: SelectChangeEvent) => {
+    const selectedValue = event.target.value;
+
+    switch (selectedValue) {
+      case 'price_desc':
+        dispatch(setTokensSortBy('price_usd'));
+        dispatch(setTokensSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+      case 'price_asc':
+        dispatch(setTokensSortBy('price_usd'));
+        dispatch(setTokensSortDirection('asc'));
+        dispatch(setPage(1));
+        break;
+      case 'price24h_desc':
+        dispatch(setTokensSortBy('price_change24h'));
+        dispatch(setTokensSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+      case 'price24h_asc':
+        dispatch(setTokensSortBy('price_change24h'));
+        dispatch(setTokensSortDirection('asc'));
+        dispatch(setPage(1));
+        break;
+      case 'volume24h_desc':
+        dispatch(setTokensSortBy('volume24h'));
+        dispatch(setTokensSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+      case 'volume24h_asc':
+        dispatch(setTokensSortBy('volume24h'));
+        dispatch(setTokensSortDirection('asc'));
+        dispatch(setPage(1));
+        break;
+      case 'volume30d_desc':
+        dispatch(setTokensSortBy('volume30d'));
+        dispatch(setTokensSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+      case 'volume30d_asc':
+        dispatch(setTokensSortBy('volume30d'));
+        dispatch(setTokensSortDirection('asc'));
+        dispatch(setPage(1));
+        break;
+      default:
+        dispatch(setTokensSortBy('price_usd'));
+        dispatch(setTokensSortDirection('desc'));
+        dispatch(setPage(1));
+        break;
+    }
+  };
+
+  // Helper function to get display label based on selected value
+  const getSelectedLabel = () => {
+    if (sortBy === 'price_usd' && sortDirection === 'desc') return 'Highest Price';
+    if (sortBy === 'price_usd' && sortDirection === 'asc') return 'Lowest Price';
+    if (sortBy === 'price_change24h' && sortDirection === 'desc') return 'Highest Price Change 24h';
+    if (sortBy === 'price_change24h' && sortDirection === 'asc') return 'Lowest Price Change 24h';
+    if (sortBy === 'volume24h' && sortDirection === 'desc') return 'Highest Volume 24h';
+    if (sortBy === 'volume24h' && sortDirection === 'asc') return 'Lowest Volume 24h';
+    if (sortBy === 'volume30d' && sortDirection === 'desc') return 'Highest Volume 30D';
+    if (sortBy === 'volume30d' && sortDirection === 'asc') return 'Lowest Volume 30D';
+    return 'Highest Price'; // Default
   };
 
   // Function to sync scroll for all elements
-  const scrollContainerRef = useRef<HTMLDivElement[]>([]);
-  const syncScroll = (index: number) => (event: React.UIEvent<HTMLDivElement>) => {
-    const { scrollLeft } = event.currentTarget;
+  const tableRef = useRef<HTMLDivElement>(null);
+  let isDown = false;
+  let startX: number;
+  let scrollLeft: number;
 
-    scrollContainerRef.current.forEach((el, i) => {
-      if (el && i !== index) {
-        el.scrollLeft = scrollLeft;
-      }
-    });
+  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!tableRef.current) return;
+    isDown = true;
+    const event = "touches" in e ? e.touches[0] : e;
+    startX = event.pageX - tableRef.current.offsetLeft;
+    scrollLeft = tableRef.current.scrollLeft;
+  };
+
+  const handleEnd = () => {
+    isDown = false;
+  };
+
+  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDown || !tableRef.current) return;
+    const event = "touches" in e ? e.touches[0] : e;
+    const x = event.pageX - tableRef.current.offsetLeft;
+    const walk = (x - startX);
+    tableRef.current.scrollLeft = scrollLeft - walk;
   };
 
   return (
     <div className='b-r-sm'>
-      <div className='d-flex justify-content-between'>
-        <p className='h4 mt-1 ms-2 mb-0 text-white'>Tokens ({pairTokensNumber})</p>
-        <div className='d-flex justify-content-end'>
+      <div className={`${isMobile ? '' : 'd-flex'} justify-content-between align-items-center`}>
+        <p className='h3 mt-1 mb-0 text-white'>Tokens ({pairTokensNumber})</p>
+        <div className='d-flex justify-content-end align-items-center'>
+          <span className={`${isMobile ? 'font-size-sm' : 'font-size-md'} font-regular text-white m-r-n-xs`} style={{ textWrap: 'nowrap' }}>Sort-by: </span>
+          <Select
+            id="sort-by"
+            value={`${sortBy}_${sortDirection}`}
+            onChange={handleSortByChange}
+            input={<OutlinedInput />}
+            size='small'
+            renderValue={() => (
+              <div className={`${isMobile ? 'font-size-sm' : 'font-size-md'} font-regular`} style={{ marginTop: '2px', color: '#3fac5a' }}>
+                {getSelectedLabel()}
+              </div>
+            )}
+            className={`${isMobile ? '' : 'ms-2'}`}
+            sx={{
+              color: '#3fac5a',
+              fontSize: '14px',
+              fontFamily: 'Red Rose',
+              padding: 0,
+              '.MuiOutlinedInput-notchedOutline': {
+                border: 'none',
+              },
+              '& .MuiSvgIcon-root': {
+                color: '#3fac5a',
+                marginLeft: '-50px !important'
+              },
+              backgroundColor: 'transparent',
+            }}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  backgroundColor: 'rgba(32, 32, 32, 1)',
+                  color: 'white',
+                  fontFamily: 'Red Rose',
+                  borderRadius: '15px',
+                },
+              },
+            }}
+          >
+            <MenuItem value="price_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_usd' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Price</MenuItem>
+            <MenuItem value="price_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_usd' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Price</MenuItem>
+            <MenuItem value="price24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_change24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Price Change 24h</MenuItem>
+            <MenuItem value="price24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_change24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Price Change 24h</MenuItem>
+            <MenuItem value="volume24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Volume 24h</MenuItem>
+            <MenuItem value="volume24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Volume 24h</MenuItem>
+            <MenuItem value="volume30d_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume30d' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Volume 30D</MenuItem>
+            <MenuItem value="volume30d_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume30d' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Volume 30D</MenuItem>
+          </Select>
           <TextField
             fullWidth
-            label="Quick Search"
             size="small"
             variant="outlined"
             value={localSearchInput}
             autoComplete="off"
             onChange={handleSearchChange}
-            className="token-search-container mb-2"            
+            className="token-search-container mb-2"
             InputProps={{
-              startAdornment: <Search sx={{ color: 'rgba(255, 255, 255, 0.7)', marginRight: '8px', fontSize: '18px' }} />,
-              style: { color: 'silver', fontFamily: 'Red Rose' },
+              style: {
+                backgroundColor: 'rgba(63, 63, 63, 0.4)',
+                color: 'white',
+                borderRadius: '20px'
+              },
+              startAdornment: (
+                <Search style={{ color: 'white', marginRight: '8px', fontSize: '16px' }} />
+              ),
             }}
             InputLabelProps={{
-              style: { color: 'silver', fontFamily: 'Red Rose' },
-              shrink: true,
+              style: {
+                color: 'white',
+                marginTop: '3px',
+                fontFamily: 'Red Rose'
+              },
             }}
             sx={{
+              '& .MuiInputBase-input': {
+                height: '0.95em',
+                fontSize: '0.95em',
+              },
               '& .MuiOutlinedInput-root': {
+                height: 'auto',
                 '& fieldset': {
-                  borderColor: 'silver',
-                  borderRadius: '20px',
+                  borderColor: 'transparent',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3FAC5A',
                 },
                 '&:hover fieldset': {
-                  borderColor: 'silver',
+                  borderColor: '#3FAC5A',
                 },
-                fontFamily: 'Red Rose',
-                fontSize: '12px',
               },
-              '& .MuiInputLabel-root': {
-                backgroundColor: '#141414',
-                paddingRight: '5px'
-              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'transparent',
+              }
             }}
           />
-
         </div>
       </div>
-      <List>
-        {!loading ? (
-          Object.values(pairTokens).length > 0 ? (
-            Object.values(pairTokens).map((token: Token, index: number) => (
-              <div
-                key={`list-item-${token.token_id}`}
-                className='mb-1 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item'
-                style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
-              >
-                {/* Fixed Token Column */}
-                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '50px' : '5%' }}>
-                  <Avatar className='' src={token.logo_url} sx={{ height: '35px', width: '35px', marginTop: '-2px' }} />                  
-                </div>
+      {!loading ? (
+        Object.values(pairTokens).length > 0 ? (
+          <div
+            ref={tableRef}
+            className="portfolio-list-table-div"
+            onMouseDown={handleStart}
+            onMouseUp={handleEnd}
+            onMouseMove={handleMove}
+            onMouseLeave={handleEnd}
+            onTouchStart={handleStart}
+            onTouchEnd={handleEnd}
+            onTouchMove={handleMove}
+          >
+            <Table
+              className='portfolio-list-table'
+            >
+              <tbody>
+                {Object.values(pairTokens).map((token: Token) => (
+                  <tr
+                    key={token.token_id}
+                  >
+                    {/* Sticky First Column */}
+                    <td width={5}>
+                      <Avatar src={token.logo_url} sx={{ height: '35px', width: '35px' }} />
+                    </td>
 
-                {/* Scrollable Section for Other Columns */}
-                <div
-                  ref={(el) => (scrollContainerRef.current[index] = el!)}
-                  onScroll={syncScroll(index)}
-                  className="d-flex overflow-auto py-2 ps-0 pe-3"
-                  style={{ flex: 1, gap: '10px', paddingLeft: '10px' }}
-                >
-                  <div className='' style={{ minWidth: isMobile ? '70px' : '5%' }}>
-                    <p className='font-size-xs mb-0 text-silver'>Token</p>
-                    <p className='font-size-sm mb-0'>{token.ticker}</p>
-                  </div>
+                    {/* Scrollable Columns */}
+                    <td width={10}>
+                      <div className='m-l-n-xs'>
+                        <p className={`font-size-xs mb-0 text-silver`}>
+                          Token
+                        </p>
+                        <p className="font-size-sm mb-0">{token.ticker}</p>
+                      </div>
+                    </td>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '13%' }}>
-                    <p className='font-size-xs mb-0 text-silver'>Price</p>
-                    <p className='font-size-sm mb-0'>
-                      $<ReduceZerosFormat
-                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}
-                      />
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right">
+                        <p className={`font-size-xs mb-0 ${sortBy === 'price_usd' ? 'text-intense-green font-bold' : 'text-silver'}`}  style={{ textWrap: 'nowrap' }}>
+                          Price
+                          {sortBy === 'price_usd' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                          {sortBy === 'price_usd' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          $<ReduceZerosFormat
+                            numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}
+                          />
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '13%' }}>
-                    <p className='font-size-xs mb-0 text-silver'>Price 24H</p>
-                    <p className='font-size-sm mb-0'>
-                      {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_24h))}
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right">
+                        <p className={`font-size-xs mb-0 ${sortBy === 'price_change24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Price 24H
+                          {sortBy === 'price_change24h' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                          {sortBy === 'price_change24h' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_24h))}
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '13%' }}>
-                    <p className='font-size-xs mb-0 text-silver'>Price 30D</p>
-                    <p className='font-size-sm mb-0'>
-                      {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_30d))}
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right">
+                        <p className={`font-size-xs mb-0 'text-silver`}>
+                          Price 30D
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          {getPriceChangePercentage(parseFloat(pairTokens[token.token_id]?.price_usd), parseFloat(pairTokens[token.token_id]?.price_change_30d))}
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '16%' }}>
-                    <p className='font-size-xs mb-0 text-silver'>Volume 24H</p>
-                    <p className='font-size-sm mb-0'>
-                      $<ReduceZerosFormat
-                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.volume_24h || '0'), 3)), 0, 20)}
-                      />
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '14%' }}>
+                        <p className={`font-size-xs mb-0 ${sortBy === 'volume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Volume 24h
+                          {sortBy === 'volume24h' && sortDirection === 'desc' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                          {sortBy === 'volume24h' && sortDirection === 'asc' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          $<ReduceZerosFormat
+                            numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.volume_24h || '0'), 3)), 0, 20)}
+                          />
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '16%' }}>
-                    <p className='font-size-xs mb-0 text-silver'>Volume 30D</p>
-                    <p className='font-size-sm mb-0'>
-                      $<ReduceZerosFormat
-                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.volume_30d || '0'), 3)), 0, 20)}
-                      />
-                    </p>
-                  </div>
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '14%' }}>
+                        <p className={`font-size-xs mb-0 ${sortBy === 'volume30d' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                          Volume 30D
+                          {sortBy === 'volume30d' && sortDirection === 'desc' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                          {sortBy === 'volume30d' && sortDirection === 'asc' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          $<ReduceZerosFormat
+                            numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.volume_30d || '0'), 3)), 0, 20)}
+                          />
+                        </p>
+                      </div>
+                    </td>
 
-                  <div className='text-right' style={{ minWidth: isMobile ? '150px' : '18%' }}>
-                    <p className='font-size-xs mb-0 text-silver'>Liquidity</p>
-                    <p className='font-size-sm mb-0'>
-                      ${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0') * parseFloat(pairTokens[token.token_id]?.supply || '0'), 3)), 0, 20)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
-              <p className='text-silver text-center mt-2 h6'>No token found</p>
-            </div>
-          )
+                    <td align="right">
+                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '11%' }}>
+                        <p className={`font-size-xs mb-0 text-silver`}>
+                          Liquidity
+                        </p>
+                        <p className="font-size-sm mb-0">
+                          ${intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0') * parseFloat(pairTokens[token.token_id]?.supply || '0'), 3)), 0, 20)}
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
         ) : (
-          <SimpleLoader />
-        )}
-      </List>
+          <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
+            <p className='text-silver text-center mt-2 h6'>No token found</p>
+          </div>
+        )
+      ) : (
+        <SimpleLoader />
+      )}
       {/* Pagination controls */}
       {Object.values(pairTokens).length > 0 && (
         <div className="pagination-controls m-t-n-xs">
