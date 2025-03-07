@@ -12,7 +12,7 @@ import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArro
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
-import MovingIcon from '@mui/icons-material/Moving';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import Table from "react-bootstrap/Table";
@@ -23,14 +23,14 @@ const getPriceChangePercentage = (currentPrice: number, previousPrice: number) =
   const percentageChange = ((currentPrice - previousPrice) / Math.abs(previousPrice)) * 100;
   const isPositive = percentageChange >= 0;
   const color = isPositive ? '#3FAC5A' : '#bd0d0d';
-  const rotation = isPositive ? 'rotate(-45deg)' : 'rotate(-225deg)';
+  const rotation = isPositive ? 'rotate(-90deg)' : 'rotate(90deg)';
 
   return (
     <span style={{ color, textWrap: 'nowrap' }}>
       {percentageChange ? (
         <>
-          <MovingIcon style={{ transform: rotation, fontSize: '20px' }} />
-          {Math.abs(percentageChange).toFixed(3)}%
+          <PlayArrowIcon style={{ transform: rotation, fontSize: '20px' }} />
+          <span className='text-white'>{Math.abs(percentageChange).toFixed(3)}%</span>
         </>
       ) : (
         <span style={{ color: 'white' }}>-</span>

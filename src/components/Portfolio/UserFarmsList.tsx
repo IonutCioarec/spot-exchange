@@ -150,7 +150,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
             className={`${isMobile ? '' : 'ms-2'}`}
             sx={{
               color: '#3fac5a',
-              fontSize: '14px',
+              fontSize: isMobile ? '14px' : '16px',
               fontFamily: 'Red Rose',
               padding: 0,
               '.MuiOutlinedInput-notchedOutline': {
