@@ -103,7 +103,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   return (
     <>
       <div
-        className='input-container2 font-rose p-1 b-r-sm d-flex justify-content-around align-items-center swap-token-container'
+        className='input-container2 font-rose b-r-sm d-flex justify-content-around align-items-center swap-token-container'
         style={{
           minWidth: isMobile || isTablet ? '150px' : '200px',
           minHeight: isMobile ? '39.44px' : '56.94px',
@@ -115,18 +115,18 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         <img
           src={allTokens[selectedToken]?.logo_url || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.logo_url}
           alt={tokenType}
-          style={{ height: isMobile ? 30 : 35, flexShrink: 0, position: 'relative' }}
+          style={{ height: isMobile ? 25 : 35, flexShrink: 0, position: 'relative' }}
           className='ms-2'
         />
         <div
           className='mx-2'
           style={{
-            width: isMobile ? '55vw' : 'auto',
+            width: isMobile || isTablet ? '45vw' : 'auto',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
           }}>
-          <p className={`m-0 ${isMobile ? 'h6' : 'h4'}`}>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
-          <p className='mt-0 mb-0 font-size-xxs text-silver'>
+          <p className={`m-0 ${isMobile ? 'font-size-sm' : 'h4'}`}>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
+          <p className='m-t-n-xs mb-0 font-size-xxs text-silver'>
             $<ReduceZerosFormat
               numberString={intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[selectedToken]?.price_usd) ?? 0, 3)), 0, 20) ||
                 intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.price_usd) || 0, 3)), 0, 20)

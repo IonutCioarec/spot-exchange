@@ -302,7 +302,7 @@ const TokensList = () => {
                     </td>
 
                     {/* Scrollable Columns */}
-                    <td width={10}>
+                    <td>
                       <div className='m-l-n-xs'>
                         <p className={`font-size-xs mb-0 text-silver`}>
                           Token
@@ -351,7 +351,7 @@ const TokensList = () => {
                     </td>
 
                     <td align="right">
-                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '14%' }}>
+                      <div className="text-right">
                         <p className={`font-size-xs mb-0 ${sortBy === 'volume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                           Volume 24h
                           {sortBy === 'volume24h' && sortDirection === 'desc' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -366,7 +366,7 @@ const TokensList = () => {
                     </td>
 
                     <td align="right">
-                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '14%' }}>
+                      <div className="text-right">
                         <p className={`font-size-xs mb-0 ${sortBy === 'volume30d' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                           Volume 30D
                           {sortBy === 'volume30d' && sortDirection === 'desc' && <TrendingDownIcon className="ms-1 font-size-md" />}
@@ -381,7 +381,7 @@ const TokensList = () => {
                     </td>
 
                     <td align="right">
-                      <div className="text-right" style={{ minWidth: isMobile ? '150px' : '11%' }}>
+                      <div className="text-right">
                         <p className={`font-size-xs mb-0 text-silver`}>
                           Liquidity
                         </p>
