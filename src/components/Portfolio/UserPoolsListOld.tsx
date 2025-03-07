@@ -1,24 +1,20 @@
 import { useState, useMemo, useRef } from 'react';
-import { TextField, Avatar, Button } from '@mui/material';
-import { denominatedAmountToIntlFormattedAmount, formatSignificantDecimals, getFormattedUserPoolLiquidity, getFormattedUserPoolShare, intlNumberFormat } from 'utils/formatters';
+import { Button, List, TextField } from '@mui/material';
+import { getFormattedUserPoolLiquidity, getFormattedUserPoolShare } from 'utils/formatters';
 import { Search } from '@mui/icons-material';
 import SimpleLoader from 'components/SimpleLoader';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import { useSelector } from 'react-redux';
 import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
+import { Pair, PairsState } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
-import ReduceZerosFormat from "components/ReduceZerosFormat";
-import MovingIcon from '@mui/icons-material/Moving';
-import { CreatedToken, CreatedTokens } from 'types/mvxTypes';
 import { Select, MenuItem } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import Table from "react-bootstrap/Table";
-import { Pair, PairsState } from 'types/backendTypes';
-import { getUserPoolLiquidity, getUserPoolShare } from 'utils/calculs';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
+import { getUserPoolLiquidity, getUserPoolShare } from 'utils/calculs';
 
 const defaultTokenValues = {
   image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
@@ -118,29 +114,16 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
     }
   };
 
-  const tableRef = useRef<HTMLDivElement>(null);
-  let isDown = false;
-  let startX: number;
-  let scrollLeft: number;
+  // Function to sync scroll for all elements
+  const scrollContainerRef = useRef<HTMLDivElement[]>([]);
+  const syncScroll = (index: number) => (event: React.UIEvent<HTMLDivElement>) => {
+    const { scrollLeft } = event.currentTarget;
 
-  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!tableRef.current) return;
-    isDown = true;
-    const event = "touches" in e ? e.touches[0] : e;
-    startX = event.pageX - tableRef.current.offsetLeft;
-    scrollLeft = tableRef.current.scrollLeft;
-  };
-
-  const handleEnd = () => {
-    isDown = false;
-  };
-
-  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDown || !tableRef.current) return;
-    const event = "touches" in e ? e.touches[0] : e;
-    const x = event.pageX - tableRef.current.offsetLeft;
-    const walk = (x - startX);
-    tableRef.current.scrollLeft = scrollLeft - walk;
+    scrollContainerRef.current.forEach((el, i) => {
+      if (el && i !== index) {
+        el.scrollLeft = scrollLeft;
+      }
+    });
   };
 
   return (
@@ -200,7 +183,7 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
             value={searchInput}
             autoComplete="off"
             onChange={handleSearchChange}
-            className="token-search-container mb-2"
+            className="token-search-container mb-2"            
             InputProps={{
               style: {
                 backgroundColor: 'rgba(63, 63, 63, 0.4)',
@@ -242,195 +225,173 @@ const UserPoolsList: React.FC<UserPoolsListProps> = ({ pairs, userLpTokenBalance
           />
         </div>
       </div>
-      {!loading ? (
-        paginatedPairs.length > 0 && Object.values(allTokens).length > 0. ? (
-          <div
-            ref={tableRef}
-            className="portfolio-list-table-div"
-            onMouseDown={handleStart}
-            onMouseUp={handleEnd}
-            onMouseMove={handleMove}
-            onMouseLeave={handleEnd}
-            onTouchStart={handleStart}
-            onTouchEnd={handleEnd}
-            onTouchMove={handleMove}
-          >
-            <Table
-              className='portfolio-list-table'
-            >
-              <tbody>
-                {paginatedPairs.map((pair: Pair) => (
-                  <tr
-                    key={pair.lp_token_id}
-                  >
-                    {/* Sticky First Column */}
-                    <td>
-                      <div className="d-flex align-items-center"  style={{ minWidth: isMobile ? '60px' : 'inherit' }}>
-                        <img
-                          src={allTokens[pair.token1]?.logo_url ?? defaultTokenValues.image_url}
-                          alt={pair.token1}
-                          className='d-inline'
-                          style={{ width: 35, height: 35, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
-                        />
-                        <motion.img
-                          src={allTokens[pair.token2]?.logo_url ?? defaultTokenValues.image_url}
-                          alt={pair.token2}
-                          className="d-inline m-l-n-xxl"
-                          initial={{ x: 0 }}
-                          animate={{ x: 20 }}
-                          transition={{
-                            duration: 2.5,
-                            ease: 'easeInOut',
-                            delay: 0.3,
-                          }}
-                          style={{
-                            width: 35,
-                            height: 35,
-                            border: '2px solid rgba(63, 172, 90, 0.3)',
-                            borderRadius: '20px',
-                            position: 'relative',
-                            left: '0px',
-                          }}
-                        />
-                      </div>
-                    </td>
+      <List>
+        {!loading ? (
+          processedPools.length > 0 ? (
+            processedPools.map((pair: Pair, index: number) => (
+              <div
+                key={`list-item-${pair.lp_token_id}`}
+                className="mb-1 text-white d-flex align-items-center cursor-pointer token-list-item"
+                style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}
+              >
+                {/* Fixed Token Column */}
+                <div className="d-flex align-items-center py-2 px-3" style={{ minWidth: isMobile ? '80px' : '5%' }}>
+                  <img
+                    src={allTokens[pair.token1]?.logo_url ?? defaultTokenValues.image_url}
+                    alt={pair.token1}
+                    className='d-inline'
+                    style={{ width: 35, height: 35, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
+                  />
+                  <motion.img
+                    src={allTokens[pair.token2]?.logo_url ?? defaultTokenValues.image_url}
+                    alt={pair.token2}
+                    className="d-inline m-l-n-xxl"
+                    initial={{ x: 0 }}
+                    animate={{ x: 20 }}
+                    transition={{
+                      duration: 2.5,
+                      ease: 'easeInOut',
+                      delay: 0.3,
+                    }}
+                    style={{
+                      width: 35,
+                      height: 35,
+                      border: '2px solid rgba(63, 172, 90, 0.3)',
+                      borderRadius: '20px',
+                      position: 'relative',
+                      left: '0px',
+                    }}
+                  />                  
+                </div>
 
-                    {/* Scrollable Columns */}
-                    <td width={10}>
-                      <div className="m-l-n-xs">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Pool {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">{allTokens[pair?.token1]?.ticker} / {allTokens[pair?.token2]?.ticker}</p>
-                      </div>
-                    </td>
+                {/* Scrollable Section for Other Columns */}
+                <div
+                  ref={(el) => (scrollContainerRef.current[index] = el!)}
+                  onScroll={syncScroll(index)}
+                  className="d-flex overflow-auto py-2 px-3"
+                  style={{ flex: 1, gap: '10px', paddingLeft: '10px', willChange: 'scroll-position' }}
+                >
+                  <div className="" style={{ minWidth: isMobile ? '100px' : '10%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Pool {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">{allTokens[pair?.token1]?.ticker} / {allTokens[pair?.token2]?.ticker}</p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestPoolShare' || sortOption === 'lowestPoolShare' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Pool Share
-                          {sortOption === 'highestPoolShare' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestPoolShare' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">
-                          {getFormattedUserPoolShare(userLpTokenBalance[pair.lp_token_id]?.balance, allTokens[pair.lp_token_id]?.supply, allTokens[pair.lp_token_id]?.decimals)}%
-                        </p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '8%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestPoolShare' || sortOption === 'lowestPoolShare' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Pool Share
+                      {sortOption === 'highestPoolShare' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestPoolShare' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">
+                      {getFormattedUserPoolShare(userLpTokenBalance[pair.lp_token_id]?.balance, allTokens[pair.lp_token_id]?.supply, allTokens[pair.lp_token_id]?.decimals)}%
+                    </p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestYourLiquidity' || sortOption === 'lowestYourLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Your Liquidity
-                          {sortOption === 'highestYourLiquidity' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestYourLiquidity' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">
-                          ${getFormattedUserPoolLiquidity(userLpTokenBalance[pair.lp_token_id]?.balance, allTokens[pair.lp_token_id]?.supply, allTokens[pair.lp_token_id]?.decimals, pair?.tvl)}
-                        </p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '17%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestYourLiquidity' || sortOption === 'lowestYourLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Your Liquidity
+                      {sortOption === 'highestYourLiquidity' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestYourLiquidity' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">
+                      ${getFormattedUserPoolLiquidity(userLpTokenBalance[pair.lp_token_id]?.balance, allTokens[pair.lp_token_id]?.supply, allTokens[pair.lp_token_id]?.decimals, pair?.tvl)}
+                    </p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestYourFees24h' || sortOption === 'lowestYourFees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Your Fees (24h)
-                          {sortOption === 'highestYourFees24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestYourFees24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">
-                          $
-                          <CountUp
-                            start={0}
-                            end={userFees24h[pair.lp_token_id]?.balance || 0}
-                            duration={1.5}
-                            separator=","
-                            decimals={3}
-                            decimal="."
-                            delay={0.1}
-                          />
-                        </p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestYourFees24h' || sortOption === 'lowestYourFees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Your Fees (24h)
+                      {sortOption === 'highestYourFees24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestYourFees24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">
+                      $
+                      <CountUp
+                        start={0}
+                        end={userFees24h[pair.lp_token_id]?.balance || 0}
+                        duration={1.5}
+                        separator=","
+                        decimals={3}
+                        decimal="."
+                        delay={0.1}
+                      />
+                    </p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestLiquidity' || sortOption === 'lowestLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Liquidity
-                          {sortOption === 'highestLiquidity' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestLiquidity' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">
-                          $
-                          <CountUp
-                            start={0}
-                            end={Number(pair?.tvl)}
-                            duration={1.5}
-                            separator=","
-                            decimals={3}
-                            decimal="."
-                            delay={0.1}
-                          />
-                        </p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '17%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestLiquidity' || sortOption === 'lowestLiquidity' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Liquidity
+                      {sortOption === 'highestLiquidity' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestLiquidity' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">
+                      $
+                      <CountUp
+                        start={0}
+                        end={Number(pair?.tvl)}
+                        duration={1.5}
+                        separator=","
+                        decimals={3}
+                        decimal="."
+                        delay={0.1}
+                      />
+                    </p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestFees24h' || sortOption === 'lowestFees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Fees (24h)
-                          {sortOption === 'highestFees24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestFees24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">
-                          $
-                          <CountUp
-                            start={0}
-                            end={Number(pair?.fees_24h)}
-                            duration={1.5}
-                            separator=","
-                            decimals={3}
-                            decimal="."
-                            delay={0.1}
-                          />
-                        </p>
-                      </div>
-                    </td>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '12%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestFees24h' || sortOption === 'lowestFees24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Fees (24h)
+                      {sortOption === 'highestFees24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestFees24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">
+                      $
+                      <CountUp
+                        start={0}
+                        end={Number(pair?.fees_24h)}
+                        duration={1.5}
+                        separator=","
+                        decimals={3}
+                        decimal="."
+                        delay={0.1}
+                      />
+                    </p>
+                  </div>
 
-                    <td align="right">
-                      <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortOption === 'highestVolume24h' || sortOption === 'lowestVolume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
-                          Volume (24h)
-                          {sortOption === 'highestVolume24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
-                          {sortOption === 'lowestVolume24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
-                        </p>
-                        <p className="font-size-sm mb-0">
-                          $
-                          <CountUp
-                            start={0}
-                            end={Number(pair?.volume_24h)}
-                            duration={1.5}
-                            separator=","
-                            decimals={3}
-                            decimal="."
-                            delay={0.1}
-                          />
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
+                  <div className="text-right" style={{ minWidth: isMobile ? '150px' : '15%' }}>
+                    <p className={`font-size-xs mb-0 ${sortOption === 'highestVolume24h' || sortOption === 'lowestVolume24h' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                      Volume (24h)
+                      {sortOption === 'highestVolume24h' && <TrendingDownIcon className="ms-1 font-size-md" />}
+                      {sortOption === 'lowestVolume24h' && <TrendingUpIcon className="ms-1 font-size-md" />}
+                    </p>
+                    <p className="font-size-sm mb-0">
+                      $
+                      <CountUp
+                        start={0}
+                        end={Number(pair?.volume_24h)}
+                        duration={1.5}
+                        separator=","
+                        decimals={3}
+                        decimal="."
+                        delay={0.1}
+                      />
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            ))
+          ) : (
+            <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
+              <p className='text-silver text-center mt-2 h6'>No pool found</p>
+            </div>
+          )
         ) : (
-          <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
-            <p className='text-silver text-center mt-2 h6'>No pool found</p>
-          </div>
-        )
-      ) : (
-        <SimpleLoader />
-      )}
+          <SimpleLoader />
+        )}
+      </List>
       {/* Pagination Controls */}
       <div className="pagination-controls m-t-n-sm">
         <Button
