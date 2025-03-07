@@ -61,7 +61,7 @@ export const StateLoader = () => {
   // Load initial state
   useEffect(() => {
     loadPairTokens(tokensPage, tokensItemsPerPage, tokensSearchInput, false, tokensSortBy, tokensSortDirection);
-  }, [dispatch, tokensPage, tokensSearchInput]);
+  }, [dispatch, tokensPage, tokensSearchInput, tokensSortBy, tokensSortDirection]);
 
   useEffect(() => {
     loadPairs(pairsPage, pairsItemsPerPage, pairsSortBy, pairsSortDirection, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch);
