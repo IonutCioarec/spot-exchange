@@ -84,6 +84,8 @@ export interface TokensState {
   };
   lpTokens: Token[];
   searchInput: string;
+  sort_by: 'volume24h' | 'volume7d' | 'volume30d' | 'price_usd' | 'price_change24h',
+  sort_direction: 'asc' | 'desc',
   status: 'loading' | 'succeeded' | 'failed';
 }
 

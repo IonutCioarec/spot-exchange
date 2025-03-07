@@ -2,7 +2,7 @@ import { useBackendAPI } from 'hooks/useBackendAPI';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPairs, selectPairsSearchInput, selectPairsLpSearchInput, selectPairsMyDeposits, selectPairsSortBy, selectPairsSortDirection, selectPairsLimit } from 'storeManager/slices/pairsSlice';
-import { selectSearchInput, setAllTokens, setPairTokens, setLpTokens } from 'storeManager/slices/tokensSlice';
+import { selectSearchInput, setAllTokens, setPairTokens, setLpTokens, selectTokensSortBy, selectTokensSortDirection } from 'storeManager/slices/tokensSlice';
 import { stateLoaderRefreshTime, tokensItemsPerPage, poolsItemsPerPage } from 'config';
 import { useGetPendingTransactions } from 'hooks';
 
@@ -12,6 +12,8 @@ export const StateLoader = () => {
   const dispatch = useDispatch();
   const tokensSearchInput = useSelector(selectSearchInput);
   const tokensPage = useSelector((state: any) => state.tokens.pairTokens.page);
+  const tokensSortBy = useSelector(selectTokensSortBy);
+  const tokensSortDirection = useSelector(selectTokensSortDirection);
 
   const pairsTokenSearch = useSelector(selectPairsSearchInput);
   const pairsLPTokenSearch = useSelector(selectPairsLpSearchInput);
@@ -22,16 +24,18 @@ export const StateLoader = () => {
   const pairsItemsPerPage = useSelector(selectPairsLimit);
 
   const loadAllTokens = async () => {
-    const { allTokens } = await getTokens(1, 500);
+    const { allTokens } = await getTokens(1, 1500);
     dispatch(setAllTokens(allTokens));
   };
 
-  const loadPairTokens = async (currentPage: number, currentLimit: number, searchByName: string) => {
+  const loadPairTokens = async (currentPage: number, currentLimit: number, searchByName: string, only_lp_tokens = false, sortBy: 'volume24h' | 'volume7d' | 'volume30d' | 'price_usd' | 'price_change24h', sortDirection: 'asc' | 'desc') => {
     const { pairTokens } = await getTokens(
       currentPage,
       currentLimit,
       searchByName,
-      false
+      only_lp_tokens,
+      sortBy,
+      sortDirection
     );
     dispatch(setPairTokens(pairTokens));
   };
@@ -56,7 +60,7 @@ export const StateLoader = () => {
 
   // Load initial state
   useEffect(() => {
-    loadPairTokens(tokensPage, tokensItemsPerPage, tokensSearchInput);
+    loadPairTokens(tokensPage, tokensItemsPerPage, tokensSearchInput, false, tokensSortBy, tokensSortDirection);
   }, [dispatch, tokensPage, tokensSearchInput]);
 
   useEffect(() => {

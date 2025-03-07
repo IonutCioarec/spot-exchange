@@ -13,6 +13,8 @@ const initialState: TokensState = {
   },
   lpTokens: [],
   searchInput: '',
+  sort_by: 'price_usd',
+  sort_direction: 'desc',
   status: 'loading',
 };
 
@@ -55,10 +57,16 @@ const tokensSlice = createSlice({
     setPage: (state, action: PayloadAction<number>) => {
       state.pairTokens.page = action.payload;
     },
+    setTokensSortBy: (state, action: PayloadAction<'volume24h' | 'volume7d' | 'volume30d' | 'price_usd' | 'price_change24h'>) => {
+      state.sort_by = action.payload;
+    },
+    setTokensSortDirection: (state, action: PayloadAction<'asc' | 'desc'>) => {
+      state.sort_direction = action.payload;
+    },
   },
 });
 
-export const { setAllTokens, setPairTokens, setLpTokens, setStatus, setSearchInput, setPage } = tokensSlice.actions;
+export const { setAllTokens, setPairTokens, setLpTokens, setStatus, setSearchInput, setPage, setTokensSortBy, setTokensSortDirection } = tokensSlice.actions;
 
 // Selectors
 export const selectAllTokens = (state: any) => state.tokens.allTokens;
@@ -69,6 +77,8 @@ export const selectTotalPages = (state: any) => state.tokens.pairTokens.total_pa
 export const selectPairTokensNumber = (state: any) => state.tokens.pairTokens.total;
 export const selectTokensStatus = (state: any) => state.tokens.status;
 export const selectSearchInput = (state: any) => state.tokens.searchInput;
+export const selectTokensSortBy = (state: any) => state.tokens.sort_by;
+export const selectTokensSortDirection = (state: any) => state.tokens.sort_direction;
 
 // Memoized selector to transform lpTokens into an object keyed by token_id
 export const selectLpTokensById = createSelector(
