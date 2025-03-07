@@ -31,7 +31,7 @@ const getPriceChangePercentageComponent = (currentPrice: number, previousPrice: 
   const rotation = isPositive ? 'rotate(-45deg)' : 'rotate(-225deg)';
 
   return (
-    <span style={{ color }}>
+    <span style={{ color, textWrap: 'nowrap' }}>
       {percentageChange ? (
         <>
           <MovingIcon style={{ transform: rotation, fontSize: '20px' }} />
