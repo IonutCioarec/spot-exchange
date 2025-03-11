@@ -87,22 +87,22 @@ const TokensList = () => {
     const selectedValue = event.target.value;
 
     switch (selectedValue) {
-      case 'price_desc':
+      case 'price_usd_desc':
         dispatch(setTokensSortBy('price_usd'));
         dispatch(setTokensSortDirection('desc'));
         dispatch(setPage(1));
         break;
-      case 'price_asc':
+      case 'price_usd_asc':
         dispatch(setTokensSortBy('price_usd'));
         dispatch(setTokensSortDirection('asc'));
         dispatch(setPage(1));
         break;
-      case 'price24h_desc':
+      case 'price_change24h_desc':
         dispatch(setTokensSortBy('price_change24h'));
         dispatch(setTokensSortDirection('desc'));
         dispatch(setPage(1));
         break;
-      case 'price24h_asc':
+      case 'price_change24h_asc':
         dispatch(setTokensSortBy('price_change24h'));
         dispatch(setTokensSortDirection('asc'));
         dispatch(setPage(1));
@@ -217,10 +217,10 @@ const TokensList = () => {
               },
             }}
           >
-            <MenuItem value="price_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_usd' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Price</MenuItem>
-            <MenuItem value="price_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_usd' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Price</MenuItem>
-            <MenuItem value="price24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_change24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Price Change 24h</MenuItem>
-            <MenuItem value="price24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_change24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Price Change 24h</MenuItem>
+            <MenuItem value="price_usd_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_usd' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Price</MenuItem>
+            <MenuItem value="price_usd_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_usd' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Price</MenuItem>
+            <MenuItem value="price_change24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_change24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Price Change 24h</MenuItem>
+            <MenuItem value="price_change24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'price_change24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Price Change 24h</MenuItem>
             <MenuItem value="volume24h_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume24h' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Volume 24h</MenuItem>
             <MenuItem value="volume24h_asc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume24h' && sortDirection === 'asc' ? 'active' : ''}`}>Lowest Volume 24h</MenuItem>
             <MenuItem value="volume30d_desc" className={`font-rose select-menu-item font-size-sm ${sortBy === 'volume30d' && sortDirection === 'desc' ? 'active' : ''}`}>Highest Volume 30D</MenuItem>
