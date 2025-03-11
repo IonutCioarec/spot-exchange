@@ -32,8 +32,16 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PeopleIcon from '@mui/icons-material/People';
 import StarIcon from '@mui/icons-material/Star';
 import { farmsDummy } from 'utils/dummyData';
+import { useSelector } from 'react-redux';
+import { selectPairs, selectPairsTotal } from 'storeManager/slices/pairsSlice';
+import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
+import PoolsList from 'components/Analytics/PoolsList';
 
 const Analytics = () => {
+  const pairs = useSelector(selectPairs);
+  const allTokens = useSelector(selectAllTokensById);
+  const totalPairs = useSelector(selectPairsTotal);
+
   // dex token details data
   const initialTokenRowItems = [
     { label: "DEX Token", value: "XTICKET", icon: "https://tools.multiversx.com/assets-cdn/devnet/tokens/XTICKET-6e9b83/icon.svg", isImage: true },
@@ -307,7 +315,7 @@ const Analytics = () => {
 
   // dex pools details data
   const initialPoolsRowItems = [
-    { label: "Total Pools", value: '187', icon: <WorkspacesIcon className="token-row-icon" />, isImage: false },
+    { label: "Total Pools", value: totalPairs, icon: <WorkspacesIcon className="token-row-icon" />, isImage: false },
     { label: "Total Liquidity", value: '$' + '987,987,345.2', icon: <PaymentsIcon className='token-row-icon' />, isImage: false },
     { label: "Total Fees (24h)", value: '$' + '876.45', icon: <AccessTimeIcon className='token-row-icon' />, isImage: false },
     { label: "Total Fees (7D)", value: '$' + '6,898.34', icon: <CalendarTodayIcon className='token-row-icon' />, isImage: false },
@@ -427,6 +435,11 @@ const Analytics = () => {
       {/* DEX Pools details animated row */}
       <div className='mt-5'>
         <TokenRow items={initialPoolsRowItems} />
+      </div>
+
+      {/* DEX Pools List */}
+      <div className='mt-5'>
+        <PoolsList pairs={pairs} allTokens={allTokens} />
       </div>
 
       {/* DEX Farms details animated row */}
