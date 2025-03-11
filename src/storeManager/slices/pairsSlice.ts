@@ -63,6 +63,7 @@ export const { setPairs, setStatus, setTokenSearch, setPage, setMyDeposits, setL
 export const selectPairs = (state: any) => state.pairs.pairs;
 export const selectPairsStatus = (state: any) => state.pairs.status;
 export const selectPairsPage = (state: any) => state.pairs.page;
+export const selectPairsTotal = (state: any) => state.pairs.total;
 export const selectPairsTotalPages = (state: any) => state.pairs.total_pages;
 export const selectPairsLimit = (state: any) => state.pairs.limit;
 export const selectPairsSearchInput = (state: any) => state.pairs.token_search;
