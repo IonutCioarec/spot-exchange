@@ -439,8 +439,8 @@ const PoolsList: React.FC<PoolsListProps> = ({ pairs, allTokens}) => {
             </Table>
           </div>
         ) : (
-          <div className='p-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
-            <p className='text-silver text-center mt-2 h6'>No token found</p>
+          <div className='p-3 mb-3 text-white d-flex justify-content-center align-items-center cursor-pointer token-list-item' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
+            <p className='text-silver text-center mt-2 h6'>No pool found</p>
           </div>
         )
       ) : (
