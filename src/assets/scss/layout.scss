@@ -315,6 +315,12 @@
   }
 }
 
+.aws-btn.smaller{
+  --button-default-height: 29px;
+  --button-default-font-size: 10px;
+  --button-raise-level: 5px;
+}
+
 .full-width {
   width: 100% !important;
 }

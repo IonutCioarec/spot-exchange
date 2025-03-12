@@ -6,18 +6,32 @@ import { poolBaseTokens } from 'config';
 import { intlFormatSignificantDecimals } from 'utils/formatters';
 import LightSpot from 'components/LightSpot';
 import { useMobile } from 'utils/responsive';
-import { FormControlLabel, styled, Switch, TextField } from '@mui/material';
+import { Button, FormControlLabel, styled, Switch, TextField } from '@mui/material';
 import { useGetAccountInfo } from 'hooks';
 import { Search } from '@mui/icons-material';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import ScrollToTopButton from 'components/ScrollToTopButton';
+import { farmsDummy, userFarmsDummy } from 'utils/dummyData';
+import { isEmpty } from '@multiversx/sdk-core/out';
+import FilterLoader from 'components/Pools/FilterLoader';
+import { Farm as FarmType } from 'types/backendTypes';
+import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
+import { FarmItem } from 'components/Farms/FarmItem';
 
 const Farms = () => {
   const isMobile = useMobile();
   const { address } = useGetAccountInfo();
   const isLoggedIn = address ? true : false;
   const [localSearchInput, setLocalSearchInput] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const currentPage = 1;
+  const totalPages = 1;
+  const handlePageChange = (newPage: number) => {
+    //
+  };
+  const sortBy = 'total_staked';
+  const sortDirection = 'desc';
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -230,6 +244,69 @@ const Farms = () => {
           />
         </Col>
       </Row>
+
+      {(isEmpty(farmsDummy)) && (
+        <div>
+          <div className='flex flex-col p-3 items-center justify-center gap-2 rounded-lg pool'>
+            <div className='flex flex-col items-center'>
+              <p className='text-white mb-0 font-bold'>No Farms Found</p>
+            </div>
+          </div>
+        </div>
+      )}
+      {loading ? (
+        <FilterLoader />
+      ) : (
+        <Fragment>
+          {Object.values(farmsDummy).map((farm: FarmType, index: number) => (
+            <FarmItem 
+              farm={farm}
+              userFarm={userFarmsDummy[farm.lp_token_id]}
+              index={index}
+              sortBy={sortBy}
+              sortDirection={sortDirection}
+              key={farm.lp_token_id}
+            />
+          ))}
+          <div className="pagination-controls mb-5">
+            <Button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className='pagination-button'
+            >
+              <KeyboardDoubleArrowLeft className={`${currentPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
+            </Button>
+
+            <Button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className='pagination-button'
+            >
+              <ChevronLeft className={`${currentPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
+            </Button>
+
+            <span>
+              Page {currentPage} {totalPages > 0 ? `of ${totalPages}` : 'of 1'}
+            </span>
+
+            <Button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className='pagination-button'
+            >
+              <ChevronRight className={`${currentPage === totalPages ? 'disabled-arrow' : 'active-arrow'}`} />
+            </Button>
+
+            <Button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className='pagination-button'
+            >
+              <KeyboardDoubleArrowRight className={`${currentPage === totalPages ? 'disabled-arrow' : 'active-arrow'}`} />
+            </Button>
+          </div>
+        </Fragment>
+      )}
 
       <LightSpot size={isMobile ? 220 : 360} x={isMobile ? '25%' : '40%'} y="36%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
     </div>

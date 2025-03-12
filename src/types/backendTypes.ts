@@ -104,7 +104,7 @@ export interface Farm {
 
 export type FarmsState = Record<string, Farm>;
 
-interface UserFarm {
+export interface UserFarm {
   staked: string;
   rewards: string;
   rewardsList: {
