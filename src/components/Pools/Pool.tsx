@@ -399,7 +399,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 />
                 <div className=" mb-0 ms-4">
                   <p className="mb-0 font-size-sm">{token1Details?.ticker ?? defaultTokenValues.name}</p>
-                  <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)}
+                  <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ $<ReduceZerosFormat numberString={intlFormatSignificantDecimals(Number(token1Details?.price_usd) ?? defaultTokenValues.price, 3)} />
                   </p>
                 </div>
                 <div className="mx-2 mb-0">
@@ -407,7 +407,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 </div>
                 <div className="">
                   <p className="mb-0 font-size-sm">{token2Details?.ticker ?? defaultTokenValues.name}</p>
-                  <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ ${intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)}
+                  <p className="m-t-n-xs mb-0 font-size-xxs text-silver">~ $<ReduceZerosFormat numberString={intlFormatSignificantDecimals(Number(token2Details?.price_usd) ?? defaultTokenValues.price, 3)} />
                   </p>
                 </div>
               </div>

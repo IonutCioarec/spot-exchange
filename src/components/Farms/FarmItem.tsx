@@ -494,7 +494,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
 
               <div className="mt-2">
                 <div className="d-flex justify-content-between align-items-center gap-2 mt-1 mx-1">
-                  <AwesomeButton className="aws-btn-primary mt-1 full-width smaller" onPress={handleStakeOpen}>STAKE LP</AwesomeButton>
+                  <AwesomeButton className="aws-btn-primary mt-1 full-width smaller" onPress={handleStakeOpen}>STAKE</AwesomeButton>
                   <AwesomeButton className="aws-btn-warning mt-1 full-width smaller">CLAIM</AwesomeButton>
                   <AwesomeButton className="aws-btn-danger mt-1 full-width smaller" onPress={handleUnstakeOpen}>UNSTAKE</AwesomeButton>
                 </div>
