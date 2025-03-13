@@ -108,10 +108,10 @@
 }
 
 .pools-page-height {
-  min-height: 88vh;
+  min-height: 91vh;
 
   @include maxQuery(700) {
-    min-height: 86.1vh;
+    min-height: 87.5vh;
   }
 }
 

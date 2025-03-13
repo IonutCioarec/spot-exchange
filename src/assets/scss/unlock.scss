@@ -13,10 +13,10 @@
 }
 
 .unlock-page-height {
-  min-height: 80.5vh;
+  min-height: 91vh;
 
   @include maxQuery(700) {
-    min-height: 69.1vh;
+    min-height: 87.5vh;
   }
 }
 
