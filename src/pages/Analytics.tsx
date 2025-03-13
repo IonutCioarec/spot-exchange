@@ -38,6 +38,7 @@ import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import PoolsList from 'components/Analytics/PoolsList';
 import { useMobile } from 'utils/responsive';
 import ScrollToTopButton from 'components/ScrollToTopButton';
+import FarmsList from 'components/Analytics/FarmsList';
 
 const Analytics = () => {
   const isMobile = useMobile();
@@ -347,10 +348,10 @@ const Analytics = () => {
     <div className="analytics-page-height mb-5">
       <Row id='topSection'>
         <Col xs={12}>
-          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
-            <div className='p-5'>
+          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ minHeight: '60px' }}>
+            {/* <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '60px' }}> */}
+            <div className={`p-3  ${isMobile ? 'mt-2' : 'mt-5'}`}>
               <h2 className='text-white text-center'>Analytics</h2>
-              <p className='text-white text-justified mb-0'>Gain Insights with Our Analytics Page: track trading volumes, liquidity trends, pools stats and others to make informed decisions. Stay ahead with real-time data and historical analysis.</p>
             </div>
           </div>
         </Col>
@@ -360,7 +361,7 @@ const Analytics = () => {
       )}
 
       {/* DEX Token details animated row */}
-      <div className='mt-5'>
+      <div className=''>
         <TokenRow items={tokenRowItems} />
       </div>
 
@@ -451,6 +452,11 @@ const Analytics = () => {
       {/* DEX Farms details animated row */}
       <div className='mt-5'>
         <TokenRow items={initialFarmsRowItems} />
+      </div>
+
+      {/* DEX Farms List */}
+      <div className='mt-5'>
+        <FarmsList farms={farmsDummy} allTokens={allTokens} />
       </div>
     </div>
   );
