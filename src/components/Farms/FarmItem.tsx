@@ -234,7 +234,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                         )}
                       </div>
                     </div>
-                  </Col>                  
+                  </Col>
                   <Col lg={3}>
                     <div className="pool-sub-container p-2 text-center" style={{ minHeight: '105px' }}>
                       <p className="text-silver font-size-sm mb-0">Your Rewards</p>
@@ -263,23 +263,259 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
         </motion.div>
 
         <StakeModal
-        isOpen={isStakeOpen}
-        setIsOpen={setIsStakeOpen}
-        lpTokenId={farm.lp_token_id}
-        lpTokenMaxAmount={Number(userLPTokens[farm.lp_token_id]?.balance)}
-      />
+          isOpen={isStakeOpen}
+          setIsOpen={setIsStakeOpen}
+          lpTokenId={farm.lp_token_id}
+          lpTokenMaxAmount={Number(userLPTokens[farm.lp_token_id]?.balance)}
+        />
 
-      <UnstakeModal
-        isOpen={isUnstakeOpen}
-        setIsOpen={setIsUnstakeOpen}
-        lpTokenId={farm.lp_token_id}
-        lpTokenMaxAmount={Number(userFarm.staked)}
-      />
+        <UnstakeModal
+          isOpen={isUnstakeOpen}
+          setIsOpen={setIsUnstakeOpen}
+          lpTokenId={farm.lp_token_id}
+          lpTokenMaxAmount={Number(userFarm.staked)}
+        />
       </div>
     );
   } else {
     return (
-      <div></div>
+      <Fragment>
+        <div className={`pool scroll-margin-top text-white ${open ? 'mb-5' : 'mb-3'}`} ref={containerRef}>
+          <div onClick={() => setOpen(!open)}>
+            <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-start align-items-center">
+                <span className="mx-2">{index + 1}</span>
+                <img
+                  src={allTokens[farm.token1]?.logo_url ?? defaultTokenValues.image_url}
+                  alt={farm.token1}
+                  className='d-inline'
+                  style={{ width: 27, height: 27, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
+                />
+                <motion.img
+                  src={allTokens[farm.token2]?.logo_url ?? defaultTokenValues.image_url}
+                  alt={farm.token2}
+                  className="d-inline m-l-n-xxl"
+                  initial={{ x: 0 }}
+                  animate={{ x: 20 }}
+                  transition={{
+                    duration: 2.5,
+                    ease: 'easeInOut',
+                    delay: 0.3,
+                  }}
+                  style={{
+                    width: 27,
+                    height: 27,
+                    border: '2px solid rgba(63, 172, 90, 0.3)',
+                    borderRadius: '20px',
+                    position: 'relative',
+                    left: '0px',
+                  }}
+                />
+                <div className="mb-0 ms-4">
+                  <p className="mb-0 font-size-sm">{farmName ?? defaultTokenValues.name}</p>
+                  <p className="m-t-n-xs mb-0 font-size-xxs text-silver">
+                    ~ $<ReduceZerosFormat numberString={intlFormatSignificantDecimals(Number(allTokens[farm.lp_token_id]?.price_usd) ?? defaultTokenValues.price, 3)} />
+                  </p>
+                </div>
+              </div>
+              <div>
+                <IconButton
+                  className="m-0 btn-success ms-2"
+                  size="small"
+                  color="success"
+                  onClick={() => setOpen(!open)}
+                >
+                  {open ? (<KeyboardDoubleArrowUpIcon sx={{ fontSize: '15px' }} />) : (<KeyboardDoubleArrowDownIcon sx={{ fontSize: '15px' }} />)}
+                </IconButton>
+              </div>
+            </div>
+            <div className="pool-sub-container p-2 mt-1">
+              <div className="d-flex justify-content-between">
+                <p className={`mb-0 font-size-sm text-silver`}>
+                  Total APR
+                </p>
+                <p className="mb-0 font-size-sm text-silver">{intlFormatSignificantDecimals(Number(farm.totalAPR), 2)}%</p>
+              </div>
+            </div>
+            <div className="pool-sub-container p-2 mt-1">
+              <div className="d-flex justify-content-between">
+                <p className={`mb-0 font-size-sm ${sortBy === 'total_staked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                  Total Staked
+                  {sortBy === 'total_staked' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                  {sortBy === 'total_staked' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+                </p>
+                <p className="mb-0 font-size-sm text-silver">
+                  $
+                  <CountUp
+                    start={0}
+                    end={Number(farm?.totalStaked)}
+                    duration={1.5}
+                    separator=","
+                    decimals={3}
+                    decimal="."
+                    delay={0.1}
+                  />
+                </p>
+              </div>
+            </div>
+            <div className="pool-sub-container p-2 mt-1">
+              <div className="d-flex justify-content-between">
+                <p className={`mb-0 font-size-sm ${sortBy === 'total_rewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+                  Total Rewards
+                  {sortBy === 'total_rewards' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                  {sortBy === 'total_rewards' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+                </p>
+                <p className="mb-0 font-size-sm text-silver">
+                  $
+                  <CountUp
+                    start={0}
+                    end={Number(farm?.totalRewards)}
+                    duration={1.5}
+                    separator=","
+                    decimals={3}
+                    decimal="."
+                    delay={0.1}
+                  />
+                </p>
+              </div>
+            </div>
+          </div>
+          <motion.div
+            style={{ overflow: 'hidden' }}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+          >
+            <div className="b-r-sm mt-2 p-2" style={{ border: '1px solid rgba(100,100,100, 0.7)' }}>
+              <div className="pool-sub-container p-1 mt-1">
+                <div className="d-flex justify-content-between">
+                  <p className="mb-0 font-size-sm text-silver">Fees APR</p>
+                  <p className="mb-0 font-size-sm text-silver">
+                    {intlFormatSignificantDecimals(Number(farm.feesAPR), 2)}%
+                  </p>
+                </div>
+              </div>
+              <div className="pool-sub-container p-1 mt-1">
+                <div className="d-flex justify-content-between">
+                  <p className="mb-0 font-size-sm text-silver">Boosted APR</p>
+                  <p className="mb-0 font-size-sm text-silver">
+                    {intlFormatSignificantDecimals(Number(farm.boostedAPR), 2)}%
+                  </p>
+                </div>
+              </div>
+              <div className="pool-sub-container p-1 mt-1">
+                <div className="d-flex justify-content-between">
+                  <p className="mb-0 font-size-sm text-silver">Staking Users</p>
+                  <p className="mb-0 font-size-sm text-silver">
+                    <CountUp
+                      start={0}
+                      end={Number(farm?.stakingUsers)}
+                      duration={1.5}
+                      separator=","
+                      decimals={0}
+                      decimal="."
+                      delay={0.1}
+                    />
+                  </p>
+                </div>
+              </div>
+
+
+              <div className="pool-sub-container p-1 mt-1">
+                <p className="mb-1 text-center text-silver font-size-sm">Total Staked</p>
+                <div className="d-flex justify-content-between mt-1">
+                  <div>
+                    <p className="mb-0 font-size-xs text-white font-bold">{abbreviateNumber(Number(farm.totalStaked), 2)} {farmName}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="mb-0 font-size-xs text-white font-bold">${abbreviateNumber(Number(farm?.totalStaked) * 2.4, 2)}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pool-sub-container p-1 mt-1">
+                <p className="mb-1 text-center text-silver font-size-sm">Total Rewards</p>
+                <div className="d-flex justify-content-between mt-1">
+                  <div>
+                    {farm.totalRewardsList.length ? (
+                      farm.totalRewardsList.map((item) => (
+                        <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>{abbreviateNumber(Number(item.value), 2)} {item.token.split('-')[0]}</p>
+                      ))
+                    ) : (
+                      <p className="mb-0 font-size-xs text-white font-bold">-</p>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    {farm.totalRewardsList.length ? (
+                      farm.totalRewardsList.map((item) => (
+                        <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>${abbreviateNumber(Number(item.value) * 2.2, 2)}</p>
+                      ))
+                    ) : (
+                      <p className="mb-0 font-size-xs text-white font-bold">-</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="pool-sub-container p-1 mt-1">
+                <p className="mb-1 text-center text-silver font-size-sm">Your Staked</p>
+                <div className="d-flex justify-content-between mt-1">
+                  <div>
+                    <p className="mb-0 font-size-xs text-white font-bold">{abbreviateNumber(Number(userFarm.staked), 2)} {farmName}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="mb-0 font-size-xs text-white font-bold">${abbreviateNumber(Number(userFarm.staked) * 2.4, 2)}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pool-sub-container p-1 mt-1">
+                <p className="mb-1 text-center text-silver font-size-sm">Your Rewards</p>
+                <div className="d-flex justify-content-between mt-1">
+                  <div>
+                    {userFarm.rewardsList.length ? (
+                      userFarm.rewardsList.map((item) => (
+                        <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>{abbreviateNumber(Number(item.value), 2)} {item.token.split('-')[0]}</p>
+                      ))
+                    ) : (
+                      <p className="mb-0 font-size-xs text-white font-bold">-</p>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    {userFarm.rewardsList.length ? (
+                      userFarm.rewardsList.map((item) => (
+                        <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>${abbreviateNumber(Number(item.value) * 2.2, 2)}</p>
+                      ))
+                    ) : (
+                      <p className="mb-0 font-size-xs text-white font-bold">-</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-2">
+                <div className="d-flex justify-content-between align-items-center gap-2 mt-1 mx-1">
+                  <AwesomeButton className="aws-btn-primary mt-1 full-width smaller" onPress={handleStakeOpen}>STAKE LP</AwesomeButton>
+                  <AwesomeButton className="aws-btn-warning mt-1 full-width smaller">CLAIM</AwesomeButton>
+                  <AwesomeButton className="aws-btn-danger mt-1 full-width smaller" onPress={handleUnstakeOpen}>UNSTAKE</AwesomeButton>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+        <StakeModal
+          isOpen={isStakeOpen}
+          setIsOpen={setIsStakeOpen}
+          lpTokenId={farm.lp_token_id}
+          lpTokenMaxAmount={Number(userLPTokens[farm.lp_token_id]?.balance)}
+        />
+
+        <UnstakeModal
+          isOpen={isUnstakeOpen}
+          setIsOpen={setIsUnstakeOpen}
+          lpTokenId={farm.lp_token_id}
+          lpTokenMaxAmount={Number(userFarm.staked)}
+        />
+      </Fragment >
     );
   }
 }

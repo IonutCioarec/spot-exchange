@@ -179,7 +179,7 @@ const Farms = () => {
             <FarmItem
               farm={farm}
               userFarm={userFarmsDummy[farm.lp_token_id]}
-              index={index}
+              index={index + (currentPage-1)  * 10}
               sortBy={sortBy}
               sortDirection={sortDirection}
               key={farm.lp_token_id}
