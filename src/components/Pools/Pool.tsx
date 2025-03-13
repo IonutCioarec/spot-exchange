@@ -210,7 +210,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           <motion.div
             style={{ overflow: 'hidden' }}
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}            
+            animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
           >
             <div className="mt-2" style={{ borderTop: '3px solid rgba(10, 10, 10, 0.3)', padding: '10px' }}>
               <Row className="g-1" style={{ marginTop: '0' }}>
@@ -370,6 +370,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           <div onClick={() => setOpen(!open)}>
             <div className="d-flex justify-content-between">
               <div className="d-flex justify-content-start align-items-center">
+                <span className="mx-2">{index + 1}</span>
                 <img
                   src={token1Details?.logo_url ?? defaultTokenValues.image_url}
                   alt={pair.token1}
@@ -574,29 +575,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               <div className="mt-2">
                 <div className="d-flex justify-content-between align-items-center gap-2 mt-1 mx-1">
                   <AwesomeButton className="aws-btn-primary full-width" onPress={() => handleAddOpen(token1Details?.token_id, token1Details?.decimals, token2Details?.token_id, token2Details?.decimals)}>ADD</AwesomeButton>
-                  <AddModal
-                    isOpen={isAddOpen}
-                    setIsOpen={setIsAddOpen}
-                    token1={token1Details?.ticker}
-                    token2={token2Details?.ticker}
-                    token1Id={token1Details?.token_id}
-                    token2Id={token2Details?.token_id}
-                    token1Decimals={token1Details?.decimals}
-                    token2Decimals={token2Details?.decimals}
-                    token1MaxAmount={userToken1Balance}
-                    token2MaxAmount={userToken2Balance}
-                    token1Image={token1Details?.logo_url}
-                    token2Image={token2Details?.logo_url}
-                    token1ExchangeRate={token1ExchangeRate}
-                    token2ExchangeRate={token2ExchangeRate}
-                  />
                   <AwesomeButton className="aws-btn-danger full-width" onPress={handleWithdrawOpen}>REMOVE</AwesomeButton>
-                  <WithdrawModal
-                    isOpen={isWithdrawOpen}
-                    setIsOpen={setIsWithdrawOpen}
-                    lpTokenId={lpTokenId}
-                    lpTokenMaxAmount={userLpTokenBalance}
-                  />
                   <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
                     <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
                   </Link>
@@ -605,7 +584,30 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
             </div>
           </motion.div>
         </div>
+        <AddModal
+          isOpen={isAddOpen}
+          setIsOpen={setIsAddOpen}
+          token1={token1Details?.ticker}
+          token2={token2Details?.ticker}
+          token1Id={token1Details?.token_id}
+          token2Id={token2Details?.token_id}
+          token1Decimals={token1Details?.decimals}
+          token2Decimals={token2Details?.decimals}
+          token1MaxAmount={userToken1Balance}
+          token2MaxAmount={userToken2Balance}
+          token1Image={token1Details?.logo_url}
+          token2Image={token2Details?.logo_url}
+          token1ExchangeRate={token1ExchangeRate}
+          token2ExchangeRate={token2ExchangeRate}
+        />
+        <WithdrawModal
+          isOpen={isWithdrawOpen}
+          setIsOpen={setIsWithdrawOpen}
+          lpTokenId={lpTokenId}
+          lpTokenMaxAmount={userLpTokenBalance}
+        />
       </Fragment >
+
     );
   }
 }
