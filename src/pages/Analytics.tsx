@@ -36,8 +36,11 @@ import { useSelector } from 'react-redux';
 import { selectPairs, selectPairsTotal } from 'storeManager/slices/pairsSlice';
 import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import PoolsList from 'components/Analytics/PoolsList';
+import { useMobile } from 'utils/responsive';
+import ScrollToTopButton from 'components/ScrollToTopButton';
 
 const Analytics = () => {
+  const isMobile = useMobile();
   const pairs = useSelector(selectPairs);
   const allTokens = useSelector(selectAllTokensById);
   const totalPairs = useSelector(selectPairsTotal);
@@ -352,6 +355,9 @@ const Analytics = () => {
           </div>
         </Col>
       </Row>
+      {isMobile && (
+        <ScrollToTopButton targetRefId='topSection' />
+      )}
 
       {/* DEX Token details animated row */}
       <div className='mt-5'>
