@@ -20,6 +20,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import BadgeIcon from '@mui/icons-material/Badge';
 import { Container } from 'react-bootstrap';
 import logo from 'assets/img/logo.png';
+import fullLogo from 'assets/img/logo_with_text.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { Telegram, Facebook, X, MenuBook } from '@mui/icons-material';
@@ -67,19 +68,14 @@ export const Header = () => {
     <>
       <div className='header-area2'>
         <div className='d-flex py-2 justify-content-between align-items-center'>
-          <div className='d-flex align-items-center ml-3'>
+          <div className='d-flex align-items-center'>
             <img
-              src={logo}
-              alt='logo'
-              className='cursor-pointer ms-1'
-              style={{ width: 25, height: 25 }}
+              src={fullLogo}
+              alt='fullLogo'
+              className='cursor-pointer'
+              style={{ height: isMobile ? 200 : 245, marginTop: '-100px', marginBottom: '-100px' }}
               onClick={() => handleClick(isLoggedIn ? 'portfolio' : '')}
-            />
-            <p className='header-area1-text font-size-xxl mb-0 ms-2' onClick={() => handleClick(isLoggedIn ? 'portfolio' : '')}>
-              Emeral
-              <span className='half-colored-d'>D</span>
-              <span className='text-white'>EX</span>
-            </p>
+            />            
           </div>
           <div>
             {!isMobile && (
@@ -157,14 +153,14 @@ export const Header = () => {
               <Button
                 component={Link}
                 to="/unlock"
-                className="btn-intense-default btn-intense-success2 hover-btn"
+                className="btn-intense-default btn-intense-success2 hover-btn b-r-md"
               >
                 Connect Wallet
               </Button>
             ) : (
               <Button
                 onClick={handleLogout}
-                className="btn-intense-default btn-intense-success2 hover-btn"
+                className="btn-intense-default btn-intense-success2 hover-btn b-r-md"
               >
                 Disconnect
               </Button>
