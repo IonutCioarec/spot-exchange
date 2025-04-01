@@ -58,9 +58,9 @@ export const Header = () => {
   useEffect(() => {
     const currentRoute = routes.find(route => route.path === location.pathname);
     if (currentRoute) {
-      document.title = `EmeralDex - ${currentRoute.title}`;
+      document.title = `Spot Exchange - ${currentRoute.title}`;
     } else {
-      document.title = 'EmeralDEX';
+      document.title = 'Spot Exchange';
     }
   }, [location]);
 
