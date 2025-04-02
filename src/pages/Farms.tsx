@@ -85,7 +85,7 @@ const Farms = () => {
         <Col xs={12}>
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ minHeight: '60px' }}>
             {/* <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '60px' }}> */}
-            <div className={`p-3  ${isMobile ? 'mt-2' : 'mt-5'}`}>
+            <div className={`p-3 mb-2 ${isMobile ? 'mt-2' : 'mt-4'}`}>
               <h2 className='text-white text-center'>Farms</h2>
             </div>
           </div>
