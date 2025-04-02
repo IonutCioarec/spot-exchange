@@ -84,7 +84,6 @@ export const useBackendAPI = () => {
       });
 
       const { data, page, limit, total, total_pages } = response.data;
-      console.log(JSON.stringify(response.data, null, 2));
 
       return {
         allTokens: data,
