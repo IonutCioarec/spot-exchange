@@ -12,8 +12,8 @@ export const usePoolsIssueLPToken = (pair_address: string, lp_token_display_name
     const contract = await getRouterSmartContractObj();
     const interaction = contract.methodsExplicit.issueLpToken([
       new AddressValue(new Address(pair_address)),
-      BytesValue.fromHex(lp_token_display_name),
-      BytesValue.fromHex(lp_token_ticker)
+      BytesValue.fromUTF8(lp_token_display_name),
+      BytesValue.fromUTF8(lp_token_ticker)
     ]);
 
     const valueBig = new BigNumber(poolLPTokenPrice).multipliedBy(new BigNumber(10).pow(18));
