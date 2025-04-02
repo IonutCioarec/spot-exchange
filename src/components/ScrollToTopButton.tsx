@@ -4,9 +4,11 @@ import { Button, IconButton } from '@mui/material';
 
 interface ScrollToRefButtonProps {
   targetRefId: string;
+  bottom?: string;
+  right?: string;
 }
 
-const ScrollToRefButton: React.FC<ScrollToRefButtonProps> = ({ targetRefId }) => {
+const ScrollToRefButton: React.FC<ScrollToRefButtonProps> = ({ targetRefId, bottom ='11vh', right = '13px' }) => {
   const scrollToRef = () => {
     const targetElement = document.getElementById(targetRefId);
     if (targetElement) {
@@ -21,8 +23,8 @@ const ScrollToRefButton: React.FC<ScrollToRefButtonProps> = ({ targetRefId }) =>
       className="btn-intense-default hover-btn small b-r-sm btn-scroll-top"
       style={{
         position: 'fixed',
-        bottom: '11vh',
-        right: '13px',
+        bottom: bottom,
+        right: right,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '100%',
