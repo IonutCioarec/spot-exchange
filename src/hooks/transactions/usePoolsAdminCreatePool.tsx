@@ -13,7 +13,7 @@ export const usePoolsAdminCreatePool = (first_token_id: string, second_token_id:
 
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(10_000_000)
+      .withGasLimit(40_000_000)
       .withChainID(network.chainId)
       .withValue(0)
       .buildTransaction();
