@@ -45,3 +45,11 @@ export const getFarmsSmartContractObj = async () => {
     abi: abiRegistry
   });
 };
+
+export const getDynamicPairsSmartContractObj = async (contractAddress: string) => {
+  const abiRegistry = await AbiRegistry.create(formatAbiJson(pairsAbi));
+  return new SmartContract({
+    address: new Address(contractAddress),
+    abi: abiRegistry
+  });
+};
