@@ -84,6 +84,7 @@ export const useBackendAPI = () => {
       });
 
       const { data, page, limit, total, total_pages } = response.data;
+      console.log(JSON.stringify(response.data, null, 2));
 
       return {
         allTokens: data,
@@ -97,6 +98,8 @@ export const useBackendAPI = () => {
         lpTokens: data,
         searchInput: search_by_name ? search_by_name : '',
         status: 'succeeded',
+        sort_by: sort_by,
+        sort_direction: sort_direction
       };
 
     } catch (e) {
@@ -113,6 +116,8 @@ export const useBackendAPI = () => {
         searchInput: '',
         lpTokens: [],
         status: 'failed',
+        sort_by: 'price_usd',
+        sort_direction: 'desc'
       };
     }
   };
