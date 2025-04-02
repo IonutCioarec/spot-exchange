@@ -11,7 +11,7 @@ import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector
 import { useGetAccountInfo } from 'hooks';
 import { useMobile } from 'utils/responsive';
 import { pairsContractAddress, poolBaseTokens } from 'config';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
@@ -29,6 +29,9 @@ import { usePoolsSetLocalRoles } from 'hooks/transactions/usePoolsSetLocalRoles'
 import { usePoolsIssueLPToken } from 'hooks/transactions/usePoolsIssueLPToken';
 import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import { useSelector } from 'react-redux';
+import { getRouterBaseTokens } from 'helpers/scRouterRequests';
+import ScrollToTopButton from 'components/ScrollToTopButton';
+import toast from 'react-hot-toast';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -189,18 +192,34 @@ const Admin = () => {
     }
   );
 
+  const [routerBaseTokens, setRouterBaseTokens] = useState([]);
+  const getRouterBaseTokensData = async () => {
+    const data = await getRouterBaseTokens();
+    if (data) {
+      setRouterBaseTokens(data);
+    }
+  };
+
+  useEffect(() => {
+    if (address) {
+      getRouterBaseTokensData();
+    }
+  }, [address]);
+
   return (
-    <Container className='create-pool-page-height font-rose'>
-      <Row>
-        <Col xs={12} lg={12}>
-          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
-            <div className='p-5'>
+    <Container className='create-pool-page-height font-rose mb-5'>
+      <Row id='topSection'>
+        <Col xs={12}>
+          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ minHeight: '60px' }}>
+            {/* <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '60px' }}> */}
+            <div className={`p-3 mb-3  ${isMobile ? 'mt-2' : 'mt-4'}`}>
               <h2 className='text-white text-center'>Admin</h2>
-              <p className='text-white mb-0 text-justified'>Configurations, operations, monitoring</p>
             </div>
           </div>
         </Col>
       </Row>
+      <ScrollToTopButton targetRefId='topSection' right='30px' />
+
       <Row className={`${isMobile ? 'mt-4' : 'mt-3'} mb-5`}>
         <Col xs={12} lg={6}>
           <div className={`create-container text-white`}>
@@ -513,6 +532,32 @@ const Admin = () => {
                 </StepContent>
               </Step>
             </Stepper>
+          </div>
+        </Col>
+
+        <Col xs={12} lg={6}>
+          <div className={`create-container text-white`}>
+            <p className='font-bold font-size-xxl text-center text-intense-green underline'>Get Creating Pools Base Tokens</p>
+            <div className='mt-4'>
+              <p className='mb-1'>Current base tokens:</p>
+              {routerBaseTokens.length > 0 ? (
+                routerBaseTokens.map((token: string, index: number) => (
+                  <p className='mb-0 font-size-sm' key={`token-${token}`}>{(index + 1).toString()}. {token}</p>
+                ))
+              ) : (
+                <p className='font-size-sm text-danger'>- No base tokens found</p>
+              )}
+              <div className="mt-3" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
+                <Button
+                  className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
+                  variant='contained'
+                  size='small'
+                  onClick={() => {getRouterBaseTokensData(); toast.success('Tokens refreshed successfully', { duration: 3000 });}}
+                >
+                  Refresh Tokens
+                </Button>
+              </div>
+            </div>
           </div>
         </Col>
       </Row>
