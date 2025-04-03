@@ -29,3 +29,21 @@ export const getRouterBaseTokens = async () => {
   }
   return [];
 };
+
+export const getPairCreationState = async () => {
+  const contract = await getRouterSmartContractObj();
+  const interaction = contract.methodsExplicit.getPairCreationEnabled();
+
+  const query = interaction.buildQuery();
+  const response = await Provider.queryContract(query);
+  const endpointDef = interaction.getEndpoint();
+  const parsedResponse = resultsParser.parseQueryResponse(
+    response,
+    endpointDef
+  );
+  if (parsedResponse.returnCode.isSuccess()) {
+    const value = parsedResponse.firstValue?.valueOf();
+    return value;
+  }
+  return [];
+};
