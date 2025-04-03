@@ -29,9 +29,13 @@ import { usePoolsSetLocalRoles } from 'hooks/transactions/usePoolsSetLocalRoles'
 import { usePoolsIssueLPToken } from 'hooks/transactions/usePoolsIssueLPToken';
 import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import { useSelector } from 'react-redux';
-import { getRouterBaseTokens } from 'helpers/scRouterRequests';
+import { getRouterBaseTokens, getPairCreationState } from 'helpers/scRouterRequests';
 import ScrollToTopButton from 'components/ScrollToTopButton';
 import toast from 'react-hot-toast';
+import { usePoolsEnableSwap } from 'hooks/transactions/usePoolsEnableSwap';
+import { usePoolsResume } from 'hooks/transactions/usePoolsResume';
+import { usePoolsPairCreation } from 'hooks/transactions/usePoolsPairCreation';
+import { useGetPendingTransactions } from 'hooks';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -104,6 +108,7 @@ const CustomStepConnector = () => (
 const Admin = () => {
   const { address } = useGetAccountInfo();
   const isMobile = useMobile();
+  const { hasPendingTransactions } = useGetPendingTransactions();
   const [baseTokenId, setBaseTokenId] = useState(poolBaseTokens.token1.id);
   const [baseTokenTicker, setBaseTokenTicker] = useState(poolBaseTokens.token1.ticker);
   const [baseTokenImage, setBaseTokenImage] = useState(poolBaseTokens.token1.image);
@@ -177,20 +182,35 @@ const Admin = () => {
 
   // create pair hook (for all steps)
   const createPool = usePoolsAdminCreatePool(baseTokenId, secondTokenId);
-  const issueLpToken = usePoolsIssueLPToken(pairsContractAddress, baseTokenId.split('-')[0] + secondTokenId.split('-')[0], baseTokenId.split('-')[0] + secondTokenId.split('-')[0]);
-  const setLocalRoles = usePoolsSetLocalRoles(pairsContractAddress);
+  const issueLpToken = usePoolsIssueLPToken('erd1qqqqqqqqqqqqqpgqfr3dxdn27cswygptpemlc0g5g7t8lmx4v2vs86n2u9', 'USDCXTT', 'USDCXTT');
+  const setLocalRoles = usePoolsSetLocalRoles('erd1qqqqqqqqqqqqqpgqfr3dxdn27cswygptpemlc0g5g7t8lmx4v2vs86n2u9');
+  // const addInitialLiquidity = usePoolsAddInitialLiquidity(
+  //   {
+  //     token_id: baseTokenId,
+  //     token_decimals: baseTokenDecimals,
+  //     token_amount: Number(firstTokenAmount)
+  //   },
+  //   {
+  //     token_id: secondTokenId,
+  //     token_decimals: secondTokenDecimals,
+  //     token_amount: Number(secondTokenAmount)
+  //   }
+  // );
+
   const addInitialLiquidity = usePoolsAddInitialLiquidity(
+    'erd1qqqqqqqqqqqqqpgqfr3dxdn27cswygptpemlc0g5g7t8lmx4v2vs86n2u9',
     {
-      token_id: baseTokenId,
-      token_decimals: baseTokenDecimals,
-      token_amount: Number(firstTokenAmount)
+      token_id: 'USDC-350c4e',
+      token_decimals: 6,
+      token_amount: 0.1
     },
     {
-      token_id: secondTokenId,
-      token_decimals: secondTokenDecimals,
-      token_amount: Number(secondTokenAmount)
+      token_id: 'XTICKET-6e9b83',
+      token_decimals: 18,
+      token_amount: 1000
     }
   );
+  const resumePoolSwap = usePoolsResume('erd1qqqqqqqqqqqqqpgqkjqjsketuzhadc2f5lw2523hcpzghzlrv2vsqlrkg6');
 
   const [routerBaseTokens, setRouterBaseTokens] = useState([]);
   const getRouterBaseTokensData = async () => {
@@ -200,18 +220,28 @@ const Admin = () => {
     }
   };
 
+  const [pairCreationState, setPairCreationState] = useState(false);
+  const enablePoolsPairCreation = usePoolsPairCreation(true);
+  const disablePoolsPairCreation = usePoolsPairCreation(false);
+  const getPairCreationStateData = async () => {
+    const data = await getPairCreationState();
+    if (data) {
+      setPairCreationState(data);
+    }
+  };
+
   useEffect(() => {
     if (address) {
       getRouterBaseTokensData();
+      getPairCreationStateData();
     }
-  }, [address]);
+  }, [address, hasPendingTransactions]);
 
   return (
     <Container className='create-pool-page-height font-rose mb-5'>
       <Row id='topSection'>
         <Col xs={12}>
           <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ minHeight: '60px' }}>
-            {/* <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '60px' }}> */}
             <div className={`p-3 mb-3  ${isMobile ? 'mt-2' : 'mt-4'}`}>
               <h2 className='text-white text-center'>Admin</h2>
             </div>
@@ -221,6 +251,72 @@ const Admin = () => {
       <ScrollToTopButton targetRefId='topSection' right='30px' />
 
       <Row className={`${isMobile ? 'mt-4' : 'mt-3'} mb-5`}>
+        <Col xs={12} lg={6}>
+          <Row>
+            <Col xs={12}>
+              <div className={`create-container text-white`}>
+                <p className='font-bold font-size-xxl text-center text-intense-green underline'>Enable / Disable creating pools</p>
+                <div className='mt-4'>
+                  <p className='mb-1'>Current Pools Creating State:</p>            
+                    <p className='mb-0 font-size-sm'>- {pairCreationState ? 'Enabled' : 'Disabled'}</p>    
+                  <div className="mt-3 d-flex" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
+                    <Button
+                      className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
+                      variant='contained'
+                      size='small'
+                      onClick={() => { getPairCreationStateData(); toast.success('Creating pairs state refreshed successfully', { duration: 3000 }); }}
+                    >
+                      Refresh Data
+                    </Button>
+                    <Button
+                      className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3 ms-2'
+                      variant='contained'
+                      size='small'
+                      onClick={() => enablePoolsPairCreation()}
+                    >
+                      Enable Creating
+                    </Button>
+                    <Button
+                      className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3 ms-2'
+                      variant='contained'
+                      size='small'
+                      onClick={() => disablePoolsPairCreation()}
+                    >
+                      Disable Creating
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={12} className='mt-3'>
+              <div className={`create-container text-white`}>
+                <p className='font-bold font-size-xxl text-center text-intense-green underline'>Get Creating Pools Base Tokens</p>
+                <div className='mt-4'>
+                  <p className='mb-1'>Current base tokens:</p>
+                  {routerBaseTokens.length > 0 ? (
+                    routerBaseTokens.map((token: string, index: number) => (
+                      <p className='mb-0 font-size-sm' key={`token-${token}`}>{(index + 1).toString()}. {token}</p>
+                    ))
+                  ) : (
+                    <p className='font-size-sm text-danger'>- No base tokens found</p>
+                  )}
+                  <div className="mt-3" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
+                    <Button
+                      className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
+                      variant='contained'
+                      size='small'
+                      onClick={() => { getRouterBaseTokensData(); toast.success('Tokens refreshed successfully', { duration: 3000 }); }}
+                    >
+                      Refresh Tokens
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Col>
+
         <Col xs={12} lg={6}>
           <div className={`create-container text-white`}>
             <p className='font-bold font-size-xxl text-center text-intense-green underline'>CREATE POOL</p>
@@ -532,31 +628,16 @@ const Admin = () => {
                 </StepContent>
               </Step>
             </Stepper>
-          </div>
-        </Col>
 
-        <Col xs={12} lg={6}>
-          <div className={`create-container text-white`}>
-            <p className='font-bold font-size-xxl text-center text-intense-green underline'>Get Creating Pools Base Tokens</p>
-            <div className='mt-4'>
-              <p className='mb-1'>Current base tokens:</p>
-              {routerBaseTokens.length > 0 ? (
-                routerBaseTokens.map((token: string, index: number) => (
-                  <p className='mb-0 font-size-sm' key={`token-${token}`}>{(index + 1).toString()}. {token}</p>
-                ))
-              ) : (
-                <p className='font-size-sm text-danger'>- No base tokens found</p>
-              )}
-              <div className="mt-3" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
-                <Button
-                  className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
-                  variant='contained'
-                  size='small'
-                  onClick={() => {getRouterBaseTokensData(); toast.success('Tokens refreshed successfully', { duration: 3000 });}}
-                >
-                  Refresh Tokens
-                </Button>
-              </div>
+            <div className="mt-3" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
+              <Button
+                className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
+                variant='contained'
+                size='small'
+                onClick={() => resumePoolSwap()}
+              >
+                Enable SWAP
+              </Button>
             </div>
           </div>
         </Col>
