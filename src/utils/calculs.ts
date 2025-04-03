@@ -56,3 +56,23 @@ export const getUserPoolShare = (userLpTokenBalance: string, supply: string, dec
 
   return share;
 }
+
+//Generate lp_token_name
+export const generateLPTokenName = (token1: string, token2: string): string => {
+  // Normalize tokens: remove suffix and convert to lowercase
+  const formatToken = (token: string) => token.split('-')[0].toLowerCase();
+  
+  const formattedToken1 = formatToken(token1);
+  const formattedToken2 = formatToken(token2);
+  
+  // Construct the base LP token name
+  let lpTokenName = (formattedToken1 + formattedToken2 + 'lp').toUpperCase();
+  
+  // Ensure the final name is at most 10 characters
+  if (lpTokenName.length > 10) {
+      const remainingLength = 10 - 2 - formattedToken1.length; // 2 for 'LP'
+      lpTokenName = (formattedToken1 + formattedToken2.substring(0, remainingLength) + 'LP').toUpperCase();
+  }
+  
+  return lpTokenName;
+}
