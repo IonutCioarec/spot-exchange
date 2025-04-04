@@ -21,7 +21,7 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface WithdrawModal {
+interface AddModal {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   token1: string;
@@ -36,9 +36,10 @@ interface WithdrawModal {
   token2ExchangeRate: string;
   token1Decimals: number;
   token2Decimals: number;
+  pair_address: string;
 }
 
-const AddModal: React.FC<WithdrawModal> = ({
+const AddModal: React.FC<AddModal> = ({
   isOpen,
   setIsOpen,
   token1,
@@ -53,6 +54,7 @@ const AddModal: React.FC<WithdrawModal> = ({
   token2ExchangeRate,
   token1Decimals,
   token2Decimals,
+  pair_address
 }) => {
   const [amountToken1, setAmountToken1] = useState('');
   const [amountToken2, setAmountToken2] = useState('');
@@ -177,7 +179,8 @@ const AddModal: React.FC<WithdrawModal> = ({
   };
 
   // add liquidity hook
-  const addLiquidity = usePoolsAddLiquidity(
+  const addLiquidity = (pair_address: string) => usePoolsAddLiquidity(
+    pair_address,
     {
       token_id: token1Id,
       token_decimals: token1Decimals,
@@ -398,7 +401,7 @@ const AddModal: React.FC<WithdrawModal> = ({
 
           <Button
             className="btn-intense-default hover-btn btn-intense-success2 mt-2 smaller fullWidth mt-3"
-            onClick={() => { addLiquidity(); handleAdd(); }}
+            onClick={() => { addLiquidity(pair_address); handleAdd(); }}
             sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
           >
             Add
