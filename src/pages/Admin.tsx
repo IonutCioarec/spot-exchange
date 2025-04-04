@@ -29,13 +29,14 @@ import { usePoolsSetLocalRoles } from 'hooks/transactions/usePoolsSetLocalRoles'
 import { usePoolsIssueLPToken } from 'hooks/transactions/usePoolsIssueLPToken';
 import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import { useSelector } from 'react-redux';
-import { getRouterBaseTokens, getPairCreationState } from 'helpers/scRouterRequests';
+import { getRouterBaseTokens, getPairCreationState, getBurnAddress, getVaultAddress } from 'helpers/scRouterRequests';
 import ScrollToTopButton from 'components/ScrollToTopButton';
 import toast from 'react-hot-toast';
 import { usePoolsEnableSwap } from 'hooks/transactions/usePoolsEnableSwap';
 import { usePoolsResume } from 'hooks/transactions/usePoolsResume';
 import { usePoolsPairCreation } from 'hooks/transactions/usePoolsPairCreation';
 import { useGetPendingTransactions } from 'hooks';
+import { CopyToClipboard } from "utils/calculs";
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -229,11 +230,29 @@ const Admin = () => {
       setPairCreationState(data);
     }
   };
+  
+  const [routerBurnAddress, setBurnAddress] = useState('');
+  const getRouterBurnAddressData = async () => {
+    const data = await getBurnAddress();
+    if (data) {
+      setBurnAddress(data.toString());
+    }
+  };
+
+  const [routerVaultAddress, setVaultAddress] = useState('');
+  const getRouterVaultAddressData = async () => {
+    const data = await getVaultAddress();
+    if (data) {
+      setVaultAddress(data.toString());
+    }
+  };
 
   useEffect(() => {
     if (address) {
       getRouterBaseTokensData();
       getPairCreationStateData();
+      getRouterBurnAddressData();
+      getRouterVaultAddressData();
     }
   }, [address, hasPendingTransactions]);
 
@@ -257,8 +276,8 @@ const Admin = () => {
               <div className={`create-container text-white`}>
                 <p className='font-bold font-size-xxl text-center text-intense-green underline'>Enable / Disable creating pools</p>
                 <div className='mt-4'>
-                  <p className='mb-1'>Current Pools Creating State:</p>            
-                    <p className='mb-0 font-size-sm'>- {pairCreationState ? 'Enabled' : 'Disabled'}</p>    
+                  <p className='mb-1'>Current Pools Creating State:</p>
+                  <p className='mb-0 font-size-sm'>- {pairCreationState ? 'Enabled' : 'Disabled'}</p>
                   <div className="mt-3 d-flex" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
                     <Button
                       className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
@@ -314,6 +333,63 @@ const Admin = () => {
                 </div>
               </div>
             </Col>
+
+            <Col xs={12} className='mt-3'>
+              <div className={`create-container text-white`}>
+                <p className='font-bold font-size-xxl text-center text-intense-green underline'>Swap Burn Address</p>
+                <div className='mt-4'>
+                  <p className='mb-1'>Current Burn Address:</p>
+                  <p className='mb-0 font-size-sm text-intense-green' style={{wordBreak: 'break-word'}}>{routerBurnAddress}</p>
+                  <div className="mt-3 d-flex" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
+                    <Button
+                      className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
+                      variant='contained'
+                      size='small'
+                      onClick={() => { getRouterBurnAddressData(); toast.success('Burn address refreshed successfully', { duration: 3000 }); }}
+                    >
+                      Refresh Data
+                    </Button>
+                    <Button
+                      className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3 ms-3'
+                      variant='contained'
+                      size='small'
+                      onClick={() => { CopyToClipboard(routerBurnAddress);}}
+                    >
+                      Copy Address
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={12} className='mt-3'>
+              <div className={`create-container text-white`}>
+                <p className='font-bold font-size-xxl text-center text-intense-green underline'>Swap Vault Address</p>
+                <div className='mt-4'>
+                  <p className='mb-1'>Current Vault Address:</p>
+                  <p className='mb-0 font-size-sm text-intense-green' style={{wordBreak: 'break-word'}}>{routerVaultAddress}</p>
+                  <div className="mt-3 d-flex" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
+                    <Button
+                      className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
+                      variant='contained'
+                      size='small'
+                      onClick={() => { getRouterVaultAddressData(); toast.success('Vault address refreshed successfully', { duration: 3000 }); }}
+                    >
+                      Refresh Data
+                    </Button>
+                    <Button
+                      className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3 ms-3'
+                      variant='contained'
+                      size='small'
+                      onClick={() => { CopyToClipboard(routerVaultAddress);}}
+                    >
+                      Copy Address
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Col>
+
           </Row>
         </Col>
 
