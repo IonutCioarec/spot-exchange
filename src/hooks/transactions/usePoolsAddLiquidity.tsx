@@ -1,8 +1,7 @@
 import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
-import { network, poolLPTokenPrice } from 'config';
-import { Transaction, BytesValue, Address, AddressValue, BigUIntValue, TokenTransfer } from '@multiversx/sdk-core/out';
-import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
-import { getPairsSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo, watcher } from 'helpers';
+import { network } from 'config';
+import { BigUIntValue, TokenTransfer } from '@multiversx/sdk-core/out';
+import { getDynamicPairsSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo, watcher } from 'helpers';
 import BigNumber from 'bignumber.js';
 
 interface TokenProps {
@@ -11,11 +10,11 @@ interface TokenProps {
   token_amount: number
 }
 
-export const usePoolsAddLiquidity = (token1: TokenProps, token2: TokenProps) => {
+export const usePoolsAddLiquidity = (pair_address: string, token1: TokenProps, token2: TokenProps) => {
   const { account } = useGetAccountInfo();
 
   const addLiquidity = async () => {
-    const contract = await getPairsSmartContractObj();
+    const contract = await getDynamicPairsSmartContractObj(pair_address);
     const interaction = contract.methodsExplicit.addLiquidity([
       new BigUIntValue(new BigNumber(token1.token_amount).multipliedBy(new BigNumber(10).pow(token1.token_decimals))),
       new BigUIntValue(new BigNumber(token2.token_amount).multipliedBy(new BigNumber(10).pow(token2.token_decimals)))
@@ -23,7 +22,7 @@ export const usePoolsAddLiquidity = (token1: TokenProps, token2: TokenProps) => 
 
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(20_000_000)
+      .withGasLimit(30_000_000)
       .withChainID(network.chainId)
       .withValue(0)
       .withMultiESDTNFTTransfer([
