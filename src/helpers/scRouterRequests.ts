@@ -47,3 +47,39 @@ export const getPairCreationState = async () => {
   }
   return [];
 };
+
+export const getBurnAddress = async () => {
+  const contract = await getRouterSmartContractObj();
+  const interaction = contract.methodsExplicit.getBurnAddress();
+
+  const query = interaction.buildQuery();
+  const response = await Provider.queryContract(query);
+  const endpointDef = interaction.getEndpoint();
+  const parsedResponse = resultsParser.parseQueryResponse(
+    response,
+    endpointDef
+  );
+  if (parsedResponse.returnCode.isSuccess()) {
+    const value = parsedResponse.firstValue?.valueOf();
+    return value;
+  }
+  return [];
+};
+
+export const getVaultAddress = async () => {
+  const contract = await getRouterSmartContractObj();
+  const interaction = contract.methodsExplicit.getVaultAddress();
+
+  const query = interaction.buildQuery();
+  const response = await Provider.queryContract(query);
+  const endpointDef = interaction.getEndpoint();
+  const parsedResponse = resultsParser.parseQueryResponse(
+    response,
+    endpointDef
+  );
+  if (parsedResponse.returnCode.isSuccess()) {
+    const value = parsedResponse.firstValue?.valueOf();
+    return value;
+  }
+  return [];
+};
