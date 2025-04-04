@@ -1,14 +1,16 @@
 import { useGetAccountInfo } from '@multiversx/sdk-dapp/hooks/account';
 import { network } from 'config';
 import { Address, AddressValue } from '@multiversx/sdk-core/out';
-import { getDynamicPairsSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo } from 'helpers';
+import { getRouterSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo } from 'helpers';
 
-export const usePoolsResume = (pair_address: string) => {
+export const useRouterResume = (pair_address: string) => {
   const { account } = useGetAccountInfo();
 
   const resumePool = async () => {
-    const contract = await getDynamicPairsSmartContractObj(pair_address);
-    const interaction = contract.methodsExplicit.resume();
+    const contract = await getRouterSmartContractObj();
+    const interaction = contract.methodsExplicit.resume([
+      new AddressValue(new Address(pair_address))
+    ]);
 
     const transaction = interaction
       .withNonce(account.nonce)
