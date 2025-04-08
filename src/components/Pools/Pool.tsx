@@ -374,13 +374,13 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               <div className="d-flex justify-content-start align-items-center">
                 <span className="mx-2">{index + 1}</span>
                 <img
-                  src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                  src={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
                   alt={pair.token1}
                   className='d-inline'
                   style={{ width: 27, height: 27, border: '1px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
                 />
                 <motion.img
-                  src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                  src={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
                   alt={pair.token2}
                   className="d-inline m-l-n-xxl"
                   initial={{ x: 0 }}
