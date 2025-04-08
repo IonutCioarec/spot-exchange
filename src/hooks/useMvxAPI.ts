@@ -2,6 +2,7 @@ import axios from 'axios';
 import { API_URL } from 'config';
 import logo from 'assets/img/no_logo.png';
 import { CreatedTokens, UserNFTs } from 'types/mvxTypes';
+import { denominatedAmountToAmount } from 'utils/formatters';
 
 export const useMvxAPI = () => {
   const getUserTokensBalance = async (
@@ -13,7 +14,7 @@ export const useMvxAPI = () => {
   }> => {
     try {
       // Extract token_ids and join them for the API request
-      const tokensString = tokens.map(token => token.token_id).join('-');
+      const tokensString = tokens.map(token => token.token_id).join('%2C');
       const response = await axios.get(
         `${API_URL}/accounts/${address}/tokens?identifiers=${tokensString}&includeMetaESDT=true`,
         {
@@ -29,7 +30,7 @@ export const useMvxAPI = () => {
       const tokenData: Record<string, { balance: string }> = {};
       if (response.data) {
         response.data.forEach((token: any) => {
-          tokenData[token.identifier] = { balance: token.balance };
+          tokenData[token.identifier] = { balance: denominatedAmountToAmount(token.balance, token.decimals, 3) };
         });
       }
 
@@ -42,11 +43,11 @@ export const useMvxAPI = () => {
           pairTokens[token.token_id] = { balance };
         }
         // Example data, will be removed when the sc are connected with the backend
-        lpTokens['WTAOWEGLD-5833e2'] = { balance: '20' };
-        lpTokens['XGTXCR-386762'] = { balance: '20000' };
-        lpTokens['TADAWEGLD-e427f1'] = { balance: '4' };
-        lpTokens['CEGLDXCR-701cd5'] = { balance: '213' };
-        pairTokens['WTAO-a0cc6b'] = { balance: '2000' };
+        // lpTokens['WTAOWEGLD-5833e2'] = { balance: '20' };
+        // lpTokens['XGTXCR-386762'] = { balance: '20000' };
+        // lpTokens['TADAWEGLD-e427f1'] = { balance: '4' };
+        // lpTokens['CEGLDXCR-701cd5'] = { balance: '213' };
+        // pairTokens['WTAO-a0cc6b'] = { balance: '2000' };
       });
 
       return { lpTokens, pairTokens };
