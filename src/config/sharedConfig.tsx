@@ -13,8 +13,8 @@ export const adminAddresses = [
 ];
 export const stateLoaderRefreshTime = 15000;
 export const userStateLoaderRefreshTime = 5000;
-export const defaultSwapToken1 = 'WEGLD-a28c59';
-export const defaultSwapToken2 = 'MEX-a659d0';
+export const defaultSwapToken1 = 'USDC-350c4e';
+export const defaultSwapToken2 = 'SPOT-ec8f71';
 export const tokensItemsPerPage = 10;
 export const poolsItemsPerPage = 10;
 export const debounceSearchTime = 1000;
