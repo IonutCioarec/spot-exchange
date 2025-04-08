@@ -23,6 +23,7 @@ import AddModal from './AddModal';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { useBackendAPI } from "hooks/useBackendAPI";
 import ReduceZerosFormat from "components/ReduceZerosFormat";
+import defaultLogo from 'assets/img/no_logo.png';
 
 interface PoolProps {
   pair: Pair;
@@ -39,7 +40,7 @@ interface PoolProps {
 }
 
 const defaultTokenValues = {
-  image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
+  image_url: defaultLogo,
   name: 'TOKEN',
   price: 0,
   decimals: 18
@@ -99,13 +100,13 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
               </Col>
               <Col lg={1}>
                 <img
-                  src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                  src={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
                   alt={pair.token1}
                   className='d-inline'
                   style={{ width: 35, height: 35, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
                 />
                 <motion.img
-                  src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                  src={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
                   alt={pair.token2}
                   className="d-inline m-l-n-xxl"
                   initial={{ x: 0 }}
@@ -224,7 +225,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         <div className="d-flex justify-content-start">
                           <p className="h5 mb-0">{intlNumberFormat(Number(pair.token1_reserve), 3, 3)}</p>
                           <img
-                            src={token1Details?.logo_url ?? defaultTokenValues.image_url}
+                            src={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
                             alt={pair.token1}
                             className='ms-2'
                             style={{ width: 25, height: 25 }}
@@ -238,7 +239,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         <div className="d-flex justify-content-end">
                           <p className="h5 mb-0">{intlNumberFormat(Number(pair.token2_reserve), 3, 3)}</p>
                           <img
-                            src={token2Details?.logo_url ?? defaultTokenValues.image_url}
+                            src={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
                             alt={pair.token2}
                             className='ms-2'
                             style={{ width: 25, height: 25 }}
