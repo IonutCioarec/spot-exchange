@@ -17,12 +17,12 @@ export const formatSignificantDecimals = (input: number, decimals: number = 2): 
     return '0';
   }
 
+  const inputStr = input.toString();
   const regexPattern = new RegExp(`^-?\\d*\\.?0*\\d{0,${decimals}}`);
-  const fixedInput = input.toFixed(20);
-  const match = fixedInput.match(regexPattern);
+  const match = inputStr.match(regexPattern);
 
-  if (parseFloat(fixedInput) === parseInt(fixedInput, 10)) {
-    return parseFloat(fixedInput).toFixed(decimals);
+  if (Number.isInteger(input)) {
+    return input.toFixed(decimals);
   }
 
   if (match) {
