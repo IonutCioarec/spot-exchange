@@ -37,9 +37,10 @@ import { debounceSearchTime } from 'config';
 import { useSwapTokensRouter } from 'hooks/transactions/useSwapTokensRouter';
 import { setTokenSearch, selectPairs } from 'storeManager/slices/pairsSlice';
 import ScrollToTopButton from 'components/ScrollToTopButton';
+import defaultLogo from 'assets/img/no_logo.png';
 
 const defaultTokenValues = {
-  image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
+  image_url: defaultLogo,
   name: 'TOKEN',
   price: 0,
   decimals: 18
@@ -568,14 +569,14 @@ const Swap = () => {
                         <CustomTooltip key={`t-route-${index}`} title={`${allTokens[step?.token_in]?.ticker} > ${allTokens[step?.token_out]?.ticker}`}>
                           <div className='bg-[#32323299] d-flex justify-content-end align-items-center text-white p-1 b-r-sm'>
                             <img
-                              src={allTokens[step?.token_in]?.logo_url ?? defaultTokenValues.image_url}
+                              src={allTokens[step?.token_in]?.logo_url && allTokens[step?.token_in]?.logo_url !== 'N/A' ? allTokens[step?.token_in]?.logo_url : defaultTokenValues.image_url}
                               alt={allTokens[step?.token_in]?.ticker}
                               style={{ width: 20, height: 20, border: '1px solid #202020' }}
                               className='b-r-sm'
                             />
-                            <span className='mx-1'><FontAwesomeIcon icon={faCaretRight} size='xs' /></span>
+                            <span className='mx-1' style={{marginTop: '2px'}}><FontAwesomeIcon icon={faCaretRight} size='xs' /></span>
                             <img
-                              src={allTokens[step?.token_out]?.logo_url ?? defaultTokenValues.image_url}
+                              src={allTokens[step?.token_out]?.logo_url && allTokens[step?.token_out]?.logo_url !== 'N/A' ? allTokens[step?.token_out]?.logo_url : defaultTokenValues.image_url}
                               alt={allTokens[step?.token_out]?.ticker}
                               style={{ width: 20, height: 20, border: '1px solid #202020' }}
                               className='b-r-sm'
