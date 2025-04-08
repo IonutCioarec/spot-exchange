@@ -17,6 +17,7 @@ import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
 import { getTokenLogo } from 'utils/formatters';
+import defaultLogo from 'assets/img/no_logo.png';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -209,7 +210,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
               Object.values(pairTokens).length > 0 ? (
                 Object.values(pairTokens).map((token: Token) => (
                   <div key={`list-item-${token.token_id}`} className='py-1 px-2 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item' onClick={() => handleTokenSelect(token.token_id)}>
-                    <Avatar src={token.logo_url} sx={{ height: '30px', width: '30px', marginTop: '-2px' }} />
+                    <Avatar src={token.logo_url && token.logo_url !== 'N/A' ? token.logo_url : defaultLogo} sx={{ height: '30px', width: '30px', marginTop: '-2px' }} />
                     <div className='' style={{ width: '30%' }}>
                       <p className='font-size-xxs mb-0 text-silver'>Token</p>
                       <p className='font-size-xs mb-0'>{token.token_id}</p>
