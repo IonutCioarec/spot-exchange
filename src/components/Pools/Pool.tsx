@@ -340,8 +340,8 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                         token2Decimals={token2Details?.decimals}
                         token1MaxAmount={userToken1Balance}
                         token2MaxAmount={userToken2Balance}
-                        token1Image={token1Details?.logo_url}
-                        token2Image={token2Details?.logo_url}
+                        token1Image={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
+                        token2Image={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
                         token1ExchangeRate={token1ExchangeRate}
                         token2ExchangeRate={token2ExchangeRate}
                         pair_address={pair.pair_id}
@@ -597,8 +597,8 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           token2Decimals={token2Details?.decimals}
           token1MaxAmount={userToken1Balance}
           token2MaxAmount={userToken2Balance}
-          token1Image={token1Details?.logo_url}
-          token2Image={token2Details?.logo_url}
+          token1Image={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
+          token2Image={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
           token1ExchangeRate={token1ExchangeRate}
           token2ExchangeRate={token2ExchangeRate}
           pair_address={pair.pair_id}
