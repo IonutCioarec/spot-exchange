@@ -18,7 +18,7 @@ interface FeesChartProps {
   viewBtnType?: string;
 }
 
-const VolumeChart: React.FC<FeesChartProps> = ({
+const FeeesChart: React.FC<FeesChartProps> = ({
   xData, yData, view, setView, title, subtitle, 
   color1 = 'rgba(13, 202, 240, 0.8)', 
   color2 = 'rgba(5, 120, 150, 0.4)', 
@@ -162,10 +162,9 @@ const VolumeChart: React.FC<FeesChartProps> = ({
   );
 
   return (
-    <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)' }}>
+    <div className='b-r-sm' style={{ backgroundColor: 'rgba(32,32,32, 0.5)'}}>
       <div className='px-5 py-4 text-center text-white'>
         <p className='mb-0 font-size-md'>{title}</p>
-        <p className='mb-0 font-size-sm'>{subtitle}</p>
         <div className='mt-1'>
           <ButtonGroup className='b-r-md p-1' size="small" variant="outlined" aria-label="outlined volume button group" style={{ border: `1px solid ${tooltipBorderColor}` }}>
             <Button className={`btn-intense-default b-r-sm hover-btn px-3 py-0 ${view === '24H' ? viewBtnType : 'text-silver'}`} onClick={() => handleClick('24H')}>24H</Button>
@@ -186,4 +185,4 @@ const VolumeChart: React.FC<FeesChartProps> = ({
   );
 };
 
-export default VolumeChart;
+export default FeeesChart;
