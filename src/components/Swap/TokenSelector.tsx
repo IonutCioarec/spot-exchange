@@ -16,6 +16,7 @@ import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArro
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
+import { getTokenLogo } from 'utils/formatters';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -113,7 +114,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         onClick={handleOpen}
       >
         <img
-          src={allTokens[selectedToken]?.logo_url || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.logo_url}
+          src={getTokenLogo(tokenType, allTokens, selectedToken)}
           alt={tokenType}
           style={{ height: isMobile ? 25 : 35, flexShrink: 0, position: 'relative' }}
           className='ms-2'
@@ -125,7 +126,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             textOverflow: 'ellipsis',
             overflow: 'hidden',
           }}>
-          <p className={`m-0 ${isMobile ? 'font-size-sm' : 'h4'}`}>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
+          <p className={`m-0 ${isMobile ? 'font-size-sm' : 'h5'}`}>{allTokens[selectedToken]?.ticker || allTokens[tokenType == 'token1' ? defaultSwapToken1 : defaultSwapToken2]?.ticker}</p>
           <p className='m-t-n-xs mb-0 font-size-xxs text-silver'>
             $<ReduceZerosFormat
               numberString={intlNumberFormat(Number(formatSignificantDecimals(Number(allTokens[selectedToken]?.price_usd) ?? 0, 3)), 0, 20) ||

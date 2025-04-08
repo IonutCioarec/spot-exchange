@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { getAmountFromPercentageBigNumber, getPercentageBigNumber } from './calculs';
 import { Pair, Token } from 'types/backendTypes';
+import defaultLogo from 'assets/img/no_logo.png';
+import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 
 export const denominatedAmountToAmount = (amount: number | string, denomination: number, decimals: number) => {
   return new BigNumber(amount).shiftedBy(-denomination).decimalPlaces(decimals, BigNumber.ROUND_DOWN).toString(10);
@@ -155,3 +157,18 @@ export const getFormattedUserPoolShare = (userLpTokenBalance: string, tokenSuppl
 
   return share;
 }
+
+// return swap tokens image
+export const getTokenLogo = (
+  tokenType: 'token1' | 'token2',
+  allTokens: Record<string, Token>,
+  selectedToken?: string
+) => {
+  const tokenKey =
+    selectedToken ||
+    (tokenType === 'token2' ? defaultSwapToken2 : defaultSwapToken1);
+
+  const logoUrl = allTokens[tokenKey]?.logo_url;
+
+  return logoUrl && logoUrl !== 'N/A' ? logoUrl : defaultLogo;
+};
