@@ -4,39 +4,72 @@ import { Transaction, BytesValue, Address, AddressValue, BigUIntValue, TokenTran
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
 import { getRouterSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo, watcher } from 'helpers';
 import BigNumber from 'bignumber.js';
+import { SwapStep } from 'types/backendTypes';
+import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
+import { useSelector } from 'react-redux';
 
 interface TokenProps {
-  token_id: string,
-  token_decimals: number,
-  token_amount: number
+  token_id: string;
+  token_decimals: number;
+  token_amount: string;
 }
 
-export const useSwapTokensRouter = (token1: TokenProps, token2: TokenProps, pair_address: string) => {
+export const useSwapTokensRouter = (
+  tokenInDetails: TokenProps,
+  swapSteps: SwapStep[],
+  tokenOutDetails: TokenProps,
+) => {
   const { account } = useGetAccountInfo();
+  const allTokens = useSelector(selectAllTokensById);
 
-  const swapTokensFixedInput = async () => {
+  const swapTokens = async () => {
     const contract = await getRouterSmartContractObj();
-    const interaction = contract.methodsExplicit.multiPairSwap([
-      new AddressValue(new Address(pair_address)),
-      BytesValue.fromHex('swapTokensFixedInput'),
-      new TokenIdentifierValue(token2.token_id),
-      new BigUIntValue(new BigNumber(token2.token_amount).multipliedBy(new BigNumber(10).pow(token2.token_decimals)))
-    ]);
+
+    const swapOperations = swapSteps.map((step, index) => {
+      const pairAddress = new AddressValue(new Address(step.sc_address));
+      const pairMethodName = BytesValue.fromUTF8('swapTokensFixedInput');
+
+      let pairTokenOut: TokenIdentifierValue;
+      let pairAmountOut: BigUIntValue;
+
+      const isLastStep = index === swapSteps.length - 1;
+      if (!isLastStep && swapSteps[index + 1]) {
+        pairTokenOut = new TokenIdentifierValue(swapSteps[index + 1].token_in);
+        pairAmountOut = new BigUIntValue(new BigNumber(swapSteps[index + 1].x_in.raw).multipliedBy(new BigNumber(10).pow(allTokens[swapSteps[index + 1].token_in].decimals)));
+      }else{
+        pairTokenOut = new TokenIdentifierValue(tokenOutDetails.token_id);
+        pairAmountOut = new BigUIntValue(new BigNumber(tokenOutDetails.token_amount).multipliedBy(new BigNumber(10).pow(tokenOutDetails.token_decimals)));
+      }
+
+      return [pairAddress, pairMethodName, pairTokenOut, pairAmountOut];
+    });
+
+    const interaction = contract.methods.multiPairSwap(swapOperations);
 
     const transaction = interaction
       .withNonce(account.nonce)
-      .withGasLimit(70_000_000)
+      .withGasLimit(90_000_000)
       .withChainID(network.chainId)
       .withValue(0)
-      .withSingleESDTTransfer(TokenTransfer.fungibleFromAmount(token1.token_id, token1.token_amount, token1.token_decimals))
+      .withSingleESDTTransfer(
+        TokenTransfer.fungibleFromAmount(
+          tokenInDetails.token_id,
+          tokenInDetails.token_amount,
+          tokenInDetails.token_decimals
+        )
+      )
       .buildTransaction();
 
     const sessionId = await sendAndSignTransactionsWrapped(
       [transaction],
-      transactionDisplayInfo({ transactionName: 'swap ', successTransactionName: 'Swapped' })
+      transactionDisplayInfo({
+        transactionName: 'Swapping',
+        successTransactionName: 'Tokens swapped'
+      })
     );
+
     return sessionId;
   };
 
-  return swapTokensFixedInput;
+  return swapTokens;
 };
