@@ -6,7 +6,6 @@ import { getRouterSmartContractObj, sendAndSignTransactionsWrapped, sendTransact
 import BigNumber from 'bignumber.js';
 import { SwapStep } from 'types/backendTypes';
 import { routerContractAddress } from 'config';
-import { toHexExact } from 'utils/formatters';
 import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import { useSelector } from 'react-redux';
 
