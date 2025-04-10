@@ -548,12 +548,11 @@ const Swap = () => {
               <Fragment>
                 <div className='d-flex justify-content-between align-items-center'>
                   <div className='d-flex justify-content-start'>
-                    <p className='text-silver font-size-sm mb-0 mt-1'>Price Impact</p>
                     <div>
                       {steps.map((step: any, index: number) => (
-                        <p className='text-white font-size-sm m-b-n-xs ms-2 mt-1' key={`step-${index}`}>
-                          <FontAwesomeIcon icon={faCaretRight} className='me-1 text-[white]' />
-                          <span className='text-[white] font-bold font-size-xs'>
+                        <p className='text-silver font-size-sm mb-0 mt-1' key={`step-${index}`}>
+                          Price Impact
+                          <span className='text-white font-bold font-size-xs ms-2'>
                             {allTokens[step?.token_in]?.ticker ?? 'TOKEN'} {'/'} {allTokens[step?.token_out]?.ticker ?? 'TOKEN'}
                           </span>
                         </p>
@@ -584,7 +583,7 @@ const Swap = () => {
                               style={{ width: 20, height: 20, border: '1px solid #202020' }}
                               className='b-r-sm'
                             />
-                            <span className='mx-1' style={{marginTop: '2px'}}><FontAwesomeIcon icon={faCaretRight} size='xs' /></span>
+                            <span className='mx-1' style={{ marginTop: '2px' }}><FontAwesomeIcon icon={faCaretRight} size='xs' /></span>
                             <img
                               src={allTokens[step?.token_out]?.logo_url && allTokens[step?.token_out]?.logo_url !== 'N/A' ? allTokens[step?.token_out]?.logo_url : defaultTokenValues.image_url}
                               alt={allTokens[step?.token_out]?.ticker}
