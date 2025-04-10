@@ -9,7 +9,7 @@ import { useBackendAPI } from 'hooks/useBackendAPI';
 import 'assets/scss/swap.scss';
 import { Container, Row, Col } from 'react-bootstrap';
 import BigNumber from 'bignumber.js';
-import { SwapPrice } from 'types/backendTypes';
+import { SwapPrice, SwapStep } from 'types/backendTypes';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import TextField from '@mui/material/TextField';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
@@ -38,6 +38,8 @@ import { useSwapTokensRouter } from 'hooks/transactions/useSwapTokensRouter';
 import { setTokenSearch, selectPairs } from 'storeManager/slices/pairsSlice';
 import ScrollToTopButton from 'components/ScrollToTopButton';
 import defaultLogo from 'assets/img/no_logo.png';
+import { useSwapTokensHex } from 'hooks/transactions/useSwapTokensHex';
+import { getPairReservesAndTotalSupply } from 'helpers/scPairRequests';
 
 const defaultTokenValues = {
   image_url: defaultLogo,
@@ -76,7 +78,7 @@ const Swap = () => {
   const [token2Amount, setToken2Amount] = useState<string>('');
   const [token1AmountPrice, setToken1AmountPrice] = useState<string>('0.000');
   const [token2AmountPrice, setToken2AmountPrice] = useState<string>('0.000');
-  const [steps, setSteps] = useState([{}]);
+  const [steps, setSteps] = useState<SwapStep[]>([]);
   const [slippage, setSlippage] = useState('1.00');
   const [swapPrice, setSwapPrice] = useState<number | 0>(0);
   const [showSlippageModal, setShowSlippageModal] = useState<boolean>(false);
@@ -94,7 +96,7 @@ const Swap = () => {
     }
 
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-    //console.log(JSON.stringify(priceResponse, null, 2));
+    console.log(JSON.stringify(priceResponse, null, 2));
     if (!priceResponse) {
       return { swapPrice: '0', steps: [], exchangeRate: '0' };
     }
@@ -125,7 +127,7 @@ const Swap = () => {
       setToken2Amount('');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
-      setSteps([{}]);
+      setSteps([]);
       setExchangeRate('0');
       setActiveContainer1(false);
       setActiveContainer2(false);
@@ -138,7 +140,7 @@ const Swap = () => {
       setToken2Amount('0');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
-      setSteps([{}]);
+      setSteps([]);
       setExchangeRate('0');
       setActiveContainer1(false);
       setActiveContainer2(false);
@@ -170,7 +172,7 @@ const Swap = () => {
       setToken2Amount('');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
-      setSteps([{}]);
+      setSteps([]);
       setExchangeRate('0');
       setActiveContainer1(false);
       setActiveContainer2(false);
@@ -183,7 +185,7 @@ const Swap = () => {
       setToken2Amount('0');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
-      setSteps([{}]);
+      setSteps([]);
       setExchangeRate('0');
       setActiveContainer1(false);
       setActiveContainer2(false);
@@ -298,7 +300,7 @@ const Swap = () => {
     setToken2Amount('');
     setToken1AmountPrice('0.000');
     setToken2AmountPrice('0.000');
-    setSteps([{}]);
+    setSteps([]);
     setExchangeRate('0');
     setActiveContainer1(false);
     setActiveContainer2(false);
@@ -318,15 +320,23 @@ const Swap = () => {
     {
       token_id: allTokens[token1]?.token_id,
       token_decimals: allTokens[token1]?.decimals,
-      token_amount: parseFormattedNumber(token1Amount)
+      token_amount: token1Amount
     },
+    steps,
     {
       token_id: allTokens[token2]?.token_id,
       token_decimals: allTokens[token2]?.decimals,
-      token_amount: parseFormattedNumber(token2Amount)
+      token_amount: minReceived
     },
-    ''
   );
+
+  // console.log('token_id: ' + allTokens[token1]?.token_id);
+  // console.log('token_decimals: ' + allTokens[token1]?.decimals);
+  // console.log('token_amount: ' + parseFormattedNumber(token1Amount));
+  // console.log('token_out: ' + allTokens[token2]?.token_id);
+  // console.log('token_out_decimals: ' + allTokens[token2]?.decimals);
+  // console.log('token_out_amount: ' + parseFormattedNumber(minReceived));
+  // console.log('steps: ' + JSON.stringify(steps, null, 2));
 
   return (
     <Container className='swap-page-height font-rose'>
