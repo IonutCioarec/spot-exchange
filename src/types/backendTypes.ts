@@ -114,3 +114,5 @@ export interface UserFarm {
 }
 
 export type UserFarmsState = Record<string, UserFarm>;
+
+export type SwapValidationResult = 'low_reserve' | 'slippage_exceeded' | 'swap_ok';

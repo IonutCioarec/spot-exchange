@@ -1,45 +1,35 @@
 import { Fragment, useEffect, useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectPairTokensById, selectLpTokensById, selectAllTokensById } from 'storeManager/slices/tokensSlice';
+import { useSelector } from 'react-redux';
+import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
-import FilterLoader from 'components/Pools/FilterLoader';
-import { denominatedAmountToIntlFormattedAmount, denominatedAmountToAmount, amountToDenominatedAmount, formatSignificantDecimals, intlNumberFormat, formatNumberWithCommas, parseFormattedNumber } from 'utils/formatters';
+import { amountToDenominatedAmount, formatSignificantDecimals, intlNumberFormat, formatNumberWithCommas, parseFormattedNumber } from 'utils/formatters';
 import { useGetAccountInfo } from 'hooks';
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import 'assets/scss/swap.scss';
 import { Container, Row, Col } from 'react-bootstrap';
 import BigNumber from 'bignumber.js';
-import { SwapPrice, SwapStep } from 'types/backendTypes';
-import { KeyboardArrowDown } from '@mui/icons-material';
+import { SwapStep } from 'types/backendTypes';
 import TextField from '@mui/material/TextField';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import WalletIcon from '@mui/icons-material/Wallet';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill, faWallet, faCircleInfo, faGear, faRotate, faArrowRight, faArrowCircleRight, faCaretRight, faRightLong, faAnglesRight, faRetweet, faRotateRight } from '@fortawesome/free-solid-svg-icons';
-import InfoIcon from '@mui/icons-material/Info';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, InputAdornment } from '@mui/material';
+import { faWallet, faCircleInfo, faGear, faCaretRight, } from '@fortawesome/free-solid-svg-icons';
+import { Button, InputAdornment } from '@mui/material';
 import TokenSelector from 'components/Swap/TokenSelector';
 import CustomTooltip from 'components/CustomTooltip';
 import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useLocation } from 'react-router-dom';
 import SimpleLoader from 'components/SimpleLoader';
-import { AwesomeButton } from 'react-awesome-button';
 import WifiProtectedSetupIcon from '@mui/icons-material/WifiProtectedSetup';
 import LightSpot from 'components/LightSpot';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import { useSwapTokensRouter } from 'hooks/transactions/useSwapTokensRouter';
-import { setTokenSearch, selectPairs } from 'storeManager/slices/pairsSlice';
+import { selectPairs } from 'storeManager/slices/pairsSlice';
 import ScrollToTopButton from 'components/ScrollToTopButton';
 import defaultLogo from 'assets/img/no_logo.png';
 import { useSwapTokensHex } from 'hooks/transactions/useSwapTokensHex';
-import { getPairReservesAndTotalSupply } from 'helpers/scPairRequests';
+import { validateSwapStepsReserve } from 'utils/calculs';
 
 const defaultTokenValues = {
   image_url: defaultLogo,
@@ -47,6 +37,7 @@ const defaultTokenValues = {
   price: 0,
   decimals: 18
 }
+
 
 const Swap = () => {
   const { address } = useGetAccountInfo();
@@ -96,7 +87,7 @@ const Swap = () => {
     }
 
     const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-    console.log(JSON.stringify(priceResponse, null, 2));
+    //console.log(JSON.stringify(priceResponse, null, 2));
     if (!priceResponse) {
       return { swapPrice: '0', steps: [], exchangeRate: '0' };
     }
@@ -218,9 +209,11 @@ const Swap = () => {
 
       if (price?.steps) {
         setSteps(price.steps);
+
+        const validation = validateSwapStepsReserve(price.steps, minReceived);
       }
     }, debounceSearchTime),
-    [token1, token2, allTokens]
+    [token1, token2, allTokens, slippage]
   );
 
   const debouncedToken2Calculation = useCallback(
@@ -238,10 +231,11 @@ const Swap = () => {
       const price2 = await getPrice(token1, token2, parseFormattedNumber(rawValue).toString());
       if (price2.steps) {
         setSteps(price2.steps);
+        const validation = validateSwapStepsReserve(price.steps, minReceived);
       }
       setExchangeRate(price2.exchangeRate);
     }, debounceSearchTime),
-    [token1, token2, allTokens]
+    [token1, token2, allTokens, slippage]
   );
 
   const handleSlippageAmount = (event: React.ChangeEvent<HTMLInputElement>) => {

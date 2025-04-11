@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
 import { denominatedAmountToAmount } from './formatters';
+import { SwapStep, SwapValidationResult } from 'types/backendTypes';
 
 export const getPercentage = (amount: number, totalAmount: number): number => {
   const percentage = totalAmount > 0 ? (amount * 100) / totalAmount : 0;
@@ -75,4 +76,42 @@ export const generateLPTokenName = (token1: string, token2: string): string => {
   }
   
   return lpTokenName;
+}
+
+export function validateSwapStepsReserve(
+  steps: SwapStep[],
+  finalOutputRaw: string
+) {
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+    const xReserve = parseFloat(step.x_reserve.raw);
+    const yReserve = parseFloat(step.y_reserve.raw);
+    const xIn = parseFloat(step.x_in.raw);
+    const fee = parseFloat(step.swap_fee.raw);
+
+    // Adjust xIn for the fee (subtract the fee from the xIn amount)
+    const effectiveXIn = xIn * (1 - fee);
+
+    // Same-step low reserve check with fee adjustment
+    if (effectiveXIn > xReserve) {
+      return 'low_reserve';
+    }
+
+    let nextXIn: number;
+    if (i < steps.length - 1) {
+      nextXIn = parseFloat(steps[i + 1].x_in.raw);
+    } else {
+      nextXIn = parseFloat(finalOutputRaw);
+    }
+
+    // Adjust nextXIn for the fee (subtract the fee from the next step's xIn)
+    const effectiveNextXIn = nextXIn * (1 - fee);
+
+    // Next-step low reserve check with fee adjustment
+    if (effectiveNextXIn > yReserve) {
+      return 'low_reserve';
+    }
+  }
+
+  return 'swap_ok';
 }
