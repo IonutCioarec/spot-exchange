@@ -11,6 +11,9 @@ import { usePoolsAddLiquidity } from "hooks/transactions/usePoolsAddLiquidity";
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
+import { useSelector } from 'react-redux';
+import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
+import BigNumber from 'bignumber.js';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -58,24 +61,16 @@ const AddModal: React.FC<AddModal> = ({
 }) => {
   const [amountToken1, setAmountToken1] = useState('');
   const [amountToken2, setAmountToken2] = useState('');
+  const allTokens = useSelector(selectAllTokensById);
   const isMobile = useMobile();
-  const { getSwapPrice } = useBackendAPI();
+  const { getSwapPrice, getSwapRawPrice } = useBackendAPI();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const getPrice = async (fromToken: string, toToken: string, amount: string, fromTokenDecimals: number) => {
-    const amountScaled = amountToDenominatedAmount(amount, fromTokenDecimals, 20);
-    if (parseFloat(amountScaled) === 0) {
-      return '0';
-    }
-    const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-    //console.log(JSON.stringify(priceResponse, null, 2));
+  const getRawPrice = async (fromToken: string, toToken: string) => {
+    const response = await getSwapRawPrice(fromToken, toToken);
+    const price = response ? response.final_price : 0;
 
-    if (!priceResponse) {
-      return '0';
-    }
-
-    const rate = priceResponse ? priceResponse?.cumulative_exchange_rate?.raw : '0';
-    return rate;
+    return price;
   };
 
   const handleClose = () => {
@@ -127,6 +122,7 @@ const AddModal: React.FC<AddModal> = ({
       debouncedToken2Calculation.cancel();
       setAmountToken1('');
       setAmountToken2('');
+
       return;
     }
 
@@ -149,7 +145,9 @@ const AddModal: React.FC<AddModal> = ({
     debounce(async (value: string) => {
       if (!token1Id || !token2Id) return;
 
-      const price = await getPrice(token1Id, token2Id, value, token1Decimals);
+      const unitPrice = await getRawPrice(token2Id, token1Id);
+      const price = new BigNumber(unitPrice).multipliedBy(value).toString();
+
       setAmountToken2(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
     }, debounceSearchTime),
     [token1Id, token2Id]
@@ -159,7 +157,9 @@ const AddModal: React.FC<AddModal> = ({
     debounce(async (value: string) => {
       if (!token1Id || !token2Id) return;
 
-      const price = await getPrice(token2Id, token1Id, value, token2Decimals);
+      const unitPrice = await getRawPrice(token1Id, token2Id);
+      const price = new BigNumber(unitPrice).multipliedBy(value).toString();
+
       setAmountToken1(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
     }, debounceSearchTime),
     [token1Id, token2Id]
@@ -169,7 +169,7 @@ const AddModal: React.FC<AddModal> = ({
     handleAmountToken1Change(token1MaxAmount.toString());
   };
   const handleMaxToken2Amount = () => {
-    handleAmountToken1Change(token2MaxAmount.toString());
+    handleAmountToken2Change(token2MaxAmount.toString());
   };
 
   const handleAdd = () => {
@@ -179,17 +179,17 @@ const AddModal: React.FC<AddModal> = ({
   };
 
   // add liquidity hook
-  const addLiquidity = (pair_address: string) => usePoolsAddLiquidity(
+  const addLiquidity = usePoolsAddLiquidity(
     pair_address,
     {
       token_id: token1Id,
       token_decimals: token1Decimals,
-      token_amount: Number(amountToken1)
+      token_amount: parseFloat(amountToken1)
     },
     {
       token_id: token2Id,
       token_decimals: token2Decimals,
-      token_amount: Number(amountToken2)
+      token_amount: parseFloat(amountToken2)
     },
   );
 
@@ -211,14 +211,14 @@ const AddModal: React.FC<AddModal> = ({
         maxWidth='xs'
         fullWidth
         PaperProps={{
-        style: { 
-          backgroundColor: 'rgba(20, 20, 20, 0.9)', 
-          borderRadius: '10px',
-          minHeight: '100px', 
-          zIndex: 1300,
-          display: 'flex',
-        },
-      }}
+          style: {
+            backgroundColor: 'rgba(20, 20, 20, 0.9)',
+            borderRadius: '10px',
+            minHeight: '100px',
+            zIndex: 1300,
+            display: 'flex',
+          },
+        }}
       >
         <DialogTitle id="scroll-dialog-title">
           <div className='d-flex justify-content-between font-rose align-items-center'>
@@ -250,7 +250,7 @@ const AddModal: React.FC<AddModal> = ({
               />
             </div>
             <p className='text-silver font-size-xs mb-0 me-2'>Balance: <span className='text-white'>{intlNumberFormat(Number(formatSignificantDecimals(Number(token1MaxAmount), 3)), 0, 20)}</span></p>
-          </div>          
+          </div>
           <TextField
             type='text'
             placeholder='First token amount'
@@ -260,7 +260,7 @@ const AddModal: React.FC<AddModal> = ({
             value={amountToken1}
             autoComplete="off"
             onChange={handleAmountToken1Change}
-            className='withdraw-input'            
+            className='withdraw-input'
             InputProps={{
               endAdornment: (
                 <Button
@@ -337,7 +337,7 @@ const AddModal: React.FC<AddModal> = ({
             value={amountToken2}
             autoComplete="off"
             onChange={handleAmountToken2Change}
-            className='withdraw-input'            
+            className='withdraw-input'
             ref={inputRef}
             InputProps={{
               endAdornment: (
@@ -401,7 +401,7 @@ const AddModal: React.FC<AddModal> = ({
 
           <Button
             className="btn-intense-default hover-btn btn-intense-success2 mt-2 smaller fullWidth mt-3"
-            onClick={() => { addLiquidity(pair_address); handleAdd(); }}
+            onClick={() => { addLiquidity(); handleAdd(); }}
             sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
           >
             Add
