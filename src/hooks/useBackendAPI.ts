@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { dexAPI } from 'config';
-import { Pair, SwapPrice, TokensState, Token, PairsState } from 'types/backendTypes';
+import { Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice } from 'types/backendTypes';
 
 
 export const useBackendAPI = () => {
@@ -157,10 +157,37 @@ export const useBackendAPI = () => {
     return {signature: ''};
   };
 
+  // get the price of swaping token1 -> token2 without price impact
+  const getSwapRawPrice = async (token1: string, token2: string): Promise<SwapRawPrice> => {
+    try {
+      const response = await axios.get<SwapRawPrice[]>(`${dexAPI}/swap/routes?token_in=${token1}&token_out=${token2}`, {
+        headers: { Accept: 'application/json' },
+      });
+      return response.data[0];
+    } catch (e) {
+      console.error(e);
+    }
+    return {
+      pairs : [
+        {
+          'sc_address': '',
+          'token_in': '',
+          'token_out': '',
+          'price': 0,
+          'fee_percentage': 0,
+          'fee_amount': 0,
+        }
+      ],
+      final_price: 0
+    };
+  };
+
+
   return {
     getPairs,
     getTokens,
     getSwapPrice,
-    getValidationSignature
+    getValidationSignature,
+    getSwapRawPrice
   };
 };

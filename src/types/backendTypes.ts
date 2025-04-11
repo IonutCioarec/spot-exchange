@@ -116,3 +116,17 @@ export interface UserFarm {
 export type UserFarmsState = Record<string, UserFarm>;
 
 export type SwapValidationResult = 'low_reserve' | 'slippage_exceeded' | 'swap_ok';
+
+export interface SwapRawPrice {
+  pairs : [
+    {
+      'sc_address': string;
+      'token_in': string;
+      'token_out': string;
+      'price': number;
+      'fee_percentage': number;
+      'fee_amount': number;
+    }
+  ]
+  final_price: number;
+}
