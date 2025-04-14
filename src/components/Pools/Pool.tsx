@@ -3,7 +3,7 @@ import 'assets/scss/pools.scss';
 import { useMobile, useTablet } from 'utils/responsive';
 import { Pair, Token } from "types/backendTypes";
 import { useEffect, useRef, useState } from "react";
-import { intlNumberFormat, intlFormatSignificantDecimals, amountToDenominatedAmount } from 'utils/formatters';
+import { intlNumberFormat, intlFormatSignificantDecimals, amountToDenominatedAmount, abbreviateNumber, formatSignificantDecimals } from 'utils/formatters';
 import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
 import { Button, IconButton } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
@@ -258,19 +258,19 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
                         <p className="text-silver font-size-xs mb-0">Volume (30D)</p>
-                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.volume_30d), 3)}</p>
+                        <p className="h5 mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.volume_30d), 3)), 3)}</p>
                       </div>
                     </Col>
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
                         <p className="text-silver font-size-xs mb-0">Volume (7D)</p>
-                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.volume_7d), 3)}</p>
+                        <p className="h5 mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.volume_7d), 3)), 3)}</p>
                       </div>
                     </Col>
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
                         <p className="text-silver font-size-xs mb-0">Volume (24H)</p>
-                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.volume_24h), 3)}</p>
+                        <p className="h5 mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.volume_24h), 3)), 3)}</p>
                       </div>
                     </Col>
                   </Row>
@@ -284,19 +284,19 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
                         <p className="text-silver font-size-xs mb-0">Fees (30D)</p>
-                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_30d), 3)}</p>
+                        <p className="h5 mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.fees_30d), 3)), 3)}</p>
                       </div>
                     </Col>
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
                         <p className="text-silver font-size-xs mb-0">Fees (7D)</p>
-                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_7d), 3)}</p>
+                        <p className="h5 mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.fees_7d), 3)), 3)}</p>
                       </div>
                     </Col>
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
                         <p className="text-silver font-size-xs mb-0">Fees (24H)</p>
-                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}</p>
+                        <p className="h5 mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.fees_24h), 3)), 3)}</p>
                       </div>
                     </Col>
                   </Row>
@@ -359,24 +359,24 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     <div className="d-flex justify-content-between align-items-center m-t-n-xxs">
                       <p className="small text-silver mb-0">&#x2022; 24H</p>
                       <p className="font-size-sm mb-0">
-                        ${intlFormatSignificantDecimals(
-                          0, 3, 3)
+                        ${abbreviateNumber(
+                          0, 3)
                         }
                       </p>
                     </div>
                     <div className="d-flex justify-content-between align-items-center m-t-n-xxs">
                       <p className="small text-silver mb-0">&#x2022; 7D</p>
                       <p className="font-size-sm mb-0">
-                        ${intlFormatSignificantDecimals(
-                          0, 3, 3)
+                        ${abbreviateNumber(
+                          0, 3)
                         }
                       </p>
                     </div>
                     <div className="d-flex justify-content-between align-items-center">
                       <p className="small text-silver mb-0">&#x2022; 30D</p>
                       <p className="font-size-sm mb-0">
-                        ${intlFormatSignificantDecimals(
-                          0, 3, 3)
+                        ${abbreviateNumber(
+                          0, 3)
                         }
                       </p>
                     </div>
@@ -553,7 +553,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
                   <p className="mb-0 font-size-sm text-silver">
-                    ${intlFormatSignificantDecimals(Number(pair?.volume_30d), 3)}
+                    ${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.volume_30d), 3)), 3)}
                   </p>
                 </div>
               </div>
@@ -561,7 +561,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Fees (Total)</p>
                   <p className="mb-0 font-size-sm text-silver">
-                    ${intlFormatSignificantDecimals(Number(pair?.fees_30d), 3)}
+                    ${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.fees_30d), 3)), 3)}
                   </p>
                 </div>
               </div>
