@@ -169,8 +169,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 $
                 <CountUp
                   start={0}
-                  // end={Number(pair?.fees_24h)}
-                  end={423.245}
+                  end={Number(pair?.fees_24h)}
                   duration={1.5}
                   separator=","
                   decimals={3}
@@ -187,8 +186,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 $
                 <CountUp
                   start={0}
-                  // end={Number(pair?.volume_24h)}
-                  end={4563.764}
+                  end={Number(pair?.volume_24h)}
                   duration={1.5}
                   separator=","
                   decimals={3}
@@ -253,8 +251,34 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   <Row className="g-1">
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
+                        <p className="text-silver font-size-xs mb-0">Volume (Total)</p>
+                        <p className="h5 mb-0">-</p>
+                      </div>
+                    </Col>
+                    <Col lg={3} className="mt-2">
+                      <div className="pool-sub-container p-2 text-center">
+                        <p className="text-silver font-size-xs mb-0">Volume (30D)</p>
+                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.volume_30d), 3)}</p>
+                      </div>
+                    </Col>
+                    <Col lg={3} className="mt-2">
+                      <div className="pool-sub-container p-2 text-center">
+                        <p className="text-silver font-size-xs mb-0">Volume (7D)</p>
+                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.volume_7d), 3)}</p>
+                      </div>
+                    </Col>
+                    <Col lg={3} className="mt-2">
+                      <div className="pool-sub-container p-2 text-center">
+                        <p className="text-silver font-size-xs mb-0">Volume (24H)</p>
+                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.volume_24h), 3)}</p>
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row className="g-1">
+                    <Col lg={3} className="mt-2">
+                      <div className="pool-sub-container p-2 text-center">
                         <p className="text-silver font-size-xs mb-0">Fees (Total)</p>
-                        <p className="h5 mb-0">$12.8M</p>
+                        <p className="h5 mb-0">-</p>
                       </div>
                     </Col>
                     <Col lg={3} className="mt-2">
@@ -265,14 +289,14 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     </Col>
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
-                        <p className="text-silver font-size-xs mb-0">Your Fees (Total)</p>
-                        <p className="h5 mb-0">${address ? '4M' : '0'}</p>
+                        <p className="text-silver font-size-xs mb-0">Fees (7D)</p>
+                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_7d), 3)}</p>
                       </div>
                     </Col>
                     <Col lg={3} className="mt-2">
                       <div className="pool-sub-container p-2 text-center">
-                        <p className="text-silver font-size-xs mb-0">Your Fees (24h)</p>
-                        <p className="h5 mb-0">${address ? '48k' : '0'}</p>
+                        <p className="text-silver font-size-xs mb-0">Fees (24H)</p>
+                        <p className="h5 mb-0">${intlFormatSignificantDecimals(Number(pair?.fees_24h), 3)}</p>
                       </div>
                     </Col>
                   </Row>
@@ -325,41 +349,72 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                       </p>
                     </div>
                   </div>
-
-                  <div className="mt-2">
-                    <div className="d-flex justify-content-between align-items-center gap-3 mt-1 mb-1 mx-1">
-                      <AwesomeButton className="aws-btn-primary full-width" onPress={() => handleAddOpen(token1Details?.token_id, token1Details?.decimals, token2Details?.token_id, token2Details?.decimals)}>ADD</AwesomeButton>
-                      <AddModal
-                        isOpen={isAddOpen}
-                        setIsOpen={setIsAddOpen}
-                        token1={token1Details?.ticker}
-                        token2={token2Details?.ticker}
-                        token1Id={token1Details?.token_id}
-                        token2Id={token2Details?.token_id}
-                        token1Decimals={token1Details?.decimals}
-                        token2Decimals={token2Details?.decimals}
-                        token1MaxAmount={userToken1Balance}
-                        token2MaxAmount={userToken2Balance}
-                        token1Image={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
-                        token2Image={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
-                        token1ExchangeRate={token1ExchangeRate}
-                        token2ExchangeRate={token2ExchangeRate}
-                        pair_address={pair.pair_id}
-                      />
-                      <AwesomeButton className="aws-btn-danger full-width" onPress={handleWithdrawOpen}>REMOVE</AwesomeButton>
-                      <WithdrawModal
-                        isOpen={isWithdrawOpen}
-                        setIsOpen={setIsWithdrawOpen}
-                        lpTokenId={lpTokenId}
-                        lpTokenMaxAmount={userLpTokenBalance}
-                      />
-                      <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
-                        <AwesomeButton className="aws-btn-warning full-width">SWAP</AwesomeButton>
-                      </Link>
+                  <div className="pool-sub-container px-3 py-2 mt-1">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <p className="text-white font-size-md font-bold mb-0 m-t-n-xxs">Your Fees</p>
+                      <p className="text-white font-size-xl font-bold mb-0">
+                        -
+                      </p>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center m-t-n-xxs">
+                      <p className="small text-silver mb-0">&#x2022; 24H</p>
+                      <p className="font-size-sm mb-0">
+                        ${intlFormatSignificantDecimals(
+                          0, 3, 3)
+                        }
+                      </p>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center m-t-n-xxs">
+                      <p className="small text-silver mb-0">&#x2022; 7D</p>
+                      <p className="font-size-sm mb-0">
+                        ${intlFormatSignificantDecimals(
+                          0, 3, 3)
+                        }
+                      </p>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <p className="small text-silver mb-0">&#x2022; 30D</p>
+                      <p className="font-size-sm mb-0">
+                        ${intlFormatSignificantDecimals(
+                          0, 3, 3)
+                        }
+                      </p>
                     </div>
                   </div>
                 </Col>
               </Row>
+              <div className="mt-3" style={{ borderTop: '3px solid rgba(10, 10, 10, 0.3)' }}>
+                <div className="d-flex justify-content-end align-items-center gap-3 mt-3 mb-1">
+                  <AwesomeButton className="aws-btn-primary w-150" onPress={() => handleAddOpen(token1Details?.token_id, token1Details?.decimals, token2Details?.token_id, token2Details?.decimals)}>ADD</AwesomeButton>
+                  <AddModal
+                    isOpen={isAddOpen}
+                    setIsOpen={setIsAddOpen}
+                    token1={token1Details?.ticker}
+                    token2={token2Details?.ticker}
+                    token1Id={token1Details?.token_id}
+                    token2Id={token2Details?.token_id}
+                    token1Decimals={token1Details?.decimals}
+                    token2Decimals={token2Details?.decimals}
+                    token1MaxAmount={userToken1Balance}
+                    token2MaxAmount={userToken2Balance}
+                    token1Image={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
+                    token2Image={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
+                    token1ExchangeRate={token1ExchangeRate}
+                    token2ExchangeRate={token2ExchangeRate}
+                    pair_address={pair.pair_id}
+                  />
+                  <AwesomeButton className="aws-btn-danger w-150" onPress={handleWithdrawOpen}>REMOVE</AwesomeButton>
+                  <WithdrawModal
+                    isOpen={isWithdrawOpen}
+                    setIsOpen={setIsWithdrawOpen}
+                    lpTokenId={lpTokenId}
+                    lpTokenMaxAmount={userLpTokenBalance}
+                  />
+                  <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
+                    <AwesomeButton className="aws-btn-warning w-150">SWAP</AwesomeButton>
+                  </Link>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -456,8 +511,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   $
                   <CountUp
                     start={0}
-                    // end={Number(pair?.volume_24h)}
-                    end={4563.764}
+                    end={Number(pair?.volume_24h)}
                     duration={1.5}
                     separator=","
                     decimals={3}
@@ -478,8 +532,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   $
                   <CountUp
                     start={0}
-                    // end={Number(pair?.fees_24h)}
-                    end={423.245}
+                    end={Number(pair?.fees_24h)}
                     duration={1.5}
                     separator=","
                     decimals={3}
@@ -516,12 +569,12 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                 <div className="d-flex justify-content-between">
                   <div>
                     <p className="mb-0 font-size-sm text-silver">Your Fee (Total)</p>
-                    <p className="mb-0 mt-1 font-size-xs text-white font-bold">$4,052,123.1</p>
+                    <p className="mb-0 mt-1 font-size-xs text-white font-bold">$0</p>
                   </div>
                   <div className="text-right">
                     <p className="mb-0 font-size-sm text-silver">Your Fee (24h)</p>
                     <p className="mb-0 mt-1 font-size-xs text-white font-bold">
-                      $152,123.1
+                      $0
                     </p>
                   </div>
                 </div>
