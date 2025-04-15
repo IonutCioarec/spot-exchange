@@ -253,7 +253,7 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                         <p className={`font-size-xs mb-0 text-silver`}>
                           Farm
                         </p>
-                        <p className="font-size-sm mb-0" style={{ whiteSpace: 'nowrap' }}>{allTokens[farm?.token1]?.ticker} / {allTokens[farm?.token2]?.ticker}</p>
+                        <p className="font-size-sm mb-0" style={{ whiteSpace: 'nowrap' }}>{allTokens[farm?.token1]?.ticker ?? (defaultTokenValues.name + '1')}{allTokens[farm?.token2]?.ticker ?? (defaultTokenValues.name + '2')}</p>
                       </div>
                     </td>
 
