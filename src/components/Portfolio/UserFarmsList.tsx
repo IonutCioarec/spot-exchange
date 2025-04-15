@@ -296,7 +296,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                         <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                           Farm {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
                         </p>
-                        <p className="font-size-sm mb-0">{allTokens[farm?.token1]?.ticker}{allTokens[farm?.token2]?.ticker}</p>
+                        <p className="font-size-sm mb-0">{allTokens[farm?.token1]?.ticker ?? (defaultTokenValues.name + '1')}{allTokens[farm?.token2]?.ticker ?? (defaultTokenValues.name + '2')}</p>
                       </div>
                     </td>
 
