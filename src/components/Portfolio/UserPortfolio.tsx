@@ -8,6 +8,7 @@ import PortfolioStats from 'components/Portfolio/PortfolioStats';
 import PortfolioRewardsStats from './PortfolioRewardsStats';
 import { useMobile } from 'utils/responsive';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { network } from 'config';
 
 const UserPortfolio: React.FC<PortfolioProps> = ({ data, rewardsData, walletBalance, rewardsBalance }) => {
   const { address } = useGetAccountInfo();
@@ -22,7 +23,7 @@ const UserPortfolio: React.FC<PortfolioProps> = ({ data, rewardsData, walletBala
             <span className='me-1'>Account: {address.slice(0, 5)} ... {address.slice(58, 62)}</span>
             <ClipboardCopy text={address} />
             <span
-              onClick={() => window.open(`https://explorer.multiversx.com/accounts/${address}`, '_blank', 'noopener,noreferrer')}
+              onClick={() => window.open(`${network.explorerAddress}/accounts/${address}`, '_blank', 'noopener,noreferrer')}
               className="cursor-pointer"
             >
               <ArrowOutwardIcon className="ms-2" style={{ fontSize: '19px', marginTop: '-3px' }} />
