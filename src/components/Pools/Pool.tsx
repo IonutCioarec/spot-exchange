@@ -550,32 +550,51 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           >
             <div className="b-r-sm mt-2 p-2" style={{ border: '1px solid rgba(100,100,100, 0.7)' }}>
               <div className="pool-sub-container p-1 mt-1">
-                <div className="d-flex justify-content-between">
-                  <p className="mb-0 font-size-sm text-silver">Volume (Total)</p>
-                  <p className="mb-0 font-size-sm text-silver">
-                    ${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.volume_30d), 3)), 3)}
-                  </p>
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="text-white font-size-sm font-bold mb-0">Volume (Total)</p>
+                  <p className="text-white font-size-sm font-bold mb-0 text-right">-</p>
                 </div>
-              </div>
-              <div className="pool-sub-container p-1 mt-1">
-                <div className="d-flex justify-content-between">
-                  <p className="mb-0 font-size-sm text-silver">Fees (Total)</p>
-                  <p className="mb-0 font-size-sm text-silver">
-                    ${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.fees_30d), 3)), 3)}
-                  </p>
-                </div>
-              </div>
-              <div className="pool-sub-container p-1 mt-1">
-                <div className="d-flex justify-content-between">
-                  <div>
-                    <p className="mb-0 font-size-sm text-silver">Your Fee (Total)</p>
-                    <p className="mb-0 mt-1 font-size-xs text-white font-bold">$0</p>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 24H</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.volume_24h), 3)), 3)}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="mb-0 font-size-sm text-silver">Your Fee (24h)</p>
-                    <p className="mb-0 mt-1 font-size-xs text-white font-bold">
-                      $0
-                    </p>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 7D</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.volume_7d), 3)), 3)}</p>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 30D</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.volume_30d), 3)), 3)}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pool-sub-container p-1 mt-1">
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="text-white font-size-sm font-bold mb-0">Fees (Total)</p>
+                  <p className="text-white font-size-sm font-bold mb-0 text-right">-</p>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 24H</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.fees_24h), 3)), 3)}</p>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 7D</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.fees_7d), 3)), 3)}</p>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 30D</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(Number(formatSignificantDecimals(Number(pair?.fees_30d), 3)), 3)}</p>
                   </div>
                 </div>
               </div>
@@ -612,6 +631,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   </div>
                 </div>
               </div>
+
               <div className="pool-sub-container p-1 mt-1">
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
@@ -627,6 +647,32 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                   </p>
                 </div>
               </div>
+
+              <div className="pool-sub-container p-1 mt-1">
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="text-white font-size-sm font-bold mb-0">Your fees</p>
+                  <p className="text-white font-size-sm font-bold mb-0 text-right">-</p>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 24H</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(0, 3)}</p>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 7D</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(0, 3)}</p>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-baseline">
+                  <p className="small text-silver font-size-xs mb-0">&#x2022; 30D</p>
+                  <div className="d-flex justify-content-end">
+                    <p className="font-size-xs mb-0">${abbreviateNumber(0, 3)}</p>
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-2">
                 <div className="d-flex justify-content-between align-items-center gap-2 mt-1 mx-1">
                   <AwesomeButton className="aws-btn-primary full-width" onPress={() => handleAddOpen(token1Details?.token_id, token1Details?.decimals, token2Details?.token_id, token2Details?.decimals)}>ADD</AwesomeButton>
