@@ -15,6 +15,8 @@ import { Select, MenuItem } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import Table from "react-bootstrap/Table";
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { network } from 'config';
 
 const getPriceChangePercentage = (currentPrice: number, previousPrice: number) => {
   if (previousPrice === 0) return 0;
@@ -291,7 +293,15 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                         <p className={`font-size-xs mb-0 ${sortOption === 'alphabetically' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                           Token {sortOption === 'alphabetically' && <TrendingUpIcon className="ms-1 font-size-md" />}
                         </p>
-                        <p className="font-size-sm mb-0">{token.ticker}</p>
+                        <p className="font-size-sm mb-0">
+                          {token.ticker}
+                          <span
+                            onClick={() => window.open(`${network.explorerAddress}/tokens/${token.token_id}`, '_blank', 'noopener,noreferrer')}
+                            className="cursor-pointer text-silver"
+                          >
+                            <ArrowOutwardIcon className="ms-1" style={{ fontSize: '16px', marginTop: '-1px' }} />
+                          </span>
+                        </p>
                       </div>
                     </td>
 
