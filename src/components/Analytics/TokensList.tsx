@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { TextField, List, Avatar, Button, SelectChangeEvent, Select, OutlinedInput, MenuItem} from '@mui/material';
+import { TextField, List, Avatar, Button, SelectChangeEvent, Select, OutlinedInput, MenuItem } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { Search } from '@mui/icons-material';
 import SimpleLoader from 'components/SimpleLoader';
@@ -10,12 +10,13 @@ import { selectPage, selectPairTokensById, selectSearchInput, selectTotalPages, 
 import { Token } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounce } from 'lodash';
-import { debounceSearchTime } from 'config';
+import { debounceSearchTime, network } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import Table from "react-bootstrap/Table";
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
 const getPriceChangePercentage = (currentPrice: number, previousPrice: number) => {
   if (previousPrice === 0) return <span> - </span>; // Avoid division by zero
@@ -307,13 +308,21 @@ const TokensList = () => {
                         <p className={`font-size-xs mb-0 text-silver`}>
                           Token
                         </p>
-                        <p className="font-size-sm mb-0">{token.ticker}</p>
+                        <p className="font-size-sm mb-0">
+                          {token.ticker}
+                          <span
+                            onClick={() => window.open(`${network.explorerAddress}/tokens/${token.token_id}`, '_blank', 'noopener,noreferrer')}
+                            className="cursor-pointer text-silver"
+                          >
+                            <ArrowOutwardIcon className="ms-1" style={{ fontSize: '16px', marginTop: '-1px' }} />
+                          </span>
+                        </p>
                       </div>
                     </td>
 
                     <td align="right">
                       <div className="text-right">
-                        <p className={`font-size-xs mb-0 ${sortBy === 'price_usd' ? 'text-intense-green font-bold' : 'text-silver'}`}  style={{ textWrap: 'nowrap' }}>
+                        <p className={`font-size-xs mb-0 ${sortBy === 'price_usd' ? 'text-intense-green font-bold' : 'text-silver'}`} style={{ textWrap: 'nowrap' }}>
                           Price
                           {sortBy === 'price_usd' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
                           {sortBy === 'price_usd' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
