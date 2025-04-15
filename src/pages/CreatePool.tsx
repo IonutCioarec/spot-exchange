@@ -31,6 +31,8 @@ import { usePoolsAddInitialLiquidity } from 'hooks/transactions/usePoolsAddIniti
 import { CreatedTokens } from 'types/mvxTypes';
 import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import { useSelector } from 'react-redux';
+import { generateLPTokenName } from 'utils/calculs';
+import { usePoolsResume } from 'hooks/transactions/usePoolsResume';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -183,7 +185,7 @@ const CreatePool = () => {
   };
 
   const handleMaxToken2Amount = () => {
-    setSecondTokenAmount(userTokens[secondTokenId]?.balance ??'0');
+    setSecondTokenAmount(userTokens[secondTokenId]?.balance ?? '0');
   };
 
   //get the validation message
@@ -211,20 +213,22 @@ const CreatePool = () => {
 
   // create pair hook (for all steps)
   const createPool = usePoolsCreatePool(baseTokenId, secondTokenId, signature);
-  const issueLpToken = usePoolsIssueLPToken(pairsContractAddress, baseTokenId.split('-')[0] + secondTokenId.split('-')[0], baseTokenId.split('-')[0] + secondTokenId.split('-')[0]);
-  const setLocalRoles = usePoolsSetLocalRoles(pairsContractAddress);
+  const issueLpToken = usePoolsIssueLPToken('erd1qqqqqqqqqqqqqpgqmwaaes0meq5s59gye4crkezuws9lwl7lv2vsu3xxf9', generateLPTokenName('USDC-350c4e', 'XPRIZE-1dd538'), generateLPTokenName('MEX-a659d0', 'SPOT-ec8f71'));
+  const setLocalRoles = usePoolsSetLocalRoles('erd1qqqqqqqqqqqqqpgqmwaaes0meq5s59gye4crkezuws9lwl7lv2vsu3xxf9');
   const addInitialLiquidity = usePoolsAddInitialLiquidity(
+    'erd1qqqqqqqqqqqqqpgqmwaaes0meq5s59gye4crkezuws9lwl7lv2vsu3xxf9',
     {
-      token_id: baseTokenId,
-      token_decimals: baseTokenDecimals,
+      token_id: 'USDC-350c4e',
+      token_decimals: 6,
       token_amount: Number(firstTokenAmount)
     },
     {
-      token_id: secondTokenId,
-      token_decimals: secondTokenDecimals,
+      token_id: 'XPRIZE-1dd538',
+      token_decimals: 18,
       token_amount: Number(secondTokenAmount)
     }
   );
+  const resumePoolSwap = usePoolsResume('erd1qqqqqqqqqqqqqpgqmwaaes0meq5s59gye4crkezuws9lwl7lv2vsu3xxf9');
 
   return (
     <Container className='create-pool-page-height font-rose'>
@@ -237,7 +241,7 @@ const CreatePool = () => {
             </div>
           </div>
         </Col>
-      </Row>      
+      </Row>
       <Row className={`${isMobile ? 'mt-4' : 'mt-3'} mb-5`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className={`create-container text-white mb-5`}>
@@ -391,7 +395,7 @@ const CreatePool = () => {
 
                     <Button
                       variant="contained"
-                      onClick={() => {createPool(); handleStepChange(1);}}
+                      onClick={() => { createPool(); handleStepChange(1); }}
                       className='btn-intense-default hover-btn btn-intense-success2 mt-2 fullWidth smaller'
                     >
                       Create Pool

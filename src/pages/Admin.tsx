@@ -36,7 +36,8 @@ import { usePoolsEnableSwap } from 'hooks/transactions/usePoolsEnableSwap';
 import { usePoolsResume } from 'hooks/transactions/usePoolsResume';
 import { usePoolsPairCreation } from 'hooks/transactions/usePoolsPairCreation';
 import { useGetPendingTransactions } from 'hooks';
-import { CopyToClipboard } from "utils/calculs";
+import { CopyToClipboard, generateLPTokenName } from "utils/calculs";
+import { useRouterResume } from 'hooks/transactions/useRouterResume';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -183,8 +184,8 @@ const Admin = () => {
 
   // create pair hook (for all steps)
   const createPool = usePoolsAdminCreatePool(baseTokenId, secondTokenId);
-  const issueLpToken = usePoolsIssueLPToken('erd1qqqqqqqqqqqqqpgqfr3dxdn27cswygptpemlc0g5g7t8lmx4v2vs86n2u9', 'USDCXTT', 'USDCXTT');
-  const setLocalRoles = usePoolsSetLocalRoles('erd1qqqqqqqqqqqqqpgqfr3dxdn27cswygptpemlc0g5g7t8lmx4v2vs86n2u9');
+  const issueLpToken = usePoolsIssueLPToken('erd1qqqqqqqqqqqqqpgqc3y7nvyfhq4cfpq89aq6tp3uelcyafs4v2vstxwtz8', generateLPTokenName('LEGLD-e8378b', 'SPOT-ec8f71'), generateLPTokenName('LEGLD-e8378b', 'SPOT-ec8f71'));
+  const setLocalRoles = usePoolsSetLocalRoles('erd1qqqqqqqqqqqqqpgqc3y7nvyfhq4cfpq89aq6tp3uelcyafs4v2vstxwtz8');
   // const addInitialLiquidity = usePoolsAddInitialLiquidity(
   //   {
   //     token_id: baseTokenId,
@@ -199,19 +200,20 @@ const Admin = () => {
   // );
 
   const addInitialLiquidity = usePoolsAddInitialLiquidity(
-    'erd1qqqqqqqqqqqqqpgqfr3dxdn27cswygptpemlc0g5g7t8lmx4v2vs86n2u9',
+    'erd1qqqqqqqqqqqqqpgqc3y7nvyfhq4cfpq89aq6tp3uelcyafs4v2vstxwtz8',
     {
-      token_id: 'USDC-350c4e',
-      token_decimals: 6,
-      token_amount: 0.1
+      token_id: 'LEGLD-e8378b',
+      token_decimals: 18,
+      token_amount: 0.01
     },
     {
-      token_id: 'XTICKET-6e9b83',
+      token_id: 'SPOT-ec8f71',
       token_decimals: 18,
-      token_amount: 1000
+      token_amount: 10000
     }
   );
-  const resumePoolSwap = usePoolsResume('erd1qqqqqqqqqqqqqpgqkjqjsketuzhadc2f5lw2523hcpzghzlrv2vsqlrkg6');
+  const resumePoolSwap = useRouterResume('erd1qqqqqqqqqqqqqpgqc3y7nvyfhq4cfpq89aq6tp3uelcyafs4v2vstxwtz8');
+  const resumePoolSwap2 = usePoolsResume('erd1qqqqqqqqqqqqqpgq9hsk0d9d8dze228ljpt3wm69tv7ad4cjv2vswpgv9e');
 
   const [routerBaseTokens, setRouterBaseTokens] = useState([]);
   const getRouterBaseTokensData = async () => {
@@ -576,7 +578,7 @@ const Admin = () => {
                 <StepContent>
                   <div className='my-3'>
                     <p className='text-center text-intense-green mt-2 font-size-md font-bold'>MINT/BURN LP TOKEN ROLES</p>
-                    <p className='roles-container fullWidth text-center font-size-sm mb-2 text-uppercase'>{baseTokenId.split('-')[0] + secondTokenId.split('-')[0]}</p>
+                    <p className='roles-container fullWidth text-center font-size-sm mb-2 text-uppercase'>{generateLPTokenName('LEGLD-e8378b', 'SPOT-ec8f71')}</p>
                     <Button
                       variant="contained"
                       onClick={setLocalRoles}
@@ -712,7 +714,15 @@ const Admin = () => {
                 size='small'
                 onClick={() => resumePoolSwap()}
               >
-                Enable SWAP
+                Enable Admin SWAP
+              </Button>
+              <Button
+                className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3 ms-2'
+                variant='contained'
+                size='small'
+                onClick={() => resumePoolSwap2()}
+              >
+                Enable SWAP 2
               </Button>
             </div>
           </div>
