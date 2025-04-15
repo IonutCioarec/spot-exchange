@@ -24,9 +24,10 @@ import { selectPairsLimit, selectPairsPage, selectPairsSortBy, selectPairsSortDi
 import { selectNonZeroBalanceLpTokenIds } from 'storeManager/slices/userTokensSlice';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
+import defaultLogo from 'assets/img/no_logo.png';
 
 const defaultTokenValues = {
-  image_url: 'https://tools.multiversx.com/assets-cdn/devnet/tokens/WEGLD-a28c59/icon.png',
+  image_url: defaultLogo,
   name: 'TOKEN',
   price: 0,
   decimals: 18
@@ -218,13 +219,13 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                     <td>
                       <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '60px' : 'auto' }}>
                         <img
-                          src={allTokens[farm.token1]?.logo_url ?? defaultTokenValues.image_url}
+                          src={allTokens[farm.token1]?.logo_url && allTokens[farm.token1]?.logo_url !== 'N/A' ? allTokens[farm.token1].logo_url : defaultTokenValues.image_url}
                           alt={farm.token1}
                           className='d-inline'
                           style={{ width: 35, height: 35, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
                         />
                         <motion.img
-                          src={allTokens[farm.token2]?.logo_url ?? defaultTokenValues.image_url}
+                          src={allTokens[farm.token2]?.logo_url && allTokens[farm.token2]?.logo_url !== 'N/A' ? allTokens[farm.token2].logo_url : defaultTokenValues.image_url}
                           alt={farm.token2}
                           className="d-inline m-l-n-xxl"
                           initial={{ x: 0 }}
