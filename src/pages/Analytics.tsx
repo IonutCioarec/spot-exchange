@@ -5,7 +5,7 @@ import LiquidityChart from 'components/Analytics/LiquidityChart';
 import VolumeChart from 'components/Analytics/VolumeChart';
 import FeesChart from 'components/Analytics/FeesChart';
 import TokenRow from 'components/Analytics/TokenRow';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import RecyclingIcon from '@mui/icons-material/Recycling';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
@@ -32,8 +32,8 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PeopleIcon from '@mui/icons-material/People';
 import StarIcon from '@mui/icons-material/Star';
 import { farmsDummy } from 'utils/dummyData';
-import { useSelector } from 'react-redux';
-import { selectPairs, selectPairsTotal } from 'storeManager/slices/pairsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectPairs, selectPairsTotal, setLPTokenSearch } from 'storeManager/slices/pairsSlice';
 import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import PoolsList from 'components/Analytics/PoolsList';
 import { useMobile } from 'utils/responsive';
@@ -42,9 +42,15 @@ import FarmsList from 'components/Analytics/FarmsList';
 
 const Analytics = () => {
   const isMobile = useMobile();
+  const dispatch = useDispatch();
   const pairs = useSelector(selectPairs);
   const allTokens = useSelector(selectAllTokensById);
   const totalPairs = useSelector(selectPairsTotal);
+
+  // Reset the viewMode to 'all' when the component is first mounted
+  useEffect(() => {
+    dispatch(setLPTokenSearch([]));
+  }, [dispatch]);
 
   // dex token details data
   const initialTokenRowItems = [
