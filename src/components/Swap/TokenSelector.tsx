@@ -131,7 +131,8 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
     let filtered = userTokensArray.filter(token =>
       (token.token_id.toLowerCase().includes(localSearchInput.toLowerCase()) ||
         token.ticker.toLowerCase().includes(localSearchInput.toLowerCase())) &&
-      token.token_id !== excludedToken
+        token.token_id !== excludedToken &&
+        parseFloat(token.balance) >= 0.00001
     );
 
     return filtered.sort((a: ExtraToken, b: ExtraToken) => {
