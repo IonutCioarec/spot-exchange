@@ -48,7 +48,20 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   resetAmounts
 }) => {
   const dispatch = useDispatch();
-  const pairTokens = useSelector(selectPairTokensById);
+  const rawPairTokens = useSelector(selectPairTokensById);
+
+  const pairTokens = useMemo(() => {
+    const filtered: Record<string, Token> = {};
+
+    for (const [tokenId, tokenData] of Object.entries(rawPairTokens)) {
+      if (tokenId !== excludedToken) {
+        filtered[tokenId] = tokenData;
+      }
+    }
+
+    return filtered;
+  }, [rawPairTokens, excludedToken]);
+
   const currentPage = useSelector(selectPage);
   const totalPages = useSelector(selectTotalPages);
   const pairTokensNumber = useSelector(selectPairTokensNumber);
@@ -116,8 +129,9 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
 
   const processedUserTokens = useMemo(() => {
     let filtered = userTokensArray.filter(token =>
-      token.token_id.toLowerCase().includes(localSearchInput.toLowerCase()) ||
-      token.ticker.toLowerCase().includes(localSearchInput.toLowerCase())
+      (token.token_id.toLowerCase().includes(localSearchInput.toLowerCase()) ||
+        token.ticker.toLowerCase().includes(localSearchInput.toLowerCase())) &&
+      token.token_id !== excludedToken
     );
 
     return filtered.sort((a: ExtraToken, b: ExtraToken) => {
@@ -248,7 +262,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
           />
         </DialogTitle>
         <DialogContent>
-          <p className='small mt-1 ms-2 mb-0 text-white'>Your Tokens ({processedUserTokens.length})</p>
+          <p className='small mt-1 ms-2 mb-0 text-white'>Your Tokens ({paginatedUserTokens.length > 0 ? processedUserTokens.length : 0})</p>
           <List>
             {paginatedUserTokens.length > 0 ? (
               paginatedUserTokens.map((token: ExtraToken) => (
@@ -281,45 +295,47 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             )}
           </List>
           {/* User Tokens Pagination Controls */}
-          <div className="pagination-controls m-t-n-sm">
-            <Button
-              onClick={() => handleUserPageChange(1)}
-              disabled={currentUserPage === 1}
-              className='pagination-button'
-            >
-              <KeyboardDoubleArrowLeft className={`${currentUserPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
-            </Button>
+          {paginatedUserTokens.length > 0 && (
+            <div className="pagination-controls m-t-n-sm">
+              <Button
+                onClick={() => handleUserPageChange(1)}
+                disabled={currentUserPage === 1}
+                className='pagination-button'
+              >
+                <KeyboardDoubleArrowLeft className={`${currentUserPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
+              </Button>
 
-            <Button
-              onClick={() => handleUserPageChange(currentUserPage - 1)}
-              disabled={currentUserPage === 1}
-              className='pagination-button'
-            >
-              <ChevronLeft className={`${currentUserPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
-            </Button>
+              <Button
+                onClick={() => handleUserPageChange(currentUserPage - 1)}
+                disabled={currentUserPage === 1}
+                className='pagination-button'
+              >
+                <ChevronLeft className={`${currentUserPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
+              </Button>
 
-            <span>
-              Page {currentUserPage} {totalUserPages > 0 ? `of ${totalUserPages}` : 'of 1'}
-            </span>
+              <span>
+                Page {currentUserPage} {totalUserPages > 0 ? `of ${totalUserPages}` : 'of 1'}
+              </span>
 
-            <Button
-              onClick={() => handleUserPageChange(currentUserPage + 1)}
-              disabled={currentUserPage === totalUserPages}
-              className='pagination-button'
-            >
-              <ChevronRight className={`${currentUserPage === totalUserPages ? 'disabled-arrow' : 'active-arrow'}`} />
-            </Button>
+              <Button
+                onClick={() => handleUserPageChange(currentUserPage + 1)}
+                disabled={currentUserPage === totalUserPages}
+                className='pagination-button'
+              >
+                <ChevronRight className={`${currentUserPage === totalUserPages ? 'disabled-arrow' : 'active-arrow'}`} />
+              </Button>
 
-            <Button
-              onClick={() => handleUserPageChange(totalUserPages)}
-              disabled={currentUserPage === totalUserPages}
-              className='pagination-button'
-            >
-              <KeyboardDoubleArrowRight className={`${currentUserPage === totalUserPages ? 'disabled-arrow' : 'active-arrow'}`} />
-            </Button>
-          </div>
+              <Button
+                onClick={() => handleUserPageChange(totalUserPages)}
+                disabled={currentUserPage === totalUserPages}
+                className='pagination-button'
+              >
+                <KeyboardDoubleArrowRight className={`${currentUserPage === totalUserPages ? 'disabled-arrow' : 'active-arrow'}`} />
+              </Button>
+            </div>
+          )}
 
-          <p className='small mt-1 ms-2 mb-0 text-white'>All Tokens ({pairTokensNumber})</p>
+          <p className='small mt-1 ms-2 mb-0 text-white'>All Tokens ({Object.values(pairTokens).length > 0 ? pairTokensNumber : 0})</p>
           <List>
             {!loading ? (
               Object.values(pairTokens).length > 0 ? (
