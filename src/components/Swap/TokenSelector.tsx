@@ -18,7 +18,6 @@ import { debounceSearchTime } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
 import { getTokenLogo } from 'utils/formatters';
 import defaultLogo from 'assets/img/no_logo.png';
-//new repository name test
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
