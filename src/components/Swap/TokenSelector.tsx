@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useEffect, useState, useCallback } from 'react';
+import { forwardRef, Fragment, useEffect, useState, useCallback, useMemo } from 'react';
 import { Dialog, DialogContent, TextField, List, ListItem, ListItemAvatar, Avatar, ListItemText, DialogTitle, Divider, IconButton, Button } from '@mui/material';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
 import { KeyboardArrowDown, Search, ArrowDropDown } from '@mui/icons-material';
@@ -11,7 +11,7 @@ import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectPage, selectPairTokens, selectPairTokensById, selectSearchInput, selectTotalPages, setPage, setSearchInput, selectPairTokensNumber } from 'storeManager/slices/tokensSlice';
-import { Token } from 'types/backendTypes';
+import { Token, ExtraToken } from 'types/backendTypes';
 import { ChevronLeft, ChevronRight, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft } from '@mui/icons-material';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
@@ -52,13 +52,25 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   const currentPage = useSelector(selectPage);
   const totalPages = useSelector(selectTotalPages);
   const pairTokensNumber = useSelector(selectPairTokensNumber);
-  const apiSearchInput = useSelector(selectSearchInput);
 
   const [isOpen, setIsOpen] = useState(false);
   const [localSearchInput, setLocalSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const isMobile = useMobile();
   const isTablet = useTablet();
+
+  // Convert user tokens object to an array
+  const userTokensArray = useMemo(() => {
+    return Object.entries(userTokens)
+      .filter(([tokenId]) => {
+        const token = allTokens[tokenId];
+        return token && token.is_lp_token === false;
+      })
+      .map(([tokenId, tokenData]) => ({
+        ...tokenData,
+        ...allTokens[tokenId]
+      }));
+  }, [userTokens, allTokens]);
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => {
@@ -100,6 +112,38 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
     setSelectedToken(tokenId);
     resetAmounts();
     handleClose();
+  };
+
+  const processedUserTokens = useMemo(() => {
+    let filtered = userTokensArray.filter(token =>
+      token.token_id.toLowerCase().includes(localSearchInput.toLowerCase()) ||
+      token.ticker.toLowerCase().includes(localSearchInput.toLowerCase())
+    );
+
+    return filtered.sort((a: ExtraToken, b: ExtraToken) => {
+      const priceA = parseFloat(a?.price_usd) || 0;
+      const priceB = parseFloat(b?.price_usd) || 0;
+      const balanceA = parseFloat(a?.balance) || 0;
+      const balanceB = parseFloat(b?.balance) || 0;
+
+      const valueA = priceA * balanceA;
+      const valueB = priceB * balanceB;
+
+      return valueB - valueA;
+    });
+  }, [userTokensArray, localSearchInput, allTokens]);
+
+  // User tokens pagination Logic
+  const ITEMS_PER_PAGE = 5;
+  const [currentUserPage, setCurrentUserPage] = useState(1);
+  const totalUserPages = Math.ceil(processedUserTokens.length / ITEMS_PER_PAGE);
+  const paginatedUserTokens = processedUserTokens.slice((currentUserPage - 1) * ITEMS_PER_PAGE, currentUserPage * ITEMS_PER_PAGE);
+
+  // Handle page change
+  const handleUserPageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalUserPages) {
+      setCurrentUserPage(newPage);
+    }
   };
 
   return (
@@ -175,7 +219,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
             value={localSearchInput}
             autoComplete="off"
             onChange={handleSearchChange}
-            className='token-search-container mb-2'            
+            className='token-search-container mb-2'
             InputProps={{
               startAdornment: <Search sx={{ color: 'rgba(63, 172, 90, 0.7)', marginRight: '8px', fontSize: '18px' }} />,
               style: { color: 'silver', fontFamily: 'Red Rose' },
@@ -204,7 +248,78 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
           />
         </DialogTitle>
         <DialogContent>
-          <p className='small mt-1 ms-2 mb-0 text-white'>Tokens({pairTokensNumber})</p>
+          <p className='small mt-1 ms-2 mb-0 text-white'>Your Tokens ({processedUserTokens.length})</p>
+          <List>
+            {paginatedUserTokens.length > 0 ? (
+              paginatedUserTokens.map((token: ExtraToken) => (
+                <div key={`list-item-${token.token_id}`} className='py-1 px-2 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item' onClick={() => handleTokenSelect(token.token_id)}>
+                  <Avatar src={token.logo_url && token.logo_url !== 'N/A' ? token.logo_url : defaultLogo} sx={{ height: '30px', width: '30px', marginTop: '-2px' }} />
+                  <div className='' style={{ width: '30%' }}>
+                    <p className='font-size-xxs mb-0 text-silver'>Token</p>
+                    <p className='font-size-xs mb-0'>{token.token_id}</p>
+                  </div>
+                  <div className='text-right' style={{ width: '35%' }}>
+                    <p className='font-size-xxs mb-0 text-silver'>Price</p>
+                    <p className='font-size-xs mb-0'>
+                      $<ReduceZerosFormat
+                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(token?.price_usd || '0'), 3)), 0, 20)}
+                      />
+                    </p>
+                  </div>
+                  <div className='text-right' style={{ width: '20%' }}>
+                    <p className='font-size-xxs mb-0 text-silver'>Balance</p>
+                    <p className='font-size-xs mb-0'>
+                      <ReduceZerosFormat
+                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(token?.balance || '0'), 3)), 0, 20)}
+                      />
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className='text-silver text-center h6'>No token found</p>
+            )}
+          </List>
+          {/* User Tokens Pagination Controls */}
+          <div className="pagination-controls m-t-n-sm">
+            <Button
+              onClick={() => handleUserPageChange(1)}
+              disabled={currentUserPage === 1}
+              className='pagination-button'
+            >
+              <KeyboardDoubleArrowLeft className={`${currentUserPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
+            </Button>
+
+            <Button
+              onClick={() => handleUserPageChange(currentUserPage - 1)}
+              disabled={currentUserPage === 1}
+              className='pagination-button'
+            >
+              <ChevronLeft className={`${currentUserPage === 1 ? 'disabled-arrow' : 'active-arrow'}`} />
+            </Button>
+
+            <span>
+              Page {currentUserPage} {totalUserPages > 0 ? `of ${totalUserPages}` : 'of 1'}
+            </span>
+
+            <Button
+              onClick={() => handleUserPageChange(currentUserPage + 1)}
+              disabled={currentUserPage === totalUserPages}
+              className='pagination-button'
+            >
+              <ChevronRight className={`${currentUserPage === totalUserPages ? 'disabled-arrow' : 'active-arrow'}`} />
+            </Button>
+
+            <Button
+              onClick={() => handleUserPageChange(totalUserPages)}
+              disabled={currentUserPage === totalUserPages}
+              className='pagination-button'
+            >
+              <KeyboardDoubleArrowRight className={`${currentUserPage === totalUserPages ? 'disabled-arrow' : 'active-arrow'}`} />
+            </Button>
+          </div>
+
+          <p className='small mt-1 ms-2 mb-0 text-white'>All Tokens ({pairTokensNumber})</p>
           <List>
             {!loading ? (
               Object.values(pairTokens).length > 0 ? (
@@ -220,7 +335,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
                       <p className='font-size-xs mb-0'>
                         $<ReduceZerosFormat
                           numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(pairTokens[token.token_id]?.price_usd || '0'), 3)), 0, 20)}
-                        />                        
+                        />
                       </p>
                     </div>
                     <div className='text-right' style={{ width: '20%' }}>
@@ -228,7 +343,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
                       <p className='font-size-xs mb-0'>
                         <ReduceZerosFormat
                           numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(userTokens[token.token_id]?.balance || '0'), 3)), 0, 20)}
-                        />                        
+                        />
                       </p>
                     </div>
 
@@ -243,7 +358,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
           </List>
           {/* Pagination controls */}
           {Object.values(pairTokens).length > 0 && (
-            <div className="pagination-controls">
+            <div className="pagination-controls m-t-n-sm">
               <Button
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}

@@ -37,6 +37,24 @@ export interface Token {
   supply: string
 }
 
+export interface ExtraToken {
+  token_id: string,
+  ticker: string,
+  logo_url: string,
+  has_branding: boolean,
+  decimals: number,
+  is_lp_token: boolean,
+  price_usd: string,
+  price_change_24h: string,
+  price_change_7d: string,
+  price_change_30d: string,
+  volume_24h: string,
+  volume_7d: string,
+  volume_30d: string,
+  supply: string;
+  balance: string;
+}
+
 export interface FormattedRawValue {
   formatted: string;
   raw: string;
