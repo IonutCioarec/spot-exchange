@@ -323,7 +323,7 @@ const UserTokensList: React.FC<CreatedTokens> = ({ tokens }) => {
                           Balance {sortOption === 'highestBalance' && <TrendingDownIcon className="ms-1 font-size-md" />}
                           {sortOption === 'lowestBalance' && <TrendingUpIcon className="ms-1 font-size-md" />}
                         </p>
-                        <p className="font-size-sm mb-0">{denominatedAmountToIntlFormattedAmount(token.balance || 0, token.decimals || 18, 2)}</p>
+                        <p className="font-size-sm mb-0">{denominatedAmountToIntlFormattedAmount(token.balance || 0, token.decimals || 18, 4)}</p>
                       </div>
                     </td>
 
