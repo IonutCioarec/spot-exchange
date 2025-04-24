@@ -15,6 +15,9 @@ dist-ssr
 build
 package-lock.json
 
+# secret keys and configs
+src/config/sharedConfig.tsx
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
