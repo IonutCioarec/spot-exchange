@@ -30,7 +30,7 @@ export const useMvxAPI = () => {
       const tokenData: Record<string, { balance: string }> = {};
       if (response.data) {
         response.data.forEach((token: any) => {
-          tokenData[token.identifier] = { balance: denominatedAmountToAmount(token.balance, token.decimals, 3) };
+          tokenData[token.identifier] = { balance: denominatedAmountToAmount(token.balance, token.decimals, 20) };
         });
       }
 
