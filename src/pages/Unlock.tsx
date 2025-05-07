@@ -26,6 +26,8 @@ import ledgerLogo from 'assets/img/legderLogo.svg';
 import walletLogo from 'assets/img/xWalletLogo.svg';
 import walletLogoBlack from 'assets/img/xWalletLogoBlack.svg';
 import extensionLogo from 'assets/img/extensionLogo.svg';
+import { useGetIsLoggedIn } from 'hooks';
+import { useEffect } from 'react';
 
 type CommonPropsType =
   | OperaWalletLoginButtonPropsType
@@ -44,6 +46,14 @@ export const Unlock = () => {
       navigate(RouteNamesEnum.portfolio);
     }
   };
+  const isLoggedIn = useGetIsLoggedIn();
+
+  //Redirect the user to the potfolio page if he is logged in
+    useEffect(() => {
+      if (isLoggedIn) {
+        navigate('/portfolio');
+      }
+    }, [isLoggedIn, navigate]);
 
   return (
     <div className="container unlock-page-height">
