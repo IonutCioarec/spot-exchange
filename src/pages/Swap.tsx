@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import { amountToDenominatedAmount, formatSignificantDecimals, intlNumberFormat, formatNumberWithCommas, parseFormattedNumber } from 'utils/formatters';
-import { useGetAccountInfo } from 'hooks';
+import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import 'assets/scss/swap.scss';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -18,7 +18,7 @@ import TokenSelector from 'components/Swap/TokenSelector';
 import CustomTooltip from 'components/CustomTooltip';
 import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SimpleLoader from 'components/SimpleLoader';
 import WifiProtectedSetupIcon from '@mui/icons-material/WifiProtectedSetup';
 import LightSpot from 'components/LightSpot';
@@ -41,6 +41,7 @@ const defaultTokenValues = {
 
 const Swap = () => {
   const { address } = useGetAccountInfo();
+  const isLoggedIn = useGetIsLoggedIn();
   const [loading, setLoading] = useState<boolean>(false);
   const allTokens = useSelector(selectAllTokensById);
 
@@ -604,12 +605,22 @@ const Swap = () => {
               </div>
             )}
           </div>
-          <Button
-            className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
-            onClick={swapTokensRouter}
-          >
-            SWAP
-          </Button>
+          {isLoggedIn ? (
+            <Button
+              className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
+              onClick={swapTokensRouter}
+            >
+              SWAP
+            </Button>
+          ) : (
+            <Button
+              className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
+              component={Link}
+              to="/unlock"
+            >
+              Connect Wallet
+            </Button>
+          )}
         </Col>
 
       </Row>
