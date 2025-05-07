@@ -10,7 +10,7 @@ import StepContent from '@mui/material/StepContent';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { useGetAccountInfo } from 'hooks';
 import { useMobile } from 'utils/responsive';
-import { pairsContractAddress, poolBaseTokens } from 'config';
+import { adminAddresses, pairsContractAddress, poolBaseTokens } from 'config';
 import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
@@ -38,6 +38,7 @@ import { usePoolsPairCreation } from 'hooks/transactions/usePoolsPairCreation';
 import { useGetPendingTransactions } from 'hooks';
 import { CopyToClipboard, generateLPTokenName } from "utils/calculs";
 import { useRouterResume } from 'hooks/transactions/useRouterResume';
+import { useNavigate } from 'react-router-dom';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -109,6 +110,7 @@ const CustomStepConnector = () => (
 
 const Admin = () => {
   const { address } = useGetAccountInfo();
+  const isAdmin = adminAddresses.includes(address);
   const isMobile = useMobile();
   const { hasPendingTransactions } = useGetPendingTransactions();
   const [baseTokenId, setBaseTokenId] = useState(poolBaseTokens.token1.id);
@@ -120,6 +122,14 @@ const Admin = () => {
   const [secondTokenDecimals, setSecondTokenDecimals] = useState(18);
   const [activeStep, setActiveStep] = useState(0);
   const userTokens = useSelector(selectUserTokens);
+  const navigate = useNavigate();
+
+  //Redirect the user to the home page if he is not an admin
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate('/');
+    }
+  }, [isAdmin, navigate]);
 
   const [firstTokenAmount, setFirstTokenAmount] = useState('');
   const [secondTokenAmount, setSecondTokenAmount] = useState('');
@@ -232,7 +242,7 @@ const Admin = () => {
       setPairCreationState(data);
     }
   };
-  
+
   const [routerBurnAddress, setBurnAddress] = useState('');
   const getRouterBurnAddressData = async () => {
     const data = await getBurnAddress();
@@ -341,7 +351,7 @@ const Admin = () => {
                 <p className='font-bold font-size-xxl text-center text-intense-green underline'>Swap Burn Address</p>
                 <div className='mt-4'>
                   <p className='mb-1'>Current Burn Address:</p>
-                  <p className='mb-0 font-size-sm text-intense-green' style={{wordBreak: 'break-word'}}>{routerBurnAddress}</p>
+                  <p className='mb-0 font-size-sm text-intense-green' style={{ wordBreak: 'break-word' }}>{routerBurnAddress}</p>
                   <div className="mt-3 d-flex" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
                     <Button
                       className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
@@ -355,7 +365,7 @@ const Admin = () => {
                       className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3 ms-3'
                       variant='contained'
                       size='small'
-                      onClick={() => { CopyToClipboard(routerBurnAddress);}}
+                      onClick={() => { CopyToClipboard(routerBurnAddress); }}
                     >
                       Copy Address
                     </Button>
@@ -369,7 +379,7 @@ const Admin = () => {
                 <p className='font-bold font-size-xxl text-center text-intense-green underline'>Swap Vault Address</p>
                 <div className='mt-4'>
                   <p className='mb-1'>Current Vault Address:</p>
-                  <p className='mb-0 font-size-sm text-intense-green' style={{wordBreak: 'break-word'}}>{routerVaultAddress}</p>
+                  <p className='mb-0 font-size-sm text-intense-green' style={{ wordBreak: 'break-word' }}>{routerVaultAddress}</p>
                   <div className="mt-3 d-flex" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
                     <Button
                       className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
@@ -383,7 +393,7 @@ const Admin = () => {
                       className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3 ms-3'
                       variant='contained'
                       size='small'
-                      onClick={() => { CopyToClipboard(routerVaultAddress);}}
+                      onClick={() => { CopyToClipboard(routerVaultAddress); }}
                     >
                       Copy Address
                     </Button>
