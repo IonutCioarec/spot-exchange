@@ -9,6 +9,8 @@ import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
+import { useGetIsLoggedIn } from 'hooks';
+import { Link } from 'react-router-dom';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,6 +37,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
   const [amount, setAmount] = useState('');
   const isMobile = useMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const isLoggedIn = useGetIsLoggedIn();
 
   const handleClose = () => {
     setAmount('');
@@ -105,7 +108,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
                 handleAmountChange(e);
               }
             }}
-            className='withdraw-input'            
+            className='withdraw-input'
             InputProps={{
               endAdornment: (
                 <Button
@@ -161,14 +164,26 @@ const StakeModal: React.FC<StakeModalProps> = ({
             <p className='text-white font-size-xs mb-0 ms-2 mt-1'>Balance:</p>
             <p className='text-white font-size-xs mb-0 me-2 mt-1'><span>{intlNumberFormat(Number(formatSignificantDecimals(Number(lpTokenMaxAmount), 3)), 0, 20)} {lpTokenId}</span></p>
           </div>
-          <Button
-            variant="contained"
-            className="btn-intense-default hover-btn btn-intense-success2 smaller"
-            onClick={handleStake}
-            fullWidth
-          >
-            Stake
-          </Button>
+          {isLoggedIn ? (
+            <Button
+              variant="contained"
+              className="btn-intense-default hover-btn btn-intense-success2 smaller"
+              onClick={handleStake}
+              fullWidth
+            >
+              Stake
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              className="btn-intense-default hover-btn btn-intense-success2 smaller"
+              component={Link}
+              to="/unlock"
+              fullWidth
+            >
+              Connect Wallet
+            </Button>
+          )}
         </DialogContent>
       </Dialog>
     </>
