@@ -9,6 +9,8 @@ import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
+import { useGetIsLoggedIn } from 'hooks';
+import { Link } from 'react-router-dom';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,6 +37,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
   const [amount, setAmount] = useState('');
   const isMobile = useMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const isLoggedIn = useGetIsLoggedIn();
 
   const handleClose = () => {
     setAmount('');
@@ -107,7 +110,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
               }
             }}
             ref={inputRef}
-            className='withdraw-input'            
+            className='withdraw-input'
             InputProps={{
               endAdornment: (
                 <Button
@@ -163,14 +166,24 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
             <p className='text-white font-size-xs mb-0 ms-2 mt-1'>Balance:</p>
             <p className='text-white font-size-xs mb-0 me-2 mt-1'><span>{intlNumberFormat(Number(formatSignificantDecimals(Number(lpTokenMaxAmount), 3)), 0, 20)} {lpTokenId}</span></p>
           </div>
-          <Button
-            className="btn-intense-default btn-intense-danger hover-btn"
-            onClick={handleWithdraw}
-            sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
-            fullWidth
-          >
-            Remove
-          </Button>
+          {isLoggedIn ? (
+            <Button
+              className="btn-intense-default btn-intense-danger hover-btn smaller fullWidth"
+              onClick={handleWithdraw}
+              sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
+            >
+              Remove
+            </Button>
+          ) : (
+            <Button
+              className="btn-intense-default btn-intense-danger hover-btn smaller fullWidth"
+              sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
+              component={Link}
+              to="/unlock"
+            >
+              Connect Wallet
+            </Button>
+          )}
         </DialogContent>
       </Dialog>
     </>
