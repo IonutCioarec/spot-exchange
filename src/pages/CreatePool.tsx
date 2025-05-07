@@ -8,7 +8,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
-import { useGetAccountInfo } from 'hooks';
+import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
 import { useMobile } from 'utils/responsive';
 import { pairsContractAddress, poolBaseTokens } from 'config';
 import { useEffect, useState } from 'react';
@@ -33,6 +33,7 @@ import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import { useSelector } from 'react-redux';
 import { generateLPTokenName } from 'utils/calculs';
 import { usePoolsResume } from 'hooks/transactions/usePoolsResume';
+import { useNavigate } from 'react-router-dom';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -103,6 +104,8 @@ const CustomStepConnector = () => (
 
 const CreatePool = () => {
   const { address } = useGetAccountInfo();
+  const isLoggedIn = useGetIsLoggedIn();
+  const navigate = useNavigate();
   const { getValidationSignature } = useBackendAPI();
   const isMobile = useMobile();
   const [baseTokenId, setBaseTokenId] = useState(poolBaseTokens.token1.id);
@@ -118,6 +121,13 @@ const CreatePool = () => {
   const { getUserCreatedTokens } = useMvxAPI();
   const [createdTokens, setCreatedTokens] = useState<CreatedTokens>({});
   const userTokens = useSelector(selectUserTokens);
+
+  //Redirect the user to the unlock page if he is not logged in
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/unlock');
+    }
+  }, [isLoggedIn, navigate]);
 
   const [firstTokenAmount, setFirstTokenAmount] = useState('');
   const [secondTokenAmount, setSecondTokenAmount] = useState('');
