@@ -8,7 +8,7 @@ import { KeyboardArrowUp, KeyboardArrowDown, Add } from '@mui/icons-material';
 import { Button, IconButton } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
 import { getPercentageBigNumber, getAmountFromPercentageBigNumber } from "utils/calculs";
-import { useGetAccountInfo } from 'hooks';
+import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
 import { Link } from 'react-router-dom';
 import { defaultSwapToken1, defaultSwapToken2 } from "config";
 import CountUp from 'react-countup';
@@ -55,6 +55,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
   const [open, setOpen] = useState(false);
   const { address } = useGetAccountInfo();
   const containerRef = useRef<HTMLDivElement>(null);
+  const isLoggedIn = useGetIsLoggedIn();
 
   const [isUnstakeOpen, setIsUnstakeOpen] = useState(false);
   const handleUnstakeOpen = () => {
@@ -254,7 +255,13 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               <Col lg={2}>
                 <div className="mx-2" style={{ minHeight: '100px' }}>
                   <AwesomeButton className="aws-btn-primary mt-1 full-width smaller" onPress={handleStakeOpen}>STAKE LP</AwesomeButton>
-                  <AwesomeButton className="aws-btn-warning mt-1 full-width smaller">CLAIM</AwesomeButton>
+                  {isLoggedIn ? (
+                    <AwesomeButton className="aws-btn-warning mt-1 full-width smaller">CLAIM</AwesomeButton>
+                  ) : (
+                    <Link to='/unlock'>
+                      <AwesomeButton className="aws-btn-warning mt-1 full-width smaller">CLAIM</AwesomeButton>
+                    </Link>
+                  )}
                   <AwesomeButton className="aws-btn-danger mt-1 full-width smaller" onPress={handleUnstakeOpen}>UNSTAKE</AwesomeButton>
                 </div>
               </Col>
@@ -495,7 +502,13 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               <div className="mt-2">
                 <div className="d-flex justify-content-between align-items-center gap-2 mt-1 mx-1">
                   <AwesomeButton className="aws-btn-primary mt-1 full-width smaller" onPress={handleStakeOpen}>STAKE</AwesomeButton>
-                  <AwesomeButton className="aws-btn-warning mt-1 full-width smaller">CLAIM</AwesomeButton>
+                  {isLoggedIn ? (
+                    <AwesomeButton className="aws-btn-warning mt-1 full-width smaller">CLAIM</AwesomeButton>
+                  ) : (
+                    <Link to='/unlock'>
+                      <AwesomeButton className="aws-btn-warning mt-1 full-width smaller">CLAIM</AwesomeButton>
+                    </Link>
+                  )}
                   <AwesomeButton className="aws-btn-danger mt-1 full-width smaller" onPress={handleUnstakeOpen}>UNSTAKE</AwesomeButton>
                 </div>
               </div>
