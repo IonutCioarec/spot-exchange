@@ -18,6 +18,7 @@ import { debounceSearchTime } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
 import { getTokenLogo } from 'utils/formatters';
 import defaultLogo from 'assets/img/no_logo.png';
+import { useGetIsLoggedIn } from 'hooks';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -47,6 +48,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
   allTokens,
   resetAmounts
 }) => {
+  const isLoggedIn = useGetIsLoggedIn();
   const dispatch = useDispatch();
   const rawPairTokens = useSelector(selectPairTokensById);
 
@@ -131,8 +133,8 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
     let filtered = userTokensArray.filter(token =>
       (token.token_id.toLowerCase().includes(localSearchInput.toLowerCase()) ||
         token.ticker.toLowerCase().includes(localSearchInput.toLowerCase())) &&
-        token.token_id !== excludedToken &&
-        parseFloat(token.balance) > 0
+      token.token_id !== excludedToken &&
+      parseFloat(token.balance) > 0
     );
 
     return filtered.sort((a: ExtraToken, b: ExtraToken) => {
@@ -263,38 +265,42 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
           />
         </DialogTitle>
         <DialogContent>
-          <p className='small mt-1 ms-2 mb-0 text-white'>Your Tokens ({paginatedUserTokens.length > 0 ? processedUserTokens.length : 0})</p>
-          <List>
-            {paginatedUserTokens.length > 0 ? (
-              paginatedUserTokens.map((token: ExtraToken) => (
-                <div key={`list-item-${token.token_id}`} className='py-1 px-2 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item' onClick={() => handleTokenSelect(token.token_id)}>
-                  <Avatar src={token.logo_url && token.logo_url !== 'N/A' ? token.logo_url : defaultLogo} sx={{ height: '30px', width: '30px', marginTop: '-2px' }} />
-                  <div className='' style={{ width: '30%' }}>
-                    <p className='font-size-xxs mb-0 text-silver'>Token</p>
-                    <p className='font-size-xs mb-0'>{token.token_id}</p>
-                  </div>
-                  <div className='text-right' style={{ width: '35%' }}>
-                    <p className='font-size-xxs mb-0 text-silver'>Price</p>
-                    <p className='font-size-xs mb-0'>
-                      $<ReduceZerosFormat
-                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(token?.price_usd || '0'), 3)), 0, 20)}
-                      />
-                    </p>
-                  </div>
-                  <div className='text-right' style={{ width: '20%' }}>
-                    <p className='font-size-xxs mb-0 text-silver'>Balance</p>
-                    <p className='font-size-xs mb-0'>
-                      <ReduceZerosFormat
-                        numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(token?.balance || '0'), 3)), 0, 20)}
-                      />
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className='text-silver text-center h6'>No token found</p>
-            )}
-          </List>
+          {isLoggedIn && (
+            <Fragment>
+              <p className='small mt-1 ms-2 mb-0 text-white'>Your Tokens ({paginatedUserTokens.length > 0 ? processedUserTokens.length : 0})</p>
+              <List>
+                {paginatedUserTokens.length > 0 ? (
+                  paginatedUserTokens.map((token: ExtraToken) => (
+                    <div key={`list-item-${token.token_id}`} className='py-1 px-2 mb-2 text-white d-flex justify-content-between align-items-center cursor-pointer token-list-item' onClick={() => handleTokenSelect(token.token_id)}>
+                      <Avatar src={token.logo_url && token.logo_url !== 'N/A' ? token.logo_url : defaultLogo} sx={{ height: '30px', width: '30px', marginTop: '-2px' }} />
+                      <div className='' style={{ width: '30%' }}>
+                        <p className='font-size-xxs mb-0 text-silver'>Token</p>
+                        <p className='font-size-xs mb-0'>{token.token_id}</p>
+                      </div>
+                      <div className='text-right' style={{ width: '35%' }}>
+                        <p className='font-size-xxs mb-0 text-silver'>Price</p>
+                        <p className='font-size-xs mb-0'>
+                          $<ReduceZerosFormat
+                            numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(token?.price_usd || '0'), 3)), 0, 20)}
+                          />
+                        </p>
+                      </div>
+                      <div className='text-right' style={{ width: '20%' }}>
+                        <p className='font-size-xxs mb-0 text-silver'>Balance</p>
+                        <p className='font-size-xs mb-0'>
+                          <ReduceZerosFormat
+                            numberString={intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(token?.balance || '0'), 3)), 0, 20)}
+                          />
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className='text-silver text-center h6'>No token found</p>
+                )}
+              </List>
+            </Fragment>
+          )}
           {/* User Tokens Pagination Controls */}
           {paginatedUserTokens.length > 0 && (
             <div className="pagination-controls m-t-n-sm">
