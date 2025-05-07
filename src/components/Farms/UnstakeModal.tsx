@@ -9,6 +9,8 @@ import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 import { useMobile } from 'utils/responsive';
 import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
+import { useGetIsLoggedIn } from 'hooks';
+import { Link } from 'react-router-dom';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,6 +37,7 @@ const UnstakeModal: React.FC<UnstakeModalProps> = ({
   const [amount, setAmount] = useState('');
   const isMobile = useMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const isLoggedIn = useGetIsLoggedIn();
 
   const handleClose = () => {
     setAmount('');
@@ -105,7 +108,7 @@ const UnstakeModal: React.FC<UnstakeModalProps> = ({
                 handleAmountChange(e);
               }
             }}
-            className='withdraw-input'            
+            className='withdraw-input'
             InputProps={{
               endAdornment: (
                 <Button
@@ -161,14 +164,26 @@ const UnstakeModal: React.FC<UnstakeModalProps> = ({
             <p className='text-white font-size-xs mb-0 ms-2 mt-1'>Balance:</p>
             <p className='text-white font-size-xs mb-0 me-2 mt-1'><span>{intlNumberFormat(Number(formatSignificantDecimals(Number(lpTokenMaxAmount), 3)), 0, 20)} {lpTokenId}</span></p>
           </div>
-          <Button
-            variant="contained"
-            className="btn-intense-default hover-btn btn-intense-danger smaller"
-            onClick={handleWithdraw}            
-            fullWidth
-          >
-            Unstake
-          </Button>
+          {isLoggedIn ? (
+            <Button
+              variant="contained"
+              className="btn-intense-default hover-btn btn-intense-danger smaller"
+              onClick={handleWithdraw}
+              fullWidth
+            >
+              Unstake
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              className="btn-intense-default hover-btn btn-intense-danger smaller"
+              component={Link}
+              to="/unlock"
+              fullWidth
+            >
+              Connect Wallet
+            </Button>
+          )}
         </DialogContent>
       </Dialog>
     </>
