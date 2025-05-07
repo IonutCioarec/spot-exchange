@@ -37,6 +37,7 @@ import UserFarmsList from 'components/Portfolio/UserFarmsList';
 import { useMobile, useTablet } from 'utils/responsive';
 import ScrollToTopButton from 'components/ScrollToTopButton';
 import LightSpot from 'components/LightSpot';
+import { useNavigate } from 'react-router-dom';
 
 const Portfolio = () => {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const Portfolio = () => {
   const isTablet = useTablet();
   const { getTokens, getPairs } = useBackendAPI();
   const isLoggedIn = useGetIsLoggedIn();
+  const navigate = useNavigate();
   const { account, address } = useGetAccountInfo();
   const [userTokens, setUserTokens] = useState<any>({});
   const [userTokensCount, setUserTokensCount] = useState<number>(0);
@@ -70,6 +72,13 @@ const Portfolio = () => {
   const [userFees30D, setUserFees30D] = useState<Record<string, { balance: number }>>({});
   const [userFees, setUserFees] = useState<Record<string, { balance: number }>>({});
   const allTokens = useSelector(selectAllTokensById);
+
+  //Redirect the user to the unlock page if he is not logged in
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/unlock');
+    }
+  }, [isLoggedIn, navigate]);
 
 
   // load the tokens created by the user through the api
