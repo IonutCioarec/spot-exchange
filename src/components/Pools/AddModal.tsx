@@ -14,6 +14,8 @@ import { debounceSearchTime } from 'config';
 import { useSelector } from 'react-redux';
 import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import BigNumber from 'bignumber.js';
+import { useGetIsLoggedIn } from 'hooks';
+import { Link } from 'react-router-dom';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -65,6 +67,7 @@ const AddModal: React.FC<AddModal> = ({
   const isMobile = useMobile();
   const { getSwapPrice, getSwapRawPrice } = useBackendAPI();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const isLoggedIn = useGetIsLoggedIn();
 
   const getRawPrice = async (fromToken: string, toToken: string) => {
     const response = await getSwapRawPrice(fromToken, toToken);
@@ -399,13 +402,24 @@ const AddModal: React.FC<AddModal> = ({
           </div>
 
 
-          <Button
-            className="btn-intense-default hover-btn btn-intense-success2 mt-2 smaller fullWidth mt-3"
-            onClick={() => { addLiquidity(); handleAdd(); }}
-            sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
-          >
-            Add
-          </Button>
+          {isLoggedIn ? (
+            <Button
+              className="btn-intense-default hover-btn btn-intense-success2 mt-2 smaller fullWidth mt-3"
+              onClick={() => { addLiquidity(); handleAdd(); }}
+              sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
+            >
+              Add
+            </Button>
+          ) : (
+            <Button
+              className="btn-intense-default hover-btn btn-intense-success2 mt-2 smaller fullWidth mt-3"
+              sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
+              component={Link}
+              to="/unlock"
+            >
+              Connect Wallet
+            </Button>
+          )}
         </DialogContent>
       </Dialog>
     </>
