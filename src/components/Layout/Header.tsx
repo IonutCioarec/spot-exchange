@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import 'assets/css/header.css';
-import { useGetIsLoggedIn } from 'hooks';
+import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
 import { logout } from 'helpers';
 import { useMobile } from 'utils/responsive';
 import 'assets/css/bottomNavbar.css';
@@ -28,6 +28,7 @@ import LightLine from 'components/LightLine';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import SecurityIcon from '@mui/icons-material/Security';
 import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
+import { adminAddresses } from 'config';
 
 export const Header = () => {
   const [expanded, setExpanded] = useState(false);
@@ -39,6 +40,8 @@ export const Header = () => {
     hasConsentPopup: false
   };
 
+  const { address } = useGetAccountInfo();
+  const isAdmin = adminAddresses.includes(address);
   const isLoggedIn = useGetIsLoggedIn();
   const handleLogout = () => {
     sessionStorage.clear();
@@ -75,7 +78,7 @@ export const Header = () => {
               className='cursor-pointer'
               style={{ height: isMobile ? 200 : 245, marginTop: '-100px', marginBottom: '-100px' }}
               onClick={() => handleClick(isLoggedIn ? 'portfolio' : '')}
-            />            
+            />
           </div>
           <div>
             {!isMobile && (
@@ -133,16 +136,18 @@ export const Header = () => {
                       Analytics
                     </p>
                   </Nav.Link>
-                  <Nav.Link
-                    as={Link}
-                    to="/admin-operations"
-                    className={`mx-1 ${location.pathname === '/admin-operations' ? 'active' : ''}`}
-                    onClick={handleSelect}
-                  >
-                    <p className="nav-link mb-0 mt-0 link font-size-sm">
-                      Admin
-                    </p>
-                  </Nav.Link>
+                  {isAdmin && (
+                    <Nav.Link
+                      as={Link}
+                      to="/admin-operations"
+                      className={`mx-1 ${location.pathname === '/admin-operations' ? 'active' : ''}`}
+                      onClick={handleSelect}
+                    >
+                      <p className="nav-link mb-0 mt-0 link font-size-sm">
+                        Admin
+                      </p>
+                    </Nav.Link>
+                  )}
                 </Nav>
 
               </Navbar>
@@ -203,13 +208,15 @@ export const Header = () => {
               <AnalyticsIcon />
               <p className='mb-0'>Analytics</p>
             </Link>
-            <Link
-              to="/admin-operations"
-              className={`nav-item ${location.pathname === '/admin-operations' ? 'active' : ''}`}
-            >
-              <SecurityIcon />
-              <p className='mb-0'>Admin</p>
-            </Link>
+            {isAdmin && (
+              <Link
+                to="/admin-operations"
+                className={`nav-item ${location.pathname === '/admin-operations' ? 'active' : ''}`}
+              >
+                <SecurityIcon />
+                <p className='mb-0'>Admin</p>
+              </Link>
+            )}
           </div>
         </div>
       )}
