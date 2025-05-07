@@ -34,7 +34,7 @@ import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { isEmpty } from '@multiversx/sdk-core/out';
 import TextField from '@mui/material/TextField';
 import { Search } from '@mui/icons-material';
-import { useGetAccountInfo } from 'hooks';
+import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
 import { Switch, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useMobile } from 'utils/responsive';
@@ -50,7 +50,7 @@ import ScrollToTopButton from 'components/ScrollToTopButton';
 
 const Pools = () => {
   const { address } = useGetAccountInfo();
-  const isLoggedIn = address ? true : false;
+  const isLoggedIn = useGetIsLoggedIn();
   const [loading, setLoading] = useState<boolean>(false);
   // const [viewMode, setViewModeState] = useState<'all' | 'assets' | 'created'>('all');
   const [localSearchInput, setLocalSearchInput] = useState<string>('');
@@ -229,10 +229,10 @@ const Pools = () => {
     <div className='pools-page-height'>
       <Row id='topSection'>
         <Col xs={12}>
-          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{minHeight: '60px' }}>
-          {/* <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '60px' }}> */}
+          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ minHeight: '60px' }}>
+            {/* <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '60px' }}> */}
             <div className={`p-3 mb-2  ${isMobile ? 'mt-2' : 'mt-4'}`}>
-              <h2 className='text-white text-center'>Liquidity Pools</h2>              
+              <h2 className='text-white text-center'>Liquidity Pools</h2>
             </div>
           </div>
         </Col>
@@ -312,14 +312,16 @@ const Pools = () => {
                 </div>
               }
               <div className='d-flex justify-content-end'>
-                <Button
-                  component={Link}
-                  to="/create-pool"
-                  className="btn-intense-default btn-intense-success2 hover-btn text-white"
-                  sx={{ minWidth: isMobile ? '170px' : '120px', height: '30px' }}
-                >
-                  New Pool
-                </Button>
+                {isLoggedIn &&
+                  <Button
+                    component={Link}
+                    to="/create-pool"
+                    className="btn-intense-default btn-intense-success2 hover-btn text-white"
+                    sx={{ minWidth: isMobile ? '170px' : '120px', height: '30px' }}
+                  >
+                    New Pool
+                  </Button>
+                }
                 <TextField
                   id="outlined-search"
                   type="search"
