@@ -325,6 +325,20 @@ const Swap = () => {
     },
   );
 
+  // Check if user has enough token1 in wallet for swapping
+  const [hasEnoughToken1, setHasEnoughToken1] = useState<boolean>(true);
+  useEffect(() => {
+    const checkAmounts = () => {
+      if (Number(token1Amount) > Number(userTokens[token1]?.balance)) {
+        setHasEnoughToken1(false);
+      } else {
+        setHasEnoughToken1(true);
+      }
+    };
+
+    checkAmounts();
+  }, [token1Amount]);
+
   // console.log('token_id: ' + allTokens[token1]?.token_id);
   // console.log('token_decimals: ' + allTokens[token1]?.decimals);
   // console.log('token_amount: ' + parseFormattedNumber(token1Amount));
@@ -605,12 +619,20 @@ const Swap = () => {
             )}
           </div>
           {isLoggedIn ? (
-            <Button
-              className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
-              onClick={swapTokensRouter}
-            >
-              SWAP
-            </Button>
+            (hasEnoughToken1 || Number(token1Amount) == 0) ? (
+              <Button
+                className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
+                onClick={swapTokensRouter}
+              >
+                SWAP
+              </Button>
+            ) : (
+              <Button
+                className="font-size-md btn-intense-default btn-intense-danger hover-btn text-white mt-3 mb-5 fullWidth"
+              >
+                Insufficient funds
+              </Button>
+            )
           ) : (
             <Button
               className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
