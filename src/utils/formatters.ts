@@ -17,7 +17,7 @@ export const formatSignificantDecimals = (input: number, decimals: number = 2): 
     return '0';
   }
 
-  const inputStr = input.toString();
+  const inputStr = input.toFixed(20);
   const regexPattern = new RegExp(`^-?\\d*\\.?0*\\d{0,${decimals}}`);
   const match = inputStr.match(regexPattern);
 
