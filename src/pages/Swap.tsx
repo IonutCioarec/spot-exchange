@@ -336,11 +336,10 @@ const Swap = () => {
   return (
     <Container className='swap-page-height font-rose'>
       <Row id='topSection'>
-        <Col xs={12} lg={{ span: 6, offset: 3 }}>
-          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
-            <div className='p-5'>
+        <Col xs={12}>
+          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ minHeight: '60px' }}>
+            <div className={`p-3 mb-2  ${isMobile ? 'mt-2' : 'mt-4'}`}>
               <h2 className='text-white text-center'>Swap</h2>
-              <p className='text-white mb-0 text-justified'>Multiversx's fastest exchange with a huge catalog of tokens</p>
             </div>
           </div>
         </Col>
@@ -348,7 +347,7 @@ const Swap = () => {
       {Number(exchangeRate) > 0 && isMobile && (
         <ScrollToTopButton targetRefId='topSection' />
       )}
-      <Row className={`${isMobile ? 'mt-4' : 'mt-5'}`}>
+      <Row className={`${isMobile ? 'mt-2' : 'mt-2'}`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className={`swap-container text-white mt-1 ${activeContainer1 ? 'selected-side' : ''}`}>
             <p className='mb-0 ml-1 small'>From</p>
