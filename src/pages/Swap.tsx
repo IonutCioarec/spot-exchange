@@ -30,6 +30,7 @@ import ScrollToTopButton from 'components/ScrollToTopButton';
 import defaultLogo from 'assets/img/no_logo.png';
 import { useSwapTokensHex } from 'hooks/transactions/useSwapTokensHex';
 import { validateSwapStepsReserve } from 'utils/calculs';
+import toast from 'react-hot-toast';
 
 const defaultTokenValues = {
   image_url: defaultLogo,
@@ -324,6 +325,14 @@ const Swap = () => {
       token_amount: minReceived
     },
   );
+
+  const swapTokensRouterHook = () => {
+    if(Number(token1Amount) <= 0 || !Number(token1Amount) || Number(token2Amount) <= 0 || !Number(token2Amount)){
+      toast.error('Invalid token amount', { duration: 3000 });
+      return;
+    }
+    swapTokensRouter();
+  };
 
   // Check if user has enough token1 in wallet for swapping
   const [hasEnoughToken1, setHasEnoughToken1] = useState<boolean>(true);
@@ -622,7 +631,7 @@ const Swap = () => {
             (hasEnoughToken1 || Number(token1Amount) == 0) ? (
               <Button
                 className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
-                onClick={swapTokensRouter}
+                onClick={swapTokensRouterHook}
               >
                 SWAP
               </Button>
