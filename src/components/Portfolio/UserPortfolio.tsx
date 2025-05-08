@@ -16,7 +16,7 @@ const UserPortfolio: React.FC<PortfolioProps> = ({ data, rewardsData, walletBala
 
   return (
     <>
-      <h3 className='mt-5 text-white mb-1'>Your Portfolio</h3>
+      {/* <h3 className='mt-5 text-white mb-1'>Your Wallet</h3> */}
       {address &&
         <p className='adress-text'>
           <span className='address-copy-text'>
