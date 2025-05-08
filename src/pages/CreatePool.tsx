@@ -242,17 +242,16 @@ const CreatePool = () => {
 
   return (
     <Container className='create-pool-page-height font-rose'>
-      <Row>
-        <Col xs={12} lg={{ span: 6, offset: 3 }}>
-          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ backgroundColor: 'rgba(32,32,32, 0.5)', minHeight: '100px' }}>
-            <div className='p-5'>
+      <Row id='topSection'>
+        <Col xs={12}>
+          <div className='b-r-sm d-flex align-items-center justify-content-center mt-4' style={{ minHeight: '60px' }}>
+            <div className={`p-3 mb-2  ${isMobile ? 'mt-2' : 'mt-4'}`}>
               <h2 className='text-white text-center'>Create Pool</h2>
-              <p className='text-white mb-0 text-justified'>Create a pool now and enjoy full benefits</p>
             </div>
           </div>
         </Col>
       </Row>
-      <Row className={`${isMobile ? 'mt-4' : 'mt-3'} mb-5`}>
+      <Row className={`${isMobile ? 'mt-2' : 'mt-2'} mb-5`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
           <div className={`create-container text-white mb-5`}>
             <Stepper
