@@ -29,6 +29,7 @@ import AgricultureIcon from '@mui/icons-material/Agriculture';
 import SecurityIcon from '@mui/icons-material/Security';
 import FolderSpecialIcon from '@mui/icons-material/FolderSpecial';
 import { adminAddresses } from 'config';
+import HandymanIcon from '@mui/icons-material/Handyman';
 
 export const Header = () => {
   const [expanded, setExpanded] = useState(false);
@@ -136,6 +137,16 @@ export const Header = () => {
                       Analytics
                     </p>
                   </Nav.Link>
+                  <Nav.Link
+                    as={Link}
+                    to="/tools"
+                    className={`mx-1 ${location.pathname === '/tools' ? 'active' : ''}`}
+                    onClick={handleSelect}
+                  >
+                    <p className="nav-link mb-0 mt-0 link font-size-sm">
+                      Tools
+                    </p>
+                  </Nav.Link>
                   {isAdmin && (
                     <Nav.Link
                       as={Link}
@@ -207,6 +218,13 @@ export const Header = () => {
             >
               <AnalyticsIcon />
               <p className='mb-0'>Analytics</p>
+            </Link>
+            <Link
+              to="/tools"
+              className={`nav-item ${location.pathname === '/tools' ? 'active' : ''}`}
+            >
+              <HandymanIcon />
+              <p className='mb-0'>Tools</p>
             </Link>
             {isAdmin && (
               <Link

@@ -5,6 +5,7 @@ import CreatePool from 'pages/CreatePool';
 import Admin from 'pages/Admin';
 import Analytics from 'pages/Analytics';
 import Portfolio from 'pages/Portfolio';
+import Tools from 'pages/Tools';
 
 interface RouteWithTitleType extends RouteType {
   title: string;
@@ -24,7 +25,8 @@ export const routeNames = {
   farms: '/farms',
   createPool: '/create-pool',
   adminOperations: '/admin-operations',
-  analytics: '/analytics'
+  analytics: '/analytics',
+  tools: '/tools'
 };
 
 export const routes: RouteWithTitleType[] = [
@@ -67,6 +69,11 @@ export const routes: RouteWithTitleType[] = [
     path: routeNames.analytics,
     title: 'Analytics',
     component: Analytics
+  },
+  {
+    path: routeNames.tools,
+    title: 'Tools',
+    component: Tools
   }
 ];
 
@@ -79,4 +86,5 @@ export enum RouteNamesEnum {
   createPool = '/create-pool',
   adminOperations = '/admin-operations',
   analytics = '/analytics',
+  tools = '/tools',
 }
