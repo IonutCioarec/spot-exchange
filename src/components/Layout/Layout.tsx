@@ -29,7 +29,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
 
       {/* Animate the auxiliary elements */}
-      <motion.img
+      {/* <motion.img
         src={aux1}
         alt="Aux 1"
         className="absolute"
@@ -47,7 +47,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           top: '25%',
           left: '3%'
         }}
-      />
+      /> */}
 
       <Toaster
         toastOptions={{
