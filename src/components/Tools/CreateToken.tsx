@@ -54,9 +54,20 @@ const CreateToken = () => {
   const isLoggedIn = useGetIsLoggedIn();
 
   const [name, setName] = useState<string>('');
+  const [nameError, setNameError] = useState<string | null>(null);
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setName(value);
+    const newName = event.target.value;
+    setName(newName);
+
+    if (!newName) {
+      setNameError('Name is required');
+    } else if (newName.length < 3 || newName.length > 50) {
+      setNameError('Must be between 3 - 50 characters long');
+    } else if (!/^[a-zA-Z0-9]*$/.test(newName)) {
+      setNameError('Alphanumeric characters only');
+    } else {
+      setNameError('');
+    }
   };
 
   const [ticker, setTicker] = useState<string>('');
@@ -141,12 +152,11 @@ const CreateToken = () => {
     setSpecialRoles(event.target.checked);
   };
 
-
   return (
     <div>
       <div className='create-token-container mt-3'>
         <p className='h5 mt-1 mb-0 text-white text-center mb-3'>Issue Token</p>
-        <p className='small mb-0 text-silver'>Name</p>
+        <p className='small ms-1 mb-0 text-silver required'>Name</p>
         <TextField
           type='text'
           fullWidth
@@ -155,6 +165,14 @@ const CreateToken = () => {
           value={name}
           autoComplete="off"
           onChange={handleNameChange}
+          error={!!nameError}
+          helperText={
+            nameError ? (
+              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                {nameError}
+              </span>
+            ) : null
+          }
           className='mt-1'
           InputProps={{
             style: { color: 'silver', fontFamily: 'Red Rose' },
@@ -172,10 +190,10 @@ const CreateToken = () => {
                 fontSize: '14px',
               },
               '&:hover fieldset': {
-                borderColor: 'transparent',
+                borderColor: nameError ? '#d32f2f' : '#3FAC5A',
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'transparent',
+                borderColor: nameError ? '#d32f2f' : '#3FAC5A',
               },
               fontFamily: 'Red Rose',
               fontSize: '14px',
@@ -192,7 +210,7 @@ const CreateToken = () => {
           }}
         />
 
-        <p className='small mt-4 mb-0 text-silver'>Ticker</p>
+        <p className='small mt-4 mb-0 text-silver ms-1'>Ticker</p>
         <TextField
           type='text'
           fullWidth
@@ -238,7 +256,7 @@ const CreateToken = () => {
           }}
         />
 
-        <p className='small mt-4 mb-0 text-silver'>Mint Amount</p>
+        <p className='small mt-4 mb-0 text-silver ms-1'>Mint Amount</p>
         <TextField
           type='text'
           fullWidth
@@ -284,7 +302,7 @@ const CreateToken = () => {
           }}
         />
 
-        <p className='small mt-4 mb-0 text-silver'>Decimals</p>
+        <p className='small mt-4 mb-0 text-silver ms-1'>Decimals</p>
         <TextField
           type='text'
           fullWidth
