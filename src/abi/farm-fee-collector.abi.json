@@ -1,11 +1,11 @@
 {
     "buildInfo": {
         "rustc": {
-            "version": "1.81.0-nightly",
-            "commitHash": "684b3553f70148ded97a80371c2405984d4f6aa7",
-            "commitDate": "2024-06-20",
-            "channel": "Nightly",
-            "short": "rustc 1.81.0-nightly (684b3553f 2024-06-20)"
+            "version": "1.86.0",
+            "commitHash": "05f9846f893b09a1be1fc8560e33fc3c815cfecb",
+            "commitDate": "2025-03-31",
+            "channel": "Stable",
+            "short": "rustc 1.86.0 (05f9846f8 2025-03-31)"
         },
         "contractCrate": {
             "name": "farm-fee-collector",
@@ -44,29 +44,11 @@
     },
     "endpoints": [
         {
-            "name": "setEmergencyStop",
-            "onlyOwner": true,
-            "mutability": "mutable",
-            "inputs": [
-                {
-                    "name": "is_emergency_stop",
-                    "type": "bool"
-                }
-            ],
-            "outputs": []
-        },
-        {
             "name": "startFarming",
             "mutability": "mutable",
             "payableInTokens": [
                 "*"
             ],
-            "inputs": [],
-            "outputs": []
-        },
-        {
-            "name": "claimRewards",
-            "mutability": "mutable",
             "inputs": [],
             "outputs": []
         },
@@ -82,6 +64,24 @@
             "outputs": []
         },
         {
+            "name": "claimRewards",
+            "mutability": "mutable",
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "setEmergencyStop",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "is_emergency_stop",
+                    "type": "bool"
+                }
+            ],
+            "outputs": []
+        },
+        {
             "name": "depositReward",
             "mutability": "mutable",
             "payableInTokens": [
@@ -89,75 +89,6 @@
             ],
             "inputs": [],
             "outputs": []
-        },
-        {
-            "name": "getPendingRewards",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "user_address",
-                    "type": "Address"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "List<EsdtTokenPayment>"
-                }
-            ]
-        },
-        {
-            "name": "getPendingTokenReward",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "user_address",
-                    "type": "Address"
-                },
-                {
-                    "name": "reward_token_id",
-                    "type": "TokenIdentifier"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "BigUint"
-                }
-            ]
-        },
-        {
-            "name": "getState",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "maybe_user",
-                    "type": "optional<Address>",
-                    "multi_arg": true
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "FarmFeeCollectorState"
-                }
-            ]
-        },
-        {
-            "name": "getUnstoredUserRewardAmount",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "user_address",
-                    "type": "Address"
-                },
-                {
-                    "name": "reward_token_id",
-                    "type": "TokenIdentifier"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "BigUint"
-                }
-            ]
         },
         {
             "name": "getRewardShareAmount",
@@ -214,84 +145,6 @@
             ]
         },
         {
-            "name": "getTotalLpStakedAmount",
-            "mutability": "readonly",
-            "inputs": [],
-            "outputs": [
-                {
-                    "type": "BigUint"
-                }
-            ]
-        },
-        {
-            "name": "getUserLpStakedAmount",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "user_address",
-                    "type": "Address"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "BigUint"
-                }
-            ]
-        },
-        {
-            "name": "getRewardRate",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "reward_token_id",
-                    "type": "TokenIdentifier"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "BigUint"
-                }
-            ]
-        },
-        {
-            "name": "getUserRewardRate",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "user_address",
-                    "type": "Address"
-                },
-                {
-                    "name": "reward_token_id",
-                    "type": "TokenIdentifier"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "BigUint"
-                }
-            ]
-        },
-        {
-            "name": "getUnclaimedStoredRewards",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "user_address",
-                    "type": "Address"
-                },
-                {
-                    "name": "reward_token_id",
-                    "type": "TokenIdentifier"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "BigUint"
-                }
-            ]
-        },
-        {
             "name": "getIsEmergencyStop",
             "mutability": "readonly",
             "inputs": [],
@@ -310,11 +163,414 @@
                     "type": "Address"
                 }
             ]
+        },
+        {
+            "name": "getUnstoredRewardsForToken",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "user",
+                    "type": "Address"
+                },
+                {
+                    "name": "reward_token_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getUserStakedScore",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getAggregatedStakedScore",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getCurrentRewardRate",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "reward_token_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getUserRewardRate",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "user",
+                    "type": "Address"
+                },
+                {
+                    "name": "reward_token_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getUserStoredRewards",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "user",
+                    "type": "Address"
+                },
+                {
+                    "name": "reward_token_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getLastUserUpdate",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "user",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "getLastRewardRateUpdate",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "reward_token_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "getAddressesInStake",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<Address>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getTotalDistributed",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "token_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getDistributionAmountPerRound",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "start_round",
+                    "type": "u64"
+                },
+                {
+                    "name": "end_round",
+                    "type": "u64"
+                },
+                {
+                    "name": "total_distribution_amount",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getLastDistributionRoundRaw",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "getDistributionPlanRaw",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<tuple<TokenIdentifier,u64,u64,BigUint>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getPendingRewards",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "user_address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "List<EsdtTokenPayment>"
+                }
+            ]
+        },
+        {
+            "name": "getPendingTokenReward",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "user_address",
+                    "type": "Address"
+                },
+                {
+                    "name": "reward_token_id",
+                    "type": "TokenIdentifier"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getState",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "maybe_user",
+                    "type": "optional<Address>",
+                    "multi_arg": true
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "FarmFeeCollectorState"
+                }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "identifier": "update_stake",
+            "inputs": [
+                {
+                    "name": "caller",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "epoch",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "block",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "timestamp",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "update_stake_event",
+                    "type": "UpdateStakeEvent"
+                }
+            ]
+        },
+        {
+            "identifier": "claim_rewards",
+            "inputs": [
+                {
+                    "name": "caller",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "epoch",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "block",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "timestamp",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "claim_rewards_event",
+                    "type": "ClaimRewardsEvent"
+                }
+            ]
+        },
+        {
+            "identifier": "deposit_reward",
+            "inputs": [
+                {
+                    "name": "caller",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "epoch",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "block",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "timestamp",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "deposit_reward_event",
+                    "type": "DepositRewardEvent"
+                }
+            ]
+        },
+        {
+            "identifier": "fee_collector_stats",
+            "inputs": [
+                {
+                    "name": "epoch",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "block",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "timestamp",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "farm_fee_collector_stats_event",
+                    "type": "FarmFeeCollectorStatsEvent",
+                    "indexed": true
+                }
+            ]
         }
     ],
     "esdtAttributes": [],
     "hasCallback": false,
     "types": {
+        "ClaimRewardsEvent": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "caller",
+                    "type": "Address"
+                },
+                {
+                    "name": "lp_token_id",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "claimed_rewards",
+                    "type": "List<EsdtTokenPayment>"
+                }
+            ]
+        },
+        "DepositRewardEvent": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "caller",
+                    "type": "Address"
+                },
+                {
+                    "name": "reward_token_id",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "total_staked_lp_amount",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "new_reward_rate",
+                    "type": "BigUint"
+                }
+            ]
+        },
         "EsdtTokenPayment": {
             "type": "struct",
             "fields": [
@@ -357,6 +613,27 @@
                 }
             ]
         },
+        "FarmFeeCollectorStatsEvent": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "reward_rates",
+                    "type": "List<EsdtTokenPayment>"
+                },
+                {
+                    "name": "total_staked",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "total_users_in_stake",
+                    "type": "u32"
+                },
+                {
+                    "name": "total_distributed",
+                    "type": "List<EsdtTokenPayment>"
+                }
+            ]
+        },
         "RewardTokenState": {
             "type": "struct",
             "fields": [
@@ -375,6 +652,27 @@
                 {
                     "name": "pending_rewards",
                     "type": "BigUint"
+                }
+            ]
+        },
+        "UpdateStakeEvent": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "caller",
+                    "type": "Address"
+                },
+                {
+                    "name": "lp_token_id",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "updated_stake",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "pending_rewards",
+                    "type": "List<EsdtTokenPayment>"
                 }
             ]
         }
