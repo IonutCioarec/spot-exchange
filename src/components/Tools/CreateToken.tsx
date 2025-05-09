@@ -128,7 +128,7 @@ const CreateToken = () => {
       setDecimalsError('Must be between 0 - 18');
     } else if (!/^[0-9]*$/.test(value)) {
       setDecimalsError('Invalid value');
-    }else {
+    } else {
       setDecimalsError('');
     }
 
@@ -479,12 +479,21 @@ const CreateToken = () => {
         </Row>
 
         {isLoggedIn ? (
-          <Button
-            className="btn-intense-default b-r-xs hover-btn btn-intense-success2 mt-4 fullWidth"
-            sx={{ height: '30px' }}
-          >
-            Issue Token
-          </Button>
+          (nameError || tickerError || amountError || decimalsError) ? (
+            <Button
+              className="btn-intense-default b-r-xs hover-btn btn-intense-danger mt-4 fullWidth"
+              sx={{ height: '30px' }}
+            >
+              Issue Token
+            </Button>
+          ) : (
+            <Button
+              className="btn-intense-default b-r-xs hover-btn btn-intense-success2 mt-4 fullWidth"
+              sx={{ height: '30px' }}
+            >
+              Issue Token
+            </Button>
+          )
         ) : (
           <Button
             className="btn-intense-default b-r-xs hover-btn btn-intense-success2 mt-4 fullWidth"
