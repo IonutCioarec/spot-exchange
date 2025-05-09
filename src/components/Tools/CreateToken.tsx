@@ -113,6 +113,7 @@ const CreateToken = () => {
   };
 
   const [decimals, setDecimals] = useState<string>('18');
+  const [decimalsError, setDecimalsError] = useState<string | null>(null);
   const handleDecimalsChange = (input: any) => {
     let value: string;
     if (typeof input === 'string') {
@@ -121,17 +122,14 @@ const CreateToken = () => {
       value = input.target.value;
     }
 
-    if (value === '') {
-      setDecimals('');
-    }
-
-    if (Number(value) > 18) {
-      setDecimals('18');
-      return;
-    }
-
-    if (isNaN(Number(value)) || !value) {
-      return;
+    if (!value || value === '') {
+      setDecimalsError('Required');
+    } else if (Number(value) < 0 || Number(value) > 18) {
+      setDecimalsError('Must be between 0 - 18');
+    } else if (!/^[0-9]*$/.test(value)) {
+      setDecimalsError('Invalid value');
+    }else {
+      setDecimalsError('');
     }
 
     setDecimals(value);
@@ -342,6 +340,14 @@ const CreateToken = () => {
           value={decimals}
           autoComplete="off"
           onChange={handleDecimalsChange}
+          error={!!decimalsError}
+          helperText={
+            decimalsError ? (
+              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                {decimalsError}
+              </span>
+            ) : null
+          }
           className='mt-1'
           InputProps={{
             style: { color: 'silver', fontFamily: 'Red Rose' },
