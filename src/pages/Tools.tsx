@@ -2,18 +2,18 @@ import 'assets/scss/tools.scss';
 import { Row, Col } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { useGetIsLoggedIn } from 'hooks';
-
 import { useMobile, useTablet } from 'utils/responsive';
 import ScrollToTopButton from 'components/ScrollToTopButton';
 import LightSpot from 'components/LightSpot';
 import { useNavigate } from 'react-router-dom';
+import CreateToken from 'components/Tools/CreateToken';
 
 const Tools = () => {
   const isMobile = useMobile();
   const isTablet = useTablet();
   const isLoggedIn = useGetIsLoggedIn();
   const navigate = useNavigate();
-  
+
 
   return (
     <div className="tools-page-height">
@@ -29,6 +29,13 @@ const Tools = () => {
       {isMobile && (
         <ScrollToTopButton targetRefId='topSection' />
       )}
+
+      {/* Create Token Section */}
+      <Row>
+        <Col xs={12} lg={6}>
+          <CreateToken />
+        </Col>
+      </Row>
 
       {/* Add light spots */}
       <LightSpot size={isMobile ? 220 : 350} x={isMobile ? '25%' : '40%'} y="40%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
