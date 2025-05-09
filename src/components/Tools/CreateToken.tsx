@@ -60,7 +60,7 @@ const CreateToken = () => {
     setName(newName);
 
     if (!newName) {
-      setNameError('Name is required');
+      setNameError('Required');
     } else if (newName.length < 3 || newName.length > 50) {
       setNameError('Must be between 3 - 50 characters long');
     } else if (!/^[a-zA-Z0-9]*$/.test(newName)) {
@@ -71,9 +71,21 @@ const CreateToken = () => {
   };
 
   const [ticker, setTicker] = useState<string>('');
+  const [tickerError, setTickerError] = useState<string | null>(null);
   const handleTickerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+    const rawValue = event.target.value;
+    const value = rawValue.toUpperCase();
     setTicker(value);
+
+    if (!value) {
+      setTickerError('Required');
+    } else if (value.length < 3 || value.length > 10) {
+      setTickerError('Must be between 3 - 10 characters long');
+    } else if (!/^[A-Z0-9]*$/.test(value)) {
+      setTickerError('Alphanumeric uppercase characters only');
+    } else {
+      setTickerError('');
+    }
   };
 
   const [amount, setAmount] = useState<string>('');
@@ -219,6 +231,14 @@ const CreateToken = () => {
           value={ticker}
           autoComplete="off"
           onChange={handleTickerChange}
+          error={!!tickerError}
+          helperText={
+            tickerError ? (
+              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                {tickerError}
+              </span>
+            ) : null
+          }
           className='mt-1'
           InputProps={{
             style: { color: 'silver', fontFamily: 'Red Rose' },
