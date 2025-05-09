@@ -89,6 +89,7 @@ const CreateToken = () => {
   };
 
   const [amount, setAmount] = useState<string>('');
+  const [amountError, setAmountError] = useState<string | null>(null);
   const handleAmountChange = (input: any) => {
     let value: string;
     if (typeof input === 'string') {
@@ -100,12 +101,14 @@ const CreateToken = () => {
 
     if (rawValue === '') {
       setAmount('');
+      setAmountError('Required');
+    } else {
+      setAmountError('');
     }
 
     if (isNaN(Number(rawValue)) || !rawValue) {
       return;
     }
-
     setAmount(intlNumberFormat(parseFloat(rawValue), 0, 20));
   };
 
@@ -285,6 +288,14 @@ const CreateToken = () => {
           value={amount}
           autoComplete="off"
           onChange={handleAmountChange}
+          error={!!amountError}
+          helperText={
+            amountError ? (
+              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                {amountError}
+              </span>
+            ) : null
+          }
           className='mt-1'
           InputProps={{
             style: { color: 'silver', fontFamily: 'Red Rose' },
