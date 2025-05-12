@@ -522,7 +522,7 @@ const CreateToken = () => {
                 sx={{ height: '30px' }}
                 onClick={issueToken}
               >
-                Issue Token
+                Issue Token (0.05 EGLD)
               </Button>
             )
           ) : (
