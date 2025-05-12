@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CustomTooltip from 'components/CustomTooltip';
+import { useIssueToken } from 'hooks/transactions/useIssueToken';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -170,19 +171,33 @@ const CreateToken = () => {
   };
 
   const [open, setOpen] = useState(false);
+  const issueToken = useIssueToken({
+    name,
+    ticker,
+    amount,
+    decimals,
+    roles: {
+      canFreeze: freezable,
+      canWipe: wipeable,
+      canPause: pauseable,
+      canChangeOwner: changeable,
+      canUpgrade: upgradeable,
+      canAddSpecialRoles: specialRoles
+    }
+  });
 
   return (
     <div>
-      <div className={`create-token-container mt-3 mb-5 ${open ? 'tool-active' : ''}`}>
-        <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center ${open ? 'px-4 pt-4' : 'px-4 pt-3'}`} onClick={() => setOpen(!open)}>
-          <p className={`h5 mb-0 text-white ${open ? 'mx-auto text-center' : ''}`}>Issue Token</p>          
-            {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' style={{ color: 'white' }} />}
+      <div className={`create-token-container mb-5 ${open ? 'tool-active' : ''}`}>
+        <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center ${open ? 'px-4 pt-3' : 'px-4 pt-2'}`} onClick={() => setOpen(!open)}>
+          <p className={`h5 text-white ${open ? 'mx-auto text-center mb-0' : 'mb-2'}`}>Issue Token</p>
+          {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' className='mb-2' style={{ color: 'white' }} />}
         </div>
         <motion.div
           style={{ overflow: 'hidden' }}
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
-          className={open ? 'p-4' : 'p-2'}
+          className={open ? 'p-4' : ''}
         >
           <p className='small ms-1 mb-0 text-silver required'>Name</p>
           <TextField
@@ -505,6 +520,7 @@ const CreateToken = () => {
               <Button
                 className="btn-intense-default b-r-xs hover-btn btn-intense-success2 mt-4 fullWidth"
                 sx={{ height: '30px' }}
+                onClick={issueToken}
               >
                 Issue Token
               </Button>

@@ -31,8 +31,8 @@ const Tools = () => {
       )}
 
       {/* Create Token Section */}
-      <Row>
-        <Col xs={12} lg={6}>
+      <Row className='mt-1'>
+        <Col xs={12} lg={6} className='mt-2'>
           <CreateToken />
         </Col>
       </Row>
