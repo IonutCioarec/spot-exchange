@@ -27,8 +27,14 @@
 }
 
 .create-token-container {
-  padding: 25px;
   background-color: rgba(40, 40, 40, 0.6);
   border-radius: 10px;
   box-shadow: 10px 0 40px rgba(63, 142, 90, 0.1), -10px 0 40px rgba(63, 142, 90, 0.1);
+}
+
+.tools-title:hover p {
+  color: #3FAC5A !important;
+}
+.tools-title:hover svg {
+  color: #3FAC5A !important;
 }

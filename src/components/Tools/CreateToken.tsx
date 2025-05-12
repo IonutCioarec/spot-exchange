@@ -5,6 +5,10 @@ import { Button, FormControlLabel, styled, Switch, TextField } from '@mui/materi
 import { Row, Col } from 'react-bootstrap';
 import { useGetIsLoggedIn } from 'hooks';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CustomTooltip from 'components/CustomTooltip';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -165,345 +169,357 @@ const CreateToken = () => {
     setSpecialRoles(event.target.checked);
   };
 
+  const [open, setOpen] = useState(false);
+
   return (
     <div>
       <div className='create-token-container mt-3'>
-        <p className='h5 mt-1 mb-0 text-white text-center mb-3'>Issue Token</p>
-        <p className='small ms-1 mb-0 text-silver required'>Name</p>
-        <TextField
-          type='text'
-          fullWidth
-          size='small'
-          variant='outlined'
-          value={name}
-          autoComplete="off"
-          onChange={handleNameChange}
-          error={!!nameError}
-          helperText={
-            nameError ? (
-              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                {nameError}
-              </span>
-            ) : null
-          }
-          className='mt-1'
-          InputProps={{
-            style: { color: 'silver', fontFamily: 'Red Rose' },
-          }}
-          InputLabelProps={{
-            style: { color: 'silver', fontFamily: 'Red Rose' },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'transparent',
-                background: 'rgba(18, 18, 18, 0.3)',
-                borderRadius: '5px',
-                color: 'silver',
+        <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center ${open ? 'px-4 pt-4' : 'px-4 pt-3'}`} onClick={() => setOpen(!open)}>
+          <p className={`h5 mb-0 text-white ${open ? 'mx-auto text-center' : ''}`}>Issue Token</p>          
+            {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' style={{ color: 'white' }} />}
+        </div>
+        <motion.div
+          style={{ overflow: 'hidden' }}
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+          className={open ? 'p-4' : 'p-2'}
+        >
+          <p className='small ms-1 mb-0 text-silver required'>Name</p>
+          <TextField
+            type='text'
+            fullWidth
+            size='small'
+            variant='outlined'
+            value={name}
+            autoComplete="off"
+            onChange={handleNameChange}
+            error={!!nameError}
+            helperText={
+              nameError ? (
+                <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                  {nameError}
+                </span>
+              ) : null
+            }
+            className='mt-1'
+            InputProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            InputLabelProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'transparent',
+                  background: 'rgba(18, 18, 18, 0.3)',
+                  borderRadius: '5px',
+                  color: 'silver',
+                  fontSize: '14px',
+                },
+                '&:hover fieldset': {
+                  borderColor: nameError ? '#d32f2f' : '#3FAC5A',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: nameError ? '#d32f2f' : '#3FAC5A',
+                },
+                fontFamily: 'Red Rose',
                 fontSize: '14px',
               },
-              '&:hover fieldset': {
-                borderColor: nameError ? '#d32f2f' : '#3FAC5A',
+              '& input[type=number]': {
+                MozAppearance: 'textfield',
+                WebkitAppearance: 'none',
+                appearance: 'none',
               },
-              '&.Mui-focused fieldset': {
-                borderColor: nameError ? '#d32f2f' : '#3FAC5A',
+              '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                WebkitAppearance: 'none',
+                margin: 0,
               },
-              fontFamily: 'Red Rose',
-              fontSize: '14px',
-            },
-            '& input[type=number]': {
-              MozAppearance: 'textfield',
-              WebkitAppearance: 'none',
-              appearance: 'none',
-            },
-            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-              WebkitAppearance: 'none',
-              margin: 0,
-            },
-          }}
-        />
+            }}
+          />
 
-        <p className='small mt-4 mb-0 text-silver ms-1'>Ticker</p>
-        <TextField
-          type='text'
-          fullWidth
-          size='small'
-          variant='outlined'
-          value={ticker}
-          autoComplete="off"
-          onChange={handleTickerChange}
-          error={!!tickerError}
-          helperText={
-            tickerError ? (
-              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                {tickerError}
-              </span>
-            ) : null
-          }
-          className='mt-1'
-          InputProps={{
-            style: { color: 'silver', fontFamily: 'Red Rose' },
-          }}
-          InputLabelProps={{
-            style: { color: 'silver', fontFamily: 'Red Rose' },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'transparent',
-                background: 'rgba(18, 18, 18, 0.3)',
-                borderRadius: '5px',
-                color: 'silver',
+          <p className='small mt-4 mb-0 text-silver ms-1'>Ticker</p>
+          <TextField
+            type='text'
+            fullWidth
+            size='small'
+            variant='outlined'
+            value={ticker}
+            autoComplete="off"
+            onChange={handleTickerChange}
+            error={!!tickerError}
+            helperText={
+              tickerError ? (
+                <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                  {tickerError}
+                </span>
+              ) : null
+            }
+            className='mt-1'
+            InputProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            InputLabelProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'transparent',
+                  background: 'rgba(18, 18, 18, 0.3)',
+                  borderRadius: '5px',
+                  color: 'silver',
+                  fontSize: '14px',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'transparent',
+                },
+                fontFamily: 'Red Rose',
                 fontSize: '14px',
               },
-              '&:hover fieldset': {
-                borderColor: 'transparent',
+              '& input[type=number]': {
+                MozAppearance: 'textfield',
+                WebkitAppearance: 'none',
+                appearance: 'none',
               },
-              '&.Mui-focused fieldset': {
-                borderColor: 'transparent',
+              '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                WebkitAppearance: 'none',
+                margin: 0,
               },
-              fontFamily: 'Red Rose',
-              fontSize: '14px',
-            },
-            '& input[type=number]': {
-              MozAppearance: 'textfield',
-              WebkitAppearance: 'none',
-              appearance: 'none',
-            },
-            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-              WebkitAppearance: 'none',
-              margin: 0,
-            },
-          }}
-        />
+            }}
+          />
 
-        <p className='small mt-4 mb-0 text-silver ms-1'>Mint Amount</p>
-        <TextField
-          type='text'
-          fullWidth
-          size='small'
-          variant='outlined'
-          value={amount}
-          autoComplete="off"
-          onChange={handleAmountChange}
-          error={!!amountError}
-          helperText={
-            amountError ? (
-              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                {amountError}
-              </span>
-            ) : null
-          }
-          className='mt-1'
-          InputProps={{
-            style: { color: 'silver', fontFamily: 'Red Rose' },
-          }}
-          InputLabelProps={{
-            style: { color: 'silver', fontFamily: 'Red Rose' },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'transparent',
-                background: 'rgba(18, 18, 18, 0.3)',
-                borderRadius: '5px',
-                color: 'silver',
+          <p className='small mt-4 mb-0 text-silver ms-1'>Mint Amount</p>
+          <TextField
+            type='text'
+            fullWidth
+            size='small'
+            variant='outlined'
+            value={amount}
+            autoComplete="off"
+            onChange={handleAmountChange}
+            error={!!amountError}
+            helperText={
+              amountError ? (
+                <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                  {amountError}
+                </span>
+              ) : null
+            }
+            className='mt-1'
+            InputProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            InputLabelProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'transparent',
+                  background: 'rgba(18, 18, 18, 0.3)',
+                  borderRadius: '5px',
+                  color: 'silver',
+                  fontSize: '14px',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'transparent',
+                },
+                fontFamily: 'Red Rose',
                 fontSize: '14px',
               },
-              '&:hover fieldset': {
-                borderColor: 'transparent',
+              '& input[type=number]': {
+                MozAppearance: 'textfield',
+                WebkitAppearance: 'none',
+                appearance: 'none',
               },
-              '&.Mui-focused fieldset': {
-                borderColor: 'transparent',
+              '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                WebkitAppearance: 'none',
+                margin: 0,
               },
-              fontFamily: 'Red Rose',
-              fontSize: '14px',
-            },
-            '& input[type=number]': {
-              MozAppearance: 'textfield',
-              WebkitAppearance: 'none',
-              appearance: 'none',
-            },
-            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-              WebkitAppearance: 'none',
-              margin: 0,
-            },
-          }}
-        />
+            }}
+          />
 
-        <p className='small mt-4 mb-0 text-silver ms-1'>Decimals</p>
-        <TextField
-          type='text'
-          fullWidth
-          size='small'
-          variant='outlined'
-          value={decimals}
-          autoComplete="off"
-          onChange={handleDecimalsChange}
-          error={!!decimalsError}
-          helperText={
-            decimalsError ? (
-              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                {decimalsError}
-              </span>
-            ) : null
-          }
-          className='mt-1'
-          InputProps={{
-            style: { color: 'silver', fontFamily: 'Red Rose' },
-          }}
-          InputLabelProps={{
-            style: { color: 'silver', fontFamily: 'Red Rose' },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'transparent',
-                background: 'rgba(18, 18, 18, 0.3)',
-                borderRadius: '5px',
-                color: 'silver',
+          <p className='small mt-4 mb-0 text-silver ms-1'>Decimals</p>
+          <TextField
+            type='text'
+            fullWidth
+            size='small'
+            variant='outlined'
+            value={decimals}
+            autoComplete="off"
+            onChange={handleDecimalsChange}
+            error={!!decimalsError}
+            helperText={
+              decimalsError ? (
+                <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                  {decimalsError}
+                </span>
+              ) : null
+            }
+            className='mt-1'
+            InputProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            InputLabelProps={{
+              style: { color: 'silver', fontFamily: 'Red Rose' },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'transparent',
+                  background: 'rgba(18, 18, 18, 0.3)',
+                  borderRadius: '5px',
+                  color: 'silver',
+                  fontSize: '14px',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'transparent',
+                },
+                fontFamily: 'Red Rose',
                 fontSize: '14px',
               },
-              '&:hover fieldset': {
-                borderColor: 'transparent',
+              '& input[type=number]': {
+                MozAppearance: 'textfield',
+                WebkitAppearance: 'none',
+                appearance: 'none',
               },
-              '&.Mui-focused fieldset': {
-                borderColor: 'transparent',
+              '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                WebkitAppearance: 'none',
+                margin: 0,
               },
-              fontFamily: 'Red Rose',
-              fontSize: '14px',
-            },
-            '& input[type=number]': {
-              MozAppearance: 'textfield',
-              WebkitAppearance: 'none',
-              appearance: 'none',
-            },
-            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-              WebkitAppearance: 'none',
-              margin: 0,
-            },
-          }}
-        />
+            }}
+          />
 
-        <Row className='mt-4'>
-          <Col xs={12} lg={6}>
-            <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
-              <p className={`font-size-sm mb-0 ${freezable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Freezable</p>
-              <FormControlLabel
-                control={
-                  <CustomSwitch
-                    checked={freezable}
-                    onChange={handleFreezableToggle}
-                  />
-                }
-                label={false}
-                style={{ marginRight: '0' }}
-              />
-            </div>
-          </Col>
-          <Col xs={12} lg={6}>
-            <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
-              <p className={`font-size-sm mb-0 ${wipeable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Wipeable</p>
-              <FormControlLabel
-                control={
-                  <CustomSwitch
-                    checked={wipeable}
-                    onChange={handleWipeableToggle}
-                  />
-                }
-                label={false}
-                style={{ marginRight: '0' }}
-              />
-            </div>
-          </Col>
-          <Col xs={12} lg={6}>
-            <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
-              <p className={`font-size-sm mb-0 ${pauseable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Pauseable</p>
-              <FormControlLabel
-                control={
-                  <CustomSwitch
-                    checked={pauseable}
-                    onChange={handlePauseableToggle}
-                  />
-                }
-                label={false}
-                style={{ marginRight: '0' }}
-              />
-            </div>
-          </Col>
-          <Col xs={12} lg={6}>
-            <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
-              <p className={`font-size-sm mb-0 ${upgradeable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Upgradeable</p>
-              <FormControlLabel
-                control={
-                  <CustomSwitch
-                    checked={upgradeable}
-                    onChange={handleUpgradeableToggle}
-                  />
-                }
-                label={false}
-                style={{ marginRight: '0' }}
-              />
-            </div>
-          </Col>
-          <Col xs={12} lg={6}>
-            <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
-              <p className={`font-size-sm mb-0 ${changeable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Changeable Owner</p>
-              <FormControlLabel
-                control={
-                  <CustomSwitch
-                    checked={changeable}
-                    onChange={handleChangeableToggle}
-                  />
-                }
-                label={false}
-                style={{ marginRight: '0' }}
-              />
-            </div>
-          </Col>
-          <Col xs={12} lg={6}>
-            <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
-              <p className={`font-size-sm mb-0 ${specialRoles ? 'text-[#3FAC5A]' : 'text-silver'}`}>Can Add Special Roles</p>
-              <FormControlLabel
-                control={
-                  <CustomSwitch
-                    checked={specialRoles}
-                    onChange={handleSpecialRolesToggle}
-                  />
-                }
-                label={false}
-                style={{ marginRight: '0' }}
-              />
-            </div>
-          </Col>
-        </Row>
+          <Row className='mt-4'>
+            <Col xs={12} lg={6}>
+              <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
+                <p className={`font-size-sm mb-0 ${freezable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Freezable</p>
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      checked={freezable}
+                      onChange={handleFreezableToggle}
+                    />
+                  }
+                  label={false}
+                  style={{ marginRight: '0' }}
+                />
+              </div>
+            </Col>
+            <Col xs={12} lg={6}>
+              <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
+                <p className={`font-size-sm mb-0 ${wipeable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Wipeable</p>
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      checked={wipeable}
+                      onChange={handleWipeableToggle}
+                    />
+                  }
+                  label={false}
+                  style={{ marginRight: '0' }}
+                />
+              </div>
+            </Col>
+            <Col xs={12} lg={6}>
+              <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
+                <p className={`font-size-sm mb-0 ${pauseable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Pauseable</p>
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      checked={pauseable}
+                      onChange={handlePauseableToggle}
+                    />
+                  }
+                  label={false}
+                  style={{ marginRight: '0' }}
+                />
+              </div>
+            </Col>
+            <Col xs={12} lg={6}>
+              <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
+                <p className={`font-size-sm mb-0 ${upgradeable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Upgradeable</p>
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      checked={upgradeable}
+                      onChange={handleUpgradeableToggle}
+                    />
+                  }
+                  label={false}
+                  style={{ marginRight: '0' }}
+                />
+              </div>
+            </Col>
+            <Col xs={12} lg={6}>
+              <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
+                <p className={`font-size-sm mb-0 ${changeable ? 'text-[#3FAC5A]' : 'text-silver'}`}>Changeable Owner</p>
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      checked={changeable}
+                      onChange={handleChangeableToggle}
+                    />
+                  }
+                  label={false}
+                  style={{ marginRight: '0' }}
+                />
+              </div>
+            </Col>
+            <Col xs={12} lg={6}>
+              <div className={`d-flex justify-content-between align-items-center ${isMobile ? '' : 'mx-3'}`}>
+                <p className={`font-size-sm mb-0 ${specialRoles ? 'text-[#3FAC5A]' : 'text-silver'}`}>Can Add Special Roles</p>
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      checked={specialRoles}
+                      onChange={handleSpecialRolesToggle}
+                    />
+                  }
+                  label={false}
+                  style={{ marginRight: '0' }}
+                />
+              </div>
+            </Col>
+          </Row>
 
-        {isLoggedIn ? (
-          (nameError || tickerError || amountError || decimalsError) ? (
-            <Button
-              className="btn-intense-default b-r-xs hover-btn btn-intense-danger mt-4 fullWidth"
-              sx={{ height: '30px' }}
-            >
-              Issue Token
-            </Button>
+          {isLoggedIn ? (
+            (nameError || tickerError || amountError || decimalsError) ? (
+              <Button
+                className="btn-intense-default b-r-xs hover-btn btn-intense-danger mt-4 fullWidth"
+                sx={{ height: '30px' }}
+              >
+                Issue Token
+              </Button>
+            ) : (
+              <Button
+                className="btn-intense-default b-r-xs hover-btn btn-intense-success2 mt-4 fullWidth"
+                sx={{ height: '30px' }}
+              >
+                Issue Token
+              </Button>
+            )
           ) : (
             <Button
               className="btn-intense-default b-r-xs hover-btn btn-intense-success2 mt-4 fullWidth"
               sx={{ height: '30px' }}
+              component={Link}
+              to="/unlock"
             >
-              Issue Token
+              Connect Wallet
             </Button>
-          )
-        ) : (
-          <Button
-            className="btn-intense-default b-r-xs hover-btn btn-intense-success2 mt-4 fullWidth"
-            sx={{ height: '30px' }}
-            component={Link}
-            to="/unlock"
-          >
-            Connect Wallet
-          </Button>
-        )}
+          )}
+        </motion.div>
       </div>
     </div>
   );
