@@ -11,6 +11,7 @@ export interface CreatedToken {
   logo: string;
   balance: string;
   branded: boolean;
+  assets: [];
 }
 export type CreatedTokens = Record<string, CreatedToken>;
 
