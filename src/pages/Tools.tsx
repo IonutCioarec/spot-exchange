@@ -31,7 +31,7 @@ const Tools = () => {
         <ScrollToTopButton targetRefId='topSection' />
       )}
 
-      <Row className='mt-1'>
+      <Row className='mt-1 mb-5'>
         {/* Create Token Section */}
         <Col xs={12} lg={6} className='mt-2'>
           <CreateToken />

@@ -188,7 +188,7 @@ const CreateToken = () => {
 
   return (
     <div>
-      <div className={`create-token-container mb-5 ${open ? 'tool-active' : ''}`}>
+      <div className={`create-token-container mb-2 ${open ? 'tool-active' : ''}`}>
         <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center ${open ? 'px-4 pt-3' : 'px-4 pt-2'}`} onClick={() => setOpen(!open)}>
           <p className={`h5 text-white ${open ? 'mx-auto text-center mb-0' : 'mb-2'}`}>Issue Token</p>
           {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' className='mb-2' style={{ color: 'white' }} />}

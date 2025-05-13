@@ -40,7 +40,7 @@ const OwnedTokens = () => {
 
   return (
     <div>
-      <div className={`create-token-container mb-5 ${open ? 'tool-active' : ''}`}>
+      <div className={`create-token-container mb-2 ${open ? 'tool-active' : ''}`}>
         <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center ${open ? 'px-4 pt-3' : 'px-4 pt-2'}`} onClick={() => setOpen(!open)}>
           <p className={`h5 text-white ${open ? 'mx-auto text-center mb-0' : 'mb-2'}`}>Branding Token</p>
           {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' className='mb-2' style={{ color: 'white' }} />}
@@ -58,16 +58,16 @@ const OwnedTokens = () => {
             <div key={`created-token-${token.token_id}`} className='text-silver'>
               <hr className='my-3' style={{ opacity: '0.3', color: 'green' }} />
               <Row className='d-flex align-items-center'>
-                <Col xs={6} lg={2}>
+                <Col xs={3} lg={2}>
                   <img
                     src={token.logo}
                     alt={token.token_id}
-                    style={{ width: 50, height: 50, flexShrink: 0 }}
+                    style={{ width: isMobile ? 55 : 50, height: isMobile ? 55 : 50, flexShrink: 0 }}
                     className='me-1'
                   />
                 </Col>
-                <Col xs={6} lg={7}>
-                  <div className='m-l-n-md me-3'>
+                <Col xs={9} lg={7}>
+                  <div className={`${isMobile ? '' : 'm-l-n-md me-3'}`}>
                     <p className='mb-0 text-white'>
                       {token.token_id}
                       <span
@@ -80,18 +80,35 @@ const OwnedTokens = () => {
                     <p className='font-size-xs text-justified mb-0'>{token?.assets?.description}</p>
                   </div>
                 </Col>
-                <Col xs={6} lg={3}>
-                  <Button
-                    component={Link}
-                    to={`/token-assets/${token.token_id}`}
-                    state={{ createdTokens }}
-                    className="btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth"
-                    sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
-                  >
-                    {token.branded ? 'Update Assets' : 'Set Assets'}
-                  </Button>
-                </Col>
+                {!isMobile && (
+                  <Col xs={12} lg={3}>
+                    <Button
+                      component={Link}
+                      to={`/token-assets/${token.token_id}`}
+                      state={{ createdTokens }}
+                      className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth`}
+                      sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
+                    >
+                      {token.branded ? 'Update Assets' : 'Set Assets'}
+                    </Button>
+                  </Col>
+                )}
               </Row>
+              {isMobile && (
+                <Row>
+                  <Col xs={12}>
+                    <Button
+                      component={Link}
+                      to={`/token-assets/${token.token_id}`}
+                      state={{ createdTokens }}
+                      className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth mt-3`}
+                      sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
+                    >
+                      {token.branded ? 'Update Assets' : 'Set Assets'}
+                    </Button>
+                  </Col>
+                </Row>
+              )}
             </div>
           ))}
           {!isLoggedIn && (
