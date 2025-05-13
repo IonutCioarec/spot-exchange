@@ -10,6 +10,7 @@ export interface CreatedToken {
   decimals: number;
   logo: string;
   balance: string;
+  branded: boolean;
 }
 export type CreatedTokens = Record<string, CreatedToken>;
 
