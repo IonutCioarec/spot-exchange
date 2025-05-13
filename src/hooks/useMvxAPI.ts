@@ -77,7 +77,7 @@ export const useMvxAPI = () => {
             logo: token?.assets?.pngUrl ?? logo,
             balance: token.balance,
             branded: token?.assets?.pngUrl ? true : false,
-            assets: token?.assets ?? []
+            assets: token?.assets ?? {}
           };
         });
       }
@@ -108,7 +108,7 @@ export const useMvxAPI = () => {
             logo: token?.assets?.pngUrl ?? logo,
             balance: token.balance,
             branded: token?.assets?.pngUrl ? true : false,
-            assets: token?.assets ?? []
+            assets: token?.assets ?? {}
           };
         });
       }
