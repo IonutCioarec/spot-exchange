@@ -75,7 +75,8 @@ export const useMvxAPI = () => {
             ticker: token.identifier.split('-')[0],
             decimals: token.decimals,
             logo: token?.assets?.pngUrl ?? logo,
-            balance: token.balance
+            balance: token.balance,
+            branded: token?.assets?.pngUrl ? true : false
           };
         });
       }
@@ -104,7 +105,8 @@ export const useMvxAPI = () => {
             ticker: token.identifier.split('-')[0],
             decimals: token.decimals,
             logo: token?.assets?.pngUrl ?? logo,
-            balance: token.balance
+            balance: token.balance,
+            branded: token?.assets?.pngUrl ? true : false
           };
         });
       }
