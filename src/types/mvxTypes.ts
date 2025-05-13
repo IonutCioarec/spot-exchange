@@ -4,6 +4,25 @@ export interface UserTokensState {
   status: 'loading' | 'succeeded' | 'failed';
 }
 
+export interface CreatedTokenSocial {
+  email?: string;
+  blog?: string;
+  twitter?: string;
+  whitepaper?: string;
+  coinmarketcap?: string;
+  coingecko?: string;
+}
+
+export interface CreatedTokenAssets {
+  website?: string;
+  description?: string;
+  ledgerSignature?: string;
+  social?: CreatedTokenSocial;
+  lockedAccounts?: Record<string, string>;
+  extraTokens?: string[];
+  status?: string;
+}
+
 export interface CreatedToken {
   token_id: string;
   ticker: string;
@@ -11,7 +30,7 @@ export interface CreatedToken {
   logo: string;
   balance: string;
   branded: boolean;
-  assets: [];
+  assets?: CreatedTokenAssets;
 }
 export type CreatedTokens = Record<string, CreatedToken>;
 
