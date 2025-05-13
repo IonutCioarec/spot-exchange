@@ -7,6 +7,7 @@ import ScrollToTopButton from 'components/ScrollToTopButton';
 import LightSpot from 'components/LightSpot';
 import { useNavigate } from 'react-router-dom';
 import CreateToken from 'components/Tools/CreateToken';
+import OwnedTokens from 'components/Tools/OwnedTokens';
 
 const Tools = () => {
   const isMobile = useMobile();
@@ -30,10 +31,15 @@ const Tools = () => {
         <ScrollToTopButton targetRefId='topSection' />
       )}
 
-      {/* Create Token Section */}
       <Row className='mt-1'>
+        {/* Create Token Section */}
         <Col xs={12} lg={6} className='mt-2'>
           <CreateToken />
+        </Col>
+
+        {/* Branding Tokens Section */}
+        <Col xs={12} lg={6} className='mt-2'>
+          <OwnedTokens />
         </Col>
       </Row>
 
