@@ -13,7 +13,6 @@ import {
   WebWalletLoginButton as WebWalletUrlLoginButton,
   // XaliasLoginButton
 } from 'components/Dapp/sdkDappComponents';
-import { nativeAuth } from 'config';
 import { RouteNamesEnum } from 'routes/routes';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
@@ -28,6 +27,7 @@ import walletLogoBlack from 'assets/img/xWalletLogoBlack.svg';
 import extensionLogo from 'assets/img/extensionLogo.svg';
 import { useGetIsLoggedIn } from 'hooks';
 import { useEffect } from 'react';
+import { nativeAuth } from 'config';
 
 type CommonPropsType =
   | OperaWalletLoginButtonPropsType
