@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import pairsReducer from './slices/pairsSlice';
 import tokensReducer from './slices/tokensSlice';
 import userTokensReducer from './slices/userTokensSlice';
+import authReducer from './slices/authSlice';
 
 // Create the Redux store
 const store = configureStore({
   reducer: {
+    auth: authReducer,
     pairs: pairsReducer,
     tokens: tokensReducer,
     userTokens: userTokensReducer
