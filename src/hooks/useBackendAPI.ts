@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { dexAPI } from 'config';
-import { Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice } from 'types/backendTypes';
+import { Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice, AuthState } from 'types/backendTypes';
 
 
 export const useBackendAPI = () => {
@@ -69,7 +69,7 @@ export const useBackendAPI = () => {
     currentLimit: number = 10,
     search_by_name: string = '',
     only_lp_tokens?: boolean,
-    sort_by: 'volume24h' | 'volume7d'| 'volume30d'| 'price_usd'| 'price_change24h' = 'price_usd',
+    sort_by: 'volume24h' | 'volume7d' | 'volume30d' | 'price_usd' | 'price_change24h' = 'price_usd',
     sort_direction: 'asc' | 'desc' = 'desc'
   ): Promise<TokensState> => {
     try {
@@ -145,7 +145,7 @@ export const useBackendAPI = () => {
   };
 
   // get validation signature for create new pool
-  const getValidationSignature = async (token_id: string): Promise<{signature:string}> => {
+  const getValidationSignature = async (token_id: string): Promise<{ signature: string }> => {
     try {
       const response = await axios.get(`${dexAPI}/validation/token-owner?token_identifier=${token_id}`, {
         headers: { Accept: 'application/json' },
@@ -154,7 +154,7 @@ export const useBackendAPI = () => {
     } catch (e) {
       console.error(e);
     }
-    return {signature: ''};
+    return { signature: '' };
   };
 
   // get the price of swaping token1 -> token2 without price impact
@@ -168,7 +168,7 @@ export const useBackendAPI = () => {
       console.error(e);
     }
     return {
-      pairs : [
+      pairs: [
         {
           'sc_address': '',
           'token_in': '',
@@ -182,12 +182,37 @@ export const useBackendAPI = () => {
     };
   };
 
+  const verifyAuth = async (accessToken: string): Promise<AuthState> => {
+    try {
+      const response = await axios.post(`http://localhost:3000/verify-auth`, {
+        accessToken,
+      });
+
+      response.data.status = 'succeeded';
+      return response.data;
+    } catch (error) {
+      console.error('Error verifying auth:', error);
+      return {
+        isAuthenticated: false,
+        address: '',
+        origin: '',
+        issued: 0,
+        expires: 0,
+        signature: '',
+        blockHash: '',
+        ttl: 0,
+        status: 'failed'
+      };
+    }
+  };
+
 
   return {
     getPairs,
     getTokens,
     getSwapPrice,
     getValidationSignature,
-    getSwapRawPrice
+    getSwapRawPrice,
+    verifyAuth
   };
 };
