@@ -44,3 +44,9 @@ export const network = {
   skipFetchFromServer: true,
   chainId: 'T '
 };
+
+export const nativeAuth = {
+  origin: 'http://localhost:3001',
+  apiUrl: 'https://testnet-api.multiversx.com',
+  expirySeconds: 21600,
+};
