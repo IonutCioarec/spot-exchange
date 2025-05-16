@@ -19,7 +19,8 @@ export interface Pair {
   volume_24h: string,
   volume_30d: string,
   volume_7d: string
-}
+};
+
 export interface Token {
   token_id: string,
   ticker: string,
@@ -35,7 +36,7 @@ export interface Token {
   volume_7d: string,
   volume_30d: string,
   supply: string
-}
+};
 
 export interface ExtraToken {
   token_id: string,
@@ -53,12 +54,12 @@ export interface ExtraToken {
   volume_30d: string,
   supply: string;
   balance: string;
-}
+};
 
 export interface FormattedRawValue {
   formatted: string;
   raw: string;
-}
+};
 
 export interface SwapStep {
   price_impact: FormattedRawValue;
@@ -69,13 +70,13 @@ export interface SwapStep {
   x_in: FormattedRawValue;
   x_reserve: FormattedRawValue;
   y_reserve: FormattedRawValue;
-}
+};
 
 export interface SwapPrice {
   cumulative_exchange_rate: FormattedRawValue;
   final_output: FormattedRawValue;
   steps: SwapStep[];
-}
+};
 
 export interface PairsState {
   pairs: Pair[];
@@ -89,7 +90,7 @@ export interface PairsState {
   sort_by: 'liquidity' | 'volume24h' | 'fees24h',
   sort_direction: 'asc' | 'desc',
   status: 'loading' | 'succeeded' | 'failed';  
-}
+};
 
 export interface TokensState {
   allTokens: Token[];
@@ -105,7 +106,7 @@ export interface TokensState {
   sort_by: 'volume24h' | 'volume7d' | 'volume30d' | 'price_usd' | 'price_change24h',
   sort_direction: 'asc' | 'desc',
   status: 'loading' | 'succeeded' | 'failed';
-}
+};
 
 export interface Farm {
   token1: string;
@@ -118,7 +119,7 @@ export interface Farm {
   stakingUsers: number;
   lp_token_id: string;
   totalRewardsList: { token: string; value: string }[];
-}
+};
 
 export type FarmsState = Record<string, Farm>;
 
@@ -129,7 +130,7 @@ export interface UserFarm {
     token: string;
     value: string;
   }[];
-}
+};
 
 export type UserFarmsState = Record<string, UserFarm>;
 
@@ -147,4 +148,16 @@ export interface SwapRawPrice {
     }
   ]
   final_price: number;
-}
+};
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  address: string;
+  origin: string;
+  issued: number;
+  expires: number;
+  signature: string;
+  blockHash: string;
+  ttl: number;
+  status: 'loading' | 'succeeded' | 'failed';
+};
