@@ -27,7 +27,7 @@ import walletLogoBlack from 'assets/img/xWalletLogoBlack.svg';
 import extensionLogo from 'assets/img/extensionLogo.svg';
 import { useGetIsLoggedIn } from 'hooks';
 import { useEffect } from 'react';
-import { nativeAuth } from 'config';
+import { nativeAuthConfig } from 'config';
 
 type CommonPropsType =
   | OperaWalletLoginButtonPropsType
@@ -41,7 +41,7 @@ export const Unlock = () => {
   const navigate = useNavigate();
   const commonProps: CommonPropsType = {
     callbackRoute: RouteNamesEnum.portfolio,
-    nativeAuth,
+    nativeAuth: nativeAuthConfig,
     onLoginRedirect: () => {
       navigate(RouteNamesEnum.portfolio);
     }

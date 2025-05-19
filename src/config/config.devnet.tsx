@@ -45,7 +45,7 @@ export const network = {
   chainId: 'D'
 };
 
-export const nativeAuth = {
+export const nativeAuthConfig = {
   origin: 'http://localhost:3001',
   apiUrl: 'https://devnet-api.multiversx.com',
   expirySeconds: 21600,

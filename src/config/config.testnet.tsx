@@ -45,7 +45,7 @@ export const network = {
   chainId: 'T '
 };
 
-export const nativeAuth = {
+export const nativeAuthConfig = {
   origin: 'http://localhost:3001',
   apiUrl: 'https://testnet-api.multiversx.com',
   expirySeconds: 21600,
