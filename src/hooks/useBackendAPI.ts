@@ -184,7 +184,7 @@ export const useBackendAPI = () => {
 
   const verifyAuth = async (accessToken: string): Promise<AuthState> => {
     try {
-      const response = await axios.post(`http://localhost:3000/verify-auth`, {
+      const response = await axios.post(`http://localhost:3001/verify-auth`, {
         accessToken,
       });
 

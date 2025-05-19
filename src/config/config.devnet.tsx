@@ -46,7 +46,7 @@ export const network = {
 };
 
 export const nativeAuthConfig = {
-  origin: 'http://localhost:3001',
+  origin: 'http://localhost:3000',
   apiUrl: 'https://devnet-api.multiversx.com',
   expirySeconds: 21600,
 };
