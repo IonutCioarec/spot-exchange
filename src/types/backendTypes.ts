@@ -161,3 +161,23 @@ export interface AuthState {
   ttl: number;
   status: 'loading' | 'succeeded' | 'failed';
 };
+
+export interface CreateBrandingPRResponse {
+  status: 'succeeded' | 'failed';
+  success?: boolean;
+  pullRequestUrl?: string;
+  pullRequestNumber?: number;
+  error?: string;
+};
+
+export interface CheckBrandingPRResponse {
+  status: 'succeeded' | 'failed';
+  success?: boolean;
+  prs?: Array<{
+    prInProgress: boolean;
+    prUrl: string;
+    state: string;
+    token_id: string;
+  }>;
+  error?: string;
+};
