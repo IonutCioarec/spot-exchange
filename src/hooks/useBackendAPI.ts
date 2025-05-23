@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { dexAPI } from 'config';
-import { Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice, AuthState } from 'types/backendTypes';
+import { Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice, AuthState, CreateBrandingPRResponse, CheckBrandingPRResponse } from 'types/backendTypes';
 
 
 export const useBackendAPI = () => {
@@ -184,7 +184,7 @@ export const useBackendAPI = () => {
 
   const verifyAuth = async (accessToken: string): Promise<AuthState> => {
     try {
-      const response = await axios.post(`http://localhost:3001/verify-auth`, {
+      const response = await axios.post(`http://localhost:3001/api/verify-auth`, {
         accessToken,
       });
 
@@ -206,20 +206,77 @@ export const useBackendAPI = () => {
     }
   };
 
-  const checkBrandingPR = async (accessToken: string, token_id: string): Promise<{prInProgress: boolean, status: string}> => {
+  const checkBrandingPR = async (accessToken: string): Promise<CheckBrandingPRResponse> => {
+    if (!accessToken) {
+      console.error('Missing accessToken');
+      return { status: 'failed', error: 'Missing accessToken' };
+    }
     try {
-      const response = await axios.get(`http://localhost:3002/check-branding-pr`, {
-        params: { token_id },
+      const response = await axios.get('http://localhost:3002/api/check-branding-pr', {
         headers: { 'X-Access-Token': accessToken },
       });
 
-      response.data.status = 'succeeded';
-      return response.data;
-    } catch (error) {
-      console.error('Error verifying auth:', error);
       return {
-        prInProgress: false,
-        status: 'failed'
+        status: 'succeeded',
+        success: response.data.success,
+        prs: response.data.prs,
+      };
+    } catch (error: any) {
+      console.error('Error checking branding PRs:', error.response?.data || error.message);
+      return {
+        status: 'failed',
+        error: error.response?.data?.error || 'Failed to check branding PRs',
+      };
+    }
+  };
+
+  const createBrandingPR = async (accessToken: string, token_id: string, signature: string, isBranded: boolean = false): Promise<CreateBrandingPRResponse> => {
+    // Validate inputs
+    if (!accessToken) {
+      console.error('Missing accessToken');
+      return { status: 'failed', error: 'Missing accessToken' };
+    }
+    if (!token_id) {
+      console.error('Missing token_id');
+      return { status: 'failed', error: 'Missing token_id' };
+    }
+    if (!signature) {
+      console.error('Missing signature');
+      return { status: 'failed', error: 'Missing signature' };
+    }
+
+    // Construct payload
+    const branch_name = `devnet/tokens/${token_id}`;
+    const pr_name = isBranded ? `${token_id} token branding` : `${token_id} token update`;
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3002/api/create-branding-pr',
+        {
+          accessToken,
+          token_id,
+          branch_name,
+          pr_name,
+          signature,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      return {
+        status: 'succeeded',
+        success: response.data.success,
+        pullRequestUrl: response.data.pullRequestUrl,
+        pullRequestNumber: response.data.pullRequestNumber,
+      };
+    } catch (error: any) {
+      console.error('Error creating branding PR:', error.response?.data || error.message);
+      return {
+        status: 'failed',
+        error: error.response?.data?.error || 'Failed to create branding PR',
       };
     }
   };
@@ -231,6 +288,7 @@ export const useBackendAPI = () => {
     getValidationSignature,
     getSwapRawPrice,
     verifyAuth,
-    checkBrandingPR
+    checkBrandingPR,
+    createBrandingPR
   };
 };
