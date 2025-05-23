@@ -206,6 +206,23 @@ export const useBackendAPI = () => {
     }
   };
 
+  const checkBrandingPR = async (accessToken: string, token_id: string): Promise<{prInProgress: boolean, status: string}> => {
+    try {
+      const response = await axios.get(`http://localhost:3002/check-branding-pr`, {
+        params: { token_id },
+        headers: { 'X-Access-Token': accessToken },
+      });
+
+      response.data.status = 'succeeded';
+      return response.data;
+    } catch (error) {
+      console.error('Error verifying auth:', error);
+      return {
+        prInProgress: false,
+        status: 'failed'
+      };
+    }
+  };
 
   return {
     getPairs,
@@ -213,6 +230,7 @@ export const useBackendAPI = () => {
     getSwapPrice,
     getValidationSignature,
     getSwapRawPrice,
-    verifyAuth
+    verifyAuth,
+    checkBrandingPR
   };
 };
