@@ -554,7 +554,7 @@ h6 {
 /* .btn-outline-light */
 .btn-outline-light {
   background-color: transparent !important;
-  border: 2px solid #e9ecef !important;
+  border: 1px solid #e9ecef !important;
   color: #e9ecef !important;
   transition: ease-out 0.5s !important;
   border-radius: 5px !important;
