@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatNumberWithCommas, intlNumberFormat } from 'utils/formatters';
 import { useMobile, useTablet } from 'utils/responsive';
 import { Button, FormControlLabel, styled, Switch, TextField } from '@mui/material';
@@ -53,7 +53,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const CreateToken = () => {
+const CreateToken = ({ open, setOpen }: { open: boolean, setOpen: Function }) => {
   const isMobile = useMobile();
   const isTablet = useTablet();
   const isLoggedIn = useGetIsLoggedIn();
@@ -170,7 +170,6 @@ const CreateToken = () => {
     setSpecialRoles(event.target.checked);
   };
 
-  const [open, setOpen] = useState(false);
   const issueToken = useIssueToken({
     name,
     ticker,
@@ -186,19 +185,26 @@ const CreateToken = () => {
     }
   });
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (open && containerRef.current && isMobile) {
+      containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [open]);
+
   return (
-    <div>
-      <div className={`create-token-container mb-2 ${open ? 'tool-active' : ''}`}>
-        <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center ${open ? 'px-4 pt-3' : 'px-4 pt-2'}`} onClick={() => setOpen(!open)}>
-          <p className={`h5 text-white ${open ? 'mx-auto text-center mb-0' : 'mb-2'}`}>Issue Token</p>
-          {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' className='mb-2' style={{ color: 'white' }} />}
-        </div>
-        <motion.div
-          style={{ overflow: 'hidden' }}
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
-          className={open ? 'p-4' : ''}
-        >
+    <div ref={containerRef}>
+      <motion.div
+        style={{ overflow: 'hidden' }}
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+        className='b-r-sm'
+      >
+        <div className={`create-token-container p-4 tool-active`}>
+          <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center mb-4 px-4 pt-3`} onClick={() => setOpen(!open)}>
+            <p className={`h5 text-white mx-auto text-center mb-0`}>Create Token</p>
+            {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' className='mb-2' style={{ color: 'white' }} />}
+          </div>
           <p className='small ms-1 mb-0 text-silver required'>Name</p>
           <TextField
             type='text'
@@ -514,7 +520,7 @@ const CreateToken = () => {
                 className="btn-intense-default b-r-xs hover-btn btn-intense-danger mt-4 fullWidth"
                 sx={{ height: '30px' }}
               >
-                Issue Token
+                Create Token
               </Button>
             ) : (
               <Button
@@ -522,7 +528,7 @@ const CreateToken = () => {
                 sx={{ height: '30px' }}
                 onClick={issueToken}
               >
-                Issue Token (0.05 EGLD)
+                Create Token (0.05 EGLD)
               </Button>
             )
           ) : (
@@ -535,9 +541,10 @@ const CreateToken = () => {
               Connect Wallet
             </Button>
           )}
-        </motion.div>
-      </div>
-    </div>
+        </div>
+      </motion.div>
+
+    </div >
   );
 };
 
