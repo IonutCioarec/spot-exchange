@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { formatNumberWithCommas, intlNumberFormat } from 'utils/formatters';
 import { useMobile, useTablet } from 'utils/responsive';
 import { Button, FormControlLabel, IconButton, styled, Switch, TextField } from '@mui/material';
@@ -15,14 +15,13 @@ import LanguageIcon from '@mui/icons-material/Language';
 import { network } from 'config';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
-const OwnedTokens = () => {
+const OwnedTokens = ({ open, setOpen }: { open: boolean, setOpen: Function }) => {
   const isMobile = useMobile();
   const isTablet = useTablet();
   const navigate = useNavigate();
   const { address } = useGetAccountInfo();
   const isLoggedIn = useGetIsLoggedIn();
 
-  const [open, setOpen] = useState(false);
   const [createdTokens, setCreatedTokens] = useState<CreatedTokens>({});
   const { getUserCreatedTokens } = useMvxAPI();
 
@@ -38,19 +37,26 @@ const OwnedTokens = () => {
     loadCreatedTokens();
   }, [address]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (open && containerRef.current && isMobile) {
+      containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [open]);
+
   return (
-    <div>
-      <div className={`create-token-container mb-2 ${open ? 'tool-active' : ''}`}>
-        <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center ${open ? 'px-4 pt-3' : 'px-4 pt-2'}`} onClick={() => setOpen(!open)}>
-          <p className={`h5 text-white ${open ? 'mx-auto text-center mb-0' : 'mb-2'}`}>Branding Token</p>
-          {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' className='mb-2' style={{ color: 'white' }} />}
-        </div>
-        <motion.div
-          style={{ overflow: 'hidden' }}
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
-          className={open ? 'p-4' : ''}
-        >
+    <div ref={containerRef}>
+      <motion.div
+        style={{ overflow: 'hidden' }}
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+        className='b-r-sm'
+      >
+        <div className={`create-token-container p-4 tool-active`}>
+          <div className={`cursor-pointer tools-title d-flex justify-content-between align-items-center mb-4 px-4 pt-3`} onClick={() => setOpen(!open)}>
+            <p className={`h5 text-white mx-auto text-center mb-0`}>Branding Token</p>
+            {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' className='mb-2' style={{ color: 'white' }} />}
+          </div>
           {(isLoggedIn && Object.values(createdTokens).length) && (
             <p className='mt-2 text-silver font-size-md'>These are the tokens you are the owner for:</p>
           )}
@@ -85,7 +91,7 @@ const OwnedTokens = () => {
                     <Button
                       component={Link}
                       to={`/token-assets/${token.token_id}`}
-                      state={{ createdTokens }}
+                      state={{ token: createdTokens[token.token_id] }}
                       className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth`}
                       sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
                     >
@@ -100,7 +106,7 @@ const OwnedTokens = () => {
                     <Button
                       component={Link}
                       to={`/token-assets/${token.token_id}`}
-                      state={{ createdTokens }}
+                      state={{ token: createdTokens[token.token_id] }}
                       className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth mt-3`}
                       sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
                     >
@@ -124,8 +130,8 @@ const OwnedTokens = () => {
           {(isLoggedIn && Object.values(createdTokens).length == 0) && (
             <p className='text-silver font-size-md m-t-n-md'>No created tokens? Create one token using the <span className='text-[#3FAC5A]'>Issue Token</span> section and come back</p>
           )}
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </div>
   );
 };
