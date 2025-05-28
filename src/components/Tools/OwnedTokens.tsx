@@ -67,12 +67,6 @@ const OwnedTokens = ({ open, setOpen }: { open: boolean, setOpen: Function }) =>
     const seconds = Math.floor((ms % 60000) / 1000);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
-  const loadstatusData = async () => {
-    if (tokenLogin?.nativeAuthToken && address) {
-      const newData = await checkBrandingPR(tokenLogin?.nativeAuthToken || '');
-      setPRStatus(newData);
-    }
-  }
 
   // Load data from localStorage or fetch new data
   const loadStatusData = async (forceFetch: boolean = false) => {
@@ -221,8 +215,9 @@ const OwnedTokens = ({ open, setOpen }: { open: boolean, setOpen: Function }) =>
                       component={Link}
                       to={`/token-assets/${token.token_id}`}
                       state={{ token: createdTokens[token.token_id] }}
-                      className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth`}
+                      className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth ${(prStatus && prStatus?.prs?.length && prStatus?.prs[0].prInProgress) ? 'btn-disabled' : ''}`}
                       sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
+                      disabled={(prStatus && prStatus?.prs?.length && prStatus?.prs[0].prInProgress) ? true : false}
                     >
                       {token.branded ? 'Update Assets' : 'Set Assets'}
                     </Button>
@@ -238,6 +233,7 @@ const OwnedTokens = ({ open, setOpen }: { open: boolean, setOpen: Function }) =>
                       state={{ token: createdTokens[token.token_id] }}
                       className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth mt-3`}
                       sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
+                      disabled={(prStatus && prStatus?.prs?.length && prStatus?.prs[0].prInProgress) ? true : false}
                     >
                       {token.branded ? 'Update Assets' : 'Set Assets'}
                     </Button>
