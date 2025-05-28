@@ -169,7 +169,7 @@ const TokenAssets = () => {
   const { tokenLogin } = useGetLoginInfo();
   const [loading, setLoading] = useState(false);
   const [tab1, setTab1] = useState(true);
-  const [tab2, setTab2] = useState(false);
+  const [tab2, setTab2] = useState(true);
   const [tab3, setTab3] = useState(false);
   const [prInProgress, setPRInProgress] = useState(false);
   const [commitHash, setCommitHash] = useState<string>('');
@@ -468,7 +468,7 @@ const TokenAssets = () => {
 
       console.log('Branch created:', res.data);
       setCommitHash(res.data.latestCommitSha);
-      setPrError(null);      
+      setPrError(null);
     } catch (error: any) {
       console.error('Failed to create branding branch:', error);
       setPrError(error);
@@ -503,8 +503,9 @@ const TokenAssets = () => {
     const message = new SignableMessage({
       message: Buffer.from(commitHash)
     });
-    const signature = await signMessage(message).toString();
-    setOwnershipSignature(signature.toString());
+    await signMessage(message).then((r: any) => {
+      setOwnershipSignature(r.toString());
+    });
   };
 
   // create pull request function
@@ -528,13 +529,13 @@ const TokenAssets = () => {
           await createPR(ownershipSignature);
         } else if (urlSignature && urlSignature !== '') {
           await createPR(urlSignature);
-        }        
+        }
       } catch (err) {
         console.error('Failed to create PR:', err);
       } finally {
         setLoading(false);
         setTab1(false);
-        setTab2(false);
+        // setTab2(false);
         setTab3(true);
       }
     };
@@ -543,7 +544,6 @@ const TokenAssets = () => {
       handleCreatePR();
     }
   }, [ownershipSignature, urlSignature, address]);
-
 
   return (
     <div className="tools-page-height">
