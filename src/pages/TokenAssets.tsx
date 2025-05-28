@@ -1169,7 +1169,7 @@ const TokenAssets = () => {
               <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
                 <div className='create-token-container p-4'>
                   <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} mb-2`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
-                    <InfoIcon fontSize='small' color='info' />
+                    <InfoIcon fontSize='small' color='info' className='m-t-n-xxs'/>
                     <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>Branding files successfully submited!</p>
                   </div>
                   <p className='mb-0 text-white text-justified mt-3 mx-1 font-size-sm'>To complete your branding token request, you must sign the verification message below.</p>
@@ -1182,6 +1182,20 @@ const TokenAssets = () => {
                   >
                     Sign verification
                   </Button>
+                </div>
+              </Col>
+            </Row>
+          )}
+
+          {tab3 && (
+            <Row className='mt-1 mb-5'>
+              <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
+                <div className='create-token-container p-4'>
+                  <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} mb-2`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
+                    <InfoIcon fontSize='small' color='info' className='m-t-n-xxs' />
+                    <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>Branding token request successfully completed!</p>
+                  </div>
+                  <p className='mb-0 text-white text-justified mt-3 mx-1 font-size-sm'>Once the multiversx team accepts your request, your token details will be updated. During the process, you will see a notification box on the tools page, in the token branding section. </p>
                 </div>
               </Col>
             </Row>
