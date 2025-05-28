@@ -18,7 +18,7 @@ import { useBackendAPI } from 'hooks/useBackendAPI';
 import { CheckBrandingPRResponse } from 'types/backendTypes';
 import InfoIcon from '@mui/icons-material/Info';
 
-const PR_CHECK_COOLDOWN = 10 * 60 * 1000;
+const PR_CHECK_COOLDOWN = 1 * 60 * 1000;
 const STORAGE_KEY = 'pr_check_data';
 
 interface StoredPRData {
@@ -153,33 +153,36 @@ const OwnedTokens = ({ open, setOpen }: { open: boolean, setOpen: Function }) =>
             <p className={`h5 text-white mx-auto text-center mb-0`}>Branding Token</p>
             {open ? <KeyboardArrowUpIcon fontSize='large' style={{ color: 'white' }} /> : <KeyboardArrowDownIcon fontSize='large' className='mb-2' style={{ color: 'white' }} />}
           </div>
-          {(prStatus && prStatus?.prs?.length) ? (
-            (prStatus?.prs[0].prInProgress && (
-              <Fragment>
-                <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} justify-content-between align-items-center mb-5`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
-                  <InfoIcon fontSize='medium' color='info' />
-                  <p className='font-size-xs text-justified mb-0 mt-0 mx-3'>You have a branding request in progress for token {prStatus?.prs[0].token_id}. You can only have one branding request in progress at a time!</p>
-                  <Button
-                    onClick={handleRefresh}
-                    disabled={timeRemaining !== null && timeRemaining > 0}
-                    className={`btn-intense-default btn-intense-info small font-size-xxs b-r-sm hover-btn text-white`}
-                    sx={{ height: (timeRemaining !== null && timeRemaining > 0) ? '44px' : '24px', minWidth: isMobile ? '170px' : '80px', whiteSpace: 'collapse' }}
-                  >
-                    {timeRemaining !== null && timeRemaining > 0
-                      ? `Refresh in ${formatTimeRemaining(timeRemaining)}`
-                      : 'Refresh'}
-                  </Button>
-                </div>
-              </Fragment>
-            ))
-          ) : (
+          {address && (
             <Fragment>
-              <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} justify-content-between align-items-center mb-5`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
-                <InfoIcon fontSize='medium' color='info' />
-                <p className='font-size-xs text-justified mb-0 mt-0 mx-3'>You have no branding requests. You can only have one branding request in progress at a time!</p>
-              </div>
-            </Fragment>
-          )}
+              {(prStatus && prStatus?.prs?.length) ? (
+                (prStatus?.prs[0].prInProgress && (
+                  <Fragment>
+                    <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} justify-content-between align-items-center mb-5`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
+                      <InfoIcon fontSize='medium' color='info' />
+                      <p className='font-size-xs text-justified mb-0 mt-0 mx-3'>You have a branding request in progress for token {prStatus?.prs[0].token_id}. You can only have one branding request in progress at a time!</p>
+                      <Button
+                        onClick={handleRefresh}
+                        disabled={timeRemaining !== null && timeRemaining > 0}
+                        className={`btn-intense-default btn-intense-info small font-size-xxs b-r-sm hover-btn text-white`}
+                        sx={{ height: (timeRemaining !== null && timeRemaining > 0) ? '44px' : '24px', minWidth: isMobile ? '170px' : '80px', whiteSpace: 'collapse' }}
+                      >
+                        {timeRemaining !== null && timeRemaining > 0
+                          ? `Refresh in ${formatTimeRemaining(timeRemaining)}`
+                          : 'Refresh'}
+                      </Button>
+                    </div>
+                  </Fragment>
+                ))
+              ) : (
+                <Fragment>
+                  <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} justify-content-between align-items-center mb-5`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
+                    <InfoIcon fontSize='medium' color='info' />
+                    <p className='font-size-xs text-justified mb-0 mt-0 mx-3'>You have no branding requests. You can only have one branding request in progress at a time!</p>
+                  </div>
+                </Fragment>
+              )}
+            </Fragment>)}
           {(isLoggedIn && Object.values(createdTokens).length) && (
             <p className='text-silver font-size-md'>These are the tokens you are the owner for:</p>
           )}
@@ -243,13 +246,13 @@ const OwnedTokens = ({ open, setOpen }: { open: boolean, setOpen: Function }) =>
             </div>
           ))}
           {!isLoggedIn && (
-            <p className='text-white mb-0'>
+            <p className='text-white mb-0 text-justified'>
               <span
-                className='active-title cursor-pointer'
+                className='active-title cursor-pointer underline'
                 onClick={() => navigate('/unlock')}
               >
                 Connect wallet
-              </span> to see your tokens
+              </span> to see your tokens and to start the branding process
             </p>
           )}
           {(isLoggedIn && Object.values(createdTokens).length == 0) && (

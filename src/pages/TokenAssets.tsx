@@ -169,7 +169,7 @@ const TokenAssets = () => {
   const { tokenLogin } = useGetLoginInfo();
   const [loading, setLoading] = useState(false);
   const [tab1, setTab1] = useState(true);
-  const [tab2, setTab2] = useState(true);
+  const [tab2, setTab2] = useState(false);
   const [tab3, setTab3] = useState(false);
   const [prInProgress, setPRInProgress] = useState(false);
   const [commitHash, setCommitHash] = useState<string>('');
@@ -535,7 +535,7 @@ const TokenAssets = () => {
       } finally {
         setLoading(false);
         setTab1(false);
-        // setTab2(false);
+        setTab2(false);
         setTab3(true);
       }
     };
