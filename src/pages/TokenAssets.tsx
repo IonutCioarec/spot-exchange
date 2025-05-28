@@ -394,6 +394,11 @@ const TokenAssets = () => {
       return;
     }
 
+    if(prInProgress){
+      console.error('Only one open pull request is allowed at a time');
+      return;
+    }
+
     setLoading(true); // Start loading
 
     try {
@@ -443,6 +448,8 @@ const TokenAssets = () => {
       const newData = await checkBrandingPR(tokenLogin?.nativeAuthToken || '');
       if (newData && newData?.prs?.length && newData.prs[0].prInProgress) {
         setPRInProgress(true);
+      } else {
+        setPRInProgress(false);
       }
     }
   }
@@ -451,7 +458,7 @@ const TokenAssets = () => {
     if (address) {
       loadCheckData();
     }
-  }, [address]);
+  }, [address, prInProgress]);
 
   // verify the ownership
   const signLastCommit = async () => {
@@ -465,9 +472,35 @@ const TokenAssets = () => {
   // create pull request function
   const createPR = async (signature: string) => {
     if (tokenLogin?.nativeAuthToken && token_id) {
-      const result = await createBrandingPR(tokenLogin?.nativeAuthToken, token_id, signature, branded ? true : false);
+      loadCheckData();
+      if (!prInProgress) {
+        const result = await createBrandingPR(tokenLogin?.nativeAuthToken, token_id, signature, branded ? true : false);
+      }
     }
   };
+
+  useEffect(() => {
+    if (address) {
+      if (ownershipSignature && ownershipSignature != '') {
+        setLoading(true);
+        createPR(ownershipSignature).then(() => {
+          setLoading(false);
+          setTab1(false);
+          setTab2(false);
+          setTab3(true);
+        })
+      }
+      if (urlSignature && urlSignature !== '') {
+        setLoading(true);
+        createPR(urlSignature).then(() => {
+          setLoading(false);
+          setTab1(false);
+          setTab2(false);
+          setTab3(true);
+        })
+      }
+    }
+  }, [ownershipSignature, urlSignature]);
 
   return (
     <div className="tools-page-height">
@@ -1169,7 +1202,7 @@ const TokenAssets = () => {
               <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
                 <div className='create-token-container p-4'>
                   <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} mb-2`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
-                    <InfoIcon fontSize='small' color='info' className='m-t-n-xxs'/>
+                    <InfoIcon fontSize='small' color='info' className='m-t-n-xxs' />
                     <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>Branding files successfully submited!</p>
                   </div>
                   <p className='mb-0 text-white text-justified mt-3 mx-1 font-size-sm'>To complete your branding token request, you must sign the verification message below.</p>
