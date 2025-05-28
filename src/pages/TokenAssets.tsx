@@ -168,6 +168,7 @@ const TokenAssets = () => {
   const [loading, setLoading] = useState(false);
   const [tab1, setTab1] = useState(true);
   const [tab2, setTab2] = useState(false);
+  const [tab3, setTab3] = useState(false);
   const [prInProgress, setPRInProgress] = useState(false);
   const [commitHash, setCommitHash] = useState<string>('');
   const urlSignature = useRedirectSignature();
@@ -428,6 +429,7 @@ const TokenAssets = () => {
       setCommitHash(res.data.latestCommitSha);
       setTab1(false);
       setTab2(true);
+      setTab3(false);
     } catch (error) {
       console.error('Failed to create branding branch:', error);
     } finally {
@@ -458,6 +460,13 @@ const TokenAssets = () => {
     });
     const signature = await signMessage(message).toString();
     setOwnershipSignature(signature);
+  };
+
+  // create pull request function
+  const createPR = async (signature: string) => {
+    if (tokenLogin?.nativeAuthToken && token_id) {
+      const result = await createBrandingPR(tokenLogin?.nativeAuthToken, token_id, signature, branded ? true : false);
+    }
   };
 
   return (
