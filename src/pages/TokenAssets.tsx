@@ -167,6 +167,7 @@ const TokenAssets = () => {
   const [tab1, setTab1] = useState(true);
   const [tab2, setTab2] = useState(false);
   const [prInProgress, setPRInProgress] = useState(false);
+  const [commitHash, setCommitHash] = useState<string>('');
 
   // image files
   const [pngFile, setPngFile] = useState<File | null>(null);
@@ -419,6 +420,7 @@ const TokenAssets = () => {
       });
 
       console.log('Branch created:', res.data);
+      setCommitHash(res.data.latestCommitSha);
       setTab1(false);
       setTab2(true);
     } catch (error) {
