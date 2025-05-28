@@ -20,6 +20,7 @@ import { CreatedToken } from 'types/mvxTypes';
 import axios from 'axios';
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import FilterLoader from 'components/Pools/FilterLoader';
+import InfoIcon from '@mui/icons-material/Info';
 
 const isValidUrl = (url: string) => {
   try {
@@ -169,6 +170,9 @@ const TokenAssets = () => {
   const [tab2, setTab2] = useState(false);
   const [prInProgress, setPRInProgress] = useState(false);
   const [commitHash, setCommitHash] = useState<string>('');
+  const urlSignature = useRedirectSignature();
+  const [ownershipSignature, setOwnershipSignature] = useState<string | null>(null);
+  const { signMessage } = useSignMessage();
 
   // image files
   const [pngFile, setPngFile] = useState<File | null>(null);
@@ -446,6 +450,15 @@ const TokenAssets = () => {
       loadCheckData();
     }
   }, [address]);
+
+  // verify the ownership
+  const signLastCommit = async () => {
+    const message = new SignableMessage({
+      message: Buffer.from(commitHash)
+    });
+    const signature = await signMessage(message).toString();
+    setOwnershipSignature(signature);
+  };
 
   return (
     <div className="tools-page-height">
@@ -1143,9 +1156,26 @@ const TokenAssets = () => {
           )}
 
           {tab2 && (
-            <div>
+            <Row className='mt-1 mb-5'>
+              <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
+                <div className='create-token-container p-4'>
+                  <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} mb-2`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
+                    <InfoIcon fontSize='small' color='info' />
+                    <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>Branding files successfully submited!</p>
+                  </div>
+                  <p className='mb-0 text-white text-justified mt-3 mx-1 font-size-sm'>To complete your branding token request, you must sign the verification message below.</p>
 
-            </div>
+                  <Button
+                    className={`btn-intense-default mt-2 b-r-xs hover-btn btn-intense-success2 fullWidth ${(prInProgress || !address) ? 'btn-disabled' : ''}`}
+                    sx={{ height: '30px' }}
+                    onClick={() => signLastCommit()}
+                  // disabled={prInProgress}
+                  >
+                    Sign verification
+                  </Button>
+                </div>
+              </Col>
+            </Row>
           )}
         </Fragment>
       )}
