@@ -21,6 +21,8 @@ import axios from 'axios';
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import FilterLoader from 'components/Pools/FilterLoader';
 import InfoIcon from '@mui/icons-material/Info';
+import { error } from 'console';
+import { isEmpty } from 'lodash';
 
 const isValidUrl = (url: string) => {
   try {
@@ -36,7 +38,7 @@ const isValidErdAddress = (address: string) => {
 };
 
 const isValidTokenId = (tokenId: string) => {
-  return /^[a-zA-Z0-9\-]{3,10}$/.test(tokenId);
+  return /^[a-zA-Z0-9\-]{3,20}$/.test(tokenId);
 };
 
 const validateImage = (
@@ -174,6 +176,7 @@ const TokenAssets = () => {
   const urlSignature = useRedirectSignature();
   const [ownershipSignature, setOwnershipSignature] = useState<string | null>(null);
   const { signMessage } = useSignMessage();
+  const [prError, setPrError] = useState<string | null>(null);
 
   // image files
   const [pngFile, setPngFile] = useState<File | null>(null);
@@ -333,7 +336,7 @@ const TokenAssets = () => {
         if (i === index) {
           return {
             value,
-            error: isValidTokenId(value) ? '' : 'Invalid token ID (Must be between 3 - 10 characters long)'
+            error: isValidTokenId(value) ? '' : 'Invalid token ID'
           };
         }
         return item;
@@ -358,23 +361,32 @@ const TokenAssets = () => {
 
   // generate the json info based on the current state
   const generateInfoJson = () => {
+    const filteredSocial = social.length > 0 && social[0].url !== ''
+      ? social.reduce((acc, { platform, url }) => {
+        if (platform && url) acc[platform] = url;
+        return acc;
+      }, {} as Record<string, string>)
+      : undefined;
+
+    const filteredLockedAccounts = lockedAccounts.length > 0 &&
+      (lockedAccounts[0].label !== '' || lockedAccounts[0].address !== '')
+      ? lockedAccounts.reduce((acc, { address, label }) => {
+        if (address && label) acc[address] = label;
+        return acc;
+      }, {} as Record<string, string>)
+      : undefined;
+
+    const filteredExtraTokens = extraTokens.filter(token => token.value.trim() !== '');
+
     const json = {
       website,
       description,
-      ...(ledgerSignature && { ledgerSignature }),
-      ...(social.length > 0 && {
-        social: social.reduce((acc, { platform, url }) => {
-          if (platform && url) acc[platform] = url;
-          return acc;
-        }, {} as Record<string, string>)
+      ...(ledgerSignature && ledgerSignature !== '' && { ledgerSignature }),
+      ...(filteredSocial && { social: filteredSocial }),
+      ...(filteredLockedAccounts && { lockedAccounts: filteredLockedAccounts }),
+      ...(filteredExtraTokens.length > 0 && {
+        extraTokens: filteredExtraTokens.map(token => token.value)
       }),
-      ...(lockedAccounts.length > 0 && {
-        lockedAccounts: lockedAccounts.reduce((acc, { address, label }) => {
-          if (address && label) acc[address] = label;
-          return acc;
-        }, {} as Record<string, string>)
-      }),
-      ...(extraTokens.length > 0 && { extraTokens }),
       status: status || 'active'
     };
 
@@ -394,8 +406,33 @@ const TokenAssets = () => {
       return;
     }
 
-    if(prInProgress){
+    if (!pngFile) {
+      console.error('PNG file required');
+      setPrError('PNG file required');
+      return;
+    }
+
+    if (!svgFile) {
+      console.error('SVG file required');
+      setPrError('SVG file required');
+      return;
+    }
+
+    if (!website || website === '') {
+      console.error('Website field required');
+      setPrError('Website field required');
+      return;
+    }
+
+    if (!description || description === '') {
+      console.error('Description field required');
+      setPrError('Description field required');
+      return;
+    }
+
+    if (prInProgress) {
       console.error('Only one open pull request is allowed at a time');
+      setPrError('Only one open pull request is allowed at a time');
       return;
     }
 
@@ -403,7 +440,6 @@ const TokenAssets = () => {
 
     try {
       const infoJsonFile = createInfoJsonFile();
-      console.log(token_id);
 
       const formData = new FormData();
       formData.append('token_id', token_id || '');
@@ -432,13 +468,15 @@ const TokenAssets = () => {
 
       console.log('Branch created:', res.data);
       setCommitHash(res.data.latestCommitSha);
+      setPrError(null);      
+    } catch (error: any) {
+      console.error('Failed to create branding branch:', error);
+      setPrError(error);
+    } finally {
+      setLoading(false);
       setTab1(false);
       setTab2(true);
       setTab3(false);
-    } catch (error) {
-      console.error('Failed to create branding branch:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -466,41 +504,46 @@ const TokenAssets = () => {
       message: Buffer.from(commitHash)
     });
     const signature = await signMessage(message).toString();
-    setOwnershipSignature(signature);
+    setOwnershipSignature(signature.toString());
   };
 
   // create pull request function
   const createPR = async (signature: string) => {
+    if (typeof signature !== 'string' || signature === '[object Promise]') {
+      console.error('Invalid signature:', signature);
+      return;
+    }
+
     if (tokenLogin?.nativeAuthToken && token_id) {
-      loadCheckData();
-      if (!prInProgress) {
-        const result = await createBrandingPR(tokenLogin?.nativeAuthToken, token_id, signature, branded ? true : false);
-      }
+      const result = await createBrandingPR(tokenLogin?.nativeAuthToken, token_id, signature, branded ? true : false);
+      setPrError(result?.error || null);
     }
   };
 
   useEffect(() => {
-    if (address) {
-      if (ownershipSignature && ownershipSignature != '') {
-        setLoading(true);
-        createPR(ownershipSignature).then(() => {
-          setLoading(false);
-          setTab1(false);
-          setTab2(false);
-          setTab3(true);
-        })
+    const handleCreatePR = async () => {
+      setLoading(true);
+      try {
+        if (ownershipSignature && ownershipSignature !== '') {
+          await createPR(ownershipSignature);
+        } else if (urlSignature && urlSignature !== '') {
+          await createPR(urlSignature);
+        }        
+      } catch (err) {
+        console.error('Failed to create PR:', err);
+      } finally {
+        setLoading(false);
+        setTab1(false);
+        setTab2(false);
+        setTab3(true);
       }
-      if (urlSignature && urlSignature !== '') {
-        setLoading(true);
-        createPR(urlSignature).then(() => {
-          setLoading(false);
-          setTab1(false);
-          setTab2(false);
-          setTab3(true);
-        })
-      }
+    };
+
+    if (address && (ownershipSignature || urlSignature)) {
+      handleCreatePR();
     }
-  }, [ownershipSignature, urlSignature]);
+  }, [ownershipSignature, urlSignature, address]);
+
 
   return (
     <div className="tools-page-height">
@@ -518,7 +561,11 @@ const TokenAssets = () => {
       )}
 
       {loading ? (
-        <FilterLoader />
+        <Row className='mt-1 mb-5'>
+          <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
+            <FilterLoader />
+          </Col>
+        </Row>
       ) : (
         <Fragment>
           {tab1 && (
@@ -526,6 +573,12 @@ const TokenAssets = () => {
               <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
                 <div className='create-token-container p-4'>
                   {/* PNG, SVG Files */}
+                  {prError && (
+                    <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} mb-2`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
+                      <InfoIcon fontSize='small' color='error' className='m-t-n-xxs' />
+                      <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>{prError}</p>
+                    </div>
+                  )}
                   <Row>
                     <Col xs={12} lg={6} className='d-flex align-items-center justify-content-center'>
                       <div>
@@ -1202,8 +1255,8 @@ const TokenAssets = () => {
               <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
                 <div className='create-token-container p-4'>
                   <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} mb-2`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
-                    <InfoIcon fontSize='small' color='info' className='m-t-n-xxs' />
-                    <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>Branding files successfully submited!</p>
+                    <InfoIcon fontSize='small' color={`${prError ? 'error' : 'info'}`} className='m-t-n-xxs' />
+                    <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>{prError ? prError : 'Branding files successfully submited!'}</p>
                   </div>
                   <p className='mb-0 text-white text-justified mt-3 mx-1 font-size-sm'>To complete your branding token request, you must sign the verification message below.</p>
 
@@ -1225,7 +1278,7 @@ const TokenAssets = () => {
               <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
                 <div className='create-token-container p-4'>
                   <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} mb-2`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
-                    <InfoIcon fontSize='small' color='info' className='m-t-n-xxs' />
+                    <InfoIcon fontSize='small' color={`info`} className='m-t-n-xxs' />
                     <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>Branding token request successfully completed!</p>
                   </div>
                   <p className='mb-0 text-white text-justified mt-3 mx-1 font-size-sm'>Once the multiversx team accepts your request, your token details will be updated. During the process, you will see a notification box on the tools page, in the token branding section. </p>
