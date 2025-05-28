@@ -1,6 +1,6 @@
 import 'assets/scss/tools.scss';
 import { Row, Col } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useGetAccount, useGetAccountInfo, useGetIsLoggedIn, useGetLoginInfo, useSignMessage } from 'hooks';
 import { useMobile, useTablet } from 'utils/responsive';
 import ScrollToTopButton from 'components/ScrollToTopButton';
@@ -19,6 +19,7 @@ import { CloudUpload } from '@mui/icons-material';
 import { CreatedToken } from 'types/mvxTypes';
 import axios from 'axios';
 import { useBackendAPI } from 'hooks/useBackendAPI';
+import FilterLoader from 'components/Pools/FilterLoader';
 
 const isValidUrl = (url: string) => {
   try {
@@ -461,686 +462,692 @@ const TokenAssets = () => {
         <ScrollToTopButton targetRefId='topSection' />
       )}
 
-      {tab1 && (
-        <Row className='mt-1 mb-5'>
-          <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
-            <div className='create-token-container p-4'>
-              {/* PNG, SVG Files */}
-              <Row>
-                <Col xs={12} lg={6} className='d-flex align-items-center justify-content-center'>
-                  <div>
-                    <p className='small ms-1 mt-4 mb-1 text-silver required'>PNG Logo</p>
-                    {pngPreviewUrl ? (
-                      <img src={pngPreviewUrl} alt="PNG preview" className="mt-2 rounded border-1 border-dashed border-[grey]" width={132} />
-                    ) : (
-                      <div className="mt-2 d-flex align-items-center justify-content-center rounded border-1 border-dashed border-[grey]" style={{ minHeight: '100px', width: '132px' }}>
-                        <ImageIcon style={{ fontSize: '35px', color: 'white' }} />
+      {loading ? (
+        <FilterLoader />
+      ) : (
+        <Fragment>
+          {tab1 && (
+            <Row className='mt-1 mb-5'>
+              <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
+                <div className='create-token-container p-4'>
+                  {/* PNG, SVG Files */}
+                  <Row>
+                    <Col xs={12} lg={6} className='d-flex align-items-center justify-content-center'>
+                      <div>
+                        <p className='small ms-1 mt-4 mb-1 text-silver required'>PNG Logo</p>
+                        {pngPreviewUrl ? (
+                          <img src={pngPreviewUrl} alt="PNG preview" className="mt-2 rounded border-1 border-dashed border-[grey]" width={132} />
+                        ) : (
+                          <div className="mt-2 d-flex align-items-center justify-content-center rounded border-1 border-dashed border-[grey]" style={{ minHeight: '100px', width: '132px' }}>
+                            <ImageIcon style={{ fontSize: '35px', color: 'white' }} />
+                          </div>
+                        )}
+                        {pngError && <p className="text-danger font-size-sm mt-1 mb-0">* {pngError}</p>}
+
+                        <Button
+                          component="label"
+                          role={undefined}
+                          tabIndex={-1}
+                          startIcon={<CloudUpload />}
+                          className='hover-btn btn-intense-default btn-intense-info smaller b-r-xs mt-2'
+                          size='small'
+                        >
+
+                          {pngPreviewUrl ? 'Change file' : 'Select file'}
+                          <VisuallyHiddenInput
+                            type="file"
+                            onChange={handlePngUpload}
+                            accept='image/png'
+                          />
+                        </Button>
+                        {pngFileName && (
+                          <p className='text-silver mb-0 mt-1 font-size-sm'>Selected: {pngFileName}</p>
+                        )}
                       </div>
-                    )}
-                    {pngError && <p className="text-danger font-size-sm mt-1 mb-0">* {pngError}</p>}
+                    </Col>
+                    <Col xs={12} lg={6} className='d-flex align-items-center justify-content-center'>
+                      <div>
+                        <p className='small ms-1 mt-4 mb-1 text-silver required'>SVG Logo</p>
+                        {svgPreviewUrl ? (
+                          <img src={svgPreviewUrl} alt="PNG preview" className="mt-2 rounded border-1 border-dashed border-[grey]" width={132} />
+                        ) : (
+                          <div className="mt-2 d-flex align-items-center justify-content-center rounded border-1 border-dashed border-[grey]" style={{ minHeight: '100px', width: '132px' }}>
+                            <ImageIcon style={{ fontSize: '35px', color: 'white' }} />
+                          </div>
+                        )}
+                        {svgError && <p className="text-danger font-size-sm mt-1 mb-0">* {svgError}</p>}
 
-                    <Button
-                      component="label"
-                      role={undefined}
-                      tabIndex={-1}
-                      startIcon={<CloudUpload />}
-                      className='hover-btn btn-intense-default btn-intense-info smaller b-r-xs mt-2'
-                      size='small'
-                    >
+                        <Button
+                          component="label"
+                          role={undefined}
+                          tabIndex={-1}
+                          startIcon={<CloudUpload />}
+                          className='hover-btn btn-intense-default btn-intense-info smaller b-r-xs mt-2'
+                          size='small'
+                        >
 
-                      {pngPreviewUrl ? 'Change file' : 'Select file'}
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={handlePngUpload}
-                        accept='image/png'
-                      />
-                    </Button>
-                    {pngFileName && (
-                      <p className='text-silver mb-0 mt-1 font-size-sm'>Selected: {pngFileName}</p>
-                    )}
-                  </div>
-                </Col>
-                <Col xs={12} lg={6} className='d-flex align-items-center justify-content-center'>
-                  <div>
-                    <p className='small ms-1 mt-4 mb-1 text-silver required'>SVG Logo</p>
-                    {svgPreviewUrl ? (
-                      <img src={svgPreviewUrl} alt="PNG preview" className="mt-2 rounded border-1 border-dashed border-[grey]" width={132} />
-                    ) : (
-                      <div className="mt-2 d-flex align-items-center justify-content-center rounded border-1 border-dashed border-[grey]" style={{ minHeight: '100px', width: '132px' }}>
-                        <ImageIcon style={{ fontSize: '35px', color: 'white' }} />
+                          {svgPreviewUrl ? 'Change file' : 'Select file'}
+                          <VisuallyHiddenInput
+                            type="file"
+                            onChange={handleSvgUpload}
+                            accept='image/svg+xml'
+                          />
+                        </Button>
+                        {svgFileName && (
+                          <p className='text-silver mb-0 mt-1 font-size-sm'>Selected: {svgFileName}</p>
+                        )}
                       </div>
-                    )}
-                    {svgError && <p className="text-danger font-size-sm mt-1 mb-0">* {svgError}</p>}
+                    </Col>
+                  </Row>
 
-                    <Button
-                      component="label"
-                      role={undefined}
-                      tabIndex={-1}
-                      startIcon={<CloudUpload />}
-                      className='hover-btn btn-intense-default btn-intense-info smaller b-r-xs mt-2'
+                  {/* Website */}
+                  <div>
+                    <p className='small ms-1 mt-4 mb-1 text-silver required'>Website</p>
+                    <TextField
+                      type='text'
+                      fullWidth
                       size='small'
-                    >
-
-                      {svgPreviewUrl ? 'Change file' : 'Select file'}
-                      <VisuallyHiddenInput
-                        type="file"
-                        onChange={handleSvgUpload}
-                        accept='image/svg+xml'
-                      />
-                    </Button>
-                    {svgFileName && (
-                      <p className='text-silver mb-0 mt-1 font-size-sm'>Selected: {svgFileName}</p>
-                    )}
+                      variant='outlined'
+                      value={website}
+                      autoComplete="off"
+                      onChange={handleWebsiteChange}
+                      error={!!websiteError}
+                      helperText={
+                        websiteError ? (
+                          <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                            {websiteError}
+                          </span>
+                        ) : null
+                      }
+                      className='mt-1'
+                      InputProps={{
+                        style: { color: 'silver', fontFamily: 'Red Rose' },
+                      }}
+                      InputLabelProps={{
+                        style: { color: 'silver', fontFamily: 'Red Rose' },
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: 'transparent',
+                            background: 'rgba(18, 18, 18, 0.3)',
+                            borderRadius: '5px',
+                            color: 'silver',
+                            fontSize: '14px',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: websiteError ? '#d32f2f' : '#3FAC5A',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: websiteError ? '#d32f2f' : '#3FAC5A',
+                          },
+                          fontFamily: 'Red Rose',
+                          fontSize: '14px',
+                        },
+                        '& input[type=number]': {
+                          MozAppearance: 'textfield',
+                          WebkitAppearance: 'none',
+                          appearance: 'none',
+                        },
+                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                          WebkitAppearance: 'none',
+                          margin: 0,
+                        },
+                      }}
+                    />
                   </div>
-                </Col>
-              </Row>
 
-              {/* Website */}
-              <div>
-                <p className='small ms-1 mt-4 mb-1 text-silver required'>Website</p>
-                <TextField
-                  type='text'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  value={website}
-                  autoComplete="off"
-                  onChange={handleWebsiteChange}
-                  error={!!websiteError}
-                  helperText={
-                    websiteError ? (
-                      <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                        {websiteError}
-                      </span>
-                    ) : null
-                  }
-                  className='mt-1'
-                  InputProps={{
-                    style: { color: 'silver', fontFamily: 'Red Rose' },
-                  }}
-                  InputLabelProps={{
-                    style: { color: 'silver', fontFamily: 'Red Rose' },
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        borderColor: 'transparent',
-                        background: 'rgba(18, 18, 18, 0.3)',
-                        borderRadius: '5px',
-                        color: 'silver',
-                        fontSize: '14px',
-                      },
-                      '&:hover fieldset': {
-                        borderColor: websiteError ? '#d32f2f' : '#3FAC5A',
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: websiteError ? '#d32f2f' : '#3FAC5A',
-                      },
-                      fontFamily: 'Red Rose',
-                      fontSize: '14px',
-                    },
-                    '& input[type=number]': {
-                      MozAppearance: 'textfield',
-                      WebkitAppearance: 'none',
-                      appearance: 'none',
-                    },
-                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                      WebkitAppearance: 'none',
-                      margin: 0,
-                    },
-                  }}
-                />
-              </div>
+                  {/* Description */}
+                  <div>
+                    <p className='small mt-4 ms-1 mb-1 text-silver required'>Description</p>
+                    <TextField
+                      type='text'
+                      fullWidth
+                      minRows={3}
+                      multiline
+                      size='small'
+                      variant='outlined'
+                      value={description}
+                      autoComplete="off"
+                      onChange={handleDescriptionChange}
+                      error={!!descriptionError}
+                      helperText={
+                        descriptionError ? (
+                          <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                            {descriptionError}
+                          </span>
+                        ) : null
+                      }
+                      className='mt-1'
+                      InputProps={{
+                        style: { color: 'silver', fontFamily: 'Red Rose' },
+                      }}
+                      InputLabelProps={{
+                        style: { color: 'silver', fontFamily: 'Red Rose' },
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: 'transparent',
+                            background: 'rgba(18, 18, 18, 0.3)',
+                            borderRadius: '5px',
+                            color: 'silver',
+                            fontSize: '14px',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: descriptionError ? '#d32f2f' : '#3FAC5A',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: descriptionError ? '#d32f2f' : '#3FAC5A',
+                          },
+                          fontFamily: 'Red Rose',
+                          fontSize: '14px',
+                        },
+                        '& input[type=number]': {
+                          MozAppearance: 'textfield',
+                          WebkitAppearance: 'none',
+                          appearance: 'none',
+                        },
+                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                          WebkitAppearance: 'none',
+                          margin: 0,
+                        },
+                      }}
+                    />
+                  </div>
 
-              {/* Description */}
-              <div>
-                <p className='small mt-4 ms-1 mb-1 text-silver required'>Description</p>
-                <TextField
-                  type='text'
-                  fullWidth
-                  minRows={3}
-                  multiline
-                  size='small'
-                  variant='outlined'
-                  value={description}
-                  autoComplete="off"
-                  onChange={handleDescriptionChange}
-                  error={!!descriptionError}
-                  helperText={
-                    descriptionError ? (
-                      <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                        {descriptionError}
-                      </span>
-                    ) : null
-                  }
-                  className='mt-1'
-                  InputProps={{
-                    style: { color: 'silver', fontFamily: 'Red Rose' },
-                  }}
-                  InputLabelProps={{
-                    style: { color: 'silver', fontFamily: 'Red Rose' },
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        borderColor: 'transparent',
-                        background: 'rgba(18, 18, 18, 0.3)',
-                        borderRadius: '5px',
-                        color: 'silver',
-                        fontSize: '14px',
-                      },
-                      '&:hover fieldset': {
-                        borderColor: descriptionError ? '#d32f2f' : '#3FAC5A',
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: descriptionError ? '#d32f2f' : '#3FAC5A',
-                      },
-                      fontFamily: 'Red Rose',
-                      fontSize: '14px',
-                    },
-                    '& input[type=number]': {
-                      MozAppearance: 'textfield',
-                      WebkitAppearance: 'none',
-                      appearance: 'none',
-                    },
-                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                      WebkitAppearance: 'none',
-                      margin: 0,
-                    },
-                  }}
-                />
-              </div>
+                  {/* Ledger Signature */}
+                  <div>
+                    <p className='mt-4 small ms-1 mb-1 text-silver required'>Ledger Signature</p>
+                    <TextField
+                      type='text'
+                      fullWidth
+                      size='small'
+                      variant='outlined'
+                      value={ledgerSignature}
+                      autoComplete="off"
+                      onChange={handleLedgerSignatureChange}
+                      className='mt-1'
+                      InputProps={{
+                        style: { color: 'silver', fontFamily: 'Red Rose' },
+                      }}
+                      InputLabelProps={{
+                        style: { color: 'silver', fontFamily: 'Red Rose' },
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: 'transparent',
+                            background: 'rgba(18, 18, 18, 0.3)',
+                            borderRadius: '5px',
+                            color: 'silver',
+                            fontSize: '14px',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: '#3FAC5A',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#3FAC5A',
+                          },
+                          fontFamily: 'Red Rose',
+                          fontSize: '14px',
+                        },
+                        '& input[type=number]': {
+                          MozAppearance: 'textfield',
+                          WebkitAppearance: 'none',
+                          appearance: 'none',
+                        },
+                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                          WebkitAppearance: 'none',
+                          margin: 0,
+                        },
+                      }}
+                    />
+                  </div>
 
-              {/* Ledger Signature */}
-              <div>
-                <p className='mt-4 small ms-1 mb-1 text-silver required'>Ledger Signature</p>
-                <TextField
-                  type='text'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  value={ledgerSignature}
-                  autoComplete="off"
-                  onChange={handleLedgerSignatureChange}
-                  className='mt-1'
-                  InputProps={{
-                    style: { color: 'silver', fontFamily: 'Red Rose' },
-                  }}
-                  InputLabelProps={{
-                    style: { color: 'silver', fontFamily: 'Red Rose' },
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        borderColor: 'transparent',
-                        background: 'rgba(18, 18, 18, 0.3)',
-                        borderRadius: '5px',
-                        color: 'silver',
-                        fontSize: '14px',
-                      },
-                      '&:hover fieldset': {
-                        borderColor: '#3FAC5A',
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#3FAC5A',
-                      },
-                      fontFamily: 'Red Rose',
-                      fontSize: '14px',
-                    },
-                    '& input[type=number]': {
-                      MozAppearance: 'textfield',
-                      WebkitAppearance: 'none',
-                      appearance: 'none',
-                    },
-                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                      WebkitAppearance: 'none',
-                      margin: 0,
-                    },
-                  }}
-                />
-              </div>
+                  {/* Social links */}
+                  <div>
+                    <div className='d-flex justify-content-between align-items-center mt-4 mb-1'>
+                      <p className='small ms-1 mb-0 text-silver required'>Social</p>
+                      <Button
+                        className={`font-bold font-size-xxs b-r-xs hover-btn text-white`}
+                        onClick={handleAddSocial}
+                        variant='text'
+                        size='small'
+                        sx={{ height: '25px' }}
+                      >
+                        + Add social
+                      </Button>
+                    </div>
 
-              {/* Social links */}
-              <div>
-                <div className='d-flex justify-content-between align-items-center mt-4 mb-1'>
-                  <p className='small ms-1 mb-0 text-silver required'>Social</p>
+                    {social.map((entry, index) => (
+                      <div key={index} className="flex gap-2 items-start mb-2">
+                        <TextField
+                          type='text'
+                          placeholder="Platform (e.g. Telegram)"
+                          size="small"
+                          variant="outlined"
+                          value={entry.platform}
+                          autoComplete="off"
+                          onChange={(e) => handleSocialChange(index, 'platform', e.target.value)}
+                          error={!!entry.error.platform}
+                          helperText={
+                            entry.error.platform ? (
+                              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                                {entry.error.platform}
+                              </span>
+                            ) : null
+                          }
+                          className="flex-1"
+                          InputProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          InputLabelProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'transparent',
+                                background: 'rgba(18, 18, 18, 0.3)',
+                                borderRadius: '5px',
+                                color: 'silver',
+                                fontSize: '14px',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: entry.error.platform ? '#d32f2f' : '#3FAC5A',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: entry.error.platform ? '#d32f2f' : '#3FAC5A',
+                              },
+                              fontFamily: 'Red Rose',
+                              fontSize: '14px',
+                            },
+                            '& input[type=number]': {
+                              MozAppearance: 'textfield',
+                              WebkitAppearance: 'none',
+                              appearance: 'none',
+                            },
+                            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                              WebkitAppearance: 'none',
+                              margin: 0,
+                            },
+                          }}
+                        />
+
+                        <TextField
+                          type='url'
+                          placeholder="URL"
+                          size="small"
+                          variant="outlined"
+                          value={entry.url}
+                          onChange={(e) => handleSocialChange(index, 'url', e.target.value)}
+                          autoComplete="off"
+                          error={!!entry.error.url}
+                          helperText={
+                            entry.error.url ? (
+                              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                                {entry.error.url}
+                              </span>
+                            ) : null
+                          }
+                          className="flex-1"
+                          InputProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          InputLabelProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'transparent',
+                                background: 'rgba(18, 18, 18, 0.3)',
+                                borderRadius: '5px',
+                                color: 'silver',
+                                fontSize: '14px',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: entry.error.url ? '#d32f2f' : '#3FAC5A',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: entry.error.url ? '#d32f2f' : '#3FAC5A',
+                              },
+                              fontFamily: 'Red Rose',
+                              fontSize: '14px',
+                            },
+                            '& input[type=number]': {
+                              MozAppearance: 'textfield',
+                              WebkitAppearance: 'none',
+                              appearance: 'none',
+                            },
+                            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                              WebkitAppearance: 'none',
+                              margin: 0,
+                            },
+                          }}
+                        />
+
+                        <IconButton
+                          className={`font-bold font-size-xxs b-r-xs`}
+                          onClick={() => handleRemoveSocial(index)}
+                          size='small'
+                          color='error'
+                        >
+                          <IndeterminateCheckBoxIcon style={{ fontSize: '30px' }} />
+                        </IconButton>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Locked accounts */}
+                  <div>
+                    <div className='d-flex justify-content-between align-items-center mt-4 mb-1'>
+                      <p className='small ms-1 mb-0 text-silver required'>Locked Accounts</p>
+                      <Button
+                        className={` font-bold font-size-xxs b-r-xs hover-btn text-white`}
+                        onClick={handleAddLockedAccount}
+                        variant='text'
+                        size='small'
+                        sx={{ height: '25px' }}
+                      >
+                        + Add Account
+                      </Button>
+                    </div>
+
+                    {lockedAccounts.map((entry, index) => (
+                      <div key={index} className="flex gap-2 items-start mb-2">
+                        <TextField
+                          type='text'
+                          placeholder="Account address"
+                          size="small"
+                          variant="outlined"
+                          value={entry.address}
+                          autoComplete="off"
+                          onChange={(e) => handleLockedAccountChange(index, 'address', e.target.value)}
+                          error={!!entry.error.address}
+                          helperText={
+                            entry.error.address ? (
+                              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                                {entry.error.address}
+                              </span>
+                            ) : null
+                          }
+                          className="flex-1"
+                          InputProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          InputLabelProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'transparent',
+                                background: 'rgba(18, 18, 18, 0.3)',
+                                borderRadius: '5px',
+                                color: 'silver',
+                                fontSize: '14px',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: entry.error.address ? '#d32f2f' : '#3FAC5A',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: entry.error.address ? '#d32f2f' : '#3FAC5A',
+                              },
+                              fontFamily: 'Red Rose',
+                              fontSize: '14px',
+                            },
+                            '& input[type=number]': {
+                              MozAppearance: 'textfield',
+                              WebkitAppearance: 'none',
+                              appearance: 'none',
+                            },
+                            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                              WebkitAppearance: 'none',
+                              margin: 0,
+                            },
+                          }}
+                        />
+
+                        <TextField
+                          type='text'
+                          placeholder="Label"
+                          size="small"
+                          variant="outlined"
+                          value={entry.label}
+                          onChange={(e) => handleLockedAccountChange(index, 'label', e.target.value)}
+                          autoComplete="off"
+                          error={!!entry.error.label}
+                          helperText={
+                            entry.error.label ? (
+                              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                                {entry.error.label}
+                              </span>
+                            ) : null
+                          }
+                          className="flex-1"
+                          InputProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          InputLabelProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'transparent',
+                                background: 'rgba(18, 18, 18, 0.3)',
+                                borderRadius: '5px',
+                                color: 'silver',
+                                fontSize: '14px',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: entry.error.label ? '#d32f2f' : '#3FAC5A',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: entry.error.label ? '#d32f2f' : '#3FAC5A',
+                              },
+                              fontFamily: 'Red Rose',
+                              fontSize: '14px',
+                            },
+                            '& input[type=number]': {
+                              MozAppearance: 'textfield',
+                              WebkitAppearance: 'none',
+                              appearance: 'none',
+                            },
+                            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                              WebkitAppearance: 'none',
+                              margin: 0,
+                            },
+                          }}
+                        />
+
+                        <IconButton
+                          className={`font-bold font-size-xxs b-r-xs`}
+                          onClick={() => handleRemoveLockedAccount(index)}
+                          size='small'
+                          color='error'
+                        >
+                          <IndeterminateCheckBoxIcon style={{ fontSize: '30px' }} />
+                        </IconButton>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Extra tokens */}
+                  <div>
+                    <div className='d-flex justify-content-between align-items-center mt-4 mb-1'>
+                      <p className='small ms-1 mb-0 text-silver required'>Extra Tokens</p>
+                      <Button
+                        className={` font-bold font-size-xxs b-r-xs hover-btn text-white`}
+                        onClick={handleAddExtraToken}
+                        variant='text'
+                        size='small'
+                        sx={{ height: '25px' }}
+                      >
+                        + Add Token
+                      </Button>
+                    </div>
+
+                    {extraTokens.map((token, index) => (
+                      <div key={index} className="flex gap-2 items-start mb-2">
+                        <TextField
+                          type='text'
+                          placeholder="e.g. TOKEN-1234"
+                          size="small"
+                          variant="outlined"
+                          value={token.value}
+                          autoComplete="off"
+                          onChange={(e) => handleExtraTokenChange(index, e.target.value)}
+                          error={!!token.error}
+                          helperText={
+                            token.error ? (
+                              <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
+                                {token.error}
+                              </span>
+                            ) : null
+                          }
+                          className="flex-1"
+                          InputProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          InputLabelProps={{
+                            style: { color: 'silver', fontFamily: 'Red Rose' },
+                          }}
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'transparent',
+                                background: 'rgba(18, 18, 18, 0.3)',
+                                borderRadius: '5px',
+                                color: 'silver',
+                                fontSize: '14px',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: token.error ? '#d32f2f' : '#3FAC5A',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: token.error ? '#d32f2f' : '#3FAC5A',
+                              },
+                              fontFamily: 'Red Rose',
+                              fontSize: '14px',
+                            },
+                            '& input[type=number]': {
+                              MozAppearance: 'textfield',
+                              WebkitAppearance: 'none',
+                              appearance: 'none',
+                            },
+                            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                              WebkitAppearance: 'none',
+                              margin: 0,
+                            },
+                          }}
+                        />
+
+                        <IconButton
+                          className={`font-bold font-size-xxs b-r-xs`}
+                          onClick={() => handleRemoveExtraToken(index)}
+                          size='small'
+                          color='error'
+                        >
+                          <IndeterminateCheckBoxIcon style={{ fontSize: '30px' }} />
+                        </IconButton>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Status */}
+                  <div>
+                    <p className='mt-4 mb-1 small ms-1 text-silver required'>Status</p>
+                    <TextField
+                      type='select'
+                      select
+                      fullWidth
+                      size='small'
+                      variant='outlined'
+                      value={status}
+                      autoComplete="off"
+                      onChange={handleStatusChange}
+                      className='mt-1 mb-5'
+                      InputProps={{
+                        style: { color: 'silver', fontFamily: 'Red Rose' },
+                      }}
+                      InputLabelProps={{
+                        style: { color: 'silver', fontFamily: 'Red Rose' },
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: 'transparent',
+                            background: 'rgba(18, 18, 18, 0.3)',
+                            borderRadius: '5px',
+                            color: 'silver',
+                            fontSize: '14px',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: '#3FAC5A',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#3FAC5A',
+                          },
+                          fontFamily: 'Red Rose',
+                          fontSize: '14px',
+                        },
+                        '& input[type=number]': {
+                          MozAppearance: 'textfield',
+                          WebkitAppearance: 'none',
+                          appearance: 'none',
+                        },
+                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                          WebkitAppearance: 'none',
+                          margin: 0,
+                        },
+                        '& .MuiSelect-icon': {
+                          color: 'white'
+                        }
+                      }}
+                      SelectProps={{
+                        MenuProps: {
+                          PaperProps: {
+                            sx: {
+                              backgroundColor: 'rgba(32, 32, 32, 1)',
+                              color: 'white',
+                              fontFamily: 'Red Rose'
+                            },
+                          },
+                        },
+                      }}
+                    >
+                      <MenuItem value={'active'} className={`font-rose select-menu-item font-size-sm ${status === 'active' ? 'active' : ''}`}>
+                        Active
+                      </MenuItem>
+                      <MenuItem value={'inactive'} className={`font-rose select-menu-item font-size-sm ${status === 'inactive' ? 'active' : ''}`}>
+                        Inactive
+                      </MenuItem>
+                    </TextField>
+                  </div>
+
+                  {/* Submit Button */}
                   <Button
-                    className={`font-bold font-size-xxs b-r-xs hover-btn text-white`}
-                    onClick={handleAddSocial}
-                    variant='text'
-                    size='small'
-                    sx={{ height: '25px' }}
+                    className={`btn-intense-default b-r-xs hover-btn btn-intense-success2 fullWidth ${(prInProgress || !address) ? 'btn-disabled' : ''}`}
+                    sx={{ height: '30px' }}
+                    onClick={() => submitBrandingBranch(tokenLogin?.nativeAuthToken || '')}
+                  // disabled={prInProgress}
                   >
-                    + Add social
+                    Submit Files
                   </Button>
                 </div>
+              </Col>
+            </Row>
+          )}
 
-                {social.map((entry, index) => (
-                  <div key={index} className="flex gap-2 items-start mb-2">
-                    <TextField
-                      type='text'
-                      placeholder="Platform (e.g. Telegram)"
-                      size="small"
-                      variant="outlined"
-                      value={entry.platform}
-                      autoComplete="off"
-                      onChange={(e) => handleSocialChange(index, 'platform', e.target.value)}
-                      error={!!entry.error.platform}
-                      helperText={
-                        entry.error.platform ? (
-                          <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                            {entry.error.platform}
-                          </span>
-                        ) : null
-                      }
-                      className="flex-1"
-                      InputProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      InputLabelProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: 'transparent',
-                            background: 'rgba(18, 18, 18, 0.3)',
-                            borderRadius: '5px',
-                            color: 'silver',
-                            fontSize: '14px',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: entry.error.platform ? '#d32f2f' : '#3FAC5A',
-                          },
-                          '&.Mui-focused fieldset': {
-                            borderColor: entry.error.platform ? '#d32f2f' : '#3FAC5A',
-                          },
-                          fontFamily: 'Red Rose',
-                          fontSize: '14px',
-                        },
-                        '& input[type=number]': {
-                          MozAppearance: 'textfield',
-                          WebkitAppearance: 'none',
-                          appearance: 'none',
-                        },
-                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                          WebkitAppearance: 'none',
-                          margin: 0,
-                        },
-                      }}
-                    />
+          {tab2 && (
+            <div>
 
-                    <TextField
-                      type='url'
-                      placeholder="URL"
-                      size="small"
-                      variant="outlined"
-                      value={entry.url}
-                      onChange={(e) => handleSocialChange(index, 'url', e.target.value)}
-                      autoComplete="off"
-                      error={!!entry.error.url}
-                      helperText={
-                        entry.error.url ? (
-                          <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                            {entry.error.url}
-                          </span>
-                        ) : null
-                      }
-                      className="flex-1"
-                      InputProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      InputLabelProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: 'transparent',
-                            background: 'rgba(18, 18, 18, 0.3)',
-                            borderRadius: '5px',
-                            color: 'silver',
-                            fontSize: '14px',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: entry.error.url ? '#d32f2f' : '#3FAC5A',
-                          },
-                          '&.Mui-focused fieldset': {
-                            borderColor: entry.error.url ? '#d32f2f' : '#3FAC5A',
-                          },
-                          fontFamily: 'Red Rose',
-                          fontSize: '14px',
-                        },
-                        '& input[type=number]': {
-                          MozAppearance: 'textfield',
-                          WebkitAppearance: 'none',
-                          appearance: 'none',
-                        },
-                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                          WebkitAppearance: 'none',
-                          margin: 0,
-                        },
-                      }}
-                    />
-
-                    <IconButton
-                      className={`font-bold font-size-xxs b-r-xs`}
-                      onClick={() => handleRemoveSocial(index)}
-                      size='small'
-                      color='error'
-                    >
-                      <IndeterminateCheckBoxIcon style={{ fontSize: '30px' }} />
-                    </IconButton>
-                  </div>
-                ))}
-              </div>
-
-              {/* Locked accounts */}
-              <div>
-                <div className='d-flex justify-content-between align-items-center mt-4 mb-1'>
-                  <p className='small ms-1 mb-0 text-silver required'>Locked Accounts</p>
-                  <Button
-                    className={` font-bold font-size-xxs b-r-xs hover-btn text-white`}
-                    onClick={handleAddLockedAccount}
-                    variant='text'
-                    size='small'
-                    sx={{ height: '25px' }}
-                  >
-                    + Add Account
-                  </Button>
-                </div>
-
-                {lockedAccounts.map((entry, index) => (
-                  <div key={index} className="flex gap-2 items-start mb-2">
-                    <TextField
-                      type='text'
-                      placeholder="Account address"
-                      size="small"
-                      variant="outlined"
-                      value={entry.address}
-                      autoComplete="off"
-                      onChange={(e) => handleLockedAccountChange(index, 'address', e.target.value)}
-                      error={!!entry.error.address}
-                      helperText={
-                        entry.error.address ? (
-                          <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                            {entry.error.address}
-                          </span>
-                        ) : null
-                      }
-                      className="flex-1"
-                      InputProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      InputLabelProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: 'transparent',
-                            background: 'rgba(18, 18, 18, 0.3)',
-                            borderRadius: '5px',
-                            color: 'silver',
-                            fontSize: '14px',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: entry.error.address ? '#d32f2f' : '#3FAC5A',
-                          },
-                          '&.Mui-focused fieldset': {
-                            borderColor: entry.error.address ? '#d32f2f' : '#3FAC5A',
-                          },
-                          fontFamily: 'Red Rose',
-                          fontSize: '14px',
-                        },
-                        '& input[type=number]': {
-                          MozAppearance: 'textfield',
-                          WebkitAppearance: 'none',
-                          appearance: 'none',
-                        },
-                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                          WebkitAppearance: 'none',
-                          margin: 0,
-                        },
-                      }}
-                    />
-
-                    <TextField
-                      type='text'
-                      placeholder="Label"
-                      size="small"
-                      variant="outlined"
-                      value={entry.label}
-                      onChange={(e) => handleLockedAccountChange(index, 'label', e.target.value)}
-                      autoComplete="off"
-                      error={!!entry.error.label}
-                      helperText={
-                        entry.error.label ? (
-                          <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                            {entry.error.label}
-                          </span>
-                        ) : null
-                      }
-                      className="flex-1"
-                      InputProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      InputLabelProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: 'transparent',
-                            background: 'rgba(18, 18, 18, 0.3)',
-                            borderRadius: '5px',
-                            color: 'silver',
-                            fontSize: '14px',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: entry.error.label ? '#d32f2f' : '#3FAC5A',
-                          },
-                          '&.Mui-focused fieldset': {
-                            borderColor: entry.error.label ? '#d32f2f' : '#3FAC5A',
-                          },
-                          fontFamily: 'Red Rose',
-                          fontSize: '14px',
-                        },
-                        '& input[type=number]': {
-                          MozAppearance: 'textfield',
-                          WebkitAppearance: 'none',
-                          appearance: 'none',
-                        },
-                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                          WebkitAppearance: 'none',
-                          margin: 0,
-                        },
-                      }}
-                    />
-
-                    <IconButton
-                      className={`font-bold font-size-xxs b-r-xs`}
-                      onClick={() => handleRemoveLockedAccount(index)}
-                      size='small'
-                      color='error'
-                    >
-                      <IndeterminateCheckBoxIcon style={{ fontSize: '30px' }} />
-                    </IconButton>
-                  </div>
-                ))}
-              </div>
-
-              {/* Extra tokens */}
-              <div>
-                <div className='d-flex justify-content-between align-items-center mt-4 mb-1'>
-                  <p className='small ms-1 mb-0 text-silver required'>Extra Tokens</p>
-                  <Button
-                    className={` font-bold font-size-xxs b-r-xs hover-btn text-white`}
-                    onClick={handleAddExtraToken}
-                    variant='text'
-                    size='small'
-                    sx={{ height: '25px' }}
-                  >
-                    + Add Token
-                  </Button>
-                </div>
-
-                {extraTokens.map((token, index) => (
-                  <div key={index} className="flex gap-2 items-start mb-2">
-                    <TextField
-                      type='text'
-                      placeholder="e.g. TOKEN-1234"
-                      size="small"
-                      variant="outlined"
-                      value={token.value}
-                      autoComplete="off"
-                      onChange={(e) => handleExtraTokenChange(index, e.target.value)}
-                      error={!!token.error}
-                      helperText={
-                        token.error ? (
-                          <span style={{ fontFamily: 'Red Rose', marginLeft: '-10px' }}>
-                            {token.error}
-                          </span>
-                        ) : null
-                      }
-                      className="flex-1"
-                      InputProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      InputLabelProps={{
-                        style: { color: 'silver', fontFamily: 'Red Rose' },
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: 'transparent',
-                            background: 'rgba(18, 18, 18, 0.3)',
-                            borderRadius: '5px',
-                            color: 'silver',
-                            fontSize: '14px',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: token.error ? '#d32f2f' : '#3FAC5A',
-                          },
-                          '&.Mui-focused fieldset': {
-                            borderColor: token.error ? '#d32f2f' : '#3FAC5A',
-                          },
-                          fontFamily: 'Red Rose',
-                          fontSize: '14px',
-                        },
-                        '& input[type=number]': {
-                          MozAppearance: 'textfield',
-                          WebkitAppearance: 'none',
-                          appearance: 'none',
-                        },
-                        '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                          WebkitAppearance: 'none',
-                          margin: 0,
-                        },
-                      }}
-                    />
-
-                    <IconButton
-                      className={`font-bold font-size-xxs b-r-xs`}
-                      onClick={() => handleRemoveExtraToken(index)}
-                      size='small'
-                      color='error'
-                    >
-                      <IndeterminateCheckBoxIcon style={{ fontSize: '30px' }} />
-                    </IconButton>
-                  </div>
-                ))}
-              </div>
-
-              {/* Status */}
-              <div>
-                <p className='mt-4 mb-1 small ms-1 text-silver required'>Status</p>
-                <TextField
-                  type='select'
-                  select
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  value={status}
-                  autoComplete="off"
-                  onChange={handleStatusChange}
-                  className='mt-1 mb-5'
-                  InputProps={{
-                    style: { color: 'silver', fontFamily: 'Red Rose' },
-                  }}
-                  InputLabelProps={{
-                    style: { color: 'silver', fontFamily: 'Red Rose' },
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        borderColor: 'transparent',
-                        background: 'rgba(18, 18, 18, 0.3)',
-                        borderRadius: '5px',
-                        color: 'silver',
-                        fontSize: '14px',
-                      },
-                      '&:hover fieldset': {
-                        borderColor: '#3FAC5A',
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#3FAC5A',
-                      },
-                      fontFamily: 'Red Rose',
-                      fontSize: '14px',
-                    },
-                    '& input[type=number]': {
-                      MozAppearance: 'textfield',
-                      WebkitAppearance: 'none',
-                      appearance: 'none',
-                    },
-                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                      WebkitAppearance: 'none',
-                      margin: 0,
-                    },
-                    '& .MuiSelect-icon': {
-                      color: 'white'
-                    }
-                  }}
-                  SelectProps={{
-                    MenuProps: {
-                      PaperProps: {
-                        sx: {
-                          backgroundColor: 'rgba(32, 32, 32, 1)',
-                          color: 'white',
-                          fontFamily: 'Red Rose'
-                        },
-                      },
-                    },
-                  }}
-                >
-                  <MenuItem value={'active'} className={`font-rose select-menu-item font-size-sm ${status === 'active' ? 'active' : ''}`}>
-                    Active
-                  </MenuItem>
-                  <MenuItem value={'inactive'} className={`font-rose select-menu-item font-size-sm ${status === 'inactive' ? 'active' : ''}`}>
-                    Inactive
-                  </MenuItem>
-                </TextField>
-              </div>
-
-              {/* Submit Button */}
-              <Button
-                className={`btn-intense-default b-r-xs hover-btn btn-intense-success2 fullWidth ${(prInProgress || !address) ? 'btn-disabled' : ''}`}
-                sx={{ height: '30px' }}
-                onClick={() => submitBrandingBranch(tokenLogin?.nativeAuthToken || '')}
-              // disabled={prInProgress}
-              >
-                Submit Files
-              </Button>
             </div>
-          </Col>
-        </Row>
-      )}
-
-      {tab2 && (
-        <div>
-
-        </div>
+          )}
+        </Fragment>
       )}
 
       {/* Add light spots */}
