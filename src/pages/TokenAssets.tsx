@@ -498,14 +498,31 @@ const TokenAssets = () => {
     }
   }, [address, prInProgress]);
 
-  // verify the ownership
+  // Sign the commit hash
   const signLastCommit = async () => {
-    const message = new SignableMessage({
-      message: Buffer.from(commitHash)
-    });
-    await signMessage(message).then((r: any) => {
-      setOwnershipSignature(r.toString());
-    });
+    if (!commitHash) {
+      console.error('No commit hash provided');
+      setPrError('No commit hash provided');
+      return;
+    }
+
+    try {
+      const message = new SignableMessage({
+        message: Buffer.from(commitHash),
+      });
+      const result = await signMessage(message);
+
+      // Extract the signature property
+      if (!result || !result.signature) {
+        throw new Error('Invalid signature format: missing or invalid signature property');
+      }
+
+      const signature = result.getSignature();
+      setOwnershipSignature(signature.toString('hex'));
+    } catch (error: any) {
+      console.error('Failed to sign message:', error);
+      setPrError('Failed to generate signature: ' + error.message);
+    }
   };
 
   // create pull request function
