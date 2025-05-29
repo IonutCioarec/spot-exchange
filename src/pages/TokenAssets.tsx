@@ -1322,7 +1322,7 @@ const TokenAssets = () => {
                     className={`btn-intense-default b-r-xs hover-btn btn-intense-success2 fullWidth ${(prInProgress || !address) ? 'btn-disabled' : ''}`}
                     sx={{ height: '30px' }}
                     onClick={() => submitBrandingBranch(tokenLogin?.nativeAuthToken || '')}
-                  // disabled={prInProgress}
+                    disabled={prInProgress}
                   >
                     Submit Files
                   </Button>
@@ -1345,7 +1345,7 @@ const TokenAssets = () => {
                     className={`btn-intense-default mt-2 b-r-xs hover-btn btn-intense-success2 fullWidth ${(prInProgress || !address) ? 'btn-disabled' : ''}`}
                     sx={{ height: '30px' }}
                     onClick={() => signLastCommit()}
-                  // disabled={prInProgress}
+                    disabled={prInProgress}
                   >
                     Sign verification
                   </Button>
