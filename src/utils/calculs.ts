@@ -2,6 +2,8 @@ import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
 import { denominatedAmountToAmount } from './formatters';
 import { SwapStep, SwapValidationResult } from 'types/backendTypes';
+import { Address, SignableMessage } from '@multiversx/sdk-core/out';
+import { UserVerifier } from '@multiversx/sdk-wallet/out';
 
 export const getPercentage = (amount: number, totalAmount: number): number => {
   const percentage = totalAmount > 0 ? (amount * 100) / totalAmount : 0;
@@ -114,4 +116,21 @@ export function validateSwapStepsReserve(
   }
 
   return 'swap_ok';
+}
+
+export async function verifySignature(address: string, message: string, signature: string): Promise<boolean> {
+  try {
+    const signableMessage = new SignableMessage({
+      message: Buffer.from(message),
+    });
+    const serializedMessage = signableMessage.serializeForSigning();
+    const signatureBuffer = Buffer.from(signature.replace('0x', ''), 'hex');
+    const verifier = UserVerifier.fromAddress(Address.fromBech32(address));
+    const isValid = verifier.verify(serializedMessage, signatureBuffer);
+    console.log('Signature verification:', { address, message, signature, isValid });
+    return isValid;
+  } catch (error: any) {
+    console.error('Verification failed:', error.message);
+    return false;
+  }
 }

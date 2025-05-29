@@ -1,4 +1,5 @@
 import 'assets/scss/tools.scss';
+import { UserVerifier } from '@multiversx/sdk-wallet';
 import { Row, Col } from 'react-bootstrap';
 import { Fragment, useEffect, useState } from 'react';
 import { useGetAccount, useGetAccountInfo, useGetIsLoggedIn, useGetLoginInfo, useSignMessage } from 'hooks';
@@ -9,7 +10,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CreateToken from 'components/Tools/CreateToken';
 import OwnedTokens from 'components/Tools/OwnedTokens';
 import { Button, IconButton, MenuItem, styled, TextareaAutosize, TextField } from '@mui/material';
-import { SignableMessage } from "@multiversx/sdk-core";
+import { Address, SignableMessage } from "@multiversx/sdk-core";
 import { Nullable } from '@multiversx/sdk-dapp/types';
 import { useRedirectSignature } from 'hooks/transactions/useRedirectSignature';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
@@ -23,6 +24,7 @@ import FilterLoader from 'components/Pools/FilterLoader';
 import InfoIcon from '@mui/icons-material/Info';
 import { error } from 'console';
 import { isEmpty } from 'lodash';
+import { verifySignature } from 'utils/calculs';
 
 const isValidUrl = (url: string) => {
   try {
@@ -142,15 +144,12 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-
 const TokenAssets = () => {
   const { token_id } = useParams<{ token_id: string }>();
   const location = useLocation();
   const token = location.state as { token?: CreatedToken };
   const { checkBrandingPR, createBrandingPR } = useBackendAPI();
   const { address } = useGetAccountInfo();
-
-  console.log(JSON.stringify(token, null, 2));
 
   const branded = localStorage.getItem("branded");
   useEffect(() => {
@@ -471,6 +470,7 @@ const TokenAssets = () => {
 
       console.log('Branch created:', res.data);
       setCommitHash(res.data.latestCommitSha);
+      localStorage.setItem("latestCommitSha", res.data.latestCommitSha);
       setPrError(null);
     } catch (error: any) {
       console.error('Failed to create branding branch:', error);
@@ -548,9 +548,23 @@ const TokenAssets = () => {
       if (!hasCalledPR) {
         try {
           if (ownershipSignature && ownershipSignature !== '') {
+            const localCommit = localStorage.getItem("latestCommitSha") || '';
+            const isValid = await verifySignature(address, commitHash || localCommit, ownershipSignature);
+            if (!isValid) {
+              setPrError('Signature verification failed');
+              return;
+            }
+
             await createPR(ownershipSignature);
             setHasCalledPR(true);
           } else if (urlSignature && urlSignature !== '') {
+            const localCommit = localStorage.getItem("latestCommitSha") || '';
+            const isValid = await verifySignature(address, commitHash || localCommit, urlSignature);
+            if (!isValid) {
+              setPrError('Signature verification failed');
+              return;
+            }
+
             await createPR(urlSignature);
             setHasCalledPR(true);
           }
@@ -561,6 +575,7 @@ const TokenAssets = () => {
           setTab1(false);
           setTab2(false);
           setTab3(true);
+          localStorage.removeItem("latestCommitSha");
         }
       }
     };
@@ -572,58 +587,79 @@ const TokenAssets = () => {
 
   // add existing token fields if it already has a previous branding change
   useEffect(() => {
-    if (!token?.token?.assets) return;
+    const loadTokenAssets = async () => {
+      if (!token?.token?.assets) return;
 
-    const assets = token.token.assets;
+      const assets = token.token.assets;
 
-    // 1. Basic fields
-    setWebsite(assets.website || '');
-    setDescription(assets.description || '');
-    setLedgerSignature(assets.ledgerSignature || '');
-    setStatus(assets.status || 'active');
+      // 1. Basic fields
+      setWebsite(assets.website || '');
+      setDescription(assets.description || '');
+      setLedgerSignature(assets.ledgerSignature || '');
+      setStatus(assets.status || 'active');
 
-    // 2. Social (convert object to array with error placeholders)
-    if (assets.social && typeof assets.social === 'object') {
-      const socialArr = Object.entries(assets.social).map(([platform, url]) => ({
-        platform,
-        url,
-        error: { platform: '', url: '' }
-      }));
-      setSocial(socialArr.length ? socialArr : [{ platform: '', url: '', error: { platform: '', url: '' } }]);
-    }
+      // 2. Social (convert object to array with error placeholders)
+      if (assets.social && typeof assets.social === 'object') {
+        const socialArr = Object.entries(assets.social).map(([platform, url]) => ({
+          platform,
+          url,
+          error: { platform: '', url: '' }
+        }));
+        setSocial(socialArr.length ? socialArr : [{ platform: '', url: '', error: { platform: '', url: '' } }]);
+      }
 
-    // 3. Locked accounts (convert object to array with error placeholders)
-    if (assets.lockedAccounts && typeof assets.lockedAccounts === 'object') {
-      const lockedArr = Object.entries(assets.lockedAccounts).map(([address, label]) => ({
-        address,
-        label,
-        error: { address: '', label: '' }
-      }));
-      setLockedAccounts(lockedArr.length ? lockedArr : [{ address: '', label: '', error: { address: '', label: '' } }]);
-    }
+      // 3. Locked accounts (convert object to array with error placeholders)
+      if (assets.lockedAccounts && typeof assets.lockedAccounts === 'object') {
+        const lockedArr = Object.entries(assets.lockedAccounts).map(([address, label]) => ({
+          address,
+          label,
+          error: { address: '', label: '' }
+        }));
+        setLockedAccounts(lockedArr.length ? lockedArr : [{ address: '', label: '', error: { address: '', label: '' } }]);
+      }
 
-    // 4. PNG and SVG preview URLs
-    if (assets.pngUrl) {
-      setPngPreviewUrl(assets.pngUrl);
-      setPngFileName(assets.pngUrl.split('/').pop() || null);
-    }
-    if (assets.svgUrl) {
-      setSvgPreviewUrl(assets.svgUrl);
-      setSvgFileName(assets.svgUrl.split('/').pop() || null);
-    }
+      // 4. Extra tokens
+      if (Array.isArray(assets.extraTokens)) {
+        const extra = assets.extraTokens.map((value) => ({
+          value,
+          error: ''
+        }));
+        setExtraTokens(extra.length ? extra : [{ value: '', error: '' }]);
+      } else {
+        setExtraTokens([{ value: '', error: '' }]);
+      }
 
-    // 5. Extra tokens
-    if (Array.isArray(assets.extraTokens)) {
-      const extra = assets.extraTokens.map((value) => ({
-        value,
-        error: ''
-      }));
-      setExtraTokens(extra.length ? extra : [{ value: '', error: '' }]);
-    } else {
-      setExtraTokens([{ value: '', error: '' }]);
-    }
+      // 5. PNG and SVG preview + file (fetch and set as File objects)
+      if (assets.pngUrl) {
+        try {
+          const response = await fetch(assets.pngUrl);
+          const blob = await response.blob();
+          const file = new File([blob], 'logo.png', { type: blob.type });
+          setPngFile(file);
+          setPngFileName(file.name);
+          setPngPreviewUrl(URL.createObjectURL(blob));
+        } catch (err) {
+          console.warn('Failed to load PNG from URL:', err);
+        }
+      }
 
+      if (assets.svgUrl) {
+        try {
+          const response = await fetch(assets.svgUrl);
+          const blob = await response.blob();
+          const file = new File([blob], 'logo.svg', { type: blob.type });
+          setSvgFile(file);
+          setSvgFileName(file.name);
+          setSvgPreviewUrl(URL.createObjectURL(blob));
+        } catch (err) {
+          console.warn('Failed to load SVG from URL:', err);
+        }
+      }
+    };
+
+    loadTokenAssets();
   }, [token]);
+
 
 
   return (
