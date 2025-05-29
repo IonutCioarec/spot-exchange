@@ -544,8 +544,8 @@ const TokenAssets = () => {
 
   useEffect(() => {
     const handleCreatePR = async () => {
-      setLoading(true);
       if (!hasCalledPR) {
+        setLoading(true);
         try {
           if (ownershipSignature && ownershipSignature !== '') {
             const localCommit = localStorage.getItem("latestCommitSha") || '';
