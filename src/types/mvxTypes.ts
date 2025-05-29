@@ -21,6 +21,8 @@ export interface CreatedTokenAssets {
   lockedAccounts?: Record<string, string>;
   extraTokens?: string[];
   status?: string;
+  pngUrl?: string;
+  svgUrl?: string;
 }
 
 export interface CreatedToken {

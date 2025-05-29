@@ -150,6 +150,8 @@ const TokenAssets = () => {
   const { checkBrandingPR, createBrandingPR } = useBackendAPI();
   const { address } = useGetAccountInfo();
 
+  console.log(JSON.stringify(token, null, 2));
+
   const branded = localStorage.getItem("branded");
   useEffect(() => {
     if (token) {
@@ -567,6 +569,62 @@ const TokenAssets = () => {
       handleCreatePR();
     }
   }, [ownershipSignature, urlSignature, address]);
+
+  // add existing token fields if it already has a previous branding change
+  useEffect(() => {
+    if (!token?.token?.assets) return;
+
+    const assets = token.token.assets;
+
+    // 1. Basic fields
+    setWebsite(assets.website || '');
+    setDescription(assets.description || '');
+    setLedgerSignature(assets.ledgerSignature || '');
+    setStatus(assets.status || 'active');
+
+    // 2. Social (convert object to array with error placeholders)
+    if (assets.social && typeof assets.social === 'object') {
+      const socialArr = Object.entries(assets.social).map(([platform, url]) => ({
+        platform,
+        url,
+        error: { platform: '', url: '' }
+      }));
+      setSocial(socialArr.length ? socialArr : [{ platform: '', url: '', error: { platform: '', url: '' } }]);
+    }
+
+    // 3. Locked accounts (convert object to array with error placeholders)
+    if (assets.lockedAccounts && typeof assets.lockedAccounts === 'object') {
+      const lockedArr = Object.entries(assets.lockedAccounts).map(([address, label]) => ({
+        address,
+        label,
+        error: { address: '', label: '' }
+      }));
+      setLockedAccounts(lockedArr.length ? lockedArr : [{ address: '', label: '', error: { address: '', label: '' } }]);
+    }
+
+    // 4. PNG and SVG preview URLs
+    if (assets.pngUrl) {
+      setPngPreviewUrl(assets.pngUrl);
+      setPngFileName(assets.pngUrl.split('/').pop() || null);
+    }
+    if (assets.svgUrl) {
+      setSvgPreviewUrl(assets.svgUrl);
+      setSvgFileName(assets.svgUrl.split('/').pop() || null);
+    }
+
+    // 5. Extra tokens
+    if (Array.isArray(assets.extraTokens)) {
+      const extra = assets.extraTokens.map((value) => ({
+        value,
+        error: ''
+      }));
+      setExtraTokens(extra.length ? extra : [{ value: '', error: '' }]);
+    } else {
+      setExtraTokens([{ value: '', error: '' }]);
+    }
+
+  }, [token]);
+
 
   return (
     <div className="tools-page-height">
