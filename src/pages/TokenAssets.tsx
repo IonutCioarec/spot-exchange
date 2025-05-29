@@ -177,6 +177,7 @@ const TokenAssets = () => {
   const [ownershipSignature, setOwnershipSignature] = useState<string | null>(null);
   const { signMessage } = useSignMessage();
   const [prError, setPrError] = useState<string | null>(null);
+  const [hasCalledPR, setHasCalledPR] = useState(false);
 
   // image files
   const [pngFile, setPngFile] = useState<File | null>(null);
@@ -519,6 +520,7 @@ const TokenAssets = () => {
 
       const signature = result.getSignature();
       setOwnershipSignature(signature.toString('hex'));
+      setPrError(null);
     } catch (error: any) {
       console.error('Failed to sign message:', error);
       setPrError('Failed to generate signature: ' + error.message);
@@ -534,26 +536,30 @@ const TokenAssets = () => {
 
     if (tokenLogin?.nativeAuthToken && token_id) {
       const result = await createBrandingPR(tokenLogin?.nativeAuthToken, token_id, signature, branded ? true : false);
-      setPrError(result?.error || null);
+      setPrError(result?.error ? result?.error : null);
     }
   };
 
   useEffect(() => {
     const handleCreatePR = async () => {
       setLoading(true);
-      try {
-        if (ownershipSignature && ownershipSignature !== '') {
-          await createPR(ownershipSignature);
-        } else if (urlSignature && urlSignature !== '') {
-          await createPR(urlSignature);
+      if (!hasCalledPR) {
+        try {
+          if (ownershipSignature && ownershipSignature !== '') {
+            await createPR(ownershipSignature);
+            setHasCalledPR(true);
+          } else if (urlSignature && urlSignature !== '') {
+            await createPR(urlSignature);
+            setHasCalledPR(true);
+          }
+        } catch (err) {
+          console.error('Failed to create PR:', err);
+        } finally {
+          setLoading(false);
+          setTab1(false);
+          setTab2(false);
+          setTab3(true);
         }
-      } catch (err) {
-        console.error('Failed to create PR:', err);
-      } finally {
-        setLoading(false);
-        setTab1(false);
-        setTab2(false);
-        setTab3(true);
       }
     };
 
@@ -1295,8 +1301,8 @@ const TokenAssets = () => {
               <Col xs={12} lg={{ offset: 3, span: 6 }} className='mt-2'>
                 <div className='create-token-container p-4'>
                   <div className={`p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} mb-2`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
-                    <InfoIcon fontSize='small' color={`info`} className='m-t-n-xxs' />
-                    <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>Branding token request successfully completed!</p>
+                    <InfoIcon fontSize='small' color={`${prError ? 'error' : 'info'}`} className='m-t-n-xxs' />
+                    <p className='font-size-xs text-justified mb-0 mt-0 ms-2 d-inline'>{prError ? prError : 'Branding token request successfully completed!'}</p>
                   </div>
                   <p className='mb-0 text-white text-justified mt-3 mx-1 font-size-sm'>Once the multiversx team accepts your request, your token details will be updated. During the process, you will see a notification box on the tools page, in the token branding section. </p>
                 </div>
