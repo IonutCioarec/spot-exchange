@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { dexAPI } from 'config';
-import { Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice, AuthState, CreateBrandingPRResponse, CheckBrandingPRResponse } from 'types/backendTypes';
+import {
+  Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice, AuthState, CreateBrandingPRResponse,
+  CheckBrandingPRResponse, FarmsState
+} from 'types/backendTypes';
 
 
 export const useBackendAPI = () => {
@@ -281,6 +284,49 @@ export const useBackendAPI = () => {
     }
   };
 
+  // get the list of farms
+  const getFarms = async (
+    currentPage: number = 1,
+    currentLimit: number = 10,
+    sort_by: 'boosted_apr' | 'fees_apr' | 'total_apr' | 'total_staked' | 'total_rewards' | 'staking_users' = 'total_staked',
+    sort_direction: 'asc' | 'desc' = 'desc',
+    lp_token_search: string = '',
+  ): Promise<FarmsState> => {
+    try {
+      let url = `${dexAPI}/farms?page=${currentPage}&limit=${currentLimit}&sort_by=${sort_by}&sort_direction=${sort_direction}&token_search=${lp_token_search}`;
+      const response = await axios.get(url, {
+        headers: { Accept: 'application/json' },
+      });
+      const { data, page, limit, total, total_pages } = response.data;
+
+      return {
+        farms: data,
+        page,
+        limit,
+        total,
+        total_pages,
+        sort_by: sort_by,
+        sort_direction: sort_direction,
+        lp_token_search: lp_token_search ? lp_token_search : '',
+        status: 'succeeded',
+      };
+
+    } catch (e) {
+      console.error(e);
+    }
+    return {
+      farms: [],
+      page: 0,
+      limit: 0,
+      total: 0,
+      total_pages: 0,
+      sort_by: 'total_apr',
+      sort_direction: 'desc',
+      lp_token_search: '',
+      status: 'failed',
+    };
+  };
+
   return {
     getPairs,
     getTokens,
@@ -289,6 +335,7 @@ export const useBackendAPI = () => {
     getSwapRawPrice,
     verifyAuth,
     checkBrandingPR,
-    createBrandingPR
+    createBrandingPR,
+    getFarms
   };
 };

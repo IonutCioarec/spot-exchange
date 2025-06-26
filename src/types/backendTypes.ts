@@ -89,7 +89,7 @@ export interface PairsState {
   lp_token_search: string[];
   sort_by: 'liquidity' | 'volume24h' | 'fees24h',
   sort_direction: 'asc' | 'desc',
-  status: 'loading' | 'succeeded' | 'failed';  
+  status: 'loading' | 'succeeded' | 'failed';
 };
 
 export interface TokensState {
@@ -108,21 +108,6 @@ export interface TokensState {
   status: 'loading' | 'succeeded' | 'failed';
 };
 
-export interface Farm {
-  token1: string;
-  token2: string;
-  feesAPR: string;
-  boostedAPR: string;
-  totalAPR: string;
-  totalStaked: string;
-  totalRewards: string;
-  stakingUsers: number;
-  lp_token_id: string;
-  totalRewardsList: { token: string; value: string }[];
-};
-
-export type FarmsState = Record<string, Farm>;
-
 export interface UserFarm {
   staked: string;
   rewards: string;
@@ -137,7 +122,7 @@ export type UserFarmsState = Record<string, UserFarm>;
 export type SwapValidationResult = 'low_reserve' | 'slippage_exceeded' | 'swap_ok';
 
 export interface SwapRawPrice {
-  pairs : [
+  pairs: [
     {
       'sc_address': string;
       'token_in': string;
@@ -181,3 +166,41 @@ export interface CheckBrandingPRResponse {
   }>;
   error?: string;
 };
+
+export interface Farm {
+  farm_address: string;
+  token1: string;
+  token2: string;
+  fees_apr: string;
+  boosted_apr: string;
+  total_apr: string;
+  total_staked: string;
+  total_rewards: string;
+  staking_users: number;
+  lp_token_id: string;
+  apr_boost?: {
+    rewardToken: string;
+    fromRound: number;
+    toRound: number;
+    totalAmount: number;
+  }[];
+  total_rewards_list: {
+    token: string;
+    amount: number;
+    value: string;
+  }[];
+};
+
+export type FarmState = Record<string, Farm>;
+
+export interface FarmsState {
+  farms: Farm[];
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+  lp_token_search: string;
+  sort_by: 'boosted_apr' | 'fees_apr' | 'total_apr' | 'total_staked' | 'total_rewards' | 'staking_users';
+  sort_direction: 'asc' | 'desc';
+  status: 'loading' | 'succeeded' | 'failed';
+}
