@@ -83,13 +83,13 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
             <Col lg={1} style={{ whiteSpace: 'nowrap' }}>
               <span className="mx-2">{index + 1}</span>
               <img
-                src={allTokens[farm.token1]?.logo_url ?? defaultTokenValues.image_url}
+                src={allTokens[farm.token1]?.logo_url && allTokens[farm.token1]?.logo_url !== 'N/A' ? allTokens[farm.token1].logo_url : defaultTokenValues.image_url}
                 alt={farm.token1}
                 className='d-inline'
                 style={{ width: 35, height: 35, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
               />
               <motion.img
-                src={allTokens[farm.token2]?.logo_url ?? defaultTokenValues.image_url}
+                src={allTokens[farm.token2]?.logo_url && allTokens[farm.token2]?.logo_url !== 'N/A' ? allTokens[farm.token2].logo_url : defaultTokenValues.image_url}
                 alt={farm.token2}
                 className="d-inline m-l-n-xxl"
                 initial={{ x: 0 }}
@@ -120,25 +120,25 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               </div>
             </Col>
             <Col lg={1}>
-              <p className={`mb-0 font-size-xxs text-silver`}>
+              <p className={`mb-0 no-wrap font-size-xxs text-silver`}>
                 Total APR
               </p>
-              <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.totalAPR), 2)}%</p>
+              <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.total_apr), 2)}%</p>
             </Col>
             <Col lg={1}>
-              <p className={`mb-0 font-size-xxs text-silver`}>
+              <p className={`mb-0 no-wrap font-size-xxs text-silver`}>
                 Fees APR
               </p>
-              <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.feesAPR), 2)}%</p>
+              <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.fees_apr), 2)}%</p>
             </Col>
             <Col lg={1}>
-              <p className={`mb-0 font-size-xxs text-silver`}>
+              <p className={`mb-0 no-wrap font-size-xxs text-silver`}>
                 Boosted APR
               </p>
-              <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.boostedAPR), 2)}%</p>
+              <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.boosted_apr), 2)}%</p>
             </Col>
             <Col lg={2} className="text-right">
-              <p className={`mb-0 font-size-xxs ${sortBy === 'total_staked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+              <p className={`mb-0 no-wrap font-size-xxs ${sortBy === 'total_staked' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                 Total Staked
                 {sortBy === 'total_staked' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
                 {sortBy === 'total_staked' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
@@ -146,7 +146,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               $
               <CountUp
                 start={0}
-                end={Number(farm?.totalStaked)}
+                end={Number(farm?.total_staked)}
                 duration={1.5}
                 separator=","
                 decimals={3}
@@ -155,7 +155,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               />
             </Col>
             <Col lg={2} className="text-right">
-              <p className={`mb-0 font-size-xxs ${sortBy === 'total_rewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+              <p className={`mb-0 no-wrap font-size-xxs ${sortBy === 'total_rewards' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                 Total Rewards
                 {sortBy === 'total_rewards' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
                 {sortBy === 'total_rewards' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
@@ -163,7 +163,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               $
               <CountUp
                 start={0}
-                end={Number(farm?.totalRewards)}
+                end={Number(farm?.total_rewards)}
                 duration={1.5}
                 separator=","
                 decimals={3}
@@ -179,7 +179,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               </p>
               <CountUp
                 start={0}
-                end={Number(farm?.stakingUsers)}
+                end={Number(farm?.staking_users)}
                 duration={1.5}
                 separator=","
                 decimals={0}
@@ -210,25 +210,25 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                 <Row className="g-2">
                   <Col lg={3}>
                     <div className="pool-sub-container p-2 text-center" style={{ minHeight: '105px' }}>
-                      <p className="text-silver font-size-sm mb-0">Total Staked</p>
-                      <p className="font-size-sm mb-0 mt-3">{abbreviateNumber(Number(farm.totalStaked), 2)} {farmName}</p>
-                      <p className="font-size-sm mb-0">(${abbreviateNumber(Number(farm?.totalStaked) * 2.4, 2)})</p>
+                      <p className="text-silver font-size-sm mb-0 no-wrap">Total Staked</p>
+                      <p className="font-size-sm mb-0 mt-3">{abbreviateNumber(Number(farm.total_staked), 2)} {farmName}</p>
+                      <p className="font-size-sm mb-0">(${abbreviateNumber(Number(farm?.total_staked) * 2.4, 2)})</p>
                     </div>
                   </Col>
                   <Col lg={3}>
                     <div className="pool-sub-container p-2 text-center" style={{ minHeight: '105px' }}>
-                      <p className="text-silver font-size-sm mb-0">Your Staked</p>
-                      <p className="font-size-sm mb-0 mt-3">{abbreviateNumber(Number(userFarm.staked), 2)} {farmName}</p>
-                      <p className="font-size-sm mb-0">(${abbreviateNumber(Number(userFarm.staked) * 2.4, 2)})</p>
+                      <p className="text-silver font-size-sm mb-0 no-wrap">Your Staked</p>
+                      <p className="font-size-sm mb-0 mt-3">{abbreviateNumber(Number(userFarm?.staked ?? '0'), 2)} {farmName}</p>
+                      <p className="font-size-sm mb-0">(${abbreviateNumber(Number(userFarm?.staked ?? '0') * 2.4, 2)})</p>
                     </div>
                   </Col>
                   <Col lg={3}>
                     <div className="pool-sub-container p-2 text-center" style={{ minHeight: '105px' }}>
-                      <p className="text-silver font-size-sm mb-0">Total Rewards</p>
+                      <p className="text-silver font-size-sm mb-0 no-wrap">Total Rewards</p>
                       <div className="mt-3">
-                        {farm.totalRewardsList.length ? (
-                          farm.totalRewardsList.map((item) => (
-                            <p className="font-size-sm mb-0" key={`farm-${item.token}-${item.value}`}>{abbreviateNumber(Number(item.value), 2)} {item.token.split('-')[0]}</p>
+                        {farm.total_rewards_list.length ? (
+                          farm.total_rewards_list.map((item) => (
+                            <p className="font-size-sm mb-0" key={`farm-${item.token}-${item.value}`}>{abbreviateNumber(Number(item.value ?? '0'), 2)} {item.token.split('-')[0]}</p>
                           ))
                         ) : (
                           <p className="font-size-sm mb-0">-</p>
@@ -240,8 +240,8 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                     <div className="pool-sub-container p-2 text-center" style={{ minHeight: '105px' }}>
                       <p className="text-silver font-size-sm mb-0">Your Rewards</p>
                       <div className="mt-3">
-                        {userFarm.rewardsList.length ? (
-                          userFarm.rewardsList.map((item) => (
+                        {userFarm?.rewardsList.length ? (
+                          userFarm?.rewardsList.map((item) => (
                             <p className="font-size-sm mb-0" key={`user-${item.token}-${item.value}`}>{abbreviateNumber(Number(item.value), 2)} {item.token.split('-')[0]}</p>
                           ))
                         ) : (
@@ -280,7 +280,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
           isOpen={isUnstakeOpen}
           setIsOpen={setIsUnstakeOpen}
           lpTokenId={farm.lp_token_id}
-          lpTokenMaxAmount={Number(userFarm.staked)}
+          lpTokenMaxAmount={Number(userFarm?.staked)}
         />
       </div>
     );
@@ -293,13 +293,13 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               <div className="d-flex justify-content-start align-items-center">
                 <span className="mx-2">{index + 1}</span>
                 <img
-                  src={allTokens[farm.token1]?.logo_url ?? defaultTokenValues.image_url}
+                  src={allTokens[farm.token1]?.logo_url && allTokens[farm.token1]?.logo_url !== 'N/A' ? allTokens[farm.token1].logo_url : defaultTokenValues.image_url}
                   alt={farm.token1}
                   className='d-inline'
                   style={{ width: 27, height: 27, border: '2px solid rgba(63, 172, 90, 0.3)', borderRadius: '20px' }}
                 />
                 <motion.img
-                  src={allTokens[farm.token2]?.logo_url ?? defaultTokenValues.image_url}
+                  src={allTokens[farm.token2]?.logo_url && allTokens[farm.token2]?.logo_url !== 'N/A' ? allTokens[farm.token2].logo_url : defaultTokenValues.image_url}
                   alt={farm.token2}
                   className="d-inline m-l-n-xxl"
                   initial={{ x: 0 }}
@@ -341,7 +341,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                 <p className={`mb-0 font-size-sm text-silver`}>
                   Total APR
                 </p>
-                <p className="mb-0 font-size-sm text-silver">{intlFormatSignificantDecimals(Number(farm.totalAPR), 2)}%</p>
+                <p className="mb-0 font-size-sm text-silver">{intlFormatSignificantDecimals(Number(farm.total_apr), 2)}%</p>
               </div>
             </div>
             <div className="pool-sub-container p-2 mt-1">
@@ -355,7 +355,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                   $
                   <CountUp
                     start={0}
-                    end={Number(farm?.totalStaked)}
+                    end={Number(farm?.total_staked)}
                     duration={1.5}
                     separator=","
                     decimals={3}
@@ -376,7 +376,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                   $
                   <CountUp
                     start={0}
-                    end={Number(farm?.totalRewards)}
+                    end={Number(farm?.total_rewards)}
                     duration={1.5}
                     separator=","
                     decimals={3}
@@ -397,7 +397,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Fees APR</p>
                   <p className="mb-0 font-size-sm text-silver">
-                    {intlFormatSignificantDecimals(Number(farm.feesAPR), 2)}%
+                    {intlFormatSignificantDecimals(Number(farm.fees_apr), 2)}%
                   </p>
                 </div>
               </div>
@@ -405,7 +405,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                 <div className="d-flex justify-content-between">
                   <p className="mb-0 font-size-sm text-silver">Boosted APR</p>
                   <p className="mb-0 font-size-sm text-silver">
-                    {intlFormatSignificantDecimals(Number(farm.boostedAPR), 2)}%
+                    {intlFormatSignificantDecimals(Number(farm.boosted_apr), 2)}%
                   </p>
                 </div>
               </div>
@@ -415,7 +415,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                   <p className="mb-0 font-size-sm text-silver">
                     <CountUp
                       start={0}
-                      end={Number(farm?.stakingUsers)}
+                      end={Number(farm?.staking_users)}
                       duration={1.5}
                       separator=","
                       decimals={0}
@@ -431,10 +431,10 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                 <p className="mb-1 text-center text-silver font-size-sm">Total Staked</p>
                 <div className="d-flex justify-content-between mt-1">
                   <div>
-                    <p className="mb-0 font-size-xs text-white font-bold">{abbreviateNumber(Number(farm.totalStaked), 2)} {farmName}</p>
+                    <p className="mb-0 font-size-xs text-white font-bold">{abbreviateNumber(Number(farm.total_staked), 2)} {farmName}</p>
                   </div>
                   <div className="text-right">
-                    <p className="mb-0 font-size-xs text-white font-bold">${abbreviateNumber(Number(farm?.totalStaked) * 2.4, 2)}</p>
+                    <p className="mb-0 font-size-xs text-white font-bold">${abbreviateNumber(Number(farm?.total_staked) * 2.4, 2)}</p>
                   </div>
                 </div>
               </div>
@@ -443,8 +443,8 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                 <p className="mb-1 text-center text-silver font-size-sm">Total Rewards</p>
                 <div className="d-flex justify-content-between mt-1">
                   <div>
-                    {farm.totalRewardsList.length ? (
-                      farm.totalRewardsList.map((item) => (
+                    {farm.total_rewards_list.length ? (
+                      farm.total_rewards_list.map((item) => (
                         <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>{abbreviateNumber(Number(item.value), 2)} {item.token.split('-')[0]}</p>
                       ))
                     ) : (
@@ -452,8 +452,8 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                     )}
                   </div>
                   <div className="text-right">
-                    {farm.totalRewardsList.length ? (
-                      farm.totalRewardsList.map((item) => (
+                    {farm.total_rewards_list.length ? (
+                      farm.total_rewards_list.map((item) => (
                         <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>${abbreviateNumber(Number(item.value) * 2.2, 2)}</p>
                       ))
                     ) : (
@@ -467,10 +467,10 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                 <p className="mb-1 text-center text-silver font-size-sm">Your Staked</p>
                 <div className="d-flex justify-content-between mt-1">
                   <div>
-                    <p className="mb-0 font-size-xs text-white font-bold">{abbreviateNumber(Number(userFarm.staked), 2)} {farmName}</p>
+                    <p className="mb-0 font-size-xs text-white font-bold">{abbreviateNumber(Number(userFarm?.staked ?? '0'), 2)} {farmName}</p>
                   </div>
                   <div className="text-right">
-                    <p className="mb-0 font-size-xs text-white font-bold">${abbreviateNumber(Number(userFarm.staked) * 2.4, 2)}</p>
+                    <p className="mb-0 font-size-xs text-white font-bold">${abbreviateNumber(Number(userFarm?.staked ?? '0') * 2.4, 2)}</p>
                   </div>
                 </div>
               </div>
@@ -479,18 +479,18 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
                 <p className="mb-1 text-center text-silver font-size-sm">Your Rewards</p>
                 <div className="d-flex justify-content-between mt-1">
                   <div>
-                    {userFarm.rewardsList.length ? (
-                      userFarm.rewardsList.map((item) => (
-                        <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>{abbreviateNumber(Number(item.value), 2)} {item.token.split('-')[0]}</p>
+                    {userFarm?.rewardsList.length ? (
+                      userFarm?.rewardsList.map((item) => (
+                        <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>{abbreviateNumber(Number(item.value ?? '0'), 2)} {item.token.split('-')[0]}</p>
                       ))
                     ) : (
                       <p className="mb-0 font-size-xs text-white font-bold">-</p>
                     )}
                   </div>
                   <div className="text-right">
-                    {userFarm.rewardsList.length ? (
-                      userFarm.rewardsList.map((item) => (
-                        <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>${abbreviateNumber(Number(item.value) * 2.2, 2)}</p>
+                    {userFarm?.rewardsList.length ? (
+                      userFarm?.rewardsList.map((item) => (
+                        <p className="mb-0 font-size-xs text-white font-bold" key={`farm-${item.token}-${item.value}`}>${abbreviateNumber(Number(item.value ?? '0') * 2.2, 2)}</p>
                       ))
                     ) : (
                       <p className="mb-0 font-size-xs text-white font-bold">-</p>
@@ -526,7 +526,7 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
           isOpen={isUnstakeOpen}
           setIsOpen={setIsUnstakeOpen}
           lpTokenId={farm.lp_token_id}
-          lpTokenMaxAmount={Number(userFarm.staked)}
+          lpTokenMaxAmount={Number(userFarm?.staked)}
         />
       </Fragment >
     );
