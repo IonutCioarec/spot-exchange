@@ -5,7 +5,7 @@ export * from './sharedConfig';
 export const API_URL = 'https://devnet-api.multiversx.com';
 export const sampleAuthenticatedDomains = [API_URL];
 export const environment = EnvironmentsEnum.devnet;
-export const routerContractAddress = 'erd1qqqqqqqqqqqqqpgqkjqjsketuzhadc2f5lw2523hcpzghzlrv2vsqlrkg6';
+export const routerContractAddress = 'erd1qqqqqqqqqqqqqpgqz0lg63rtym20v32uqk38hsfusl5gdln0v2vsv3nu9h';
 export const pairsContractAddress = 'erd1qqqqqqqqqqqqqpgqzqssw63jn0ep64t5mzghuhxdl5n6wf6mv2vsvyf97u';
 export const farmsContractAddress = 'erd1qqqqqqqqqqqqqpgqhpj7s6f9jy0t593mcl4zpehmxwp56r7uv2vsg8tuma';
 export const dexAPI = 'https://priv-backend.x-launcher.com/api';
