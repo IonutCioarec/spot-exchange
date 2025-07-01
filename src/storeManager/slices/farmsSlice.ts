@@ -52,14 +52,14 @@ export const { setFarms, setPage, setLimit, setSortBy, setSortDirection, setLPTo
 
 // Selectors
 export const selectFarms = (state: any) => state.farms;
-export const selectFarmsPage = (state: any) => state.pairs.page;
+export const selectFarmsPage = (state: any) => state.farms.page;
 export const selectFarmsLimit = (state: any) => state.farms.limit;
-export const selectFarmsTotal = (state: any) => state.pairs.total;
-export const selectFarmsTotalPages = (state: any) => state.pairs.total_pages;
+export const selectFarmsTotal = (state: any) => state.farms.total;
+export const selectFarmsTotalPages = (state: any) => state.farms.total_pages;
 export const selectFarmsSortBy = (state: any) => state.farms.sort_by;
 export const selectFarmsSortDirection = (state: any) => state.farms.sort_direction;
 export const selectFarmsLpSearchInput = (state: any) => state.farms.lp_token_search;
-export const selectFarmsStatus = (state: any) => state.pairs.status;
+export const selectFarmsStatus = (state: any) => state.farms.status;
 
 // Memoized selector to transform lpTokens into an object keyed by token_id
 export const selectFarmsById = createSelector(

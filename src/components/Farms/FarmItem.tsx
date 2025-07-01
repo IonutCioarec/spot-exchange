@@ -120,20 +120,26 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               </div>
             </Col>
             <Col lg={1}>
-              <p className={`mb-0 no-wrap font-size-xxs text-silver`}>
+              <p className={`mb-0 no-wrap font-size-xxs ${sortBy === 'total_apr' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                 Total APR
+                {sortBy === 'total_apr' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'total_apr' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
               </p>
               <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.total_apr), 2)}%</p>
             </Col>
             <Col lg={1}>
-              <p className={`mb-0 no-wrap font-size-xxs text-silver`}>
+              <p className={`mb-0 no-wrap font-size-xxs ${sortBy === 'fees_apr' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                 Fees APR
+                {sortBy === 'fees_apr' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'fees_apr' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
               </p>
               <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.fees_apr), 2)}%</p>
             </Col>
             <Col lg={1}>
-              <p className={`mb-0 no-wrap font-size-xxs text-silver`}>
+              <p className={`mb-0 no-wrap font-size-xxs ${sortBy === 'boosted_apr' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                 Boosted APR
+                {sortBy === 'boosted_apr' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'boosted_apr' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
               </p>
               <p className="font-size-sm mb-0">{intlFormatSignificantDecimals(Number(farm.boosted_apr), 2)}%</p>
             </Col>
@@ -172,10 +178,10 @@ export const FarmItem = ({ farm, userFarm, index, sortBy, sortDirection }: FarmP
               />
             </Col>
             <Col lg={1} className="text-right">
-              <p className={`mb-0 font-size-xxs ${sortBy === 'total_users' ? 'text-intense-green font-bold' : 'text-silver'}`}>
+              <p className={`mb-0 font-size-xxs ${sortBy === 'staking_users' ? 'text-intense-green font-bold' : 'text-silver'}`}>
                 Users
-                {sortBy === 'total_users' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
-                {sortBy === 'total_users' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'staking_users' && sortDirection === 'desc' && (<TrendingDownIcon className="ms-1 font-size-md" />)}
+                {sortBy === 'staking_users' && sortDirection === 'asc' && (<TrendingUpIcon className="ms-1 font-size-md" />)}
               </p>
               <CountUp
                 start={0}

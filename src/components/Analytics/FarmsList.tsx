@@ -15,7 +15,7 @@ import { Select, MenuItem } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import Table from "react-bootstrap/Table";
-import { Farm, FarmsState, Pair, PairsState, Token } from 'types/backendTypes';
+import { Farm, FarmState, FarmsState, Pair, PairsState, Token } from 'types/backendTypes';
 import { getUserPoolLiquidity, getUserPoolShare } from 'utils/calculs';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
@@ -36,7 +36,7 @@ const defaultTokenValues = {
 const ITEMS_PER_PAGE = 10;
 
 interface FarmsListProps {
-  farms: FarmsState;
+  farms: FarmState;
   allTokens: Record<string, Token>;
 }
 
@@ -263,7 +263,7 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                           Total APR
                         </p>
                         <p className="font-size-sm mb-0">
-                          {intlFormatSignificantDecimals(Number(farm.totalAPR), 2)}%
+                          {intlFormatSignificantDecimals(Number(farm.total_apr), 2)}%
                         </p>
                       </div>
                     </td>
@@ -274,7 +274,7 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                           Fees APR
                         </p>
                         <p className="font-size-sm mb-0">
-                          {intlFormatSignificantDecimals(Number(farm.feesAPR), 2)}%
+                          {intlFormatSignificantDecimals(Number(farm.fees_apr), 2)}%
                         </p>
                       </div>
                     </td>
@@ -285,7 +285,7 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                           Boosted APR
                         </p>
                         <p className="font-size-sm mb-0">
-                          {intlFormatSignificantDecimals(Number(farm.boostedAPR), 2)}%
+                          {intlFormatSignificantDecimals(Number(farm.boosted_apr), 2)}%
                         </p>
                       </div>
                     </td>
@@ -299,7 +299,7 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                           $
                           <CountUp
                             start={0}
-                            end={Number(farm?.totalRewards)}
+                            end={Number(farm?.total_rewards)}
                             duration={1.5}
                             separator=","
                             decimals={3}
@@ -320,7 +320,7 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                           $
                           <CountUp
                             start={0}
-                            end={Number(farm?.totalStaked)}
+                            end={Number(farm?.total_staked)}
                             duration={1.5}
                             separator=","
                             decimals={3}
@@ -340,7 +340,7 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                           $
                           <CountUp
                             start={0}
-                            end={Number(farm?.stakingUsers)}
+                            end={Number(farm?.staking_users)}
                             duration={1.5}
                             separator=","
                             decimals={0}
