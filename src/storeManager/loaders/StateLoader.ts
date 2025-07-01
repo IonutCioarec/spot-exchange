@@ -110,7 +110,7 @@ export const StateLoader = () => {
     }, stateLoaderRefreshTime);
 
     return () => window.clearInterval(interval);
-  },  []);
+  },  [tokensPage, tokensSearchInput, tokensSortBy, tokensSortDirection]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -118,7 +118,7 @@ export const StateLoader = () => {
     }, stateLoaderRefreshTime);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [pairsPage, pairsItemsPerPage, pairsTokenSearch, pairsMyDeposits, pairsLPTokenSearch, pairsSortBy, pairsSortDirection]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -126,7 +126,7 @@ export const StateLoader = () => {
     }, stateLoaderRefreshTime);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [farmsPage, farmsLimit, farmsSortBy, farmsSortDirection, farmsLPTokenSearch]);
 
   return null;
 };

@@ -293,7 +293,7 @@ export const useBackendAPI = () => {
     lp_token_search: string = '',
   ): Promise<FarmsState> => {
     try {
-      let url = `${dexAPI}/farms?page=${currentPage}&limit=${currentLimit}&sort_by=${sort_by}&sort_direction=${sort_direction}&token_search=${lp_token_search}`;
+      let url = `${dexAPI}/farms?page=${currentPage}&limit=${currentLimit}&sort_by=${sort_by}&sort_direction=${sort_direction}&lp_token_search=${lp_token_search}`;
       const response = await axios.get(url, {
         headers: { Accept: 'application/json' },
       });
