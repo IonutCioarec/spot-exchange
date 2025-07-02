@@ -2,7 +2,8 @@ import axios from 'axios';
 import { dexAPI } from 'config';
 import {
   Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice, AuthState, CreateBrandingPRResponse,
-  CheckBrandingPRResponse, FarmsState
+  CheckBrandingPRResponse, FarmsState,
+  PendingPairsState
 } from 'types/backendTypes';
 
 
@@ -327,6 +328,27 @@ export const useBackendAPI = () => {
     };
   };
 
+  // get the list of farms
+  const getUserPendingPairs = async (address: string): Promise<PendingPairsState> => {
+    try {
+      let url = `${dexAPI}/pairs/pending?creator=${address}`;
+      const response = await axios.get(url, {
+        headers: { Accept: 'application/json' },
+      });
+
+      return {
+        pendingPairs: response.data,
+        status: 'succeeded',
+      };
+    } catch (e) {
+      console.error(e);
+    }
+    return {
+      pendingPairs: [],
+      status: 'failed',
+    };
+  };
+
   return {
     getPairs,
     getTokens,
@@ -336,6 +358,7 @@ export const useBackendAPI = () => {
     verifyAuth,
     checkBrandingPR,
     createBrandingPR,
-    getFarms
+    getFarms,
+    getUserPendingPairs
   };
 };

@@ -203,4 +203,17 @@ export interface FarmsState {
   sort_by: 'boosted_apr' | 'fees_apr' | 'total_apr' | 'total_staked' | 'total_rewards' | 'staking_users';
   sort_direction: 'asc' | 'desc';
   status: 'loading' | 'succeeded' | 'failed';
+};
+
+export interface PendingPair {
+  pair_address: string;
+  token1: string;
+  token2: string;
+  currentStatus: string;
+  nextPossibleSteps: string[];
+};
+
+export interface PendingPairsState {
+  pendingPairs: PendingPair[];
+  status: 'loading' | 'succeeded' | 'failed';
 }

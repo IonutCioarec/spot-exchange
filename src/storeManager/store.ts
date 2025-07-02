@@ -4,6 +4,7 @@ import tokensReducer from './slices/tokensSlice';
 import userTokensReducer from './slices/userTokensSlice';
 import authReducer from './slices/authSlice';
 import farmsReducer from './slices/farmsSlice';
+import userPendingPairsReducer from './slices/userPendingPairsSlice';
 
 // Create the Redux store
 const store = configureStore({
@@ -12,7 +13,8 @@ const store = configureStore({
     pairs: pairsReducer,
     tokens: tokensReducer,
     userTokens: userTokensReducer,
-    farms: farmsReducer
+    farms: farmsReducer,
+    userPendingPairs: userPendingPairsReducer
   },
 });
 
