@@ -9,8 +9,8 @@ export const useMvxAPI = () => {
     address: string,
     tokens: { token_id: string; is_lp_token: boolean }[]
   ): Promise<{
-    lpTokens: Record<string, { balance: string }>;
-    pairTokens: Record<string, { balance: string }>;
+    lpTokens: Record<string, { balance: string, decimals: number }>;
+    pairTokens: Record<string, { balance: string, decimals: number }>;
   }> => {
     try {
       // Extract token_ids and join them for the API request
@@ -23,31 +23,26 @@ export const useMvxAPI = () => {
       );
 
       // Initialize balance objects for LP tokens and pair tokens
-      const lpTokens: Record<string, { balance: string }> = {};
-      const pairTokens: Record<string, { balance: string }> = {};
+      const lpTokens: Record<string, { balance: string, decimals: number }> = {};
+      const pairTokens: Record<string, { balance: string, decimals: number }> = {};
 
       // Create a map from the API response for quick lookup
-      const tokenData: Record<string, { balance: string }> = {};
+      const tokenData: Record<string, { balance: string, decimals: number }> = {};
       if (response.data) {
         response.data.forEach((token: any) => {
-          tokenData[token.identifier] = { balance: denominatedAmountToAmount(token.balance, token.decimals, 20) };
+          tokenData[token.identifier] = { balance: denominatedAmountToAmount(token.balance, token.decimals, 20), decimals:  token.decimals};
         });
       }
 
       // Assign balances to each token based on `is_lp_token` flag, defaulting to '0' if not found
       tokens.forEach((token) => {
         const balance = tokenData[token.token_id]?.balance || '0';
+        const decimals = tokenData[token.token_id]?.decimals || 18;
         if (token.is_lp_token) {
-          lpTokens[token.token_id] = { balance };
+          lpTokens[token.token_id] = { balance: balance, decimals: decimals };
         } else {
-          pairTokens[token.token_id] = { balance };
+          pairTokens[token.token_id] = { balance: balance, decimals: decimals };
         }
-        // Example data, will be removed when the sc are connected with the backend
-        // lpTokens['WTAOWEGLD-5833e2'] = { balance: '20' };
-        // lpTokens['XGTXCR-386762'] = { balance: '20000' };
-        // lpTokens['TADAWEGLD-e427f1'] = { balance: '4' };
-        lpTokens['MEXSPOTLP-ff7998'] = { balance: '213' };
-        // pairTokens['WTAO-a0cc6b'] = { balance: '2000' };
       });
 
       return { lpTokens, pairTokens };
