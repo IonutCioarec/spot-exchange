@@ -25,7 +25,7 @@ export const routeNames = {
   unlock: '/unlock',
   pools: '/pools',
   farms: '/farms',
-  createPool: '/create-pool/:pool_id',
+  createPool: '/create-pool/:pair_id',
   pendingPools: '/pending-pools',
   adminOperations: '/admin-operations',
   analytics: '/analytics',

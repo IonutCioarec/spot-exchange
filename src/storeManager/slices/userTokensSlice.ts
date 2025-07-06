@@ -29,8 +29,8 @@ const userTokensSlice = createSlice({
 export const { setUserTokens, setUserLpTokens, setStatus } = userTokensSlice.actions;
 
 // Selectors
-export const selectUserTokens = (state: any): Record<string, { balance: string }> => state.userTokens.userTokens;
-export const selectUserLpTokens = (state: any): Record<string, { balance: string }> => state.userTokens.userLpTokens;
+export const selectUserTokens = (state: any): Record<string, { balance: string, decimals: number }> => state.userTokens.userTokens;
+export const selectUserLpTokens = (state: any): Record<string, { balance: string, decimals: number }> => state.userTokens.userLpTokens;
 export const selectUserTokensStatus = (state: any) => state.userTokens.status;
 
 // Memoized selector to get LP token IDs with balance > 0

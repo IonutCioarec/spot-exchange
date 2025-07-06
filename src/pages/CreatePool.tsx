@@ -8,7 +8,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
-import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
+import { useGetAccountInfo, useGetIsLoggedIn, useGetPendingTransactions } from 'hooks';
 import { useMobile } from 'utils/responsive';
 import { pairsContractAddress, poolBaseTokens } from 'config';
 import { useEffect, useState } from 'react';
@@ -33,7 +33,11 @@ import { selectUserTokens } from 'storeManager/slices/userTokensSlice';
 import { useSelector } from 'react-redux';
 import { generateLPTokenName } from 'utils/calculs';
 import { usePoolsResume } from 'hooks/transactions/usePoolsResume';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { selectPendingPairsById, selectPendingPairs } from 'storeManager/slices/userPendingPairsSlice';
+import { PendingPair } from 'types/backendTypes';
+import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -74,6 +78,7 @@ function ColorlibStepIcon(props: StepIconProps & { index: number }) {
     2: <AddModeratorIcon style={{ fontSize: '18px' }} />,
     3: <SettingsIcon style={{ fontSize: '18px' }} />,
     4: <MonetizationOnIcon style={{ fontSize: '18px' }} />,
+    5: <CheckCircleIcon style={{ fontSize: '18px' }} />,
   };
 
   return (
@@ -103,7 +108,7 @@ const CustomStepConnector = () => (
 );
 
 const CreatePool = () => {
-  const { address } = useGetAccountInfo();
+  const { address } = useGetAccountInfo() || '';
   const isLoggedIn = useGetIsLoggedIn();
   const navigate = useNavigate();
   const { getValidationSignature } = useBackendAPI();
@@ -119,8 +124,19 @@ const CreatePool = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [signature, setSignature] = useState('');
   const { getUserCreatedTokens } = useMvxAPI();
+  const { hasPendingTransactions } = useGetPendingTransactions();
   const [createdTokens, setCreatedTokens] = useState<CreatedTokens>({});
+  const allTokens = useSelector(selectAllTokensById);
   const userTokens = useSelector(selectUserTokens);
+  const pendingPairs = useSelector(selectPendingPairsById);
+  const { pair_id } = useParams<{ pair_id: string }>();
+  const [currentPair, setCurrentPair] = useState<PendingPair>({
+    currentStatus: '',
+    nextPossibleSteps: [''],
+    pair_address: '',
+    token1: '',
+    token2: ''
+  });
 
   //Redirect the user to the unlock page if he is not logged in
   useEffect(() => {
@@ -128,6 +144,27 @@ const CreatePool = () => {
       navigate('/unlock');
     }
   }, [isLoggedIn, navigate]);
+
+  useEffect(() => {
+    if (pair_id && pair_id !== 'new-pool') {
+      const newPair = pendingPairs[pair_id];
+      if (newPair) {
+        setCurrentPair(newPair);
+        if (newPair.nextPossibleSteps.length > 0) {
+          switch (newPair.nextPossibleSteps[0]) {
+            case 'Created': setActiveStep(0); break;
+            case 'issueLpToken': setActiveStep(1); break;
+            case 'setRoles': setActiveStep(2); break;
+            case 'FarmCreated': setActiveStep(3); break;
+            case 'createFarm': setActiveStep(4); break;
+            case 'Ready': setActiveStep(5); break;
+            default: setActiveStep(5); break;
+          }
+        }
+      }
+    }
+  }, [pendingPairs, hasPendingTransactions]);
+  console.log(JSON.stringify(userTokens, null, 2));
 
   const [firstTokenAmount, setFirstTokenAmount] = useState('');
   const [secondTokenAmount, setSecondTokenAmount] = useState('');
@@ -223,22 +260,26 @@ const CreatePool = () => {
 
   // create pair hook (for all steps)
   const createPool = usePoolsCreatePool(baseTokenId, secondTokenId, signature);
-  const issueLpToken = usePoolsIssueLPToken('erd1qqqqqqqqqqqqqpgqmwaaes0meq5s59gye4crkezuws9lwl7lv2vsu3xxf9', generateLPTokenName('USDC-350c4e', 'XPRIZE-1dd538'), generateLPTokenName('MEX-a659d0', 'SPOT-ec8f71'));
-  const setLocalRoles = usePoolsSetLocalRoles('erd1qqqqqqqqqqqqqpgqmwaaes0meq5s59gye4crkezuws9lwl7lv2vsu3xxf9');
+  const issueLpToken = usePoolsIssueLPToken(
+    currentPair.pair_address,
+    generateLPTokenName(currentPair.token1, currentPair.token2),
+    generateLPTokenName(currentPair.token1, currentPair.token2)
+  );
+  const setLocalRoles = usePoolsSetLocalRoles(currentPair.pair_address);
   const addInitialLiquidity = usePoolsAddInitialLiquidity(
-    'erd1qqqqqqqqqqqqqpgqmwaaes0meq5s59gye4crkezuws9lwl7lv2vsu3xxf9',
+    currentPair.pair_address,
     {
-      token_id: 'USDC-350c4e',
-      token_decimals: 6,
+      token_id: currentPair.token1,
+      token_decimals: userTokens[currentPair.token1]?.decimals || 18,
       token_amount: Number(firstTokenAmount)
     },
     {
-      token_id: 'XPRIZE-1dd538',
-      token_decimals: 18,
+      token_id: currentPair.token2,
+      token_decimals: userTokens[currentPair.token2]?.decimals || 18,
       token_amount: Number(secondTokenAmount)
     }
   );
-  const resumePoolSwap = usePoolsResume('erd1qqqqqqqqqqqqqpgqmwaaes0meq5s59gye4crkezuws9lwl7lv2vsu3xxf9');
+  const resumePoolSwap = usePoolsResume(currentPair.pair_address);
 
   return (
     <Container className='create-pool-page-height font-rose'>
@@ -404,7 +445,7 @@ const CreatePool = () => {
 
                     <Button
                       variant="contained"
-                      onClick={() => { createPool(); handleStepChange(1); }}
+                      onClick={() => { createPool(); }}
                       className='btn-intense-default hover-btn btn-intense-success2 mt-2 fullWidth smaller'
                     >
                       Create Pool
@@ -421,7 +462,7 @@ const CreatePool = () => {
                     <p className='text-center text-intense-green mt-2 font-size-md font-bold mb-2'>Press the button to automatically generate and create the LP token</p>
                     <Button
                       variant="contained"
-                      onClick={() => { issueLpToken(); handleStepChange(2); }}
+                      onClick={() => { issueLpToken(); }}
                       className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Token Issue
@@ -436,10 +477,10 @@ const CreatePool = () => {
                 <StepContent>
                   <div className='my-3'>
                     <p className='text-center text-intense-green mt-2 font-size-md font-bold'>MINT/BURN LP TOKEN ROLES</p>
-                    <p className='roles-container fullWidth text-center font-size-sm mb-2 text-uppercase'>{baseTokenId.split('-')[0] + secondTokenId.split('-')[0]}</p>
+                    <p className='roles-container fullWidth text-center font-size-sm mb-2 text-uppercase'>{generateLPTokenName(currentPair.token1, currentPair.token2)}</p>
                     <Button
                       variant="contained"
-                      onClick={() => { setLocalRoles(); handleStepChange(3); }}
+                      onClick={() => { setLocalRoles(); }}
                       className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Set Roles
@@ -453,7 +494,7 @@ const CreatePool = () => {
                 </StepLabel>
                 <StepContent>
                   <div className='my-3'>
-                    <p className='font-size-sm mt-3 mb-1 ms-2 text-uppercase'>{baseTokenId.split('-')[0]}</p>
+                    <p className='font-size-sm mt-3 mb-1 ms-2 text-uppercase'>{currentPair.token1.split('-')[0]}</p>
                     <TextField
                       id="first-token"
                       placeholder='First token amount'
@@ -501,7 +542,7 @@ const CreatePool = () => {
                       className='mb-0 token-container fullWidth b-r-md'
                       style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
                     />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[baseTokenId]?.balance ?? '0'))} <span className='text-uppercase'>{baseTokenId.split('-')[0]}</span></p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[currentPair.token1]?.balance ?? '0'))} <span className='text-uppercase'>{currentPair.token1.split('-')[0]}</span></p>
 
                     <p className='font-size-sm mb-1 ms-2 text-uppercase'>{secondTokenId.split('-')[0]}</p>
                     <TextField
@@ -551,14 +592,31 @@ const CreatePool = () => {
                       className='mb-0 token-container fullWidth b-r-md'
                       style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
                     />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[secondTokenId]?.balance ?? '0'))} <span className='text-uppercase'>{secondTokenId.split('-')[0]}</span></p>
+                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[currentPair.token2]?.balance ?? '0'))} <span className='text-uppercase'>{currentPair.token2.split('-')[0]}</span></p>
 
                     <Button
                       variant="contained"
-                      onClick={() => { addInitialLiquidity(); handleStepChange(0); }}
+                      onClick={() => { addInitialLiquidity(); }}
                       className='mt-3 btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
                     >
                       Add Liquidity
+                    </Button>
+                  </div>
+                </StepContent>
+              </Step>
+              <Step>
+                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={5} />)}>
+                  <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Enable Swap</p>
+                </StepLabel>
+                <StepContent>
+                  <div className='mt-3 mb-3'>
+                    <p className='text-center text-intense-green mt-2 font-size-md font-bold mb-2'>Press the button to enable the pool tokens swap</p>
+                    <Button
+                      variant="contained"
+                      onClick={() => { resumePoolSwap(); }}
+                      className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
+                    >
+                      Enable Swap
                     </Button>
                   </div>
                 </StepContent>
