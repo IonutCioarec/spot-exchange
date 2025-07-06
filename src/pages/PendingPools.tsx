@@ -17,7 +17,7 @@ import { PendingPair } from 'types/backendTypes';
 import InfoIcon from '@mui/icons-material/Info';
 import HorizontalStatusConnector from 'components/HorizontalStatusConnector';
 
-const CheckPools = () => {
+const PendingPools = () => {
   const { address } = useGetAccountInfo();
   const isLoggedIn = useGetIsLoggedIn();
   const navigate = useNavigate();
@@ -117,4 +117,4 @@ const CheckPools = () => {
   );
 }
 
-export default CheckPools;
+export default PendingPools;
