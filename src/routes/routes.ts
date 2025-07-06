@@ -2,6 +2,7 @@ import Pools from 'pages/Pools';
 import Swap from 'pages/Swap';
 import Farms from 'pages/Farms';
 import CreatePool from 'pages/CreatePool';
+import PendingPools from 'pages/PendingPools';
 import Admin from 'pages/Admin';
 import Analytics from 'pages/Analytics';
 import Portfolio from 'pages/Portfolio';
@@ -24,7 +25,8 @@ export const routeNames = {
   unlock: '/unlock',
   pools: '/pools',
   farms: '/farms',
-  createPool: '/create-pool',
+  createPool: '/create-pool/:pool_id',
+  pendingPools: '/pending-pools',
   adminOperations: '/admin-operations',
   analytics: '/analytics',
   tools: '/tools',
@@ -63,6 +65,11 @@ export const routes: RouteWithTitleType[] = [
     component: CreatePool
   },
   {
+    path: routeNames.pendingPools,
+    title: 'Create Pool',
+    component: PendingPools
+  },
+  {
     path: routeNames.adminOperations,
     title: 'Admin',
     component: Admin
@@ -91,6 +98,7 @@ export enum RouteNamesEnum {
   pools = '/pools',
   farms = '/farms',
   createPool = '/create-pool',
+  pendingPools = '/pending-pools',
   adminOperations = '/admin-operations',
   analytics = '/analytics',
   tools = '/tools',

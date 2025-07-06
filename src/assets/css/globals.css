@@ -2747,3 +2747,7 @@ h6 {
   justify-content: end;
   align-items: baseline;
 }
+
+.height-1 {
+  height: 1px;
+}
