@@ -15,9 +15,9 @@ const HorizontalStatusConnector: React.FC<HorizontalStatusConnectorProps> = ({ c
   return (
     <div className="flex items-center justify-between w-full py-3 px-2">
       {pendingStatusSteps.map((step, index) => {
-        const isCompleted = (index < currentIndex);
-        const isActive = (index === currentIndex) && (currentStatus !== 'Ready');
-        const isFuture = index > currentIndex;
+        const isCompleted = index <= currentIndex;
+        const isActive = index === currentIndex + 1 && !poolFinished;
+        const isFuture = !isCompleted && !isActive;
 
         const displayLabel = pendingStatusLabels[step] || pendingStatusLabels.default;
 
