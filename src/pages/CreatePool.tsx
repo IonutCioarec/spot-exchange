@@ -164,7 +164,6 @@ const CreatePool = () => {
       }
     }
   }, [pendingPairs, hasPendingTransactions]);
-  console.log(JSON.stringify(userTokens, null, 2));
 
   const [firstTokenAmount, setFirstTokenAmount] = useState('');
   const [secondTokenAmount, setSecondTokenAmount] = useState('');
@@ -259,7 +258,7 @@ const CreatePool = () => {
   }, [address]);
 
   // create pair hook (for all steps)
-  const createPool = usePoolsCreatePool(baseTokenId, secondTokenId, signature);
+  const createPool = usePoolsCreatePool(baseTokenId, secondTokenId, signature, '/pending-pools');
   const issueLpToken = usePoolsIssueLPToken(
     currentPair.pair_address,
     generateLPTokenName(currentPair.token1, currentPair.token2),
