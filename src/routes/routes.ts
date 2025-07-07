@@ -8,6 +8,7 @@ import Analytics from 'pages/Analytics';
 import Portfolio from 'pages/Portfolio';
 import Tools from 'pages/Tools';
 import TokenAssets from 'pages/TokenAssets';
+import AdminCreatePool from 'pages/AdminCreatePool';
 
 interface RouteWithTitleType extends RouteType {
   title: string;
@@ -30,7 +31,8 @@ export const routeNames = {
   adminOperations: '/admin-operations',
   analytics: '/analytics',
   tools: '/tools',
-  tokenAssets: '/token-assets/:token_id'
+  tokenAssets: '/token-assets/:token_id',
+  adminCreatePool: '/admin-create-pool/:pair_id/:user_address',
 };
 
 export const routes: RouteWithTitleType[] = [
@@ -88,6 +90,11 @@ export const routes: RouteWithTitleType[] = [
     path: routeNames.tokenAssets,
     title: 'Token Assets',
     component: TokenAssets
+  },
+  {
+    path: routeNames.adminCreatePool,
+    title: 'Admin Create Pool',
+    component: AdminCreatePool
   }
 ];
 
@@ -102,5 +109,6 @@ export enum RouteNamesEnum {
   adminOperations = '/admin-operations',
   analytics = '/analytics',
   tools = '/tools',
-  tokenAssets = '/token-assets/'
+  tokenAssets = '/token-assets/',
+  adminCreatePool = '/admin-create-pool',
 }

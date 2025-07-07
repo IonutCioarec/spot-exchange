@@ -11,7 +11,7 @@ import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector
 import { useGetAccountInfo } from 'hooks';
 import { useMobile } from 'utils/responsive';
 import { adminAddresses, pairsContractAddress, poolBaseTokens } from 'config';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { formatSignificantDecimals, intlNumberFormat } from 'utils/formatters';
@@ -38,7 +38,10 @@ import { usePoolsPairCreation } from 'hooks/transactions/usePoolsPairCreation';
 import { useGetPendingTransactions } from 'hooks';
 import { CopyToClipboard, generateLPTokenName } from "utils/calculs";
 import { useRouterResume } from 'hooks/transactions/useRouterResume';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import InfoIcon from '@mui/icons-material/Info';
+import HorizontalStatusConnector from 'components/HorizontalStatusConnector';
+import { PendingPair } from 'types/backendTypes';
 
 const ColorlibStepIconRoot = styled('div')<{
   ownerState: { completed?: boolean; active?: boolean };
@@ -113,16 +116,10 @@ const Admin = () => {
   const isAdmin = adminAddresses.includes(address);
   const isMobile = useMobile();
   const { hasPendingTransactions } = useGetPendingTransactions();
-  const [baseTokenId, setBaseTokenId] = useState(poolBaseTokens.token1.id);
-  const [baseTokenTicker, setBaseTokenTicker] = useState(poolBaseTokens.token1.ticker);
-  const [baseTokenImage, setBaseTokenImage] = useState(poolBaseTokens.token1.image);
-  const [baseTokenDecimals, setBaseTokenDecimals] = useState(poolBaseTokens.token1.decimals);
-  const [secondTokenId, setSecondTokenId] = useState('');
-  const [secondTokenTicker, setSecondTokenTicker] = useState('');
-  const [secondTokenDecimals, setSecondTokenDecimals] = useState(18);
-  const [activeStep, setActiveStep] = useState(0);
-  const userTokens = useSelector(selectUserTokens);
+  const { getUserPendingPairs } = useBackendAPI();
   const navigate = useNavigate();
+  const [pendingUserAddress, setPendingUserAddress] = useState(address);
+  const [pendingPairs, setPendingPairs] = useState<Record<string, PendingPair>>({});
 
   //Redirect the user to the home page if he is not an admin
   useEffect(() => {
@@ -130,100 +127,6 @@ const Admin = () => {
       navigate('/');
     }
   }, [isAdmin, navigate]);
-
-  const [firstTokenAmount, setFirstTokenAmount] = useState('');
-  const [secondTokenAmount, setSecondTokenAmount] = useState('');
-
-  const handleStepChange = (step: number) => {
-    setActiveStep(step);
-  };
-
-  const handleBaseTokenChange = (event: SelectChangeEvent) => {
-    const selectedValue = event.target.value;
-
-    switch (selectedValue) {
-      case poolBaseTokens.token1.id:
-        setBaseTokenId(poolBaseTokens.token1.id);
-        setBaseTokenTicker(poolBaseTokens.token1.ticker);
-        setBaseTokenImage(poolBaseTokens.token1.image);
-        setBaseTokenDecimals(poolBaseTokens.token1.decimals);
-        break;
-      case poolBaseTokens.token2.id:
-        setBaseTokenId(poolBaseTokens.token2.id);
-        setBaseTokenTicker(poolBaseTokens.token2.ticker);
-        setBaseTokenImage(poolBaseTokens.token2.image);
-        setBaseTokenDecimals(poolBaseTokens.token2.decimals);
-        break;
-      case poolBaseTokens.token3.id:
-        setBaseTokenId(poolBaseTokens.token3.id);
-        setBaseTokenTicker(poolBaseTokens.token3.ticker);
-        setBaseTokenImage(poolBaseTokens.token3.image);
-        setBaseTokenDecimals(poolBaseTokens.token3.decimals);
-        break;
-      default:
-        setBaseTokenId(poolBaseTokens.token1.id);
-        setBaseTokenTicker(poolBaseTokens.token1.ticker);
-        setBaseTokenImage(poolBaseTokens.token1.image);
-        setBaseTokenDecimals(poolBaseTokens.token1.decimals);
-        break;
-    }
-  };
-
-  const handleSecondTokenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSecondTokenId(value);
-  };
-
-  const handleFirstTokenAmount = (event: any) => {
-    const value = event.target.value;
-    setFirstTokenAmount(value);
-  };
-
-  const handleSecondTokenAmount = (event: any) => {
-    const value = event.target.value;
-    setSecondTokenAmount(value);
-  };
-
-  const handleMaxToken1Amount = () => {
-    setFirstTokenAmount(userTokens[baseTokenId]?.balance ?? '0');
-  };
-
-  const handleMaxToken2Amount = () => {
-    setSecondTokenAmount(userTokens[secondTokenId]?.balance ?? '0');
-  };
-
-  // create pair hook (for all steps)
-  const createPool = usePoolsAdminCreatePool(baseTokenId, secondTokenId);
-  const issueLpToken = usePoolsIssueLPToken('erd1qqqqqqqqqqqqqpgqc3y7nvyfhq4cfpq89aq6tp3uelcyafs4v2vstxwtz8', generateLPTokenName('LEGLD-e8378b', 'SPOT-ec8f71'), generateLPTokenName('LEGLD-e8378b', 'SPOT-ec8f71'));
-  const setLocalRoles = usePoolsSetLocalRoles('erd1qqqqqqqqqqqqqpgqc3y7nvyfhq4cfpq89aq6tp3uelcyafs4v2vstxwtz8');
-  // const addInitialLiquidity = usePoolsAddInitialLiquidity(
-  //   {
-  //     token_id: baseTokenId,
-  //     token_decimals: baseTokenDecimals,
-  //     token_amount: Number(firstTokenAmount)
-  //   },
-  //   {
-  //     token_id: secondTokenId,
-  //     token_decimals: secondTokenDecimals,
-  //     token_amount: Number(secondTokenAmount)
-  //   }
-  // );
-
-  const addInitialLiquidity = usePoolsAddInitialLiquidity(
-    'erd1qqqqqqqqqqqqqpgqc3y7nvyfhq4cfpq89aq6tp3uelcyafs4v2vstxwtz8',
-    {
-      token_id: 'LEGLD-e8378b',
-      token_decimals: 18,
-      token_amount: 0.01
-    },
-    {
-      token_id: 'SPOT-ec8f71',
-      token_decimals: 18,
-      token_amount: 10000
-    }
-  );
-  const resumePoolSwap = useRouterResume('erd1qqqqqqqqqqqqqpgqc3y7nvyfhq4cfpq89aq6tp3uelcyafs4v2vstxwtz8');
-  const resumePoolSwap2 = usePoolsResume('erd1qqqqqqqqqqqqqpgq9hsk0d9d8dze228ljpt3wm69tv7ad4cjv2vswpgv9e');
 
   const [routerBaseTokens, setRouterBaseTokens] = useState([]);
   const getRouterBaseTokensData = async () => {
@@ -267,6 +170,21 @@ const Admin = () => {
       getRouterVaultAddressData();
     }
   }, [address, hasPendingTransactions]);
+
+  // get the pending pairs for the specified address
+  const loadUserPendingPairs = async (address: string) => {
+    const newPendingPairs = await getUserPendingPairs(address);
+    const newPendingPairsByIds = newPendingPairs.pendingPairs.reduce((acc: Record<string, PendingPair>, pair: PendingPair) => {
+      acc[pair.pair_address] = pair;
+      return acc;
+    }, {});
+    setPendingPairs(newPendingPairsByIds);
+  }
+
+  const handleUserAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setPendingUserAddress(value);
+  };
 
   return (
     <Container className='create-pool-page-height font-rose mb-5'>
@@ -408,332 +326,100 @@ const Admin = () => {
         <Col xs={12} lg={6}>
           <div className={`create-container text-white`}>
             <p className='font-bold font-size-xxl text-center text-intense-green underline'>CREATE POOL</p>
-            <div className='d-flex justify-content-end'>
-              <Button className='cursor-pointer mx-1 font-size-xxs btn-intense-default hover-btn btn-intense-success2 xxs b-r-xs' variant='contained' size='small' onClick={() => handleStepChange(0)}> Step 1 </Button>
-              <Button className='cursor-pointer mx-1 font-size-xxs btn-intense-default hover-btn btn-intense-success2 xxs b-r-xs' variant='contained' size='small' onClick={() => handleStepChange(1)}> Step 2 </Button>
-              <Button className='cursor-pointer mx-1 font-size-xxs btn-intense-default hover-btn btn-intense-success2 xxs b-r-xs' variant='contained' size='small' onClick={() => handleStepChange(2)}> Step 3 </Button>
-              <Button className='cursor-pointer mx-1 font-size-xxs btn-intense-default hover-btn btn-intense-success2 xxs b-r-xs' variant='contained' size='small' onClick={() => handleStepChange(3)}> Step 4 </Button>
-            </div>
-            <Stepper
-              activeStep={activeStep}
-              orientation="vertical"
-              connector={<CustomStepConnector />}
+            <p className='font-size-sm mt-3 mb-1 ms-2'>Add Wallet Address:</p>
+            <TextField
+              id="user-wallet-address"
+              placeholder='User Wallet Address'
+              type="text"
+              value={pendingUserAddress}
+              autoComplete="off"
+              onChange={handleUserAddressChange}
+              size="medium"
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+                style: {
+                  color: 'white',
+                  fontSize: isMobile ? '17px' : '14px',
+                  caretColor: 'white',
+                  paddingLeft: '15px',
+                  fontFamily: 'Red Rose',
+                  paddingTop: '3px',
+                  paddingBottom: '3px'
+                },
+              }}
+              className='mb-0 token-container fullWidth b-r-md'
+              style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
+            />
+            <Button
+              onClick={() => loadUserPendingPairs(pendingUserAddress)}
+              className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth mt-2`}
+              sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
             >
-              <Step>
-                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={1} />)}>
-                  <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Create Swap Pool</p>
-                </StepLabel>
-                <StepContent>
-                  <div className='mb-3 mt-3'>
-                    <p className='font-size-sm mb-1 ms-2'>Pool first token</p>
-                    <Select
-                      id="sort-by"
-                      value={baseTokenId}
-                      onChange={handleBaseTokenChange}
-                      input={<OutlinedInput />}
-                      size='small'
-                      renderValue={() => (
-                        <div className='font-size-sm font-regular text-white d-flex align-items-center'>
-                          <img
-                            src={baseTokenImage}
-                            alt={baseTokenId}
-                            style={{ width: 18, height: 18, flexShrink: 0 }}
-                            className='me-1'
-                          />
-                          {baseTokenTicker}
+              Load Pending Pairs
+            </Button>
+
+            <div className="mt-4 pt-3 text-white" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
+              {(Object.values(pendingPairs).length > 0) ? (
+                <div>
+                  <p className='font-size-sm text-justified mt-3 mb-0'>The created / pending pools for the requested address:</p>
+                  {Object.values(pendingPairs).map((pair: PendingPair) => (
+                    <div key={`pending-pair-${pair.pair_address}`}>
+                      <div className={`mt-1 p-3 b-r-sm text-silver`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
+                        <div className='d-flex justify-content-between align-items-center font-bold'>
+                          <p className='font-size-sm mb-0 text-justified text-[#3FAC5A]'>{pair.token1}</p>
+                          <div className={`height-1 w-5 mx-5 bg-[#3FAC5A]`}></div>
+                          <p className='text-right font-size-sm mb-0 text-justified text-[#3FAC5A]'>{pair.token2}</p>
                         </div>
-                      )}
-                      className='fullWidth token-container b-r-md'
-                      sx={{
-                        color: 'white',
-                        fontSize: '12px',
-                        fontFamily: 'Red Rose',
-                        padding: 0,
-                        '.MuiOutlinedInput-notchedOutline': {
-                          border: 'none',
-                        },
-                        '& .MuiSvgIcon-root': {
-                          color: 'white',
-                          marginLeft: '-50px !important'
-                        },
-                        backgroundColor: 'transparent',
-                      }}
-                      MenuProps={{
-                        PaperProps: {
-                          sx: {
-                            backgroundColor: 'rgba(32, 32, 32, 1)',
-                            color: 'white',
-                            fontFamily: 'Red Rose',
-                            borderRadius: '12px',
-                          },
-                        },
-                      }}
-                    >
-                      <MenuItem value={poolBaseTokens.token1.id} className={`font-rose select-menu-item font-size-xs`}>
-                        <img
-                          src={poolBaseTokens.token1.image}
-                          alt={poolBaseTokens.token1.ticker}
-                          style={{ width: 16, height: 16, flexShrink: 0 }}
-                          className='me-1'
-                        />
-                        {poolBaseTokens.token1.ticker}
-                      </MenuItem>
-                      <MenuItem value={poolBaseTokens.token2.id} className={`font-rose select-menu-item font-size-xs`}>
-                        <img
-                          src={poolBaseTokens.token2.image}
-                          alt={poolBaseTokens.token2.ticker}
-                          style={{ width: 16, height: 16, flexShrink: 0 }}
-                          className='me-1'
-                        />
-                        {poolBaseTokens.token2.ticker}
-                      </MenuItem>
-                      <MenuItem value={poolBaseTokens.token3.id} className={`font-rose select-menu-item font-size-xs`} style={{ marginBottom: '-4px' }}>
-                        <img
-                          src={poolBaseTokens.token3.image}
-                          alt={poolBaseTokens.token3.ticker}
-                          style={{ width: 16, height: 16, flexShrink: 0 }}
-                          className='me-1'
-                        />
-                        {poolBaseTokens.token3.ticker}
-                      </MenuItem>
-                    </Select>
-
-                    <p className='font-size-sm mt-3 mb-1 ms-2'>Pool second token ID</p>
-                    <TextField
-                      id="second-token"
-                      placeholder='Token ticker'
-                      type="text"
-                      value={secondTokenId}
-                      autoComplete="off"
-                      onChange={handleSecondTokenChange}
-                      size="medium"
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: true,
-                        style: {
-                          color: 'white',
-                          fontSize: isMobile ? '17px' : '14px',
-                          caretColor: 'white',
-                          paddingLeft: '15px',
-                          fontFamily: 'Red Rose',
-                          paddingTop: '3px',
-                          paddingBottom: '3px'
-                        },
-                      }}
-                      className='mb-0 token-container fullWidth b-r-md'
-                      style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
-                    />
-
-                    <p className='font-size-sm mt-3 mb-1 ms-2'>Pool second token decimals</p>
-                    <TextField
-                      id="second-token-decimals"
-                      placeholder='Token decimals'
-                      type="text"
-                      value={secondTokenDecimals}
-                      autoComplete="off"
-                      onChange={handleSecondTokenChange}
-                      size="medium"
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: true,
-                        style: {
-                          color: 'white',
-                          fontSize: isMobile ? '17px' : '14px',
-                          caretColor: 'white',
-                          paddingLeft: '15px',
-                          fontFamily: 'Red Rose',
-                          paddingTop: '3px',
-                          paddingBottom: '3px'
-                        },
-                      }}
-                      className='mb-0 token-container fullWidth b-r-md'
-                      style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
-                    />
-                    <div className='d-flex justify-content-between'>
-                      <p className='mb-0 mt-1 ms-2 font-size-sm'>Pool Fee</p>
-                      <p className='mb-0 mt-1 me-2 font-size-sm text-right'>1%</p>
+                        <hr className='mt-2 mb-0' style={{ opacity: '0.3', color: 'silver' }} />
+                        <HorizontalStatusConnector currentStatus={pair.currentStatus} />
+                        <hr className='mt-2' style={{ opacity: '0.3', color: 'silver' }} />
+                        <div className='grid-start-center'>
+                          {pair.nextPossibleSteps.length === 0 ? (
+                            <Button
+                              className="btn-intense-default btn-disabled px-3 py-1 btn-intense-success2 hover-btn text-white b-r-xs font-size-xxs"
+                              disabled
+                            >
+                              Pair Creation Complete
+                            </Button>
+                          ) : (
+                            <Button
+                              component={Link}
+                              to={`/admin-create-pool/${pair.pair_address}/${pendingUserAddress}`}
+                              className="btn-intense-default px-3 py-1 btn-intense-success2 hover-btn text-white b-r-xs font-size-xxs"
+                            >
+                              Continue Creating Pool
+                            </Button>
+                          )}
+                        </div>
+                      </div>
                     </div>
-
-                    <Button
-                      variant="contained"
-                      onClick={createPool}
-                      className='btn-intense-default hover-btn btn-intense-success2 mt-2 fullWidth smaller'
-                    >
-                      Create Pool
-                    </Button>
+                  ))}
+                  <Button
+                    component={Link}
+                    to={`/admin-create-pool/new-pool/new-address`}
+                    className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth mt-4`}
+                    sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
+                  >
+                    Create New Pair
+                  </Button>
+                </div>
+              ) : (
+                <Fragment>
+                  <div className={`mt-2 p-3 b-r-sm text-silver ${isMobile ? '' : 'd-flex'} justify-content-center align-items-center`} style={{ backgroundColor: 'rgba(10,10,10,0.7)' }}>
+                    <InfoIcon fontSize='medium' color='info' />
+                    <p className='font-size-xs text-justified mb-0 mt-0 mx-3'>The provided address has no pairs in pending</p>
                   </div>
-                </StepContent>
-              </Step>
-              <Step>
-                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={2} />)}>
-                  <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Issue LP Token</p>
-                </StepLabel>
-                <StepContent>
-                  <div className='mt-3 mb-3'>
-                    <p className='text-center text-intense-green mt-2 font-size-md font-bold mb-2'>Press the button to automatically generate and create the LP token</p>
-                    <Button
-                      variant="contained"
-                      onClick={issueLpToken}
-                      className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
-                    >
-                      Token Issue
-                    </Button>
-                  </div>
-                </StepContent>
-              </Step>
-              <Step>
-                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={3} />)}>
-                  <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Set Role</p>
-                </StepLabel>
-                <StepContent>
-                  <div className='my-3'>
-                    <p className='text-center text-intense-green mt-2 font-size-md font-bold'>MINT/BURN LP TOKEN ROLES</p>
-                    <p className='roles-container fullWidth text-center font-size-sm mb-2 text-uppercase'>{generateLPTokenName('LEGLD-e8378b', 'SPOT-ec8f71')}</p>
-                    <Button
-                      variant="contained"
-                      onClick={setLocalRoles}
-                      className='btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
-                    >
-                      Set Roles
-                    </Button>
-                  </div>
-                </StepContent>
-              </Step>
-              <Step>
-                <StepLabel StepIconComponent={(props) => (<ColorlibStepIcon {...props} index={4} />)}>
-                  <p className='font-rose text-white font-size-lg ms-1 mb-0 mt-0'>Add Initial Liquidity</p>
-                </StepLabel>
-                <StepContent>
-                  <div className='my-3'>
-                    <p className='font-size-sm mt-3 mb-1 ms-2 text-uppercase'>{baseTokenId.split('-')[0]}</p>
-                    <TextField
-                      id="first-token"
-                      placeholder='First token amount'
-                      type="text"
-                      value={firstTokenAmount}
-                      autoComplete="off"
-                      onChange={(e) => {
-                        const input = e.target.value;
-                        if (/^\d*\.?\d*$/.test(input)) {
-                          handleFirstTokenAmount(e);
-                        }
-                      }}
-                      InputProps={{
-                        disableUnderline: true,
-                        endAdornment: (
-                          <Button
-                            onClick={handleMaxToken1Amount}
-                            sx={{
-                              minWidth: 'unset',
-                              padding: '0 8px',
-                              color: 'white',
-                              textTransform: 'none',
-                              fontSize: '12px',
-                              fontWeight: 'bold',
-                              fontFamily: 'Red Rose'
-                            }}
-                            className='hover:text-[#131313]'
-                          >
-                            Max
-                          </Button>
-                        ),
-                        style: {
-                          color: 'white',
-                          fontSize: isMobile ? '17px' : '14px',
-                          caretColor: 'white',
-                          paddingLeft: '15px',
-                          fontFamily: 'Red Rose',
-                          paddingTop: '3px',
-                          paddingBottom: '3px'
-                        },
-                      }}
-
-                      size="medium"
-                      variant="standard"
-                      className='mb-0 token-container fullWidth b-r-md'
-                      style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
-                    />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[baseTokenId]?.balance ?? '0'))} <span className='text-uppercase'>{baseTokenTicker}</span></p>
-
-                    <p className='font-size-sm mb-1 ms-2 text-uppercase'>{secondTokenId.split('-')[0]}</p>
-                    <TextField
-                      id="second-token"
-                      placeholder='Second token amount'
-                      type="text"
-                      value={secondTokenAmount}
-                      autoComplete="off"
-                      onChange={(e) => {
-                        const input = e.target.value;
-                        if (/^\d*\.?\d*$/.test(input)) {
-                          handleSecondTokenAmount(e);
-                        }
-                      }}
-                      InputProps={{
-                        disableUnderline: true,
-                        endAdornment: (
-                          <Button
-                            onClick={handleMaxToken2Amount}
-                            sx={{
-                              minWidth: 'unset',
-                              padding: '0 8px',
-                              color: 'white',
-                              textTransform: 'none',
-                              fontSize: '12px',
-                              fontWeight: 'bold',
-                              fontFamily: 'Red Rose'
-                            }}
-                            className='hover:text-[#131313]'
-                          >
-                            Max
-                          </Button>
-                        ),
-                        style: {
-                          color: 'white',
-                          fontSize: isMobile ? '17px' : '14px',
-                          caretColor: 'white',
-                          paddingLeft: '15px',
-                          fontFamily: 'Red Rose',
-                          paddingTop: '3px',
-                          paddingBottom: '3px'
-                        },
-                      }}
-
-                      size="medium"
-                      variant="standard"
-                      className='mb-0 token-container fullWidth b-r-md'
-                      style={{ border: '1px solid rgba(63, 142, 90, 0.1)' }}
-                    />
-                    <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[secondTokenId]?.balance ?? '0'))} <span className='text-uppercase'>{secondTokenId.split('-')[0]}</span></p>
-
-                    <Button
-                      variant="contained"
-                      onClick={addInitialLiquidity}
-                      className='mt-3 btn-intense-default hover-btn btn-intense-success2 fullWidth smaller'
-                    >
-                      Add Liquidity
-                    </Button>
-                  </div>
-                </StepContent>
-              </Step>
-            </Stepper>
-
-            <div className="mt-3" style={{ borderTop: '2px solid rgba(255, 255, 255, 0.5)' }}>
-              <Button
-                className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3'
-                variant='contained'
-                size='small'
-                onClick={() => resumePoolSwap()}
-              >
-                Enable Admin SWAP
-              </Button>
-              <Button
-                className='cursor-pointer mb-0 font-size- btn-intense-default hover-btn btn-intense-success2 smaller sm b-r-xs mt-3 ms-2'
-                variant='contained'
-                size='small'
-                onClick={() => resumePoolSwap2()}
-              >
-                Enable SWAP 2
-              </Button>
+                  <Button
+                    component={Link}
+                    to={`/admin-create-pool/new-pool/new-address`}
+                    className={`btn-intense-default btn-intense-success2 smaller font-size-xxs b-r-sm hover-btn text-white fullWidth mt-2`}
+                    sx={{ height: '30px', minWidth: isMobile ? '170px' : '100px' }}
+                  >
+                    Create New Pair
+                  </Button>
+                </Fragment>
+              )}
             </div>
           </div>
         </Col>
