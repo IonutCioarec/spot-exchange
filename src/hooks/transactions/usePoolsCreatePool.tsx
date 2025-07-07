@@ -4,7 +4,7 @@ import { Transaction, TokenIdentifierValue, BytesValue } from '@multiversx/sdk-c
 import { TransactionsDisplayInfoType } from '@multiversx/sdk-dapp/types';
 import { getRouterSmartContractObj, sendAndSignTransactionsWrapped, transactionDisplayInfo, watcher } from 'helpers';
 
-export const usePoolsCreatePool = (first_token_id: string, second_token_id: string, signature: any) => {
+export const usePoolsCreatePool = (first_token_id: string, second_token_id: string, signature: any, redirectRouteAfterSigned: string) => {
   const { account } = useGetAccountInfo();
 
   const createPool = async () => {
@@ -23,7 +23,8 @@ export const usePoolsCreatePool = (first_token_id: string, second_token_id: stri
       .buildTransaction();
     const sessionId = await sendAndSignTransactionsWrapped(
       [transaction],
-      transactionDisplayInfo({ transactionName: 'create pool', successTransactionName: 'Pool created' })
+      transactionDisplayInfo({ transactionName: 'create pool', successTransactionName: 'Pool created' }),
+      redirectRouteAfterSigned
     );
     return sessionId;
   };
