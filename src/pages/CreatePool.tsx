@@ -154,7 +154,7 @@ const CreatePool = () => {
           switch (newPair.nextPossibleSteps[0]) {
             case 'Created': setActiveStep(0); break;
             case 'issueLpToken': setActiveStep(1); break;
-            case 'setRoles': setActiveStep(2); break;
+            case 'setRoles': setActiveStep(3); break;
             case 'FarmCreated': setActiveStep(3); break;
             case 'createFarm': setActiveStep(4); break;
             case 'Ready': setActiveStep(5); break;
@@ -227,11 +227,11 @@ const CreatePool = () => {
   };
 
   const handleMaxToken1Amount = () => {
-    setFirstTokenAmount(userTokens[baseTokenId]?.balance ?? '0');
+    setFirstTokenAmount(userTokens[currentPair.token1]?.balance ?? '0');
   };
 
   const handleMaxToken2Amount = () => {
-    setSecondTokenAmount(userTokens[secondTokenId]?.balance ?? '0');
+    setSecondTokenAmount(userTokens[currentPair.token2]?.balance ?? '0');
   };
 
   //get the validation message
@@ -493,7 +493,7 @@ const CreatePool = () => {
                 </StepLabel>
                 <StepContent>
                   <div className='my-3'>
-                    <p className='font-size-sm mt-3 mb-1 ms-2 text-uppercase'>{currentPair.token1.split('-')[0]}</p>
+                    <p className='font-size-sm mt-3 mb-1 ms-2 text-uppercase'>{currentPair.token1}</p>
                     <TextField
                       id="first-token"
                       placeholder='First token amount'
@@ -543,7 +543,7 @@ const CreatePool = () => {
                     />
                     <p className='mb-0 mt-1 me-2 font-size-xs text-right text-silver'>Balance: {intlNumberFormat(Number(userTokens[currentPair.token1]?.balance ?? '0'))} <span className='text-uppercase'>{currentPair.token1.split('-')[0]}</span></p>
 
-                    <p className='font-size-sm mb-1 ms-2 text-uppercase'>{secondTokenId.split('-')[0]}</p>
+                    <p className='font-size-sm mb-1 ms-2 text-uppercase'>{currentPair.token2}</p>
                     <TextField
                       id="second-token"
                       placeholder='Second token amount'
