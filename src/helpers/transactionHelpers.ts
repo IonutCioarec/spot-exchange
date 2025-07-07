@@ -24,6 +24,7 @@ export const transactionDisplayInfo = ({ transactionName, successTransactionName
 export const sendAndSignTransactions = async (
   transactions: Transaction[],
   transactionsDisplayInfo: TransactionsDisplayInfoType,
+  redirectRouteAfterSigned?: string,
   minGasLimit = 20000000
 ): Promise<{
   success: boolean;
@@ -36,6 +37,8 @@ export const sendAndSignTransactions = async (
     const { sessionId, error } = await sendTransactions({
       transactions: transactions.map((t) => t.toPlainObject()),
       transactionsDisplayInfo,
+      redirectAfterSign: (redirectRouteAfterSigned !== undefined) ? true : false,
+      callbackRoute: (redirectRouteAfterSigned !== undefined) ? redirectRouteAfterSigned : '',
       minGasLimit
     });
 
@@ -49,13 +52,14 @@ export const sendAndSignTransactions = async (
 
 export const sendAndSignTransactionsWrapped = async (
   transactions: Transaction[],
-  displayInfo: TransactionsDisplayInfoType
+  displayInfo: TransactionsDisplayInfoType,
+  redirectRouteAfterSigned?: string
 ): Promise<{
   success: boolean;
   error: string;
   sessionId: string | null;
 }> => {
-  const result = await sendAndSignTransactions(transactions, displayInfo);
+  const result = await sendAndSignTransactions(transactions, displayInfo, redirectRouteAfterSigned);
   await watcher.awaitCompleted(transactions[0]);
   return result;
 };
