@@ -25,8 +25,6 @@ const PendingPools = () => {
   const userTokens = useSelector(selectUserTokens);
   const pendingPairs = useSelector(selectPendingPairsById);
 
-  console.log(JSON.stringify(pendingPairs, null, 2));
-
   //Redirect the user to the unlock page if he is not logged in
   useEffect(() => {
     if (!isLoggedIn) {
