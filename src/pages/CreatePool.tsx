@@ -154,7 +154,7 @@ const CreatePool = () => {
           switch (newPair.nextPossibleSteps[0]) {
             case 'Created': setActiveStep(0); break;
             case 'issueLpToken': setActiveStep(1); break;
-            case 'setRoles': setActiveStep(3); break;
+            case 'setRoles': setActiveStep(2); break;
             case 'FarmCreated': setActiveStep(3); break;
             case 'createFarm': setActiveStep(4); break;
             case 'Ready': setActiveStep(5); break;
