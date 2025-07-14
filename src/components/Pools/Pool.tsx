@@ -402,6 +402,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     token1ExchangeRate={token1ExchangeRate}
                     token2ExchangeRate={token2ExchangeRate}
                     pair_address={pair.pair_id}
+                    pair={pair}
                   />
                   <AwesomeButton className="aws-btn-danger w-150" onPress={handleWithdrawOpen}>REMOVE</AwesomeButton>
                   <WithdrawModal
@@ -701,6 +702,7 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           token1ExchangeRate={token1ExchangeRate}
           token2ExchangeRate={token2ExchangeRate}
           pair_address={pair.pair_id}
+          pair={pair}
         />
         <WithdrawModal
           isOpen={isWithdrawOpen}

@@ -16,6 +16,7 @@ import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 import BigNumber from 'bignumber.js';
 import { useGetIsLoggedIn } from 'hooks';
 import { Link } from 'react-router-dom';
+import { Pair } from 'types/backendTypes';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -42,6 +43,7 @@ interface AddModal {
   token1Decimals: number;
   token2Decimals: number;
   pair_address: string;
+  pair: Pair;
 }
 
 const AddModal: React.FC<AddModal> = ({
@@ -59,7 +61,8 @@ const AddModal: React.FC<AddModal> = ({
   token2ExchangeRate,
   token1Decimals,
   token2Decimals,
-  pair_address
+  pair_address,
+  pair
 }) => {
   const [amountToken1, setAmountToken1] = useState('');
   const [amountToken2, setAmountToken2] = useState('');
@@ -148,10 +151,10 @@ const AddModal: React.FC<AddModal> = ({
     debounce(async (value: string) => {
       if (!token1Id || !token2Id) return;
 
-      const unitPrice = await getRawPrice(token2Id, token1Id);
-      const price = new BigNumber(unitPrice).multipliedBy(value).toString();
+      const ration = new BigNumber(pair.token2_reserve).dividedBy(new BigNumber(pair.token1_reserve));
+      const amount = new BigNumber(ration).multipliedBy(Number(value));
 
-      setAmountToken2(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
+      setAmountToken2(intlNumberFormat(parseFloat(formatSignificantDecimals(Number(amount), 3)), 0, 20));
     }, debounceSearchTime),
     [token1Id, token2Id]
   );
@@ -160,10 +163,10 @@ const AddModal: React.FC<AddModal> = ({
     debounce(async (value: string) => {
       if (!token1Id || !token2Id) return;
 
-      const unitPrice = await getRawPrice(token1Id, token2Id);
-      const price = new BigNumber(unitPrice).multipliedBy(value).toString();
+      const ration = new BigNumber(pair.token1_reserve).dividedBy(new BigNumber(pair.token2_reserve));
+      const amount = new BigNumber(ration).multipliedBy(Number(value));
 
-      setAmountToken1(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price), 3)), 0, 20));
+      setAmountToken1(intlNumberFormat(parseFloat(formatSignificantDecimals(Number(amount), 3)), 0, 20));
     }, debounceSearchTime),
     [token1Id, token2Id]
   );
