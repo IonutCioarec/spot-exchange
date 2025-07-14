@@ -59,28 +59,9 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
     setIsWithdrawOpen(true);
   }
 
-  const [token1ExchangeRate, setToken1ExchangeRate] = useState('0');
-  const [token2ExchangeRate, setToken2ExchangeRate] = useState('0');
-  const getPrice = async (fromToken: string, fromTokenDecimals: number, toToken: string, amount: string) => {
-    const amountScaled = amountToDenominatedAmount(amount, fromTokenDecimals, 20);
-    const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
-
-    if (!priceResponse) {
-      return '0';
-    }
-
-    const price = priceResponse?.cumulative_exchange_rate?.raw || '0';
-    return price;
-  };
-
   const [isAddOpen, setIsAddOpen] = useState(false);
   const handleAddOpen = async (fromToken: string, fromTokenDecimals: number, toToken: string, toTokenDecimals: number) => {
     setIsAddOpen(true);
-    const price1 = await getPrice(fromToken, fromTokenDecimals, toToken, '1');
-    const price2 = await getPrice(toToken, toTokenDecimals, fromToken, '1');
-
-    setToken1ExchangeRate(price1);
-    setToken2ExchangeRate(price2);
   }
 
   useEffect(() => {
@@ -399,8 +380,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     token2MaxAmount={userToken2Balance}
                     token1Image={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
                     token2Image={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
-                    token1ExchangeRate={token1ExchangeRate}
-                    token2ExchangeRate={token2ExchangeRate}
                     pair_address={pair.pair_id}
                     pair={pair}
                   />
@@ -699,8 +678,6 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           token2MaxAmount={userToken2Balance}
           token1Image={token1Details?.logo_url && token1Details?.logo_url !== 'N/A' ? token1Details.logo_url : defaultTokenValues.image_url}
           token2Image={token2Details?.logo_url && token2Details?.logo_url !== 'N/A' ? token2Details.logo_url : defaultTokenValues.image_url}
-          token1ExchangeRate={token1ExchangeRate}
-          token2ExchangeRate={token2ExchangeRate}
           pair_address={pair.pair_id}
           pair={pair}
         />

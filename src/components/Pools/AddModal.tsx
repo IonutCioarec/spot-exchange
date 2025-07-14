@@ -38,8 +38,6 @@ interface AddModal {
   token2MaxAmount: number;
   token1Image: string;
   token2Image: string;
-  token1ExchangeRate: string;
-  token2ExchangeRate: string;
   token1Decimals: number;
   token2Decimals: number;
   pair_address: string;
@@ -57,8 +55,6 @@ const AddModal: React.FC<AddModal> = ({
   token2MaxAmount,
   token1Image,
   token2Image,
-  token1ExchangeRate,
-  token2ExchangeRate,
   token1Decimals,
   token2Decimals,
   pair_address,
@@ -66,18 +62,11 @@ const AddModal: React.FC<AddModal> = ({
 }) => {
   const [amountToken1, setAmountToken1] = useState('');
   const [amountToken2, setAmountToken2] = useState('');
-  const allTokens = useSelector(selectAllTokensById);
+  const [excAmountToken1, setExcAmountToken1] = useState('');
+  const [excAmountToken2, setExcAmountToken2] = useState('');
   const isMobile = useMobile();
-  const { getSwapPrice, getSwapRawPrice } = useBackendAPI();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isLoggedIn = useGetIsLoggedIn();
-
-  const getRawPrice = async (fromToken: string, toToken: string) => {
-    const response = await getSwapRawPrice(fromToken, toToken);
-    const price = response ? response.final_price : 0;
-
-    return price;
-  };
 
   const handleClose = () => {
     setIsOpen(false);
@@ -177,6 +166,24 @@ const AddModal: React.FC<AddModal> = ({
   const handleMaxToken2Amount = () => {
     handleAmountToken2Change(token2MaxAmount.toString());
   };
+
+  const handleExchangeRate = () => {
+    if (pair.token1_reserve && pair.token2_reserve) {
+      const token1ExchangeRate = new BigNumber(pair.token1_reserve).dividedBy(new BigNumber(pair.token2_reserve));
+      const token2ExchangeRate = new BigNumber(pair.token2_reserve).dividedBy(new BigNumber(pair.token1_reserve));
+
+      if (token1ExchangeRate) {
+        setExcAmountToken1(token1ExchangeRate.toString());
+      }
+      if (token2ExchangeRate) {
+        setExcAmountToken2(token2ExchangeRate.toString());
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleExchangeRate();
+  }, [pair.token1_reserve, pair.token2_reserve, amountToken1, amountToken2]);
 
   const handleAdd = () => {
     setIsOpen(false);
@@ -399,8 +406,8 @@ const AddModal: React.FC<AddModal> = ({
           <div className='d-flex justify-content-between mt-2'>
             <p className='px-2 font-size-xs text-silver mb-0'>Rate: </p>
             <div>
-              <p className={`px-2 ${isMobile ? 'font-size-xxs' : 'font-size-xs'} mb-0 text-white`}>1 {token1} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(token1ExchangeRate), 3)), 0, 20)} {token2}</p>
-              <p className={`px-2 ${isMobile ? 'font-size-xxs' : 'font-size-xs'} mb-0 text-white`}>1 {token2} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(token2ExchangeRate), 3)), 0, 20)} {token1}</p>
+              <p className={`px-2 ${isMobile ? 'font-size-xxs' : 'font-size-xs'} mb-0 text-white`}>1 {token1} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(excAmountToken2), 3)), 0, 20)} {token2}</p>
+              <p className={`px-2 ${isMobile ? 'font-size-xxs' : 'font-size-xs'} mb-0 text-white`}>1 {token2} ≃ {intlNumberFormat(Number(formatSignificantDecimals(Number(excAmountToken1), 3)), 0, 20)} {token1}</p>
             </div>
           </div>
 
