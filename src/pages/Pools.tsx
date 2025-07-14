@@ -21,7 +21,7 @@ import {
   selectPairsLimit
 } from 'storeManager/slices/pairsSlice';
 import { selectPairTokensById, selectLpTokensById, selectAllTokensById } from 'storeManager/slices/tokensSlice';
-import { selectUserTokens, selectNonZeroBalanceLpTokenIds } from 'storeManager/slices/userTokensSlice';
+import { selectUserTokens, selectNonZeroBalanceLpTokenIds, selectUserLpTokens } from 'storeManager/slices/userTokensSlice';
 import Loader from 'components/Loader';
 import FilterLoader from 'components/Pools/FilterLoader';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -105,6 +105,7 @@ const Pools = () => {
   const lptokens = useSelector(selectLpTokensById);
   const pairsStatus = useSelector(selectPairsStatus);
   const userTokens = useSelector(selectUserTokens);
+  const userLPTokens = useSelector(selectUserLpTokens);
 
   const currentPage = useSelector(selectPairsPage);
   const totalPages = useSelector(selectPairsTotalPages);
@@ -461,8 +462,7 @@ const Pools = () => {
                     token2Details={allTokens[pair.token2]}
                     userToken1Balance={Number(userTokens[pair.token1]?.balance ?? 0)}
                     userToken2Balance={Number(userTokens[pair.token2]?.balance ?? 0)}
-                    // userLpTokenBalance={Number(denominatedAmountToAmount(userTokens[pair.lp_token_id]?.balance, lptokens[pair.lp_token_id].decimals, 20) || 0)}
-                    userLpTokenBalance={Number(0.6)}
+                    userLpTokenBalance={Number(denominatedAmountToAmount(userLPTokens[pair.lp_token_id]?.balance ?? 0, lptokens[pair.lp_token_id]?.decimals ?? 18, 20) || 0)}
                     lpTokenId={pair.lp_token_id}
                     lpTokenSupply={(Number(denominatedAmountToAmount(lptokens[pair.lp_token_id]?.supply || 0, lptokens[pair.lp_token_id]?.decimals || 18, 20)) ?? 0)}
                     sortBy={sortBy}
