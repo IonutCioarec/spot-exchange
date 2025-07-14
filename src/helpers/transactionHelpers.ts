@@ -34,13 +34,24 @@ export const sendAndSignTransactions = async (
   try {
     await refreshAccount();
 
-    const { sessionId, error } = await sendTransactions({
-      transactions: transactions.map((t) => t.toPlainObject()),
-      transactionsDisplayInfo,
-      redirectAfterSign: (redirectRouteAfterSigned !== undefined) ? true : false,
-      callbackRoute: (redirectRouteAfterSigned !== undefined) ? redirectRouteAfterSigned : '',
-      minGasLimit
-    });
+    let sessionId = '';
+    let error;
+
+    if (redirectRouteAfterSigned !== undefined) {
+      ({ sessionId, error } = await sendTransactions({
+        transactions: transactions.map((t) => t.toPlainObject()),
+        transactionsDisplayInfo,
+        redirectAfterSign: (redirectRouteAfterSigned !== undefined) ? true : false,
+        callbackRoute: (redirectRouteAfterSigned !== undefined) ? redirectRouteAfterSigned : '',
+        minGasLimit
+      }));
+    } else {
+      ({ sessionId, error } = await sendTransactions({
+        transactions: transactions.map((t) => t.toPlainObject()),
+        transactionsDisplayInfo,
+        minGasLimit
+      }));
+    }
 
     await refreshAccount();
     return { success: error !== undefined, error: error ?? '', sessionId };
