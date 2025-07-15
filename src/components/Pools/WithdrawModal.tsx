@@ -11,6 +11,11 @@ import { useTablet } from 'utils/responsive';
 import CloseIcon from '@mui/icons-material/Close';
 import { useGetIsLoggedIn } from 'hooks';
 import { Link } from 'react-router-dom';
+import { Pair } from 'types/backendTypes';
+import { usePoolsRemoveLiquidity } from 'hooks/transactions/usePoolsRemoveLiquidity';
+import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
+import { selectAllTokensById } from 'storeManager/slices/tokensSlice';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -25,37 +30,65 @@ interface WithdrawModal {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   lpTokenId: string;
-  lpTokenMaxAmount: number;
+  userLpTokenBalance: number;
+  pair: Pair;
+  token1Id: string;
+  token2Id: string;
+  token1Decimals: number;
+  token2Decimals: number;
 }
 
 const WithdrawModal: React.FC<WithdrawModal> = ({
   isOpen,
   setIsOpen,
   lpTokenId,
-  lpTokenMaxAmount
+  userLpTokenBalance,
+  pair,
+  token1Id,
+  token2Id,
+  token1Decimals,
+  token2Decimals
 }) => {
-  const [amount, setAmount] = useState('');
+  const [amountToWithdraw, setAmountToWithdraw] = useState('')
   const isMobile = useMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isLoggedIn = useGetIsLoggedIn();
+  const allTokens = useSelector(selectAllTokensById);
+
+  const handleWithdrawAmounts = () => {
+    if (!amountToWithdraw || new BigNumber(amountToWithdraw).isZero()) {
+      return { token1Amount: new BigNumber(0), token2Amount: new BigNumber(0) };
+    }
+
+    const withdrawAmountBN = new BigNumber(amountToWithdraw);
+    if (withdrawAmountBN.gt(userLpTokenBalance)) {
+      return { token1Amount: new BigNumber(0), token2Amount: new BigNumber(0) };
+    }
+
+    const shareOfPool = withdrawAmountBN.dividedBy(new BigNumber(allTokens[lpTokenId]?.supply));
+    const token1AmountToReceive = new BigNumber(pair.token1_reserve).multipliedBy(shareOfPool);
+    const token2AmountToReceive = new BigNumber(pair.token2_reserve).multipliedBy(shareOfPool);
+
+    return { token1Amount: token1AmountToReceive, token2Amount: token2AmountToReceive };
+  };
 
   const handleClose = () => {
-    setAmount('');
+    setAmountToWithdraw('');
     setIsOpen(false);
   };
 
   const handleAmountChange = (e: any) => {
     const value = e.target.value;
-    setAmount(value);
+    setAmountToWithdraw(value);
   };
 
   const handleMaxAmount = () => {
-    setAmount(lpTokenMaxAmount.toString());
+    setAmountToWithdraw(userLpTokenBalance.toString());
   };
 
   const handleWithdraw = () => {
     setIsOpen(false);
-    setAmount('');
+    setAmountToWithdraw('');
   };
 
   useEffect(() => {
@@ -63,6 +96,24 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
       inputRef.current.blur();
     }
   }, [isOpen, isMobile]);
+
+
+  // add liquidity hook
+  const withdrawLiquidity = usePoolsRemoveLiquidity(
+    pair.pair_id,
+    {
+      token_id: token1Id,
+      token_decimals: token1Decimals,
+      token_amount: Number(handleWithdrawAmounts().token1Amount)
+    },
+    {
+      token_id: token2Id,
+      token_decimals: token2Decimals,
+      token_amount: Number(handleWithdrawAmounts().token2Amount)
+    },
+    lpTokenId,
+    Number(amountToWithdraw)
+  );
 
   return (
     <>
@@ -101,7 +152,7 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
             fullWidth
             size='small'
             variant='outlined'
-            value={amount}
+            value={amountToWithdraw}
             autoComplete="off"
             onChange={(e) => {
               const input = e.target.value;
@@ -164,12 +215,12 @@ const WithdrawModal: React.FC<WithdrawModal> = ({
           />
           <div className='d-flex justify-content-between align-items-center mb-3'>
             <p className='text-white font-size-xs mb-0 ms-2 mt-1'>Balance:</p>
-            <p className='text-white font-size-xs mb-0 me-2 mt-1'><span>{intlNumberFormat(Number(formatSignificantDecimals(Number(lpTokenMaxAmount), 3)), 0, 20)} {lpTokenId}</span></p>
+            <p className='text-white font-size-xs mb-0 me-2 mt-1'><span>{intlNumberFormat(Number(formatSignificantDecimals(Number(userLpTokenBalance), 3)), 0, 20)} {lpTokenId}</span></p>
           </div>
           {isLoggedIn ? (
             <Button
               className="btn-intense-default btn-intense-danger hover-btn smaller fullWidth"
-              onClick={handleWithdraw}
+              onClick={() => { withdrawLiquidity(); handleWithdraw(); }}
               sx={{ minWidth: isMobile ? '100px' : '120px', height: '30px' }}
             >
               Remove

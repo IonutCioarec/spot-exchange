@@ -79,21 +79,21 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
         case 'lowestYourRewards':
           return Number(userData[a?.lp_token_id].rewards) - Number(userData[b?.lp_token_id].rewards);
         case 'highestStaked':
-          return Number(b?.totalStaked) - Number(a?.totalStaked);
+          return Number(b?.total_staked) - Number(a?.total_staked);
         case 'lowestStaked':
-          return Number(a?.totalStaked) - Number(b?.totalStaked);
+          return Number(a?.total_staked) - Number(b?.total_staked);
         case 'highestRewards':
-          return Number(b?.totalRewards) - Number(a?.totalRewards);
+          return Number(b?.total_rewards) - Number(a?.total_rewards);
         case 'lowestRewards':
-          return Number(a?.totalRewards) - Number(b?.totalRewards);
+          return Number(a?.total_rewards) - Number(b?.total_rewards);
         case 'highestFeesAPR':
-          return Number(b?.feesAPR) - Number(a?.feesAPR);
+          return Number(b?.fees_apr) - Number(a?.fees_apr);
         case 'lowestFeesAPR':
-          return Number(a?.feesAPR) - Number(b?.feesAPR);
+          return Number(a?.fees_apr) - Number(b?.fees_apr);
         case 'highestBoostedAPR':
-          return Number(b?.boostedAPR) - Number(a?.boostedAPR);
+          return Number(b?.boosted_apr) - Number(a?.boosted_apr);
         case 'lowestBoostedAPR':
-          return Number(a?.boostedAPR) - Number(b?.boostedAPR);
+          return Number(a?.boosted_apr) - Number(b?.boosted_apr);
         case 'alphabetically':
           return a.lp_token_id.localeCompare(b.lp_token_id);
         default:
@@ -355,7 +355,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                           $
                           <CountUp
                             start={0}
-                            end={Number(farm?.totalStaked)}
+                            end={Number(farm?.total_staked)}
                             duration={1.5}
                             separator=","
                             decimals={3}
@@ -377,7 +377,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                           $
                           <CountUp
                             start={0}
-                            end={Number(farm?.totalRewards)}
+                            end={Number(farm?.total_rewards)}
                             duration={1.5}
                             separator=","
                             decimals={3}
@@ -396,7 +396,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                           {sortOption === 'lowestFeesAPR' && <TrendingUpIcon className="ms-1 font-size-md" />}
                         </p>
                         <p className="font-size-sm mb-0">
-                          {intlNumberFormat(Number(farm?.feesAPR))}%
+                          {intlNumberFormat(Number(farm?.fees_apr))}%
                         </p>
                       </div>
                     </td>
@@ -409,7 +409,7 @@ const UserFarmsList: React.FC<UserFarmsListProps> = ({ farms, userData }) => {
                           {sortOption === 'lowestBoostedAPR' && <TrendingUpIcon className="ms-1 font-size-md" />}
                         </p>
                         <p className="font-size-sm mb-0">
-                          {intlNumberFormat(Number(farm?.boostedAPR))}%
+                          {intlNumberFormat(Number(farm?.boosted_apr))}%
                         </p>
                       </div>
                     </td>
