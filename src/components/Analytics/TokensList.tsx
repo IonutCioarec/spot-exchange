@@ -17,6 +17,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import Table from "react-bootstrap/Table";
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import defaultLogo from 'assets/img/default_token_image.png';
 
 const getPriceChangePercentage = (currentPrice: number, previousPrice: number) => {
   if (previousPrice === 0) return <span> - </span>; // Avoid division by zero
@@ -299,7 +300,7 @@ const TokensList = () => {
                   >
                     {/* Sticky First Column */}
                     <td width={5}>
-                      <Avatar src={token.logo_url} sx={{ height: '35px', width: '35px' }} />
+                      <Avatar src={(token.logo_url && token.logo_url !== 'N/A') ? token.logo_url : defaultLogo} sx={{ height: '35px', width: '35px' }} />
                     </td>
 
                     {/* Scrollable Columns */}

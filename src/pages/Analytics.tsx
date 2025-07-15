@@ -341,12 +341,12 @@ const Analytics = () => {
   // dex farms details data
   const initialFarmsRowItems = [
     { label: "Total Farms", value: Object.values(farmsDummy).length.toString(), icon: <AgricultureIcon className="token-row-icon" />, isImage: false },
-    { label: "Total Staked", value: '$' + intlNumberFormat(Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.totalStaked) || 0), 0) ?? 0, 2, 2), icon: <AccountBalanceIcon className='token-row-icon' />, isImage: false },
-    { label: "Total Rewards", value: '$' + intlNumberFormat(Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.totalRewards) || 0), 0) ?? 0, 2, 2), icon: <CardGiftcardIcon className='token-row-icon' />, isImage: false },
-    { label: "Staking Users", value: Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.stakingUsers) || 0), 0).toString(), icon: <PeopleIcon className='token-row-icon' />, isImage: false },
-    { label: "Highest Staked", value: '$' + intlNumberFormat(Math.max(...Object.values(farmsDummy).map(farm => parseFloat(farm.totalStaked) || 0)), 2, 2), icon: <TrendingUpIcon className='token-row-icon' />, isImage: false },
-    { label: "Highest Reward", value: '$' + intlNumberFormat(Math.max(...Object.values(farmsDummy).map(farm => parseFloat(farm.totalRewards) || 0)), 2, 2), icon: <EmojiEventsIcon className='token-row-icon' />, isImage: false },
-    { label: "Most Staking Users", value: Math.max(...Object.values(farmsDummy).map(farm => farm.stakingUsers || 0)).toString(), icon: <StarIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Staked", value: '$' + intlNumberFormat(Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.total_staked) || 0), 0) ?? 0, 2, 2), icon: <AccountBalanceIcon className='token-row-icon' />, isImage: false },
+    { label: "Total Rewards", value: '$' + intlNumberFormat(Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.total_rewards) || 0), 0) ?? 0, 2, 2), icon: <CardGiftcardIcon className='token-row-icon' />, isImage: false },
+    { label: "Staking Users", value: Object.values(farmsDummy).reduce((sum, item) => sum + (Number(item.staking_users) || 0), 0).toString(), icon: <PeopleIcon className='token-row-icon' />, isImage: false },
+    { label: "Highest Staked", value: '$' + intlNumberFormat(Math.max(...Object.values(farmsDummy).map(farm => parseFloat(farm.total_staked) || 0)), 2, 2), icon: <TrendingUpIcon className='token-row-icon' />, isImage: false },
+    { label: "Highest Reward", value: '$' + intlNumberFormat(Math.max(...Object.values(farmsDummy).map(farm => parseFloat(farm.total_rewards) || 0)), 2, 2), icon: <EmojiEventsIcon className='token-row-icon' />, isImage: false },
+    { label: "Most Staking Users", value: Math.max(...Object.values(farmsDummy).map(farm => farm.staking_users || 0)).toString(), icon: <StarIcon className='token-row-icon' />, isImage: false },
   ];
   const [farmsRowItems, setFarmsRowItems] = useState(initialFarmsRowItems);
 
