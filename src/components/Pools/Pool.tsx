@@ -388,7 +388,12 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
                     isOpen={isWithdrawOpen}
                     setIsOpen={setIsWithdrawOpen}
                     lpTokenId={lpTokenId}
-                    lpTokenMaxAmount={userLpTokenBalance}
+                    userLpTokenBalance={userLpTokenBalance}
+                    pair={pair}
+                    token1Id={token1Details?.token_id}
+                    token2Id={token2Details?.token_id}
+                    token1Decimals={token1Details?.decimals}
+                    token2Decimals={token2Details?.decimals}
                   />
                   <Link to={`/swap?token1=${token1Details?.token_id || defaultSwapToken1}&token2=${token2Details?.token_id || defaultSwapToken2}`}>
                     <AwesomeButton className="aws-btn-warning w-150">SWAP</AwesomeButton>
@@ -685,7 +690,12 @@ export const Pool = ({ pair, index, token1Details, token2Details, userToken1Bala
           isOpen={isWithdrawOpen}
           setIsOpen={setIsWithdrawOpen}
           lpTokenId={lpTokenId}
-          lpTokenMaxAmount={userLpTokenBalance}
+          userLpTokenBalance={userLpTokenBalance}
+          pair={pair}
+          token1Id={token1Details?.token_id}
+          token2Id={token2Details?.token_id}
+          token1Decimals={token1Details?.decimals}
+          token2Decimals={token2Details?.decimals}
         />
       </Fragment >
 
