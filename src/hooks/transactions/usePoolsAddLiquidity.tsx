@@ -16,8 +16,8 @@ export const usePoolsAddLiquidity = (pair_address: string, token1: TokenProps, t
   const addLiquidity = async () => {
     const contract = await getDynamicPairsSmartContractObj(pair_address);
     const interaction = contract.methodsExplicit.addLiquidity([
-      new BigUIntValue(new BigNumber(token1.token_amount).multipliedBy(0.95).multipliedBy(new BigNumber(10).pow(token1.token_decimals))),
-      new BigUIntValue(new BigNumber(token2.token_amount).multipliedBy(0.95).multipliedBy(new BigNumber(10).pow(token2.token_decimals)))
+      new BigUIntValue(new BigNumber(token1.token_amount).multipliedBy(new BigNumber(10).pow(token1.token_decimals))),
+      new BigUIntValue(new BigNumber(token2.token_amount).multipliedBy(new BigNumber(10).pow(token2.token_decimals)))
     ]);
 
     const transaction = interaction
