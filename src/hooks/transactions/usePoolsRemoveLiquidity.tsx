@@ -11,7 +11,7 @@ interface TokenProps {
   token_amount: number
 }
 
-export const usePoolsRemoveLiquidity = (pair_address: string, token1: TokenProps, token2: TokenProps) => {
+export const usePoolsRemoveLiquidity = (pair_address: string, token1: TokenProps, token2: TokenProps, lp_token_id: string, lp_token_amount: number) => {
   const { account } = useGetAccountInfo();
 
   const removeLiquidity = async () => {
@@ -26,10 +26,9 @@ export const usePoolsRemoveLiquidity = (pair_address: string, token1: TokenProps
       .withGasLimit(20_000_000)
       .withChainID(network.chainId)
       .withValue(0)
-      .withMultiESDTNFTTransfer([
-        TokenTransfer.fungibleFromAmount(token1.token_id, token1.token_amount, token1.token_decimals),
-        TokenTransfer.fungibleFromAmount(token2.token_id, token2.token_amount, token2.token_decimals)
-      ])
+      .withSingleESDTTransfer(
+        TokenTransfer.fungibleFromAmount(lp_token_id, lp_token_amount, 18)
+      )
       .buildTransaction();
 
     const sessionId = await sendAndSignTransactionsWrapped(
