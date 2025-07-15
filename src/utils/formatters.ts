@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { getAmountFromPercentageBigNumber, getPercentageBigNumber } from './calculs';
 import { Pair, Token } from 'types/backendTypes';
-import defaultLogo from 'assets/img/no_logo.png';
+import defaultLogo from 'assets/img/default_token_image.png';
 import { defaultSwapToken1, defaultSwapToken2 } from 'config';
 
 export const denominatedAmountToAmount = (amount: number | string, denomination: number, decimals: number) => {

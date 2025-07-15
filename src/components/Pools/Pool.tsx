@@ -23,7 +23,7 @@ import AddModal from './AddModal';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { useBackendAPI } from "hooks/useBackendAPI";
 import ReduceZerosFormat from "components/ReduceZerosFormat";
-import defaultLogo from 'assets/img/no_logo.png';
+import defaultLogo from 'assets/img/default_token_image.png';
 
 interface PoolProps {
   pair: Pair;

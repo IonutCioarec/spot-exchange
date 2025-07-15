@@ -19,7 +19,7 @@ import { Farm, FarmsState, Pair, PairsState, UserFarmsState } from 'types/backen
 import { getUserPoolLiquidity, getUserPoolShare } from 'utils/calculs';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
-import defaultLogo from 'assets/img/no_logo.png';
+import defaultLogo from 'assets/img/default_token_image.png';
 
 const defaultTokenValues = {
   image_url: defaultLogo,

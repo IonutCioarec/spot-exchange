@@ -14,7 +14,7 @@ import { Address, SignableMessage } from "@multiversx/sdk-core";
 import { Nullable } from '@multiversx/sdk-dapp/types';
 import { useRedirectSignature } from 'hooks/transactions/useRedirectSignature';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-import defaultLogo from 'assets/img/no_logo.png';
+import defaultLogo from 'assets/img/default_token_image.png';
 import ImageIcon from '@mui/icons-material/Image';
 import { CloudUpload } from '@mui/icons-material';
 import { CreatedToken } from 'types/mvxTypes';

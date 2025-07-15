@@ -17,7 +17,7 @@ import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
 import ReduceZerosFormat from "components/ReduceZerosFormat";
 import { getTokenLogo } from 'utils/formatters';
-import defaultLogo from 'assets/img/no_logo.png';
+import defaultLogo from 'assets/img/default_token_image.png';
 import { useGetIsLoggedIn } from 'hooks';
 
 const Transition = forwardRef(function Transition(

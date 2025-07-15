@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL } from 'config';
-import logo from 'assets/img/no_logo.png';
+import logo from 'assets/img/default_token_image.png';
 import { CreatedTokens, UserNFTs } from 'types/mvxTypes';
 import { denominatedAmountToAmount } from 'utils/formatters';
 

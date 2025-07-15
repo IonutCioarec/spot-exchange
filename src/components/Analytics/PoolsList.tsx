@@ -24,7 +24,7 @@ import { selectPairsLimit, selectPairsPage, selectPairsSortBy, selectPairsSortDi
 import { selectNonZeroBalanceLpTokenIds } from 'storeManager/slices/userTokensSlice';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
-import defaultLogo from 'assets/img/no_logo.png';
+import defaultLogo from 'assets/img/default_token_image.png';
 
 const defaultTokenValues = {
   image_url: defaultLogo,
@@ -283,9 +283,9 @@ const PoolsList: React.FC<PoolsListProps> = ({ pairs, allTokens}) => {
               className='portfolio-list-table'
             >
               <tbody>
-                {Object.values(pairs).map((pair: Pair) => (
+                {Object.values(pairs).map((pair: Pair , index: number) => (
                   <tr
-                    key={pair.lp_token_id}
+                    key={`pair-${pair.lp_token_id}-${index}`}
                   >
                     {/* Sticky First Column */}
                     <td>

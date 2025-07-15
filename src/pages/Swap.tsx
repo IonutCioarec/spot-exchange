@@ -27,7 +27,7 @@ import { debounceSearchTime } from 'config';
 import { useSwapTokensRouter } from 'hooks/transactions/useSwapTokensRouter';
 import { selectPairs } from 'storeManager/slices/pairsSlice';
 import ScrollToTopButton from 'components/ScrollToTopButton';
-import defaultLogo from 'assets/img/no_logo.png';
+import defaultLogo from 'assets/img/default_token_image.png';
 import { useSwapTokensHex } from 'hooks/transactions/useSwapTokensHex';
 import { validateSwapStepsReserve } from 'utils/calculs';
 import toast from 'react-hot-toast';

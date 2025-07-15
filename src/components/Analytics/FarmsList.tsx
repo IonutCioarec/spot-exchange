@@ -24,7 +24,7 @@ import { selectPairsLimit, selectPairsPage, selectPairsSortBy, selectPairsSortDi
 import { selectNonZeroBalanceLpTokenIds } from 'storeManager/slices/userTokensSlice';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
-import defaultLogo from 'assets/img/no_logo.png';
+import defaultLogo from 'assets/img/default_token_image.png';
 
 const defaultTokenValues = {
   image_url: defaultLogo,
@@ -217,7 +217,7 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                   >
                     {/* Sticky First Column */}
                     <td>
-                      <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '60px' : 'auto' }}>
+                      <div className="d-flex align-items-center" style={{ minWidth: isMobile ? '60px' : '45px' }}>
                         <img
                           src={allTokens[farm.token1]?.logo_url && allTokens[farm.token1]?.logo_url !== 'N/A' ? allTokens[farm.token1].logo_url : defaultTokenValues.image_url}
                           alt={farm.token1}
@@ -331,8 +331,8 @@ const FarmsList: React.FC<FarmsListProps> = ({ farms, allTokens }) => {
                       </div>
                     </td>
 
-                    <td align="right">
-                      <div className="text-right">
+                    <td>
+                      <div className="text-center">
                         <p className={`font-size-xs mb-0 text-silver`}>
                           Users
                         </p>
