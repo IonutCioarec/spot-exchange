@@ -62,6 +62,8 @@ const AddModal: React.FC<AddModal> = ({
 }) => {
   const [amountToken1, setAmountToken1] = useState('');
   const [amountToken2, setAmountToken2] = useState('');
+  const [rawAmountToken1, setRawAmountToken1] = useState('');
+  const [rawAmountToken2, setRawAmountToken2] = useState('');
   const [excAmountToken1, setExcAmountToken1] = useState('');
   const [excAmountToken2, setExcAmountToken2] = useState('');
   const isMobile = useMobile();
@@ -87,6 +89,8 @@ const AddModal: React.FC<AddModal> = ({
       debouncedToken1Calculation.cancel();
       setAmountToken1('');
       setAmountToken2('');
+      setRawAmountToken1('');
+      setRawAmountToken2('');
       return;
     }
 
@@ -94,10 +98,13 @@ const AddModal: React.FC<AddModal> = ({
       debouncedToken1Calculation.cancel();
       setAmountToken1('0');
       setAmountToken2('0');
+      setRawAmountToken1('0');
+      setRawAmountToken2('0');
       return;
     }
 
     const formattedValue = formatNumberWithCommas(rawValue);
+    setRawAmountToken1(rawValue);
     setAmountToken1(formattedValue);
 
     if (!token1Id || !token2Id) return;
@@ -117,6 +124,8 @@ const AddModal: React.FC<AddModal> = ({
       debouncedToken2Calculation.cancel();
       setAmountToken1('');
       setAmountToken2('');
+      setRawAmountToken1('');
+      setRawAmountToken2('');
 
       return;
     }
@@ -125,10 +134,13 @@ const AddModal: React.FC<AddModal> = ({
       debouncedToken2Calculation.cancel();
       setAmountToken1('0');
       setAmountToken2('0');
+      setRawAmountToken1('0');
+      setRawAmountToken2('0');
       return;
     }
 
     const formattedValue = formatNumberWithCommas(rawValue);
+    setRawAmountToken2(rawValue);
     setAmountToken2(formattedValue);
 
     if (!token1Id || !token2Id) return;
@@ -143,7 +155,8 @@ const AddModal: React.FC<AddModal> = ({
       const ration = new BigNumber(pair.token2_reserve).dividedBy(new BigNumber(pair.token1_reserve));
       const amount = new BigNumber(ration).multipliedBy(Number(value));
 
-      setAmountToken2(intlNumberFormat(parseFloat(formatSignificantDecimals(Number(amount), 3)), 0, 20));
+      setRawAmountToken2(amount.toString());
+      setAmountToken2(intlNumberFormat(Number(formatSignificantDecimals(Number(amount), 3)), 0, 20));
     }, debounceSearchTime),
     [token1Id, token2Id]
   );
@@ -155,7 +168,8 @@ const AddModal: React.FC<AddModal> = ({
       const ration = new BigNumber(pair.token1_reserve).dividedBy(new BigNumber(pair.token2_reserve));
       const amount = new BigNumber(ration).multipliedBy(Number(value));
 
-      setAmountToken1(intlNumberFormat(parseFloat(formatSignificantDecimals(Number(amount), 3)), 0, 20));
+      setRawAmountToken1(amount.toString());
+      setAmountToken1(intlNumberFormat(Number(formatSignificantDecimals(Number(amount), 3)), 0, 20));
     }, debounceSearchTime),
     [token1Id, token2Id]
   );
@@ -197,12 +211,12 @@ const AddModal: React.FC<AddModal> = ({
     {
       token_id: token1Id,
       token_decimals: token1Decimals,
-      token_amount: parseFloat(amountToken1)
+      token_amount: parseFloat(rawAmountToken1)
     },
     {
       token_id: token2Id,
       token_decimals: token2Decimals,
-      token_amount: parseFloat(amountToken2)
+      token_amount: parseFloat(rawAmountToken2)
     },
   );
 
