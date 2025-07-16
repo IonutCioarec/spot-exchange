@@ -3,7 +3,8 @@ import { dexAPI } from 'config';
 import {
   Pair, SwapPrice, TokensState, Token, PairsState, SwapRawPrice, AuthState, CreateBrandingPRResponse,
   CheckBrandingPRResponse, FarmsState,
-  PendingPairsState
+  PendingPairsState,
+  SwapRoutesV2
 } from 'types/backendTypes';
 
 
@@ -349,6 +350,31 @@ export const useBackendAPI = () => {
     };
   };
 
+  // get the price of swaping token1 -> token2
+  const getSwapRoutesV2 = async (token1: string, token2: string, amount: string, slippage: number = 0.01): Promise<SwapRoutesV2> => {
+    try {
+      const response = await axios.get<SwapRoutesV2[]>(`${dexAPI}/swap/v2/swap?token_in=${token1}&token_out=${token2}&amount=${amount}&slippage=${slippage}`, {
+        headers: { Accept: 'application/json' },
+      });
+      return response.data[0];
+    } catch (e) {
+      console.error(e);
+    }
+    return {
+      route: [],
+      route_token_in: '',
+      route_token_out: '',
+      amount_in: '',
+      amount_in_usd: '',
+      amount_out: '',
+      amount_out_usd: '',
+      amount_out_min: '',
+      amount_out_min_usd: '',
+      exchange_rate: '',
+      tx_data: ''
+    };
+  };
+
   return {
     getPairs,
     getTokens,
@@ -359,6 +385,7 @@ export const useBackendAPI = () => {
     checkBrandingPR,
     createBrandingPR,
     getFarms,
-    getUserPendingPairs
+    getUserPendingPairs,
+    getSwapRoutesV2
   };
 };
