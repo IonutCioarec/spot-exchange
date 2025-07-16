@@ -217,3 +217,35 @@ export interface PendingPairsState {
   pendingPairs: PendingPair[];
   status: 'loading' | 'succeeded' | 'failed';
 }
+
+export interface SwapRouteV2 {
+  sc_address: string;
+  token_in: string;
+  token_out: string;
+  amount_in: string;
+  exchange_rate_raw: string;
+  price_impact: string;
+  amount_out_gross: string;
+  amount_out_actual: string;
+  fee_amount: string;
+  fee_percentage: string;
+  amount_in_usd: string;
+  amount_out_actual_usd: string;
+  amount_out_min: string;
+  amount_out_min_usd: string;
+  fee_amount_usd: string;
+};
+
+export interface SwapRoutesV2 {
+  route: SwapRouteV2[];
+  route_token_in: string;
+  route_token_out: string;
+  amount_in: string;
+  amount_in_usd: string;
+  amount_out: string;
+  amount_out_usd: string;
+  amount_out_min: string;
+  amount_out_min_usd: string;
+  exchange_rate: string;
+  tx_data: string;
+};
