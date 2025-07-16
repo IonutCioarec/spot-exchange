@@ -8,7 +8,7 @@ import { useBackendAPI } from 'hooks/useBackendAPI';
 import 'assets/scss/swap.scss';
 import { Container, Row, Col } from 'react-bootstrap';
 import BigNumber from 'bignumber.js';
-import { SwapStep } from 'types/backendTypes';
+import { SwapRouteV2, SwapStep } from 'types/backendTypes';
 import TextField from '@mui/material/TextField';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,12 +24,10 @@ import WifiProtectedSetupIcon from '@mui/icons-material/WifiProtectedSetup';
 import LightSpot from 'components/LightSpot';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
-import { useSwapTokensRouter } from 'hooks/transactions/useSwapTokensRouter';
 import { selectPairs } from 'storeManager/slices/pairsSlice';
 import ScrollToTopButton from 'components/ScrollToTopButton';
 import defaultLogo from 'assets/img/default_token_image.png';
-import { useSwapTokensHex } from 'hooks/transactions/useSwapTokensHex';
-import { validateSwapStepsReserve } from 'utils/calculs';
+import { useSwapTokensV2 } from 'hooks/transactions/useSwapTokensV2';
 import toast from 'react-hot-toast';
 
 const defaultTokenValues = {
@@ -48,7 +46,7 @@ const Swap = () => {
 
   const userTokens = useSelector(selectUserTokens);
   const isMobile = useMobile();
-  const { getSwapPrice } = useBackendAPI();
+  const { getSwapRoutesV2 } = useBackendAPI();
 
   // parse query parameters if they exist
   const location = useLocation();
@@ -71,37 +69,38 @@ const Swap = () => {
   const [token2Amount, setToken2Amount] = useState<string>('');
   const [token1AmountPrice, setToken1AmountPrice] = useState<string>('0.000');
   const [token2AmountPrice, setToken2AmountPrice] = useState<string>('0.000');
-  const [steps, setSteps] = useState<SwapStep[]>([]);
+  const [steps, setSteps] = useState<SwapRouteV2[]>([]);
   const [slippage, setSlippage] = useState('1.00');
-  const [swapPrice, setSwapPrice] = useState<number | 0>(0);
   const [showSlippageModal, setShowSlippageModal] = useState<boolean>(false);
   const [exchangeRate, setExchangeRate] = useState('0');
   const [activeContainer1, setActiveContainer1] = useState<boolean>(false);
   const [activeContainer2, setActiveContainer2] = useState<boolean>(false);
+  const [swapTx, setSwapTx] = useState<string>('');
   const pairs = useSelector(selectPairs);
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
-  const getPrice = async (fromToken: string, toToken: string, amount: string) => {
+  const getRoutes = async (fromToken: string, toToken: string, amount: string, slippage: number = 0.01) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     if (parseFloat(amountScaled) === 0) {
-      return { swapPrice: '0', steps: [], exchangeRate: '0' };
+      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '' };
     }
 
-    const priceResponse = await getSwapPrice(fromToken, toToken, amountScaled);
+    const priceResponse = await getSwapRoutesV2(fromToken, toToken, amountScaled, );
     //console.log(JSON.stringify(priceResponse, null, 2));
     if (!priceResponse) {
-      return { swapPrice: '0', steps: [], exchangeRate: '0' };
+      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '' };
     }
 
-    const price = priceResponse?.final_output?.raw || '0';
-    const steps = priceResponse?.steps || [];
-    const rate = priceResponse ? priceResponse?.cumulative_exchange_rate?.raw : '0';
+    const price = priceResponse?.amount_out || '0';
+    const steps = priceResponse?.route || [];
+    const rate = priceResponse ? priceResponse?.exchange_rate : '0';
 
     return {
       swapPrice: price,
       steps: steps,
-      exchangeRate: rate
+      exchangeRate: rate,
+      swapTx: priceResponse?.tx_data
     };
   };
 
@@ -200,7 +199,8 @@ const Swap = () => {
     debounce(async (rawValue: string) => {
       if (!token1 || !token2) return;
 
-      const price = await getPrice(token1, token2, parseFormattedNumber(rawValue).toString());
+      const price = await getRoutes(token1, token2, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
+      setSwapTx(price.swapTx);
       setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
       const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
@@ -212,7 +212,7 @@ const Swap = () => {
       if (price?.steps) {
         setSteps(price.steps);
 
-        const validation = validateSwapStepsReserve(price.steps, minReceived);
+        // const validation = validateSwapStepsReserve(price.steps, minReceived);
       }
     }, debounceSearchTime),
     [token1, token2, allTokens, slippage]
@@ -222,7 +222,8 @@ const Swap = () => {
     debounce(async (rawValue: string) => {
       if (!token1 || !token2) return;
 
-      const price = await getPrice(token2, token1, parseFormattedNumber(rawValue).toString());
+      const price = await getRoutes(token2, token1, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
+      setSwapTx(price.swapTx);
       setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
       const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
@@ -230,10 +231,10 @@ const Swap = () => {
       setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
       setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
 
-      const price2 = await getPrice(token1, token2, parseFormattedNumber(rawValue).toString());
+      const price2 = await getRoutes(token1, token2, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
       if (price2.steps) {
         setSteps(price2.steps);
-        const validation = validateSwapStepsReserve(price.steps, minReceived);
+        // const validation = validateSwapStepsReserve(price.steps, minReceived);
       }
       setExchangeRate(price2.exchangeRate);
     }, debounceSearchTime),
@@ -300,6 +301,7 @@ const Swap = () => {
     setExchangeRate('0');
     setActiveContainer1(false);
     setActiveContainer2(false);
+    setSwapTx('');
   };
 
   // Update token1 and token2 if query params change
@@ -312,22 +314,10 @@ const Swap = () => {
   }, [location.search]);
 
   // transaction hooks
-  const swapTokensRouter = useSwapTokensRouter(
-    {
-      token_id: allTokens[token1]?.token_id,
-      token_decimals: allTokens[token1]?.decimals,
-      token_amount: token1Amount
-    },
-    steps,
-    {
-      token_id: allTokens[token2]?.token_id,
-      token_decimals: allTokens[token2]?.decimals,
-      token_amount: minReceived
-    },
-  );
+  const swapTokensRouter = useSwapTokensV2(swapTx);
 
   const swapTokensRouterHook = () => {
-    if(Number(token1Amount) <= 0 || !Number(token1Amount) || Number(token2Amount) <= 0 || !Number(token2Amount)){
+    if (Number(token1Amount) <= 0 || !Number(token1Amount) || Number(token2Amount) <= 0 || !Number(token2Amount)) {
       toast.error('Invalid token amount', { duration: 3000 });
       return;
     }
@@ -347,14 +337,6 @@ const Swap = () => {
 
     checkAmounts();
   }, [token1Amount]);
-
-  // console.log('token_id: ' + allTokens[token1]?.token_id);
-  // console.log('token_decimals: ' + allTokens[token1]?.decimals);
-  // console.log('token_amount: ' + parseFormattedNumber(token1Amount));
-  // console.log('token_out: ' + allTokens[token2]?.token_id);
-  // console.log('token_out_decimals: ' + allTokens[token2]?.decimals);
-  // console.log('token_out_amount: ' + parseFormattedNumber(minReceived));
-  // console.log('steps: ' + JSON.stringify(steps, null, 2));
 
   return (
     <Container className='swap-page-height font-rose'>
@@ -580,7 +562,7 @@ const Swap = () => {
                     {steps.map((step: any, index: number) => (
                       <div className='d-flex justify-content-end align-items-center' key={`step2-${index}`}>
                         <p className='font-size-sm text-white mb-0'>
-                          {formatSignificantDecimals(Number(step?.price_impact?.raw || 0), 2)}%
+                          {formatSignificantDecimals(Number(step?.price_impact || 0), 2)}%
                         </p>
                       </div>
                     ))}
