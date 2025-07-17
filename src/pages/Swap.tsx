@@ -83,12 +83,12 @@ const Swap = () => {
   const getRoutes = async (fromToken: string, toToken: string, amount: string, slippage: number = 0.01) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     if (parseFloat(amountScaled) === 0) {
-      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000' };
+      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000', amountInUsd: '0.000', amountOutUsd: '0.000' };
     }
 
     const priceResponse = await getSwapRoutesV2(fromToken, toToken, amount, slippage);
     if (!priceResponse) {
-      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000' };
+      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000', amountInUsd: '0.000', amountOutUsd: '0.000' };
     }
 
     const price = priceResponse?.amount_out || '0';
@@ -100,7 +100,9 @@ const Swap = () => {
       steps: steps,
       exchangeRate: rate,
       swapTx: priceResponse?.tx_data,
-      amountOutMin: priceResponse.amount_out_min
+      amountOutMin: priceResponse.amount_out_min,
+      amountInUsd: priceResponse.amount_in_usd,
+      amountOutUsd: priceResponse.amount_out_usd
     };
   };
 
@@ -203,10 +205,8 @@ const Swap = () => {
       setSwapTx(price.swapTx);
       setToken2Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
-      const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-      const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
-      setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
-      setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+      setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountInUsd), 3)), 0, 20));
+      setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountOutUsd), 3)), 0, 20));
       setExchangeRate(price.exchangeRate);
       setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountOutMin || '0.000'), 3)), 0, 20));
 
@@ -224,10 +224,8 @@ const Swap = () => {
       const price = await getRoutes(token2, token1, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
       setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
-      const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
-      const totalToken1UsdPrice = new BigNumber(allTokens[token1]?.price_usd ?? 0).multipliedBy(new BigNumber(price.swapPrice));
-      setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
-      setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
+      setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountInUsd), 3)), 0, 20));
+      setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountOutUsd), 3)), 0, 20));
 
       const price2 = await getRoutes(token1, token2, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
       if (price2.steps) {
