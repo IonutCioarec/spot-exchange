@@ -86,8 +86,7 @@ const Swap = () => {
       return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '' };
     }
 
-    const priceResponse = await getSwapRoutesV2(fromToken, toToken, amountScaled, );
-    //console.log(JSON.stringify(priceResponse, null, 2));
+    const priceResponse = await getSwapRoutesV2(fromToken, toToken, amount, slippage);
     if (!priceResponse) {
       return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '' };
     }
@@ -211,8 +210,6 @@ const Swap = () => {
 
       if (price?.steps) {
         setSteps(price.steps);
-
-        // const validation = validateSwapStepsReserve(price.steps, minReceived);
       }
     }, debounceSearchTime),
     [token1, token2, allTokens, slippage]
@@ -234,7 +231,6 @@ const Swap = () => {
       const price2 = await getRoutes(token1, token2, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
       if (price2.steps) {
         setSteps(price2.steps);
-        // const validation = validateSwapStepsReserve(price.steps, minReceived);
       }
       setExchangeRate(price2.exchangeRate);
     }, debounceSearchTime),
@@ -250,10 +246,22 @@ const Swap = () => {
     }
     if (Number(value) > 50) {
       setSlippage('50');
-      return;
     }
     setSlippage(value);
   };
+
+  useEffect(() => {
+    if (!token1 || !token2) return;
+    if (!token1Amount || isNaN(parseFormattedNumber(token1Amount))) return;
+    if (!token2Amount || isNaN(parseFormattedNumber(token2Amount))) return;
+
+    if (activeContainer1) {
+      debouncedToken1Calculation(parseFormattedNumber(token1Amount).toString());
+    }
+    if (activeContainer2) {
+      debouncedToken2Calculation(parseFormattedNumber(token2Amount).toString());
+    }
+  }, [slippage]);
 
   const handleSwapTokens = async () => {
     const tempToken = token1;
