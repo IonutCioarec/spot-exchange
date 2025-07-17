@@ -222,7 +222,6 @@ const Swap = () => {
       if (!token1 || !token2) return;
 
       const price = await getRoutes(token2, token1, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
-      setSwapTx(price.swapTx);
       setToken1Amount(intlNumberFormat(parseFloat(formatSignificantDecimals(parseFloat(price.swapPrice), 3)), 0, 20));
 
       const totalToken2UsdPrice = new BigNumber(allTokens[token2]?.price_usd ?? 0).multipliedBy(new BigNumber(rawValue));
@@ -235,6 +234,7 @@ const Swap = () => {
         setSteps(price2.steps);
       }
       setExchangeRate(price2.exchangeRate);
+      setSwapTx(price2.swapTx);
       setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(Number(price2.amountOutMin || '0.000'), 3)), 0, 20));
     }, debounceSearchTime),
     [token1, token2, allTokens, slippage]
