@@ -76,19 +76,19 @@ const Swap = () => {
   const [activeContainer1, setActiveContainer1] = useState<boolean>(false);
   const [activeContainer2, setActiveContainer2] = useState<boolean>(false);
   const [swapTx, setSwapTx] = useState<string>('');
-  const pairs = useSelector(selectPairs);
+  const [minReceived, setMinReceived] = useState<string>('0.000');
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
   const getRoutes = async (fromToken: string, toToken: string, amount: string, slippage: number = 0.01) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     if (parseFloat(amountScaled) === 0) {
-      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '' };
+      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000' };
     }
 
     const priceResponse = await getSwapRoutesV2(fromToken, toToken, amount, slippage);
     if (!priceResponse) {
-      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '' };
+      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000' };
     }
 
     const price = priceResponse?.amount_out || '0';
@@ -99,7 +99,8 @@ const Swap = () => {
       swapPrice: price,
       steps: steps,
       exchangeRate: rate,
-      swapTx: priceResponse?.tx_data
+      swapTx: priceResponse?.tx_data,
+      amountOutMin: priceResponse.amount_out_min
     };
   };
 
@@ -207,6 +208,7 @@ const Swap = () => {
       setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken1UsdPrice), 3)), 0, 20));
       setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(totalToken2UsdPrice), 3)), 0, 20));
       setExchangeRate(price.exchangeRate);
+      setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountOutMin || '0.000'), 3)), 0, 20));
 
       if (price?.steps) {
         setSteps(price.steps);
@@ -233,6 +235,7 @@ const Swap = () => {
         setSteps(price2.steps);
       }
       setExchangeRate(price2.exchangeRate);
+      setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(Number(price2.amountOutMin || '0.000'), 3)), 0, 20));
     }, debounceSearchTime),
     [token1, token2, allTokens, slippage]
   );
@@ -276,19 +279,6 @@ const Swap = () => {
     const newAmount = intlNumberFormat(Number(formatSignificantDecimals(Number(userTokens[token1]?.balance ?? 0), 3)), 3, 20);
     handleToken1AmountChange(newAmount);
   };
-
-  // update minReceived when token2Amount, token1Amount, or slippage change
-  const [minReceived, setMinReceived] = useState<string>('0.000');
-  useEffect(() => {
-    const calculateMinReceived = () => {
-      if (token2Amount && slippage) {
-        const minValue = parseFormattedNumber(token2Amount) - (parseFormattedNumber(token2Amount) * (Number(slippage) / 100));
-        setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(minValue, 3)), 0, 20));
-      }
-    };
-
-    calculateMinReceived();
-  }, [token2Amount, token1Amount, slippage]);
 
   // refresh button
   const [refreshingAmount, setRefreshingAmount] = useState<boolean>(false);
