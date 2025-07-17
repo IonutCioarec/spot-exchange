@@ -570,7 +570,7 @@ const Swap = () => {
                     {steps.map((step: any, index: number) => (
                       <div className='d-flex justify-content-end align-items-center' key={`step2-${index}`}>
                         <p className='font-size-sm text-white mb-0'>
-                          {formatSignificantDecimals(Number(step?.price_impact || 0), 2)}%
+                          {formatSignificantDecimals(Number(step?.price_impact || 0) * 100, 2)}%
                         </p>
                       </div>
                     ))}
