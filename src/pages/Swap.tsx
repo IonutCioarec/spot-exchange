@@ -7,8 +7,7 @@ import { useGetAccountInfo, useGetIsLoggedIn } from 'hooks';
 import { useBackendAPI } from 'hooks/useBackendAPI';
 import 'assets/scss/swap.scss';
 import { Container, Row, Col } from 'react-bootstrap';
-import BigNumber from 'bignumber.js';
-import { SwapRouteV2, SwapStep } from 'types/backendTypes';
+import { SwapRouteV2 } from 'types/backendTypes';
 import TextField from '@mui/material/TextField';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,7 +23,6 @@ import WifiProtectedSetupIcon from '@mui/icons-material/WifiProtectedSetup';
 import LightSpot from 'components/LightSpot';
 import { debounce } from 'lodash';
 import { debounceSearchTime } from 'config';
-import { selectPairs } from 'storeManager/slices/pairsSlice';
 import ScrollToTopButton from 'components/ScrollToTopButton';
 import defaultLogo from 'assets/img/default_token_image.png';
 import { useSwapTokensV2 } from 'hooks/transactions/useSwapTokensV2';
@@ -69,7 +67,7 @@ const Swap = () => {
   const [token2Amount, setToken2Amount] = useState<string>('');
   const [token1AmountPrice, setToken1AmountPrice] = useState<string>('0.000');
   const [token2AmountPrice, setToken2AmountPrice] = useState<string>('0.000');
-  const [steps, setSteps] = useState<SwapRouteV2[]>([]);
+  const [routes, setRoutes] = useState<SwapRouteV2[]>([]);
   const [slippage, setSlippage] = useState('1.00');
   const [showSlippageModal, setShowSlippageModal] = useState<boolean>(false);
   const [exchangeRate, setExchangeRate] = useState('0');
@@ -83,21 +81,21 @@ const Swap = () => {
   const getRoutes = async (fromToken: string, toToken: string, amount: string, slippage: number = 0.01) => {
     const amountScaled = amountToDenominatedAmount(amount, allTokens[fromToken]?.decimals ?? 18, 20);
     if (parseFloat(amountScaled) === 0) {
-      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000', amountInUsd: '0.000', amountOutUsd: '0.000' };
+      return { swapPrice: '0', routes: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000', amountInUsd: '0.000', amountOutUsd: '0.000' };
     }
 
     const priceResponse = await getSwapRoutesV2(fromToken, toToken, amount, slippage);
     if (!priceResponse) {
-      return { swapPrice: '0', steps: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000', amountInUsd: '0.000', amountOutUsd: '0.000' };
+      return { swapPrice: '0', routes: [], exchangeRate: '0', swapTx: '', amountOutMin: '0.000', amountInUsd: '0.000', amountOutUsd: '0.000' };
     }
 
     const price = priceResponse?.amount_out || '0';
-    const steps = priceResponse?.route || [];
+    const routes = priceResponse?.route || [];
     const rate = priceResponse ? priceResponse?.exchange_rate : '0';
 
     return {
       swapPrice: price,
-      steps: steps,
+      routes: routes,
       exchangeRate: rate,
       swapTx: priceResponse?.tx_data,
       amountOutMin: priceResponse.amount_out_min,
@@ -121,7 +119,7 @@ const Swap = () => {
       setToken2Amount('');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
-      setSteps([]);
+      setRoutes([]);
       setExchangeRate('0');
       setActiveContainer1(false);
       setActiveContainer2(false);
@@ -134,7 +132,7 @@ const Swap = () => {
       setToken2Amount('0');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
-      setSteps([]);
+      setRoutes([]);
       setExchangeRate('0');
       setActiveContainer1(false);
       setActiveContainer2(false);
@@ -166,7 +164,7 @@ const Swap = () => {
       setToken2Amount('');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
-      setSteps([]);
+      setRoutes([]);
       setExchangeRate('0');
       setActiveContainer1(false);
       setActiveContainer2(false);
@@ -179,7 +177,7 @@ const Swap = () => {
       setToken2Amount('0');
       setToken1AmountPrice('0.000');
       setToken2AmountPrice('0.000');
-      setSteps([]);
+      setRoutes([]);
       setExchangeRate('0');
       setActiveContainer1(false);
       setActiveContainer2(false);
@@ -210,8 +208,8 @@ const Swap = () => {
       setExchangeRate(price.exchangeRate);
       setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountOutMin || '0.000'), 3)), 0, 20));
 
-      if (price?.steps) {
-        setSteps(price.steps);
+      if (price?.routes) {
+        setRoutes(price.routes);
       }
     }, debounceSearchTime),
     [token1, token2, allTokens, slippage]
@@ -228,8 +226,8 @@ const Swap = () => {
       setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountOutUsd), 3)), 0, 20));
 
       const price2 = await getRoutes(token1, token2, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
-      if (price2.steps) {
-        setSteps(price2.steps);
+      if (price2.routes) {
+        setRoutes(price2.routes);
       }
       setExchangeRate(price2.exchangeRate);
       setSwapTx(price2.swapTx);
@@ -293,7 +291,7 @@ const Swap = () => {
     setToken2Amount('');
     setToken1AmountPrice('0.000');
     setToken2AmountPrice('0.000');
-    setSteps([]);
+    setRoutes([]);
     setExchangeRate('0');
     setActiveContainer1(false);
     setActiveContainer2(false);
@@ -539,26 +537,26 @@ const Swap = () => {
                 </div>
               </div>
             }
-            {steps.some(step => Object.keys(step).length > 0) ? (
+            {routes.some(route => Object.keys(route).length > 0) ? (
               <Fragment>
                 <div className='d-flex justify-content-between align-items-center'>
                   <div className='d-flex justify-content-start'>
                     <div>
-                      {steps.map((step: any, index: number) => (
-                        <p className='text-silver font-size-sm mb-0 mt-1' key={`step-${index}`}>
+                      {routes.map((route: any, index: number) => (
+                        <p className='text-silver font-size-sm mb-0 mt-1' key={`route-${index}`}>
                           Price Impact
                           <span className='text-white font-bold font-size-xs ms-2'>
-                            {allTokens[step?.token_in]?.ticker ?? 'TOKEN'} {'/'} {allTokens[step?.token_out]?.ticker ?? 'TOKEN'}
+                            {allTokens[route?.token_in]?.ticker ?? 'TOKEN'} {'/'} {allTokens[route?.token_out]?.ticker ?? 'TOKEN'}
                           </span>
                         </p>
                       ))}
                     </div>
                   </div>
                   <div>
-                    {steps.map((step: any, index: number) => (
-                      <div className='d-flex justify-content-end align-items-center' key={`step2-${index}`}>
+                    {routes.map((route: SwapRouteV2, index: number) => (
+                      <div className='d-flex justify-content-end align-items-center' key={`route2-${index}`}>
                         <p className='font-size-sm text-white mb-0'>
-                          {formatSignificantDecimals(Number(step?.price_impact || 0) * 100, 2)}%
+                          {formatSignificantDecimals(Number(route?.price_impact || 0) * 100, 2)}%
                         </p>
                       </div>
                     ))}
@@ -567,26 +565,26 @@ const Swap = () => {
                 <div className='d-flex justify-content-between align-items-center mt-1 mb-1'>
                   <p className='text-silver font-size-sm mb-0'>Route</p>
                   <div className='d-flex justify-content-end align-items-center text-white '>
-                    {steps.map((step: any, index: number) => (
+                    {routes.map((route: SwapRouteV2, index: number) => (
                       <Fragment key={`route-${index}`}>
-                        <CustomTooltip key={`t-route-${index}`} title={`${allTokens[step?.token_in]?.ticker} > ${allTokens[step?.token_out]?.ticker}`}>
+                        <CustomTooltip key={`t-route-${index}`} title={`${allTokens[route?.token_in]?.ticker} > ${allTokens[route?.token_out]?.ticker}`}>
                           <div className='bg-[#32323299] d-flex justify-content-end align-items-center text-white p-1 b-r-sm'>
                             <img
-                              src={allTokens[step?.token_in]?.logo_url && allTokens[step?.token_in]?.logo_url !== 'N/A' ? allTokens[step?.token_in]?.logo_url : defaultTokenValues.image_url}
-                              alt={allTokens[step?.token_in]?.ticker}
+                              src={allTokens[route?.token_in]?.logo_url && allTokens[route?.token_in]?.logo_url !== 'N/A' ? allTokens[route?.token_in]?.logo_url : defaultTokenValues.image_url}
+                              alt={allTokens[route?.token_in]?.ticker}
                               style={{ width: 20, height: 20, border: '1px solid #202020' }}
                               className='b-r-sm'
                             />
                             <span className='mx-1' style={{ marginTop: '2px' }}><FontAwesomeIcon icon={faCaretRight} size='xs' /></span>
                             <img
-                              src={allTokens[step?.token_out]?.logo_url && allTokens[step?.token_out]?.logo_url !== 'N/A' ? allTokens[step?.token_out]?.logo_url : defaultTokenValues.image_url}
-                              alt={allTokens[step?.token_out]?.ticker}
+                              src={allTokens[route?.token_out]?.logo_url && allTokens[route?.token_out]?.logo_url !== 'N/A' ? allTokens[route?.token_out]?.logo_url : defaultTokenValues.image_url}
+                              alt={allTokens[route?.token_out]?.ticker}
                               style={{ width: 20, height: 20, border: '1px solid #202020' }}
                               className='b-r-sm'
                             />
                           </div>
                         </CustomTooltip>
-                        {index < steps.length - 1 && <p className='mx-2 mb-0 font-size-sm' style={{ marginTop: '-3px' }}>|</p>}
+                        {index < routes.length - 1 && <p className='mx-2 mb-0 font-size-sm' style={{ marginTop: '-3px' }}>|</p>}
                       </Fragment>
                     ))}
                   </div>
