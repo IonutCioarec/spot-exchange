@@ -311,7 +311,9 @@ const Swap = () => {
   const swapTokensRouter = useSwapTokensV2(swapTx);
 
   const swapTokensRouterHook = () => {
-    if (Number(token1Amount) <= 0 || !Number(token1Amount) || Number(token2Amount) <= 0 || !Number(token2Amount)) {
+    const token1Raw = token1Amount.replace(/,/g, '');
+    const token2Raw = token2Amount.replace(/,/g, '');
+    if (Number(token1Raw) <= 0 || !Number(token1Raw) || Number(token2Raw) <= 0 || !Number(token2Raw)) {
       toast.error('Invalid token amount', { duration: 3000 });
       return;
     }
