@@ -77,6 +77,7 @@ const Swap = () => {
   const [swapTx, setSwapTx] = useState<string>('');
   const [minReceived, setMinReceived] = useState<string>('0.000');
   const [impactExceeded, setImpactExceeded] = useState<boolean>(false);
+  const [activeColor, setActiveColor] = useState<string>('selected-side');
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
@@ -94,16 +95,6 @@ const Swap = () => {
     const price = priceResponse?.amount_out || '0';
     const routes = priceResponse?.route || [];
     const rate = priceResponse ? priceResponse?.exchange_rate : '0';
-
-    let localImpactExceeded = false;
-    if (routes.length) {
-      routes.map((route: SwapRouteV2) => {
-        if (Number(route.price_impact) * 100 > 50) {
-          localImpactExceeded = true;
-        }
-      })
-    }
-    setImpactExceeded(localImpactExceeded);
 
     return {
       swapPrice: price,
@@ -220,6 +211,19 @@ const Swap = () => {
       setExchangeRate(price.exchangeRate);
       setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountOutMin || '0.000'), 3)), 0, 20));
 
+      let localImpactExceeded = false;
+      let localColor = 'selected-side';
+      if (price.routes.length) {
+        price.routes.map((route: SwapRouteV2) => {
+          if ((Number(route.price_impact) * 100 > 50) || !hasEnoughToken1) {
+            localImpactExceeded = true;
+            localColor = 'selected-side-red';
+          }
+        })
+      }
+      setImpactExceeded(localImpactExceeded);
+      setActiveColor(localColor);
+
       if (price?.routes) {
         setRoutes(price.routes);
       }
@@ -237,13 +241,26 @@ const Swap = () => {
       setToken1AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountInUsd), 3)), 0, 20));
       setToken2AmountPrice(intlNumberFormat(Number(formatSignificantDecimals(Number(price.amountOutUsd), 3)), 0, 20));
 
-      const price2 = await getRoutes(token1, token2, parseFormattedNumber(rawValue).toString(), parseFloat(slippage) / 100);
+      const price2 = await getRoutes(token1, token2, parseFormattedNumber(token1Amount).toString(), parseFloat(slippage) / 100);
       if (price2.routes) {
         setRoutes(price2.routes);
       }
       setExchangeRate(price2.exchangeRate);
       setSwapTx(price2.swapTx);
       setMinReceived(intlNumberFormat(Number(formatSignificantDecimals(Number(price2.amountOutMin || '0.000'), 3)), 0, 20));
+
+      let localImpactExceeded = false;
+      let localColor = 'selected-side';
+      if (price2.routes.length) {
+        price2.routes.map((route: SwapRouteV2) => {
+          if ((Number(route.price_impact) * 100 > 50) || !hasEnoughToken1) {
+            localImpactExceeded = true;
+            localColor = 'selected-side-red';
+          }
+        })
+      }
+      setImpactExceeded(localImpactExceeded);
+      setActiveColor(localColor);
     }, debounceSearchTime),
     [token1, token2, allTokens, slippage]
   );
@@ -337,14 +354,14 @@ const Swap = () => {
   useEffect(() => {
     const checkAmounts = () => {
       const token1Raw = token1Amount.replace(/,/g, '');
-      if (Number(token1Raw) > Number(userTokens[token1]?.balance)) {
+      if (Number(token1Raw) > (Number(userTokens[token1]?.balance) || 0)) {
         setHasEnoughToken1(false);
       } else {
         setHasEnoughToken1(true);
       }
     };
 
-    checkAmounts();
+    if(isLoggedIn) checkAmounts();
   }, [token1Amount]);
 
   const [openPriceImpactModal, setOpenPriceImpactModal] = useState(false);
@@ -360,7 +377,7 @@ const Swap = () => {
       Cancel
     </Button>
     <Button
-      className="font-size-sm btn-intense-default btn-intense-danger2 hover-btn text-white mt-2 fullWidth"
+      className="font-size-sm btn-intense-default btn-intense-danger hover-btn text-white mt-2 fullWidth"
       onClick={swapTokensRouterHook}
     >
       SWAP
@@ -383,7 +400,7 @@ const Swap = () => {
       )}
       <Row className={`${isMobile ? 'mt-2' : 'mt-2'}`}>
         <Col xs={12} lg={{ span: 6, offset: 3 }}>
-          <div className={`swap-container text-white mt-1 ${activeContainer1 ? 'selected-side' : ''}`}>
+          <div className={`swap-container text-white mt-1 ${activeContainer1 ? activeColor : ''}`}>
             <p className='mb-0 ml-1 small'>From</p>
             <div className='d-flex justify-content-between mt-2 align-items-center gap-2 '>
               <div className='input-container b-r-sm swap-token-container'>
@@ -433,13 +450,13 @@ const Swap = () => {
           </div>
 
           <div className='swap-delimitator d-flex align-items-center justify-content-center'>
-            <div className='swap-delimitator-icon mt-0 d-flex align-items-center justify-content-center' style={{ width: '50px', height: '50px' }}>
+            <div className={`swap-delimitator-icon ${(impactExceeded || (!hasEnoughToken1)) ? 'swap-icon-red' : 'swap-icon-green'} mt-0 d-flex align-items-center justify-content-center`} style={{ width: '50px', height: '50px' }}>
               <AutorenewIcon className='full-blinking-icon default-icon' style={{ fontSize: '30px' }} onClick={handleSwapTokens} />
               <AutorenewIcon className='full-animated-icon hover-icon' style={{ fontSize: '30px' }} onClick={handleSwapTokens} />
             </div>
           </div>
 
-          <div className={`swap-container ${isMobile ? '' : 'mt-1'} text-white ${activeContainer2 ? 'selected-side' : ''}`}>
+          <div className={`swap-container ${isMobile ? '' : 'mt-1'} text-white ${activeContainer2 ? activeColor : ''}`}>
             {refreshingAmount &&
               <SimpleLoader />
             }
@@ -577,10 +594,10 @@ const Swap = () => {
                 <div className='d-flex justify-content-between align-items-center'>
                   <div className='d-flex justify-content-start'>
                     <div>
-                      {routes.map((route: any, index: number) => (
+                      {routes.map((route: SwapRouteV2, index: number) => (
                         <p className='text-silver font-size-sm mb-0 mt-1' key={`route-${index}`}>
                           Price Impact
-                          <span className='text-white font-bold font-size-xs ms-2'>
+                          <span className={`${impactExceeded ? 'text-intense-red' : 'text-white'} font-bold font-size-xs ms-2`}>
                             {allTokens[route?.token_in]?.ticker ?? 'TOKEN'} {'/'} {allTokens[route?.token_out]?.ticker ?? 'TOKEN'}
                           </span>
                         </p>
@@ -590,7 +607,7 @@ const Swap = () => {
                   <div>
                     {routes.map((route: SwapRouteV2, index: number) => (
                       <div className='d-flex justify-content-end align-items-center' key={`route2-${index}`}>
-                        <p className='font-size-sm text-white mb-0'>
+                        <p className={`${impactExceeded ? 'text-intense-red' : 'text-white'} font-size-sm mb-0`}>
                           {formatSignificantDecimals(Number(route?.price_impact || 0) * 100, 2)}%
                         </p>
                       </div>
@@ -642,7 +659,7 @@ const Swap = () => {
             (hasEnoughToken1 || Number(token1Amount) == 0) ? (
               impactExceeded ? (
                 <Button
-                  className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
+                  className="font-size-md btn-intense-default btn-intense-danger hover-btn text-white mt-3 mb-5 fullWidth"
                   onClick={handlePriceImpactModal}
                 >
                   SWAP
@@ -664,7 +681,7 @@ const Swap = () => {
             )
           ) : (
             <Button
-              className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
+              className={`font-size-md btn-intense-default ${impactExceeded ? 'btn-intense-danger' : 'btn-intense-success2'} hover-btn text-white mt-3 mb-5 fullWidth`}
               component={Link}
               to="/unlock"
             >

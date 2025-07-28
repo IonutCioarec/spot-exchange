@@ -42,6 +42,12 @@
     0 1px 15px rgba(63, 172, 90, 0.3), 0 -1px 15px rgba(63, 172, 90, 0.3);
 }
 
+.selected-side-red {
+  border: 1px solid #f47272;
+  box-shadow: 1px 0 15px rgba(244, 114, 114, 0.5), -1px 0 15px rgba(244, 114, 114, 0.5),
+    0 1px 15px rgba(244, 114, 114, 0.5), 0 -1px 15px rgba(244, 114, 114, 0.5);
+}
+
 .input-container {
   &:hover {
     background-color: rgba(56, 56, 56, 0.3);
@@ -78,13 +84,20 @@
 }
 
 .swap-delimitator-icon {
-  background-color: rgba(63, 172, 90, 0.8);
   font-size: 30px;
   padding-left: 8px;
   padding-right: 8px;
   color: rgba(10, 10, 10, 0.8);
   border-radius: 30px;
   border: 4px solid rgba(20, 20, 20, 1);
+}
+
+.swap-icon-green {
+  background-color: rgba(63, 172, 90, 0.8);
+}
+
+.swap-icon-red {
+  background-color: rgba(244, 114, 114, 0.8);
 }
 
 .animated-icon {
