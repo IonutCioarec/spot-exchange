@@ -27,6 +27,7 @@ import ScrollToTopButton from 'components/ScrollToTopButton';
 import defaultLogo from 'assets/img/default_token_image.png';
 import { useSwapTokensV2 } from 'hooks/transactions/useSwapTokensV2';
 import toast from 'react-hot-toast';
+import DisplayModal from 'components/Farms/DisplayModal';
 
 const defaultTokenValues = {
   image_url: defaultLogo,
@@ -75,6 +76,7 @@ const Swap = () => {
   const [activeContainer2, setActiveContainer2] = useState<boolean>(false);
   const [swapTx, setSwapTx] = useState<string>('');
   const [minReceived, setMinReceived] = useState<string>('0.000');
+  const [impactExceeded, setImpactExceeded] = useState<boolean>(false);
 
   const handleShowSlippageModal = () => setShowSlippageModal(!showSlippageModal);
 
@@ -92,6 +94,16 @@ const Swap = () => {
     const price = priceResponse?.amount_out || '0';
     const routes = priceResponse?.route || [];
     const rate = priceResponse ? priceResponse?.exchange_rate : '0';
+
+    let localImpactExceeded = false;
+    if (routes.length) {
+      routes.map((route: SwapRouteV2) => {
+        if (Number(route.price_impact) * 100 > 50) {
+          localImpactExceeded = true;
+        }
+      })
+    }
+    setImpactExceeded(localImpactExceeded);
 
     return {
       swapPrice: price,
@@ -334,6 +346,26 @@ const Swap = () => {
 
     checkAmounts();
   }, [token1Amount]);
+
+  const [openPriceImpactModal, setOpenPriceImpactModal] = useState(false);
+  const handlePriceImpactModal = () => {
+    setOpenPriceImpactModal(!openPriceImpactModal);
+  }
+  const priceImpactModalContent = <div>
+    <p className='text-justified text-intense-red font-size-md font-bold'>The price impact is more than 50%, you will most likely get much less tokens.</p>
+    <Button
+      className="font-size-sm btn-intense-default btn-intense-light hover-btn  mt-2 fullWidth"
+      onClick={handlePriceImpactModal}
+    >
+      Cancel
+    </Button>
+    <Button
+      className="font-size-sm btn-intense-default btn-intense-danger2 hover-btn text-white mt-2 fullWidth"
+      onClick={swapTokensRouterHook}
+    >
+      SWAP
+    </Button>
+  </div>;
 
   return (
     <Container className='swap-page-height font-rose'>
@@ -608,12 +640,21 @@ const Swap = () => {
           </div>
           {isLoggedIn ? (
             (hasEnoughToken1 || Number(token1Amount) == 0) ? (
-              <Button
-                className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
-                onClick={swapTokensRouterHook}
-              >
-                SWAP
-              </Button>
+              impactExceeded ? (
+                <Button
+                  className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
+                  onClick={handlePriceImpactModal}
+                >
+                  SWAP
+                </Button>
+              ) : (
+                <Button
+                  className="font-size-md btn-intense-default btn-intense-success2 hover-btn text-white mt-3 mb-5 fullWidth"
+                  onClick={swapTokensRouterHook}
+                >
+                  SWAP
+                </Button>
+              )
             ) : (
               <Button
                 className="font-size-md btn-intense-default btn-intense-danger hover-btn text-white mt-3 mb-5 fullWidth"
@@ -634,8 +675,15 @@ const Swap = () => {
 
       </Row>
 
+      <DisplayModal
+        isOpen={openPriceImpactModal}
+        setIsOpen={setOpenPriceImpactModal}
+        title='SWAP WARNING'
+        content={priceImpactModalContent}
+      />
+
       <LightSpot size={isMobile ? 220 : 360} x={isMobile ? '25%' : '40%'} y="36%" color="rgba(63, 172, 90, 0.3)" intensity={1} />
-    </Container>
+    </Container >
   );
 }
 

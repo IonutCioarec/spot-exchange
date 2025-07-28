@@ -2679,6 +2679,9 @@ h6 {
 .text-intense-yellow {
   color: #ffff00;
 }
+.text-intense-red {
+  color: #e24e4e;
+}
 
 .bg-intense-green {
   background-color: #3FAC5A;
