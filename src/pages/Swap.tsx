@@ -324,7 +324,8 @@ const Swap = () => {
   const [hasEnoughToken1, setHasEnoughToken1] = useState<boolean>(true);
   useEffect(() => {
     const checkAmounts = () => {
-      if (Number(token1Amount) > Number(userTokens[token1]?.balance)) {
+      const token1Raw = token1Amount.replace(/,/g, '');
+      if (Number(token1Raw) > Number(userTokens[token1]?.balance)) {
         setHasEnoughToken1(false);
       } else {
         setHasEnoughToken1(true);
