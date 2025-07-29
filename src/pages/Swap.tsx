@@ -118,27 +118,13 @@ const Swap = () => {
 
     if (rawValue === '' || isNaN(Number(rawValue)) || !rawValue) {
       debouncedToken1Calculation.cancel();
-      setToken1Amount('');
-      setToken2Amount('');
-      setToken1AmountPrice('0.000');
-      setToken2AmountPrice('0.000');
-      setRoutes([]);
-      setExchangeRate('0');
-      setActiveContainer1(false);
-      setActiveContainer2(false);
+      resetAmounts();
       return;
     }
 
     if (parseFloat(rawValue) === 0 && !rawValue.includes('.')) {
       debouncedToken1Calculation.cancel();
-      setToken1Amount('0');
-      setToken2Amount('0');
-      setToken1AmountPrice('0.000');
-      setToken2AmountPrice('0.000');
-      setRoutes([]);
-      setExchangeRate('0');
-      setActiveContainer1(false);
-      setActiveContainer2(false);
+      resetAmounts();
       return;
     }
 
@@ -163,27 +149,13 @@ const Swap = () => {
 
     if (rawValue === '' || isNaN(Number(rawValue)) || !rawValue) {
       debouncedToken2Calculation.cancel();
-      setToken1Amount('');
-      setToken2Amount('');
-      setToken1AmountPrice('0.000');
-      setToken2AmountPrice('0.000');
-      setRoutes([]);
-      setExchangeRate('0');
-      setActiveContainer1(false);
-      setActiveContainer2(false);
+      resetAmounts();
       return;
     }
 
     if (parseFloat(rawValue) === 0 && !rawValue.includes('.')) {
       debouncedToken2Calculation.cancel();
-      setToken1Amount('0');
-      setToken2Amount('0');
-      setToken1AmountPrice('0.000');
-      setToken2AmountPrice('0.000');
-      setRoutes([]);
-      setExchangeRate('0');
-      setActiveContainer1(false);
-      setActiveContainer2(false);
+      resetAmounts();
       return;
     }
 
@@ -296,8 +268,6 @@ const Swap = () => {
     setToken1(token2);
     setToken2(tempToken);
     resetAmounts();
-    setActiveContainer1(false);
-    setActiveContainer2(false);
   };
 
   const handleMaxAmount = async () => {
@@ -325,6 +295,8 @@ const Swap = () => {
     setActiveContainer1(false);
     setActiveContainer2(false);
     setSwapTx('');
+    setImpactExceeded(false);
+    setActiveColor('selected-side');
   };
 
   // Update token1 and token2 if query params change
